@@ -155,6 +155,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
+game_version = "Dev 0.0.2(Afterjam Remaster)"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
@@ -358,6 +359,25 @@ theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_sunan_bg")
 text = "Smile Games Sunar"
 
+[node name="VersionLabel" type="Label" parent="Panel" unique_id=992837461]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = 44.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.7)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "v0.0.2 (Devbuild)"
+horizontal_alignment = 2
+vertical_alignment = 1
+
 [node name="InfoPanel" type="Panel" parent="." unique_id=947952739]
 visible = false
 custom_minimum_size = Vector2(680, 460)
@@ -431,15 +451,11 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 • [color=#e6bf73]WASD / Yön Tuşları:[/color] Yüzme ve Hareket
 • [color=#e6bf73]Sol Tık:[/color] Nesneleri İncele / Topla
 • [color=#e6bf73]Fare Tekerleği:[/color] Yakınlaştır / Uzaklaştır (Kamera)
-
-[color=#f2eaed][b]İpuçları:[/b][/color]
-• Oksijenine dikkat et! Derinlere indikçe basınç artar ve oksijenin daha hızlı tükenir.
-• Topladığın hazineleri [color=#e6bf73]Antikacı[/color] veya [color=#e6bf73]Kara Borsa[/color]'da satarak [color=#e6bf73]Zurna[/color] kazan.
-• Kazandığın parayla Çanta, Dalış Gözlüğü, Palet ve Tüp seviyelerini yükselt!
+• [color=#e6bf73]E :[/color] Eşya İncele, Çantaya at
 
 
-[center][font_size=12][color=#a09080]Yapımcılar: Queen Of Femboyss & Hakan bey[/color][/font_size]
-[font_size=12][color=#e6bf73][i]Smile Games — Jam Edition. v1.0.0[/i][/color][/font_size][/center]"
+[center][font_size=12][color=#a09080]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
+[font_size=16][color=#e6bf73][i]Smile Games — Afterjam Remaster Edition 2.0 ( Devbuild 0.0.2) [/i][/color][/font_size][/center]"
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=830166412]
 visible = false

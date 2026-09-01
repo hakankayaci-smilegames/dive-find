@@ -100,18 +100,23 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 
 ---
 
-## 7. Kullanıcı Arayüzü (UI/UX) & Koleksiyon İnceleme
+## 7. Kullanıcı Arayüzü (UI/UX) & Menü Mimarisi
 
-### 7.1. Pop-up Kartı & Önizleme Modu ([`Scripts/popupui.gd`](file:///home/hakan/dive&find/Scripts/popupui.gd))
+### 7.1. Ana Menü ([`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd) & `Scenes/main_menu.tscn`)
+- **Sürüm Yönetimi**: `@export var game_version: String = "v0.0.2 (Devbuild)"` değişkeni hem ana ekranın sağ üst köşesindeki `VersionLabel` etiketini hem de Bilgi panelindeki sürüm metnini otomatik senkronize eder.
+- Yumuşak giriş/açılış animasyonları (Tween).
+- Ses slider'ları ve tam ekran ayarları (`user://settings.cfg`).
+
+### 7.2. Pop-up Kartı & Önizleme Modu ([`Scripts/popupui.gd`](file:///home/hakan/dive&find/Scripts/popupui.gd))
 - **Dalışta Toplama Modu**: `setup(data, item, false)` $\rightarrow$ "AL [E]" butonu aktif, çantaya ekleme ve VFX tetikler.
 - **Koleksiyon Önizleme Modu**: `setup(data, null, true)` $\rightarrow$ "AL" butonu gizlenir, buton "KAPAT [ESC]" olur, sadece bilgi kartı olarak incelenir. `ESC`, `E`, `Space`, `Enter` ile kapanır.
 
-### 7.2. Koleksiyon Defteri ([`Scripts/collection.gd`](file:///home/hakan/dive&find/Scripts/collection.gd) & [`Scripts/collection_slot.gd`](file:///home/hakan/dive&find/Scripts/collection_slot.gd))
+### 7.3. Koleksiyon Defteri ([`Scripts/collection.gd`](file:///home/hakan/dive&find/Scripts/collection.gd) & [`Scripts/collection_slot.gd`](file:///home/hakan/dive&find/Scripts/collection_slot.gd))
 - Keşfedilen slotlar (`discovered == true`) fare ile tıklanabilir (`CURSOR_POINTING_HAND`).
 - Tıklandığında `slot_clicked` sinyaliyle PopupUI'ın önizleme modunu açar.
 - Keşfedilmemişler siyah silüet ve `???` ipucu ile kalır, tıklamaya tepki vermez.
 
-### 7.3. Envanter & Satıcı Panelleri
+### 7.4. Envanter & Satıcı Panelleri
 - **Envanter (`inventory.gd`)**: Toplam çanta değeri, renkli kategori rozeti, klavye ile kapatma.
 - **Satıcılar (`item_seller.gd`)**: Tekil satış ("SAT") ve tüm dükkan listesini tek tıkla satan ("HEPSİNİ SAT") butonları.
 
@@ -122,7 +127,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 | Sahne (`.tscn`) | Bağlı Script (`.gd`) | Açıklama |
 | :--- | :--- | :--- |
 | `Scenes/main.tscn` | `canvas_layer.gd`, `player_controller.gd`, `map_maker.gd`, `item_spawner.gd` | Ana dalış dünyası ve HUD |
-| `Scenes/main_menu.tscn` | `main_menu.gd` | Ana menü ve ayarlar |
+| `Scenes/main_menu.tscn` | `main_menu.gd` | Ana menü, ayarlar ve dinamik sürüm göstergesi |
 | `Scenes/office_menu.tscn` | `office_menu.gd` | Ofis merkezi |
 | `Scenes/loading_screen.tscn` | `loading_screen.gd` | Yükleme ekranı & `.tres` önbellekleyicisi |
 | `Scenes/pickup.tscn` | `popupui.gd` | Eşya inceleme & alma pop-up'ı (Önizleme modu destekli) |

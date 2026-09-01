@@ -7,9 +7,13 @@ const SFX_BUS := "SFX"
 
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
+@export_group("Sürüm")
+@export var game_version: String = "v0.0.2 (Devbuild)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
 @onready var info_close: Button = $InfoPanel/CloseButton
+@onready var info_text: RichTextLabel = $InfoPanel/InfoText
 
 @onready var collection_button: Button = $Panel/VBoxContainer/Button3
 
@@ -24,6 +28,7 @@ const SFX_BUS := "SFX"
 @onready var menu_buttons: VBoxContainer = $Panel/VBoxContainer
 @onready var exit_button: Button = $Panel/Button
 @onready var sunan_label: Label = $Panel/Label2
+@onready var version_label: Label = $Panel/VersionLabel
 
 @onready var music_slider: HSlider = $SettingsPanel/Content/MusicRow/MusicSlider
 @onready var sfx_slider: HSlider = $SettingsPanel/Content/SfxRow/SfxSlider
@@ -36,6 +41,7 @@ var _base_positions := {}
 
 func _ready() -> void:
 	_ensure_audio_buses()
+	_apply_game_version()
 	_capture_positions()
 	info_panel.visible = false
 	info_button.pressed.connect(_toggle_info_panel)
@@ -58,6 +64,21 @@ func _ready() -> void:
 	call_deferred("_preload_collection_cache")
 
 
+func _apply_game_version() -> void:
+	if is_instance_valid(version_label):
+		version_label.text = game_version
+
+	if is_instance_valid(info_text):
+		# Bilgi panelindeki en alt sürüm satırını dinamik senkronize eder
+		var bbcode := info_text.text
+		var old_ver_pattern := "Smile Games — Afterjam Remaster Edition 2.0"
+		if bbcode.contains(old_ver_pattern):
+			info_text.text = bbcode.replace(
+				"( Devbuild 0.0.2)",
+				"( %s )" % game_version
+			)
+
+
 func _ensure_audio_buses() -> void:
 	if AudioServer.get_bus_index(MUSIC_BUS) < 0:
 		var idx := AudioServer.bus_count
@@ -70,8 +91,9 @@ func _ensure_audio_buses() -> void:
 
 
 func _capture_positions() -> void:
-	for node in [info_panel, settings_panel, title_box, menu_buttons, subtitle_label, exit_button, sunan_label]:
-		_base_positions[node] = node.position
+	for node in [info_panel, settings_panel, title_box, menu_buttons, subtitle_label, exit_button, sunan_label, version_label]:
+		if is_instance_valid(node):
+			_base_positions[node] = node.position
 
 
 func _play_entrance_animation() -> void:
@@ -83,6 +105,8 @@ func _play_entrance_animation() -> void:
 		_fade_in(buttons[i], 0.08 * i)
 	_fade_in(exit_button, 0.6)
 	_fade_in(sunan_label, 0.7)
+	if is_instance_valid(version_label):
+		_fade_in(version_label, 0.7)
 
 
 func _animate_enter(control: Control, from: Vector2, duration: float) -> void:
