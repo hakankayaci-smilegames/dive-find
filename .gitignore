@@ -4,7 +4,12 @@
 # Export/publish builds
 build/
 export/
-
+*.exe
+*.pck
+*.x86_64
+*.apk
+*.dmg
+*.app
 
 # OS junk
 .DS_Store

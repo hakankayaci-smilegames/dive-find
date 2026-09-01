@@ -155,7 +155,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
-game_version = "Dev 0.0.2(Afterjam Remaster)"
+game_version = "Dev 0.0.2(Afterjam Remaster)S"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
