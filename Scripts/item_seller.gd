@@ -17,6 +17,7 @@ extends CanvasLayer
 @onready var value_label: Label = $MainPanel/DetailPanel/ValueLabel
 @onready var desc_label: Label = $MainPanel/DetailPanel/DescLabel
 @onready var sell_button: Button = $MainPanel/DetailPanel/SellButton
+@onready var sell_all_button: Button = $MainPanel/DetailPanel/SellAllButton
 @onready var texture_rect: TextureRect = $MainPanel/TextureRect
 @onready var title_label_2: Label = $MainPanel/TitleLabel2
 var _selected_item: ItemData = null
@@ -27,6 +28,8 @@ func _ready() -> void:
 	title_label.text = shop_title
 	close_button.pressed.connect(queue_free)
 	sell_button.pressed.connect(_on_sell_pressed)
+	if is_instance_valid(sell_all_button):
+		sell_all_button.pressed.connect(_on_sell_all_pressed)
 
 	# isOE değerine göre resim ve label görünürlüğünü ayarla
 	texture_rect.visible = isOE
@@ -60,7 +63,7 @@ func _get_filtered_items() -> Array:
 
 	var filtered: Array = []
 	for item in GlobalInventory.collected_items:
-		if item.is_special:
+		if item and item.get("category") == "Special":
 			filtered.append(item)
 	return filtered
 
@@ -76,6 +79,7 @@ func _populate_list() -> void:
 		child.queue_free()
 
 	var items := _get_filtered_items()
+	var total_sell_value: int = 0
 
 	for item_data in items:
 		if slot_scene:
@@ -83,6 +87,14 @@ func _populate_list() -> void:
 			grid_container.add_child(slot_instance)
 			slot_instance.setup(item_data)
 			slot_instance.slot_clicked.connect(_on_item_selected)
+		total_sell_value += _get_sell_price(item_data)
+
+	if is_instance_valid(sell_all_button):
+		sell_all_button.disabled = items.is_empty()
+		if items.is_empty():
+			sell_all_button.text = "HEPSİNİ SAT"
+		else:
+			sell_all_button.text = "HEPSİNİ SAT (%d Zurna)" % total_sell_value
 
 	# Seçili eşya listeden çıktıysa (satıldıysa/filtreye artık uymuyorsa) detay panelini temizle
 	if _selected_item and not items.has(_selected_item):
@@ -102,16 +114,15 @@ func _on_item_selected(data: ItemData) -> void:
 	var sell_price: int = _get_sell_price(data)
 	value_label.text = "Satış Fiyatı: %d Zurna" % sell_price
 
-	var rarity_text = ""
-	match data.get("rarity"):
-		0: rarity_text = "Enderlik: Yaygın"
-		1: rarity_text = "Enderlik: Nadir"
-		2: rarity_text = "Enderlik: Çok Nadir"
-		3: rarity_text = "Enderlik: Destansı"
-		4: rarity_text = "Enderlik: Efsanevi"
-		5: rarity_text = "Enderlik: Mistik"
-		_: rarity_text = "Enderlik: Bilinmeyen"
-	rarity_label.text = rarity_text
+	var category_text := ""
+	match data.get("category"):
+		"Trash": category_text = "Kategori: Çöp"
+		"Resource": category_text = "Kategori: Ham Madde"
+		"Rare Found": category_text = "Kategori: Nadir Buluntu"
+		"Special": category_text = "Kategori: Özel"
+		"Valuable": category_text = "Kategori: Değerli"
+		_: category_text = "Kategori: Bilinmeyen"
+	rarity_label.text = category_text
 
 	sell_button.disabled = false
 	sell_button.text = "SAT (%d Zurna)" % sell_price
@@ -123,10 +134,24 @@ func _on_sell_pressed() -> void:
 
 	var sell_price: int = _get_sell_price(_selected_item)
 
-	# Not: remove_item() -> inventory_updated sinyalini tetikler -> _populate_list()
-	# otomatik çalışır ve seçili eşya listede kalmadığı için detay paneli de otomatik temizlenir.
 	if GlobalInventory.remove_item(_selected_item):
 		GlobalEconomy.add_money(sell_price)
+		GlobalSoundManager.play_sfx("sell")
+
+
+func _on_sell_all_pressed() -> void:
+	var items_to_sell: Array = _get_filtered_items().duplicate()
+	if items_to_sell.is_empty():
+		return
+
+	var total_income: int = 0
+	for item in items_to_sell:
+		total_income += _get_sell_price(item)
+		GlobalInventory.remove_item(item)
+
+	GlobalEconomy.add_money(total_income)
+	GlobalSoundManager.play_sfx("sell")
+	_clear_details()
 
 
 func _on_sell_button_pressed() -> void:

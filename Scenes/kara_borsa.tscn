@@ -85,10 +85,7 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel_dark")
 [node name="TitleLabel" parent="MainPanel" index="0" unique_id=55062602]
 theme_override_colors/font_color = Color(0.9, 0.32, 0.25, 1)
 
-[node name="TitleLabel2" parent="MainPanel" index="1" unique_id=663085994]
-visible = false
-
-[node name="CloseButton" parent="MainPanel" index="2" unique_id=979415548]
+[node name="CloseButton" parent="MainPanel" index="1" unique_id=979415548]
 anchors_preset = -1
 anchor_left = 0.97400004
 anchor_top = 0.024
@@ -97,23 +94,22 @@ anchor_bottom = 0.024
 offset_left = -39.80005
 offset_top = 0.0
 offset_right = 0.19995117
-offset_bottom = 50.0
 
-[node name="ScrollContainer" parent="MainPanel" index="3" unique_id=951052727]
+[node name="ScrollContainer" parent="MainPanel" index="2" unique_id=951052727]
 offset_top = 68.0
 offset_right = -450.0
 
 [node name="GridContainer" parent="MainPanel/ScrollContainer" index="0" unique_id=850747675]
 columns = 4
 
-[node name="DetailPanel" parent="MainPanel" index="4" unique_id=342245798]
+[node name="DetailPanel" parent="MainPanel" index="3" unique_id=342245798]
 anchors_preset = -1
 anchor_left = 0.97
 anchor_top = 0.95600003
 anchor_right = 0.97
 anchor_bottom = 0.95600003
 offset_left = -425.0
-offset_top = -235.0
+offset_top = -312.60004
 offset_right = 0.0
 offset_bottom = 0.0
 grow_horizontal = 0
@@ -148,14 +144,27 @@ offset_right = 410.0
 offset_bottom = 165.0
 
 [node name="SellButton" parent="MainPanel/DetailPanel" index="5" unique_id=1932424913]
-offset_left = 20.0
-offset_top = 175.0
-offset_right = 410.0
-offset_bottom = 210.0
+offset_left = 18.0
+offset_top = 215.0
+offset_right = 408.0
+offset_bottom = 252.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_sell_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_sell_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_sell_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_sell_focus")
 
-[node name="TextureRect" parent="MainPanel" index="5" unique_id=1401976274]
+[node name="SellAllButton" parent="MainPanel/DetailPanel" index="6" unique_id=1932424914]
+offset_left = 18.0
+offset_top = 260.0
+offset_right = 408.0
+offset_bottom = 297.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_sell_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_sell_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_sell_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_sell_focus")
+
+[node name="TextureRect" parent="MainPanel" index="4" unique_id=1401976274]
+visible = false
+
+[node name="TitleLabel2" parent="MainPanel" index="5" unique_id=663085994]
 visible = false

@@ -13,3 +13,7 @@
 - Godot 4.x 2D, statik tipli GDScript.
 - Veri odaklı `.tres` Resource mimarisi.
 - CachyOS Linux ortamı, net ve doğrudan iletişim tarzı ("kanka"), sıfır laf kalabalığı (zero fluff).
+
+## 4. Proje Dokümantasyonu & Mimari Senkronizasyonu (Architecture Sync)
+- Yeni projeye başlandığında veya mimari yapının kavranması gerektiğinde, tüm `.tscn`, `.tres`, `.gd` ve yapılandırma dosyalarını okuyarak bağlantıları açıklayan bir `PROJECT_ARCHITECTURE.md` oluşturmayı öner veya oluştur.
+- Projede kod, sahne, resource veya mekanik değişikliği yapıldığında; `PROJECT_ARCHITECTURE.md` dokümanını zorunlu olarak senkronize ve güncel tut.

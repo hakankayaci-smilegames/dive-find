@@ -221,9 +221,9 @@ autowrap_mode = 3
 [node name="SellButton" type="Button" parent="MainPanel/DetailPanel" unique_id=1932424913]
 layout_mode = 0
 offset_left = 560.0
-offset_top = 65.0
+offset_top = 35.0
 offset_right = 710.0
-offset_bottom = 100.0
+offset_bottom = 75.0
 theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
@@ -236,6 +236,26 @@ theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
 theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
 disabled = true
 text = "SAT"
+
+[node name="SellAllButton" type="Button" parent="MainPanel/DetailPanel" unique_id=1932424914]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 85.0
+offset_right = 710.0
+offset_bottom = 135.0
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.75, 0.72, 0.65, 0.8)
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+disabled = true
+text = "HEPSİNİ SAT"
+autowrap_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="MainPanel" unique_id=1401976274]
 layout_mode = 1

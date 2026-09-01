@@ -4,6 +4,7 @@ extends CanvasLayer
 ## burada donma olmaz).
 
 @export var slot_scene: PackedScene  # res://Scenes/collection_slot.tscn
+@export var popup_scene: PackedScene = preload("res://Scenes/pickup.tscn")
 
 @onready var grid_container: GridContainer = $MainPanel/ScrollContainer/GridContainer
 @onready var close_button: Button = $MainPanel/CloseButton
@@ -21,6 +22,14 @@ func _ready() -> void:
 		GlobalInventory.collection_updated.connect(_populate_grid)
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_ESCAPE, KEY_E, KEY_I, KEY_TAB:
+				queue_free()
+				get_viewport().set_input_as_handled()
+
+
 func _populate_grid() -> void:
 	for child in grid_container.get_children():
 		child.queue_free()
@@ -32,12 +41,13 @@ func _populate_grid() -> void:
 	var all_items := GlobalInventory.get_all_items()
 	var discovered_count := 0
 	for item in all_items:
-		var slot = slot_scene.instantiate()
+		var slot = slot_scene.instantiate() as CollectionSlot
 		grid_container.add_child(slot)
 		var is_discovered: bool = GlobalInventory.discovered_items.has(item.resource_path)
 		if is_discovered:
 			discovered_count += 1
 		slot.setup(item, is_discovered)
+		slot.slot_clicked.connect(_on_slot_clicked)
 
 	var total := all_items.size()
 	if progress_label:
@@ -47,3 +57,13 @@ func _populate_grid() -> void:
 		progress_bar.value = discovered_count
 	if progress_bar_text:
 		progress_bar_text.text = "%d / %d" % [discovered_count, total]
+
+
+func _on_slot_clicked(item: ItemData) -> void:
+	if not popup_scene or not item:
+		return
+
+	GlobalSoundManager.play_sfx("click")
+	var popup = popup_scene.instantiate()
+	get_tree().current_scene.add_child(popup)
+	popup.setup(item, null, true)

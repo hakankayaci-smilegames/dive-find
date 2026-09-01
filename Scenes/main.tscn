@@ -307,7 +307,7 @@ theme_override_constants/outline_size = 4
 theme_override_constants/shadow_outline_size = 3
 theme_override_font_sizes/font_size = 25
 
-[node name="ss" type="Node2D" parent="." unique_id=107703476]
+[node name="ItemSpawner" type="Node2D" parent="." unique_id=107703476]
 script = ExtResource("1_jkdf5")
 map_manager = NodePath("../MapMaker")
 item_pool = Array[PackedScene]([ExtResource("7_kltya"), ExtResource("8_e08e2"), ExtResource("9_bv80c"), ExtResource("10_ptfg5"), ExtResource("11_2daye"), ExtResource("12_1semv"), ExtResource("13_2060n"), ExtResource("14_6ml46"), ExtResource("15_qax2n"), ExtResource("16_y86h7"), ExtResource("17_my4ki"), ExtResource("18_lx3vj"), ExtResource("19_ynmfv"), ExtResource("20_cblf0"), ExtResource("21_nay3j"), ExtResource("22_ovafv"), ExtResource("23_owhal"), ExtResource("24_uv6w5"), ExtResource("25_r7bbj"), ExtResource("26_e5peh"), ExtResource("27_f6rfp"), ExtResource("28_sasc4"), ExtResource("29_pfx1i"), ExtResource("30_fg68e"), ExtResource("31_jekl6"), ExtResource("32_v1mrv"), ExtResource("33_fd3ed"), ExtResource("34_qnggo"), ExtResource("35_tab3y"), ExtResource("36_1tvlp")])

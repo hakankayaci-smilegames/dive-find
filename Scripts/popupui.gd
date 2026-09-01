@@ -2,6 +2,7 @@ extends CanvasLayer
 
 var _item_data: Resource
 var _physical_item: Node2D
+var _is_preview_mode: bool = false
 
 @onready var backdrop: ColorRect = $Backdrop
 @onready var card_panel: PanelContainer = $Backdrop/CardPanel
@@ -74,18 +75,31 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
-		match event.keycode:
-			KEY_E, KEY_SPACE, KEY_ENTER:
-				_on_pickup_pressed()
-				get_viewport().set_input_as_handled()
-			KEY_ESCAPE:
-				_on_close_pressed()
-				get_viewport().set_input_as_handled()
+		if _is_preview_mode:
+			match event.keycode:
+				KEY_ESCAPE, KEY_E, KEY_SPACE, KEY_ENTER:
+					_on_close_pressed()
+					get_viewport().set_input_as_handled()
+		else:
+			match event.keycode:
+				KEY_E, KEY_SPACE, KEY_ENTER:
+					_on_pickup_pressed()
+					get_viewport().set_input_as_handled()
+				KEY_ESCAPE:
+					_on_close_pressed()
+					get_viewport().set_input_as_handled()
 
 
-func setup(data: Resource, physical_item: Node2D) -> void:
+func setup(data: Resource, physical_item: Node2D = null, preview_mode: bool = false) -> void:
 	_item_data = data
 	_physical_item = physical_item
+	_is_preview_mode = preview_mode
+
+	if _is_preview_mode:
+		if is_instance_valid(pickup_button):
+			pickup_button.visible = false
+		if is_instance_valid(close_button):
+			close_button.text = "KAPAT [ESC]"
 
 	if not _item_data:
 		return
@@ -128,6 +142,8 @@ func setup(data: Resource, physical_item: Node2D) -> void:
 
 
 func _refresh_pickup_state() -> void:
+	if _is_preview_mode:
+		return
 	if not is_instance_valid(pickup_button):
 		return
 
@@ -186,4 +202,3 @@ func _animate_and_close() -> void:
 func _exit_tree() -> void:
 	if GlobalInventory.inventory_updated.is_connected(_refresh_pickup_state):
 		GlobalInventory.inventory_updated.disconnect(_refresh_pickup_state)
-
