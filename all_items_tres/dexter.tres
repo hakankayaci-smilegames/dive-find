@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://c4l0qx2iomauu"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_m80mo"]
+[ext_resource type="Texture2D" uid="uid://ci1xt6kniajoq" path="res://items_diver/Sprites new/bicak.png" id="2_smkh6"]
+
+[resource]
+script = ExtResource("1_m80mo")
+item_name = "Kanlı Bıçak?"
+sprite = ExtResource("2_smkh6")
+description = "Denize bıçak atmışlar? Bekle o üstündeki....kan mı?...kenarında az okunur bişey kazılı....\"Dexter Morgan\""
+rarity = 6
+value = 4000
+category = "Special"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

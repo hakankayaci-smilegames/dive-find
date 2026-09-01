@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bydga5nl54b2b"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_thmi3"]
+[ext_resource type="Texture2D" uid="uid://6pwqgdgippwo" path="res://items_diver/Sprites new/kasli_zenci.png" id="2_o2cam"]
+
+[resource]
+script = ExtResource("1_thmi3")
+item_name = "Kaslı Adam "
+sprite = ExtResource("2_o2cam")
+description = "Lan ben bukadar ekipman kullanıyorum adam gelmiş burda yatıyor... Reis nabıyon ya!!(para eder bu, kaslıymış)"
+rarity = 6
+value = 9500
+category = "Special"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

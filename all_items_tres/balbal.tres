@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cktgu41wqjety"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_yntc4"]
+[ext_resource type="Texture2D" uid="uid://b2xxw60ycyte3" path="res://items_diver/Sprites new/heykel.png" id="2_cegq4"]
+
+[resource]
+script = ExtResource("1_yntc4")
+item_name = "Taş Heykel"
+sprite = ExtResource("2_cegq4")
+description = "Bune la....balbal? uuuuuuuuweeeeeoooooooooaaaaa"
+rarity = 5
+value = 5000
+category = "Special"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

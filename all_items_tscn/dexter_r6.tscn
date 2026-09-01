@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bw5gtsku1n8ko"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_cg1wu"]
+[ext_resource type="Resource" uid="uid://c4l0qx2iomauu" path="res://all_items_tres/dexter.tres" id="2_16hym"]
+[ext_resource type="Texture2D" uid="uid://ci1xt6kniajoq" path="res://items_diver/Sprites new/bicak.png" id="3_qc1a7"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_cg1wu")]
+item_data = ExtResource("2_16hym")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(-1.990704, 3.756056)
+scale = Vector2(0.141972, 0.141972)
+texture = ExtResource("3_qc1a7")

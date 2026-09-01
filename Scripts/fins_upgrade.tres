@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="EquipmentUpgradeData" format=3 uid="uid://4mnacb6gv17k"]
+
+[ext_resource type="Texture2D" uid="uid://dsygmr1m6g3hd" path="res://Sprites/palet.png" id="1_58xbu"]
+[ext_resource type="Script" uid="uid://12td2mlom8vk" path="res://Scripts/EquipmentUpgradeData.gd" id="1_data"]
+
+[resource]
+script = ExtResource("1_data")
+display_name = "Palet"
+icon = ExtResource("1_58xbu")
+stat_key = "fins_level"
+description = "Karakter hızı artar"

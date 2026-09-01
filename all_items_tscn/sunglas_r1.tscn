@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://6e0vgurakujr"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_s2h3t"]
+[ext_resource type="Resource" uid="uid://bvxti4wuhu1ly" path="res://all_items_tres/sunglas.tres" id="2_zr685"]
+[ext_resource type="Texture2D" uid="uid://injg2mod43jv" path="res://items_diver/Sprites new/gunes_gozlugu.png" id="3_2fc1u"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_s2h3t")]
+item_data = ExtResource("2_zr685")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(0.819243, -5.733754)
+scale = Vector2(0.155205, 0.155205)
+texture = ExtResource("3_2fc1u")

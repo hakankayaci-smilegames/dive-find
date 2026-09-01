@@ -1,0 +1,267 @@
+[gd_scene format=3 uid="uid://vdjhdig54wo8"]
+
+[ext_resource type="Script" uid="uid://cs8x0qj1toc1a" path="res://Scripts/item_seller.gd" id="1_seller_script"]
+[ext_resource type="PackedScene" uid="uid://d1xwx6h3thsbl" path="res://Scenes/inventory_slot.tscn" id="2_slot_scene"]
+[ext_resource type="Texture2D" uid="uid://vw2m3m1uiv1p" path="res://Sprites/images (2).jpg" id="3_aikwe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.15, 0.1, 0.06, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.85, 0.75, 0.45, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.65, 0.55, 0.3, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.95, 0.85, 0.55, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 0.55, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail"]
+bg_color = Color(0.12, 0.08, 0.04, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_disabled"]
+bg_color = Color(0.4, 0.36, 0.3, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.17, 0.13, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="ItemSeller" type="CanvasLayer" unique_id=896503063]
+script = ExtResource("1_seller_script")
+slot_scene = ExtResource("2_slot_scene")
+
+[node name="MainPanel" type="Panel" parent="." unique_id=1271672358]
+custom_minimum_size = Vector2(900, 600)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -300.0
+offset_right = 450.0
+offset_bottom = 300.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="TitleLabel" type="Label" parent="MainPanel" unique_id=55062602]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 14.0
+offset_right = 500.0
+offset_bottom = 44.0
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 24
+text = "Antikacı"
+
+[node name="CloseButton" type="Button" parent="MainPanel" unique_id=979415548]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "X"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MainPanel" unique_id=951052727]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = -150.0
+offset_bottom = 363.0
+grow_horizontal = 2
+horizontal_scroll_mode = 0
+
+[node name="GridContainer" type="GridContainer" parent="MainPanel/ScrollContainer" unique_id=850747675]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 7
+
+[node name="DetailPanel" type="Panel" parent="MainPanel" unique_id=342245798]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -205.0
+offset_right = -150.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail")
+
+[node name="BigItemImage" type="TextureRect" parent="MainPanel/DetailPanel" unique_id=527821558]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = 155.0
+offset_bottom = 130.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=764419760]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 14.0
+offset_right = 540.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Eşya Seçin..."
+
+[node name="RarityLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=53679915]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 44.0
+offset_right = 540.0
+offset_bottom = 66.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.85)
+text = "-"
+
+[node name="ValueLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=290913151]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 70.0
+offset_right = 540.0
+offset_bottom = 92.0
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+text = "-"
+
+[node name="DescLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=1072968596]
+layout_mode = 0
+offset_left = 175.0
+offset_top = 96.0
+offset_right = 540.0
+offset_bottom = 178.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.9)
+theme_override_font_sizes/font_size = 15
+text = "-"
+autowrap_mode = 3
+
+[node name="SellButton" type="Button" parent="MainPanel/DetailPanel" unique_id=1932424913]
+layout_mode = 0
+offset_left = 560.0
+offset_top = 65.0
+offset_right = 710.0
+offset_bottom = 100.0
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.75, 0.72, 0.65, 0.8)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_button_disabled")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+disabled = true
+text = "SAT"
+
+[node name="TextureRect" type="TextureRect" parent="MainPanel" unique_id=1401976274]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -140.0
+offset_top = 60.0
+offset_right = -15.0
+offset_bottom = 320.0
+grow_horizontal = 0
+texture = ExtResource("3_aikwe")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel2" type="Label" parent="MainPanel" unique_id=663085994]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -140.0
+offset_top = 330.0
+offset_right = -20.0
+offset_bottom = 570.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Hoşgeldin adamım?, bugun ne pazarlık ediyoruz?"
+autowrap_mode = 2

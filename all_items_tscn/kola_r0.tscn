@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://ouo3ra03yoff"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_vu8fi"]
+[ext_resource type="Resource" uid="uid://bg0i0567ecu7m" path="res://all_items_tres/kola.tres" id="2_joyjn"]
+[ext_resource type="Texture2D" uid="uid://dsr08r2cpdeb3" path="res://items_diver/Sprites new/kola.png" id="3_e00v8"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_vu8fi")]
+item_data = ExtResource("2_joyjn")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(2.751613, -7.3)
+scale = Vector2(0.203226, 0.203226)
+texture = ExtResource("3_e00v8")

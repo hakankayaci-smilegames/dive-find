@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://7frg63lojkxa"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_d6fle"]
+[ext_resource type="Resource" uid="uid://4gn4qmhe7l70" path="res://all_items_tres/carkey_bmw.tres" id="2_epzhp"]
+[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://items_diver/Sprites new/araba_anahtari.png" id="3_cf07u"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_d6fle")]
+item_data = ExtResource("2_epzhp")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(0.974448, -4.724921)
+scale = Vector2(0.155205, 0.155205)
+texture = ExtResource("3_cf07u")

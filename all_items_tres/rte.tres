@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bdspv6lrq6pjk"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_qfj3s"]
+[ext_resource type="Texture2D" uid="uid://lxr04gf6oj4e" path="res://items_diver/Sprites new/kitap.png" id="2_dxlfs"]
+
+[resource]
+script = ExtResource("1_qfj3s")
+item_name = "Ekonomi Kitabı"
+sprite = ExtResource("2_dxlfs")
+description = "Meşhur bir ekonomistin kitabıymış, üstünde yüzü var."
+rarity = 2
+value = 75
+category = "Rare Found"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

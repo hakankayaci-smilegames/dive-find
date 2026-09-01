@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://br7kcxcy2kbdt"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_1qwk2"]
+[ext_resource type="Texture2D" uid="uid://cumshla8y56o1" path="res://items_diver/Sprites new/poset.png" id="2_hwdeg"]
+
+[resource]
+script = ExtResource("1_1qwk2")
+item_name = "Poşet"
+sprite = ExtResource("2_hwdeg")
+description = "Klasik.....10iq maymun atmaz şunu denize bi öğrenemedeniz."
+value = 3
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

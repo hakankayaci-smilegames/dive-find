@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cucpdqp7vwfsq"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_0p2bu"]
+[ext_resource type="Texture2D" uid="uid://2vjg8x7j0t0h" path="res://items_diver/Sprites new/altin_sandvik.png" id="2_uhavk"]
+
+[resource]
+script = ExtResource("1_0p2bu")
+item_name = "Altın Kuş Heykeli"
+sprite = ExtResource("2_uhavk")
+description = "O GÜR saçlar da ne öyle! Bu kuş gerçekten heykel olmayı haketmiş gibi görünüyor, eminim Bay Gold buna iyi para verir!"
+rarity = 5
+value = 5000
+category = "Special"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

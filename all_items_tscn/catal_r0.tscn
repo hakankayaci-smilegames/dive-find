@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://0rc3xfrcysps"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_x9j1i"]
+[ext_resource type="Resource" uid="uid://cixd8mqe63jy7" path="res://all_items_tres/catal.tres" id="2_ctxcw"]
+[ext_resource type="Texture2D" uid="uid://cn1w7kihxcfn" path="res://items_diver/Sprites new/catal.png" id="3_npgw9"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_x9j1i")]
+item_data = ExtResource("2_ctxcw")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(1.246196, -1)
+scale = Vector2(0.205435, 0.205435)
+texture = ExtResource("3_npgw9")

@@ -1,0 +1,289 @@
+[gd_scene format=3 uid="uid://cvwlfstop2qkq"]
+
+[ext_resource type="Script" uid="uid://d0j2cjxwqi6pf" path="res://Scripts/popupui.gd" id="1_cya6u"]
+[ext_resource type="Texture2D" uid="uid://cqhn25gtrim2a" path="res://Sprites/icon.svg" id="1_v7u4w"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+bg_color = Color(0.12, 0.08, 0.05, 0.96)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+bg_color = Color(0.18, 0.14, 0.1, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon_slot"]
+bg_color = Color(0.06, 0.04, 0.03, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.6, 0.6, 0.6, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_drop_normal"]
+bg_color = Color(0.18, 0.12, 0.08, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.75, 0.65, 0.4, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_drop_pressed"]
+bg_color = Color(0.1, 0.06, 0.04, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.45, 0.25, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_drop_hover"]
+bg_color = Color(0.28, 0.18, 0.12, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 0.55, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_take_normal"]
+bg_color = Color(0.85, 0.75, 0.45, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_take_pressed"]
+bg_color = Color(0.65, 0.55, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_take_hover"]
+bg_color = Color(0.98, 0.88, 0.58, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_take_disabled"]
+bg_color = Color(0.35, 0.3, 0.25, 0.8)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.16, 0.12, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Pickup" type="CanvasLayer" unique_id=727624084]
+process_mode = 3
+script = ExtResource("1_cya6u")
+
+[node name="Backdrop" type="ColorRect" parent="." unique_id=1100223344]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.45)
+
+[node name="CardPanel" type="PanelContainer" parent="Backdrop" unique_id=800326920]
+custom_minimum_size = Vector2(460, 270)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -230.0
+offset_top = -135.0
+offset_right = 230.0
+offset_bottom = 135.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="MarginContainer" type="MarginContainer" parent="Backdrop/CardPanel" unique_id=141421356]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Backdrop/CardPanel/MarginContainer" unique_id=271828182]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopBar" type="HBoxContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer" unique_id=314159265]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CategoryBadge" type="PanelContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar" unique_id=556677889]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="BadgeMargin" type="MarginContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/CategoryBadge" unique_id=998877665]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 4
+
+[node name="CategoryLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/CategoryBadge/BadgeMargin" unique_id=112233445]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 14
+text = "[ DEĞERLİ ]"
+vertical_alignment = 1
+
+[node name="RarityLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar" unique_id=10998864]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 14
+text = "* Efsanevi"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="CloseButtonSmall" type="Button" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar" unique_id=443322110]
+custom_minimum_size = Vector2(28, 24)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.65, 0.6, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "X"
+flat = true
+
+[node name="ContentHBox" type="HBoxContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer" unique_id=123456789]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="IconFrame" type="PanelContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox" unique_id=987654321]
+custom_minimum_size = Vector2(110, 110)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBoxFlat_icon_slot")
+
+[node name="ItemImage" type="TextureRect" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/IconFrame" unique_id=1849946124]
+layout_mode = 2
+texture = ExtResource("1_v7u4w")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DetailsVBox" type="VBoxContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox" unique_id=543216789]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="NameLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/DetailsVBox" unique_id=1408898010]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 18
+text = "Eşya Adı"
+vertical_alignment = 1
+
+[node name="ValueLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/DetailsVBox" unique_id=1548337820]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
+theme_override_font_sizes/font_size = 14
+text = "Değer: 50 Zurna"
+
+[node name="HSeparator" type="HSeparator" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/DetailsVBox" unique_id=776655443]
+layout_mode = 2
+
+[node name="DescLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/DetailsVBox" unique_id=73423380]
+custom_minimum_size = Vector2(240, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/font_color = Color(0.9, 0.85, 0.8, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "Açıklama metni..."
+autowrap_mode = 3
+
+[node name="ActionsHBox" type="HBoxContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer" unique_id=654321987]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Close" type="Button" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ActionsHBox" unique_id=1125106859]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.9, 0.85, 0.8, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_drop_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_drop_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_drop_hover")
+text = "BIRAK [ESC]"
+
+[node name="Pickup" type="Button" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ActionsHBox" unique_id=2117629892]
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.7, 0.65, 0.6, 0.8)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_take_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_take_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_take_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_take_disabled")
+text = "AL [E]"
+
+[connection signal="gui_input" from="Backdrop" to="." method="_on_backdrop_gui_input"]
+[connection signal="pressed" from="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/CloseButtonSmall" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Backdrop/CardPanel/MarginContainer/VBoxContainer/ActionsHBox/Close" to="." method="_on_close_pressed"]
+[connection signal="pressed" from="Backdrop/CardPanel/MarginContainer/VBoxContainer/ActionsHBox/Pickup" to="." method="_on_pickup_pressed"]

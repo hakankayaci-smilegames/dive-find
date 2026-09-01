@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://u5bhxtpdpff5"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_e8ii4"]
+[ext_resource type="Resource" uid="uid://c61onqjyov0k1" path="res://all_items_tres/ananas.tres" id="2_9kq71"]
+[ext_resource type="Texture2D" uid="uid://cerk5pkb6i120" path="res://items_diver/Sprites new/ananas.png" id="3_n8mtz"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_e8ii4")]
+item_data = ExtResource("2_9kq71")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(1.553918, 1.448903)
+scale = Vector2(0.157994, 0.157994)
+texture = ExtResource("3_n8mtz")

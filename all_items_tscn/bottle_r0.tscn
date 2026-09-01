@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://coawh11aymvr0"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_gdzvg"]
+[ext_resource type="Resource" uid="uid://7s0j1sgcr2on" path="res://all_items_tres/bottle.tres" id="2_pmm82"]
+[ext_resource type="Texture2D" uid="uid://bff6ulm7wqukj" path="res://items_diver/Sprites new/su_sisesi.png" id="3_i1lr3"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_gdzvg")]
+item_data = ExtResource("2_pmm82")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(8.033988, -6.10184)
+scale = Vector2(0.185521, 0.185521)
+texture = ExtResource("3_i1lr3")

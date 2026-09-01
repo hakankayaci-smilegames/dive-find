@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bf3t4vn6p18l3"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_2gu6h"]
+[ext_resource type="Texture2D" uid="uid://c4hw65tmk2ay8" path="res://items_diver/Sprites new/kolye.png" id="2_ja7ns"]
+
+[resource]
+script = ExtResource("1_2gu6h")
+item_name = "İnci Kolye"
+sprite = ExtResource("2_ja7ns")
+description = "Vay be, ne güzel bir kolye, sevgilim ister mi aca-
+pardon ilaçlarımı almalıyım....para eder işte"
+rarity = 2
+value = 100
+category = "Valuable"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://d1xwx6h3thsbl"]
+
+[ext_resource type="Script" uid="uid://ok2bfort2yag" path="res://Scripts/inventory_slot.gd" id="1_slot_script"]
+
+[node name="InventorySlot" type="Button" unique_id=2019150569]
+custom_minimum_size = Vector2(80, 80)
+offset_right = 80.0
+offset_bottom = 80.0
+script = ExtResource("1_slot_script")
+
+[node name="RarityBackground" type="ColorRect" parent="." unique_id=1279445437]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.2, 0.2, 0.2, 0.8)
+
+[node name="ItemIcon" type="TextureRect" parent="." unique_id=1735257777]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 6.0
+offset_top = 6.0
+offset_right = -6.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dxuf42lwnsx2w"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_ph3i3"]
+[ext_resource type="Resource" uid="uid://c5xsh2lv2ucon" path="res://all_items_tres/key.tres" id="2_79u26"]
+[ext_resource type="Texture2D" uid="uid://c3wl1bap15fsv" path="res://items_diver/Sprites new/havali_anahtar.png" id="3_192k4"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_ph3i3")]
+item_data = ExtResource("2_79u26")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(0.708219, -4.106849)
+scale = Vector2(0.172603, 0.172603)
+texture = ExtResource("3_192k4")

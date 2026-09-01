@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://dsunn7hip3xqu"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_4nzdk"]
+[ext_resource type="Resource" uid="uid://bo7mdv0gglpmb" path="res://all_items_tres/bottleofglass.tres" id="2_yayq3"]
+[ext_resource type="Texture2D" uid="uid://dhduqsbwaiwfp" path="res://items_diver/Sprites new/gizemli_sise.png" id="3_s195j"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_4nzdk")]
+item_data = ExtResource("2_yayq3")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(9.178893, -8.062976)
+scale = Vector2(0.174394, 0.174394)
+texture = ExtResource("3_s195j")

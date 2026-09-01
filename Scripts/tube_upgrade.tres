@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EquipmentUpgradeData" format=3 uid="uid://d1vidxh8dwtxo"]
+
+[ext_resource type="Texture2D" uid="uid://dokneaa3ssegb" path="res://Sprites/oksijen_tupu.png" id="1_3lswk"]
+[ext_resource type="Script" uid="uid://12td2mlom8vk" path="res://Scripts/EquipmentUpgradeData.gd" id="1_data"]
+
+[resource]
+script = ExtResource("1_data")
+display_name = "Oksijen Tüpü"
+icon = ExtResource("1_3lswk")
+stat_key = "tube_level"
+description = "Derinlikte oksijen daha yavaş tükenir"
+base_cost = 35
+cost_multiplier = 1.4

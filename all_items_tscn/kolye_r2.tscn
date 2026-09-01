@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bxikvku75usjm"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_088o5"]
+[ext_resource type="Resource" uid="uid://bf3t4vn6p18l3" path="res://all_items_tres/kolye.tres" id="2_or15b"]
+[ext_resource type="Texture2D" uid="uid://c4hw65tmk2ay8" path="res://items_diver/Sprites new/kolye.png" id="3_yvzk3"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_088o5")]
+item_data = ExtResource("2_or15b")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(-2.357114, -1.07738)
+scale = Vector2(0.154759, 0.154759)
+texture = ExtResource("3_yvzk3")

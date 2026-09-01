@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bc4n4848waux7"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_zxoi6"]
+[ext_resource type="Resource" uid="uid://bq2s4sytvmjlh" path="res://all_items_tres/altin_bilezik.tres" id="2_5fdhj"]
+[ext_resource type="Texture2D" uid="uid://ceommhjyls15t" path="res://items_diver/Sprites new/altin_bilezik.png" id="3_k1eyy"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_zxoi6")]
+item_data = ExtResource("2_5fdhj")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(0.733426, -10.559053)
+scale = Vector2(0.205571, 0.205571)
+texture = ExtResource("3_k1eyy")

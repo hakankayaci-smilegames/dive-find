@@ -1,0 +1,161 @@
+[gd_scene format=3 uid="uid://drtt8k8d2axic"]
+
+[ext_resource type="PackedScene" uid="uid://vdjhdig54wo8" path="res://Scenes/item_seller.tscn" id="1_base"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel_dark"]
+bg_color = Color(0.08, 0.05, 0.03, 0.97)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.55, 0.16, 0.1, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_dark"]
+bg_color = Color(0.06, 0.04, 0.03, 0.97)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.55, 0.16, 0.1, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sell_normal"]
+bg_color = Color(0.45, 0.12, 0.08, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sell_pressed"]
+bg_color = Color(0.3, 0.08, 0.06, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sell_hover"]
+bg_color = Color(0.6, 0.18, 0.12, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sell_focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.6, 0.5, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="ItemSeller" unique_id=1804705842 instance=ExtResource("1_base")]
+shop_title = "Kara Borsa"
+only_special = true
+special_multiplier = 1.5
+
+[node name="MainPanel" parent="." index="0" unique_id=1271672358]
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel_dark")
+
+[node name="TitleLabel" parent="MainPanel" index="0" unique_id=55062602]
+theme_override_colors/font_color = Color(0.9, 0.32, 0.25, 1)
+
+[node name="TitleLabel2" parent="MainPanel" index="1" unique_id=663085994]
+visible = false
+
+[node name="CloseButton" parent="MainPanel" index="2" unique_id=979415548]
+anchors_preset = -1
+anchor_left = 0.97400004
+anchor_top = 0.024
+anchor_right = 0.97400004
+anchor_bottom = 0.024
+offset_left = -39.80005
+offset_top = 0.0
+offset_right = 0.19995117
+offset_bottom = 50.0
+
+[node name="ScrollContainer" parent="MainPanel" index="3" unique_id=951052727]
+offset_top = 68.0
+offset_right = -450.0
+
+[node name="GridContainer" parent="MainPanel/ScrollContainer" index="0" unique_id=850747675]
+columns = 4
+
+[node name="DetailPanel" parent="MainPanel" index="4" unique_id=342245798]
+anchors_preset = -1
+anchor_left = 0.97
+anchor_top = 0.95600003
+anchor_right = 0.97
+anchor_bottom = 0.95600003
+offset_left = -425.0
+offset_top = -235.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_detail_dark")
+
+[node name="BigItemImage" parent="MainPanel/DetailPanel" index="0" unique_id=527821558]
+offset_right = 185.0
+offset_bottom = 165.0
+
+[node name="NameLabel" parent="MainPanel/DetailPanel" index="1" unique_id=764419760]
+offset_left = 205.0
+offset_top = 12.0
+offset_right = 410.0
+offset_bottom = 38.0
+
+[node name="RarityLabel" parent="MainPanel/DetailPanel" index="2" unique_id=53679915]
+offset_left = 205.0
+offset_top = 42.0
+offset_right = 410.0
+offset_bottom = 64.0
+
+[node name="ValueLabel" parent="MainPanel/DetailPanel" index="3" unique_id=290913151]
+offset_left = 205.0
+offset_top = 68.0
+offset_right = 410.0
+offset_bottom = 90.0
+
+[node name="DescLabel" parent="MainPanel/DetailPanel" index="4" unique_id=1072968596]
+offset_left = 205.0
+offset_top = 94.0
+offset_right = 410.0
+offset_bottom = 165.0
+
+[node name="SellButton" parent="MainPanel/DetailPanel" index="5" unique_id=1932424913]
+offset_left = 20.0
+offset_top = 175.0
+offset_right = 410.0
+offset_bottom = 210.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_sell_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_sell_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_sell_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_sell_focus")
+
+[node name="TextureRect" parent="MainPanel" index="5" unique_id=1401976274]
+visible = false

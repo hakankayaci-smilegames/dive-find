@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cgtwwapjye3o0"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_7iufv"]
+[ext_resource type="Texture2D" uid="uid://cgl2eucjop6j5" path="res://items_diver/Sprites new/suikast_defteri.png" id="2_y6rs1"]
+
+[resource]
+script = ExtResource("1_7iufv")
+item_name = "Charlie Kirk Assasin Planı"
+sprite = ExtResource("2_y6rs1")
+description = "Hey deri kapaklı bir ajanda....Bekle..BU KİMİN DEFTERİ LAN?..İçinde Charli Kirkin Suikast planı var....FBI bunun için çok zurna verir!."
+rarity = 5
+value = 7500
+category = "Special"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

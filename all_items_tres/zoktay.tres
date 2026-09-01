@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://du6pi2i53n3pv"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_ab64v"]
+[ext_resource type="Texture2D" uid="uid://e7n112n40jl1" path="res://items_diver/Sprites new/zeynebin_boyasi.png" id="2_qf03g"]
+
+[resource]
+script = ExtResource("1_ab64v")
+item_name = "Zoktayın Saç Renginde Boya"
+sprite = ExtResource("2_qf03g")
+description = "Aha buney la?...Aaa kullanılmış saç boyası, tamda Zoktayın renginde,(at cebe kullanırız dibinde varsa)"
+rarity = 2
+value = 32
+category = "Rare Found"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

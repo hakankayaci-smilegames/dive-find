@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bo7mdv0gglpmb"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_xtqqy"]
+[ext_resource type="Texture2D" uid="uid://dhduqsbwaiwfp" path="res://items_diver/Sprites new/gizemli_sise.png" id="2_xbt5o"]
+
+[resource]
+script = ExtResource("1_xtqqy")
+item_name = "Gizemli Şişe"
+sprite = ExtResource("2_xbt5o")
+description = "Anaa buney la?..içinde kağıt var..dur bakim neymiş...
+(kağıdı açar) adam nah çizmiş lan....napıyon kıtalar arası gif mi atıyon ya"
+rarity = 5
+value = 100
+category = "Valuable"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

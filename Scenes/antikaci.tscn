@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://ct77y8qdyllvr"]
+
+[ext_resource type="PackedScene" uid="uid://vdjhdig54wo8" path="res://Scenes/item_seller.tscn" id="1_base"]
+
+[node name="ItemSeller" unique_id=204131774 instance=ExtResource("1_base")]
+isOE = true
+special_multiplier = 0.25
+
+[connection signal="pressed" from="MainPanel/DetailPanel/SellButton" to="." method="_on_sell_button_pressed"]

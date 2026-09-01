@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://vrtxd5vh3043"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_aedoe"]
+[ext_resource type="Resource" uid="uid://cktgu41wqjety" path="res://all_items_tres/balbal.tres" id="2_cve6p"]
+[ext_resource type="Texture2D" uid="uid://b2xxw60ycyte3" path="res://items_diver/Sprites new/heykel.png" id="3_r5n8i"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_aedoe")]
+item_data = ExtResource("2_cve6p")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(6.187151, -1.281564)
+scale = Vector2(0.140782, 0.140782)
+texture = ExtResource("3_r5n8i")

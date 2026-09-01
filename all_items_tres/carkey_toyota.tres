@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://capevhjsl0wss"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_svbmv"]
+[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://items_diver/Sprites new/araba_anahtari.png" id="2_nnhig"]
+
+[resource]
+script = ExtResource("1_svbmv")
+item_name = "Toyata Anahtarı"
+sprite = ExtResource("2_nnhig")
+description = "Sıradan bir Toyota Corollanın Anahtarı, araba olsa neyse de, anahtarın anca plastiğini kemirirler..."
+rarity = 2
+value = 25
+category = "Rare Found"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

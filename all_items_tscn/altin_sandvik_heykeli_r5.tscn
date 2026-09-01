@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://b5v543s0w2op7"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_3aq6l"]
+[ext_resource type="Resource" uid="uid://cucpdqp7vwfsq" path="res://all_items_tres/altin_sandvik_heykeli.tres" id="2_6gt6m"]
+[ext_resource type="Texture2D" uid="uid://2vjg8x7j0t0h" path="res://items_diver/Sprites new/altin_sandvik.png" id="3_jxk87"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_3aq6l")]
+item_data = ExtResource("2_6gt6m")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(8.71532, -3.24575)
+scale = Vector2(0.154879, 0.154879)
+texture = ExtResource("3_jxk87")

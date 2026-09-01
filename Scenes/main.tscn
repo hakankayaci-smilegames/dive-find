@@ -1,0 +1,358 @@
+[gd_scene format=3 uid="uid://byplr0iu7air6"]
+
+[ext_resource type="Script" uid="uid://c3w7s8eo5dpc8" path="res://Scripts/player_controller.gd" id="1_bo1nx"]
+[ext_resource type="Script" uid="uid://bmyvhtbd5ucrr" path="res://Scripts/canvas_layer.gd" id="1_ee4r6"]
+[ext_resource type="Texture2D" uid="uid://cqhn25gtrim2a" path="res://Sprites/icon.svg" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://6ohp1hkfoqw7" path="res://Scripts/item_spawner.gd" id="1_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://dr1s8h1754al" path="res://Scenes/inventory.tscn" id="2_gt3je"]
+[ext_resource type="Script" uid="uid://cpqichuujekfq" path="res://Scripts/depth.gd" id="3_3pmx8"]
+[ext_resource type="Script" uid="uid://ca8rnlu58thx" path="res://Scripts/map_maker.gd" id="3_8gbba"]
+[ext_resource type="PackedScene" path="res://Scenes/loading_screen.tscn" id="3_loading"]
+[ext_resource type="PackedScene" uid="uid://d0gcvvqn2n874" path="res://Scenes/office_menu.tscn" id="3_u50mg"]
+[ext_resource type="Texture2D" uid="uid://b32d7g2ddahnw" path="res://Sprites/sky.png" id="4_jjvhh"]
+[ext_resource type="Texture2D" uid="uid://b27bdcio2wc8k" path="res://Sprites/lvl0.png" id="5_6iyac"]
+[ext_resource type="Texture2D" uid="uid://pebmn50nwehb" path="res://Sprites/lvl1.png" id="6_fdnlq"]
+[ext_resource type="Texture2D" uid="uid://5le36hn68lqy" path="res://Sprites/lvl2.png" id="7_jkdf5"]
+[ext_resource type="PackedScene" uid="uid://coawh11aymvr0" path="res://all_items_tscn/bottle_r0.tscn" id="7_kltya"]
+[ext_resource type="PackedScene" uid="uid://0rc3xfrcysps" path="res://all_items_tscn/catal_r0.tscn" id="8_e08e2"]
+[ext_resource type="Texture2D" uid="uid://bqcru8xhtq601" path="res://Sprites/lvl3.png" id="8_wsu2k"]
+[ext_resource type="PackedScene" uid="uid://cpo2ogihcktxq" path="res://all_items_tscn/eatenbook_r0.tscn" id="9_bv80c"]
+[ext_resource type="Texture2D" uid="uid://oogywma0pc4r" path="res://Sprites/lvl4.png" id="9_k12tt"]
+[ext_resource type="Texture2D" uid="uid://cu4ajcw6i5cbt" path="res://Sprites/lvl5.png" id="10_h1bgf"]
+[ext_resource type="PackedScene" uid="uid://ouo3ra03yoff" path="res://all_items_tscn/kola_r0.tscn" id="10_ptfg5"]
+[ext_resource type="PackedScene" uid="uid://bih84b60x6l8g" path="res://all_items_tscn/monster_r0.tscn" id="11_2daye"]
+[ext_resource type="Texture2D" uid="uid://bpld0a1gcksfe" path="res://Sprites/lvl6.png" id="11_b3802"]
+[ext_resource type="PackedScene" uid="uid://cr3oxgjr0wh7d" path="res://all_items_tscn/nahtarlık_r0.tscn" id="12_1semv"]
+[ext_resource type="Texture2D" uid="uid://c5rm22kxdktkw" path="res://Sprites/lvl7.png" id="12_fevyy"]
+[ext_resource type="PackedScene" uid="uid://dsu7ct2r6eprt" path="res://all_items_tscn/pepsi_r0.tscn" id="13_2060n"]
+[ext_resource type="Texture2D" uid="uid://c8qrl05qfo2mb" path="res://Sprites/ground.png" id="13_fdnlq"]
+[ext_resource type="PackedScene" uid="uid://568oejjer2ty" path="res://all_items_tscn/posey_r0.tscn" id="14_6ml46"]
+[ext_resource type="PackedScene" uid="uid://6e0vgurakujr" path="res://all_items_tscn/sunglas_r1.tscn" id="15_qax2n"]
+[ext_resource type="PackedScene" uid="uid://r6p717vr0ge8" path="res://all_items_tscn/snokel_r1.tscn" id="16_y86h7"]
+[ext_resource type="PackedScene" uid="uid://u5bhxtpdpff5" path="res://all_items_tscn/ananas_r1.tscn" id="17_my4ki"]
+[ext_resource type="PackedScene" uid="uid://bc4n4848waux7" path="res://all_items_tscn/altin_bilezik_r2.tscn" id="18_lx3vj"]
+[ext_resource type="PackedScene" uid="uid://u8wu5whngvqx" path="res://all_items_tscn/carkey_toyota_r2.tscn" id="19_ynmfv"]
+[ext_resource type="PackedScene" uid="uid://bxikvku75usjm" path="res://all_items_tscn/kolye_r2.tscn" id="20_cblf0"]
+[ext_resource type="PackedScene" uid="uid://s442vldq4he0" path="res://all_items_tscn/rte_r2.tscn" id="21_nay3j"]
+[ext_resource type="PackedScene" uid="uid://tr6xjnlvfkqj" path="res://all_items_tscn/zoktay_r2.tscn" id="22_ovafv"]
+[ext_resource type="PackedScene" uid="uid://b21e27bgn38b1" path="res://all_items_tscn/adminhat_r3.tscn" id="23_owhal"]
+[ext_resource type="PackedScene" uid="uid://7frg63lojkxa" path="res://all_items_tscn/carkey_bmw_r3.tscn" id="24_uv6w5"]
+[ext_resource type="PackedScene" uid="uid://donujcol57knb" path="res://all_items_tscn/kamera_r3.tscn" id="25_r7bbj"]
+[ext_resource type="PackedScene" uid="uid://dxuf42lwnsx2w" path="res://all_items_tscn/key_r3.tscn" id="26_e5peh"]
+[ext_resource type="Texture2D" uid="uid://dk3q7k7vm4tjh" path="res://item_sprites/Sprites new/yuzme1.png" id="27_e08e2"]
+[ext_resource type="PackedScene" uid="uid://678erttt1u81" path="res://all_items_tscn/carkey_mercedes_r4.tscn" id="27_f6rfp"]
+[ext_resource type="Texture2D" uid="uid://divf0idak2mdn" path="res://item_sprites/Sprites new/yuzme2.png" id="28_neg2b"]
+[ext_resource type="PackedScene" uid="uid://dsunn7hip3xqu" path="res://all_items_tscn/bottleofglass_r5.tscn" id="28_sasc4"]
+[ext_resource type="PackedScene" uid="uid://blnp1me5d6co4" path="res://all_items_tscn/ak47_r5.tscn" id="29_pfx1i"]
+[ext_resource type="Texture2D" uid="uid://dj4j535cu6745" path="res://item_sprites/Sprites new/yuzme3.png" id="29_r33sp"]
+[ext_resource type="PackedScene" uid="uid://vrtxd5vh3043" path="res://all_items_tscn/balbal_r5.tscn" id="30_fg68e"]
+[ext_resource type="Texture2D" uid="uid://gaalp22qkj6e" path="res://item_sprites/Sprites new/yuzme4.png" id="30_hdf80"]
+[ext_resource type="PackedScene" uid="uid://dgdt3gjyutgjn" path="res://all_items_tscn/MJ_r5.tscn" id="31_jekl6"]
+[ext_resource type="Texture2D" uid="uid://cy65y2iholuqw" path="res://item_sprites/Sprites new/yuzme5.png" id="31_jwpg7"]
+[ext_resource type="Texture2D" uid="uid://cctmlwrinsqpk" path="res://item_sprites/Sprites new/yuzme6.png" id="32_k2e45"]
+[ext_resource type="PackedScene" uid="uid://cdac2nr3isg7y" path="res://all_items_tscn/charlie_r5.tscn" id="32_v1mrv"]
+[ext_resource type="PackedScene" uid="uid://b5v543s0w2op7" path="res://all_items_tscn/altin_sandvik_heykeli_r5.tscn" id="33_fd3ed"]
+[ext_resource type="PackedScene" uid="uid://cx2hc64oty0i8" path="res://all_items_tscn/nahtarlıkplus_r6.tscn" id="34_qnggo"]
+[ext_resource type="PackedScene" uid="uid://bw5gtsku1n8ko" path="res://all_items_tscn/dexter_r6.tscn" id="35_tab3y"]
+[ext_resource type="PackedScene" uid="uid://beef4gip2br2r" path="res://all_items_tscn/nigrce_r6.tscn" id="36_1tvlp"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status"]
+bg_color = Color(0.15, 0.1, 0.06, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_itt4d"]
+size = Vector2(127, 128)
+
+[node name="Main" type="Node2D" unique_id=1124296121]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "difficulty_spinbox", "collection_toast_label")]
+script = ExtResource("1_ee4r6")
+inventory_scene = ExtResource("2_gt3je")
+invenb = NodePath("Button")
+player_node = NodePath("../Diver")
+depth_label = NodePath("Depth")
+target_scene = ExtResource("3_u50mg")
+loading_scene = ExtResource("3_loading")
+bag_level_label = NodePath("EquipmentPanel/VBox/Bag/Level")
+goggles_level_label = NodePath("EquipmentPanel/VBox/Goggles/Level")
+fins_level_label = NodePath("EquipmentPanel/VBox/Flippers/Level")
+tube_level_label = NodePath("EquipmentPanel/VBox/Tube/Level")
+difficulty_spinbox = NodePath("DifficultyBox/SpinBox")
+collection_toast_label = NodePath("Label")
+office_button_surface_range = 1000.0
+
+[node name="DifficultyBox" type="HBoxContainer" parent="CanvasLayer" unique_id=1015112575]
+visible = false
+offset_left = 20.0
+offset_top = 120.0
+offset_right = 260.0
+offset_bottom = 148.0
+theme_override_constants/separation = 8
+
+[node name="Label" type="Label" parent="CanvasLayer/DifficultyBox" unique_id=2015690335]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+text = "Zorluk:"
+
+[node name="SpinBox" type="SpinBox" parent="CanvasLayer/DifficultyBox" unique_id=976403450]
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+min_value = 0.25
+max_value = 5.0
+step = 0.25
+value = 1.0
+
+[node name="StatusPanel" type="Panel" parent="CanvasLayer" unique_id=160094966]
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 415.0
+offset_bottom = 110.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_status")
+
+[node name="HealthLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=2146428240]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 95.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+text = "CAN:"
+vertical_alignment = 1
+
+[node name="Health" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=268147023]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 15.0
+offset_right = 380.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+value = 100.0
+
+[node name="OxygenLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=1489052818]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 50.0
+offset_right = 95.0
+offset_bottom = 75.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+text = "OKSİJEN:"
+vertical_alignment = 1
+
+[node name="Oxygen" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=1118594691]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 50.0
+offset_right = 380.0
+offset_bottom = 75.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+value = 100.0
+
+[node name="Button" type="Button" parent="CanvasLayer" unique_id=1965632290]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -160.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 75.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 18
+text = "ÇANTA"
+
+[node name="zurna" type="Label" parent="CanvasLayer" unique_id=152403093]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -300.0
+offset_top = 35.0
+offset_right = -180.0
+offset_bottom = 59.0
+grow_horizontal = 0
+text = "9999 ZURNA"
+horizontal_alignment = 2
+
+[node name="Depth" type="Label" parent="CanvasLayer" unique_id=103934392]
+offset_left = 20.0
+offset_top = 587.0
+offset_right = 347.0
+offset_bottom = 610.0
+text = "DERİNLİK:  - 15"
+script = ExtResource("3_3pmx8")
+
+[node name="EquipmentPanel" type="Panel" parent="CanvasLayer" unique_id=2127577143]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -220.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="VBox" type="VBoxContainer" parent="CanvasLayer/EquipmentPanel" unique_id=229736089]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = -15.0
+offset_bottom = -15.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=1715808154]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.301961, 0.85098, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "EKİPMANLAR"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=1969820343]
+layout_mode = 2
+
+[node name="Bag" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=950407019]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Bag" unique_id=484292680]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Çanta:"
+
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Bag" unique_id=1420078453]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+text = "Lvl 1"
+
+[node name="Goggles" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=18039505]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Goggles" unique_id=1155232441]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Gözlük:"
+
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Goggles" unique_id=296157470]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+text = "Lvl 1"
+
+[node name="Flippers" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=1562410588]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Flippers" unique_id=600924533]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Palet:"
+
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Flippers" unique_id=864542962]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+text = "Lvl 1"
+
+[node name="Tube" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=2069411519]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Tube" unique_id=637020991]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Oksijen Tüpü:"
+
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Tube" unique_id=23603963]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+text = "Lvl 1"
+
+[node name="Button2" type="Button" parent="CanvasLayer" unique_id=47944296]
+anchors_preset = -1
+anchor_left = 0.984
+anchor_top = 0.136
+anchor_right = 0.984
+anchor_bottom = 0.136
+offset_left = -140.568
+offset_top = -0.12800598
+offset_right = 0.43200684
+offset_bottom = 50.871994
+text = "Back To Office"
+
+[node name="Label" type="Label" parent="CanvasLayer" unique_id=222879002]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -18.0
+offset_right = 223.0
+offset_bottom = 23.0
+grow_vertical = 2
+theme_override_colors/font_color = Color(1.0149437, 1.014944, 0, 1)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 3
+theme_override_font_sizes/font_size = 25
+
+[node name="ss" type="Node2D" parent="." unique_id=107703476]
+script = ExtResource("1_jkdf5")
+map_manager = NodePath("../MapMaker")
+item_pool = Array[PackedScene]([ExtResource("7_kltya"), ExtResource("8_e08e2"), ExtResource("9_bv80c"), ExtResource("10_ptfg5"), ExtResource("11_2daye"), ExtResource("12_1semv"), ExtResource("13_2060n"), ExtResource("14_6ml46"), ExtResource("15_qax2n"), ExtResource("16_y86h7"), ExtResource("17_my4ki"), ExtResource("18_lx3vj"), ExtResource("19_ynmfv"), ExtResource("20_cblf0"), ExtResource("21_nay3j"), ExtResource("22_ovafv"), ExtResource("23_owhal"), ExtResource("24_uv6w5"), ExtResource("25_r7bbj"), ExtResource("26_e5peh"), ExtResource("27_f6rfp"), ExtResource("28_sasc4"), ExtResource("29_pfx1i"), ExtResource("30_fg68e"), ExtResource("31_jekl6"), ExtResource("32_v1mrv"), ExtResource("33_fd3ed"), ExtResource("34_qnggo"), ExtResource("35_tab3y"), ExtResource("36_1tvlp")])
+base_spawn_chance = 0.2
+global_loot_multiplier = 0.4
+fallback_item_base_size = 128.0
+
+[node name="MapMaker" type="Node2D" parent="." unique_id=1852815472]
+position = Vector2(-34, 680)
+script = ExtResource("3_8gbba")
+player = NodePath("../Diver")
+map_scale = 4.0
+ocean_height_multiplier = 5.0
+surface_offset_y = 420.0
+sky_texture = ExtResource("4_jjvhh")
+ocean_textures = Array[Texture2D]([ExtResource("5_6iyac"), ExtResource("6_fdnlq"), ExtResource("7_jkdf5"), ExtResource("8_wsu2k"), ExtResource("9_k12tt"), ExtResource("10_h1bgf"), ExtResource("11_b3802"), ExtResource("12_fevyy")])
+ground_texture = ExtResource("13_fdnlq")
+
+[node name="Diver" type="CharacterBody2D" parent="." unique_id=1779072544 node_paths=PackedStringArray("health_bar", "oxygen_bar") groups=["player"]]
+position = Vector2(16, 2650)
+script = ExtResource("1_bo1nx")
+difficulty_multiplier = 1.3
+max_speed = 280.0
+acceleration = 400.0
+friction = 200.0
+sink_speed = 100.0
+max_sink_velocity = 500.0
+surface_push_force = 750.0
+base_oxygen_drain_rate = 1.0
+depth_penalty_reference = 90.0
+tube_efficiency_gain = 1.45
+health_drain_low_oxygen = 0.9
+health_drain_no_oxygen = 3.0
+base_backpack_capacity = 7
+fins_speed_per_level = 50.0
+goggles_zoom_min_per_level = 0.02
+health_bar = NodePath("../CanvasLayer/StatusPanel/Health")
+oxygen_bar = NodePath("../CanvasLayer/StatusPanel/Oxygen")
+swim_frames = Array[Texture2D]([ExtResource("27_e08e2"), ExtResource("28_neg2b"), ExtResource("29_r33sp"), ExtResource("30_hdf80"), ExtResource("31_jwpg7"), ExtResource("32_k2e45")])
+
+[node name="Sprite2D" type="Sprite2D" parent="Diver" unique_id=1155294276]
+texture = ExtResource("1_jjgbg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Diver" unique_id=1445236797]
+position = Vector2(0.5, -1)
+shape = SubResource("RectangleShape2D_itt4d")
+
+[connection signal="pressed" from="CanvasLayer/Button2" to="CanvasLayer" method="_on_button_2_pressed"]

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://4oryso1kh4w8"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_i7y17"]
+[ext_resource type="Texture2D" uid="uid://c3swg3lghd1s8" path="res://items_diver/Sprites new/nahtarlık.png" id="2_3thqi"]
+
+[resource]
+script = ExtResource("1_i7y17")
+item_name = "Bronz Anahtarlık"
+sprite = ExtResource("2_3thqi")
+description = "ADAM BRONZDAN YAPMIŞ. vaybe, bunun için bukadar para...bronz nahtarlık.ilginç"
+rarity = 6
+value = 9500
+category = "Special"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

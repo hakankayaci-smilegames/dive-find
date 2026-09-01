@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bskmqsixxr3f"]
+
+[ext_resource type="Script" uid="uid://c178co45r2b5n" path="res://Scripts/interactable_item.gd" id="1_88psv"]
+[ext_resource type="PackedScene" uid="uid://cvwlfstop2qkq" path="res://Scenes/pickup.tscn" id="2_74qy3"]
+[ext_resource type="Texture2D" uid="uid://cqhn25gtrim2a" path="res://Sprites/icon.svg" id="3_puafy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cya6u"]
+size = Vector2(123, 126)
+
+[node name="InteractableItem" type="Area2D" unique_id=774107706]
+script = ExtResource("1_88psv")
+popup_scene = ExtResource("2_74qy3")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=350953833]
+texture = ExtResource("3_puafy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1566096515]
+position = Vector2(-0.5, -1)
+shape = SubResource("RectangleShape2D_cya6u")

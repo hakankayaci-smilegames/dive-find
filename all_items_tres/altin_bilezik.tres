@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bq2s4sytvmjlh"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_q8o17"]
+[ext_resource type="Texture2D" uid="uid://ceommhjyls15t" path="res://items_diver/Sprites new/altin_bilezik.png" id="2_ghlwd"]
+
+[resource]
+script = ExtResource("1_q8o17")
+item_name = "Altın Bilezik"
+sprite = ExtResource("2_ghlwd")
+description = "Kim denize bu güzelcecik altın bileklik ile girip onu düşürme riskine girerki?.....Neyse,bizim oldu"
+rarity = 2
+value = 350
+category = "Valuable"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

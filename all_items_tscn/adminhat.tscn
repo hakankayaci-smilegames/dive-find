@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://bxijx4cr6uulg"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_4g5ps"]
+[ext_resource type="Resource" uid="uid://b3v0e5ntf5f7y" path="res://all_items_tres/adminhat.tres" id="2_j33fk"]
+[ext_resource type="Texture2D" uid="uid://biskr5xwh3c6a" path="res://items_diver/Sprites new/yahudi_sapkasi.png" id="3_3y3jp"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_4g5ps")]
+item_data = ExtResource("2_j33fk")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(12.250024, -25.999996)
+scale = Vector2(0.16679683, 0.15625)
+texture = ExtResource("3_3y3jp")
+
+[node name="CollisionShape2D" parent="." index="1" unique_id=1566096515]
+position = Vector2(9, -25)

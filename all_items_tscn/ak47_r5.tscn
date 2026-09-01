@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://blnp1me5d6co4"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_k3yr9"]
+[ext_resource type="Resource" uid="uid://c2c7df7i6fjla" path="res://all_items_tres/ak47.tres" id="2_oudoc"]
+[ext_resource type="Texture2D" uid="uid://dbg485c2x2438" path="res://items_diver/Sprites new/bukukolmayan_ak47.png" id="3_uzren"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_k3yr9")]
+item_data = ExtResource("2_oudoc")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(2.005335, -10.663434)
+scale = Vector2(0.143162, 0.143162)
+texture = ExtResource("3_uzren")

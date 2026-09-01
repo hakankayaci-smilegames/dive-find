@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://bdqp5h4m3ejvw"]
+
+[ext_resource type="Script" uid="uid://00bdnic7ajca" path="res://Scripts/equstore.gd" id="1_equstore_script"]
+[ext_resource type="PackedScene" path="res://Scenes/equipment_slot.tscn" id="2_vbpum"]
+[ext_resource type="Script" uid="uid://12td2mlom8vk" path="res://Scripts/EquipmentUpgradeData.gd" id="3_lorrf"]
+[ext_resource type="Resource" uid="uid://c5hx2of731bgb" path="res://Scripts/backpack_upgrade.tres" id="4_fojvl"]
+[ext_resource type="Resource" uid="uid://d2bgwwq4x6nyj" path="res://Scripts/goggles_upgrade.tres" id="5_jeuwl"]
+[ext_resource type="Resource" uid="uid://4mnacb6gv17k" path="res://Scripts/fins_upgrade.tres" id="6_ohr5o"]
+[ext_resource type="Resource" uid="uid://d1vidxh8dwtxo" path="res://Scripts/tube_upgrade.tres" id="7_m22qy"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.15, 0.1, 0.06, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+bg_color = Color(0.85, 0.75, 0.45, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+bg_color = Color(0.95, 0.85, 0.55, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
+bg_color = Color(0.65, 0.55, 0.3, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 0.55, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="EquipmentStore" type="CanvasLayer" unique_id=1608507760]
+script = ExtResource("1_equstore_script")
+slot_scene = ExtResource("2_vbpum")
+upgrades = Array[ExtResource("3_lorrf")]([ExtResource("4_fojvl"), ExtResource("5_jeuwl"), ExtResource("6_ohr5o"), ExtResource("7_m22qy")])
+
+[node name="MainPanel" type="Panel" parent="." unique_id=1887603063]
+custom_minimum_size = Vector2(900, 420)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -450.0
+offset_top = -210.0
+offset_right = 450.0
+offset_bottom = 210.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="TitleLabel" type="Label" parent="MainPanel" unique_id=1308879423]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 12.0
+offset_right = 450.0
+offset_bottom = 42.0
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 24
+text = "Ekipman Mağazası"
+
+[node name="SubtitleLabel" type="Label" parent="MainPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 46.0
+offset_right = 600.0
+offset_bottom = 64.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Seviye arttıkça dalış gücün artar"
+
+[node name="CloseButton" type="Button" parent="MainPanel" unique_id=2013270240]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 50.0
+grow_horizontal = 0
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 24
+text = "X"
+
+[node name="SlotsContainer" type="HBoxContainer" parent="MainPanel" unique_id=946701677]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 85.0
+offset_right = 880.0
+offset_bottom = 395.0
+theme_override_constants/separation = 24
+alignment = 1

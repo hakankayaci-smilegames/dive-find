@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EquipmentUpgradeData" format=3 uid="uid://d2bgwwq4x6nyj"]
+
+[ext_resource type="Script" uid="uid://12td2mlom8vk" path="res://Scripts/EquipmentUpgradeData.gd" id="1_data"]
+[ext_resource type="Texture2D" uid="uid://4amo7h3j07ut" path="res://Sprites/dalis_gozluk.png" id="1_i2rf3"]
+
+[resource]
+script = ExtResource("1_data")
+display_name = "Dalış Gözlüğü"
+icon = ExtResource("1_i2rf3")
+stat_key = "goggles_level"
+description = "Kamera daha geri zoom yapabilir"
+base_cost = 50
+cost_multiplier = 2.5

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cjryfvhfnl50n"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_0kivc"]
+[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://items_diver/Sprites new/araba_anahtari.png" id="2_h0u28"]
+
+[resource]
+script = ExtResource("1_0kivc")
+item_name = "Mercedes anahtarı"
+sprite = ExtResource("2_h0u28")
+description = "Cillop gibi bir AMG anahtarı, buna suda nasıl bişey olmamış?"
+rarity = 4
+value = 250
+category = "Valuable"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

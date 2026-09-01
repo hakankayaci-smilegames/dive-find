@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cpo2ogihcktxq"]
+
+[ext_resource type="PackedScene" uid="uid://bskmqsixxr3f" path="res://all_items_tscn/item_temp.tscn" id="1_zs9im"]
+[ext_resource type="Resource" uid="uid://bukhrmxrxbl8q" path="res://all_items_tres/eatenbook.tres" id="2_0yltz"]
+[ext_resource type="Texture2D" uid="uid://cuikgril0hir1" path="res://items_diver/Sprites new/kim yiyosa afiyet olsun🙏🏿.png" id="3_9atsn"]
+
+[node name="InteractableItem" unique_id=774107706 instance=ExtResource("1_zs9im")]
+item_data = ExtResource("2_0yltz")
+
+[node name="Sprite2D" parent="." index="0" unique_id=350953833]
+position = Vector2(1.051653, -3.499886)
+scale = Vector2(0.172406, 0.172406)
+texture = ExtResource("3_9atsn")
