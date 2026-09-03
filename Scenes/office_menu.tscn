@@ -235,6 +235,22 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_disabled"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.18, 0.18, 0.22, 0.85)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.4, 0.4, 0.45, 0.6)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="OfficeMenu" type="CanvasLayer" unique_id=1934741022]
 script = ExtResource("1_menu_script")
 inventory_scene = ExtResource("2_inventory_scene")
@@ -684,4 +700,6 @@ theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_dive_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_dive_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_dive_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_dive_disabled")
+theme_override_colors/font_disabled_color = Color(0.65, 0.65, 0.7, 0.8)
 text = "🤿 DALIŞA BAŞLA / OKYANUS"

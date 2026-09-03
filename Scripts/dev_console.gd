@@ -34,6 +34,10 @@ func _ready() -> void:
 	register_command("tp", _cmd_tp, "Oyuncuyu istenen derinliğe ışınlar. (Kullanım: tp <metre>)")
 	register_command("office", _cmd_office, "Nerede olursan ol Ofis & Dalış Karargahını açar.")
 	register_command("die", _cmd_die, "Oyuncunun canını sıfırlar ve Game Over ekranını tetikler.")
+	register_command("time", _cmd_time, "Saati ayarlar. (Kullanım: time <saat> [dakika] - Örn: time 18 45)")
+	register_command("add_time", _cmd_add_time, "Saati ileri sarar. (Kullanım: add_time <dakika> - Örn: add_time 30)")
+	register_command("time_speed", _cmd_time_speed, "Zaman akış hızını çarpar. (Kullanım: time_speed <çarpan> - Örn: time_speed 5)")
+	register_command("skip_day", _cmd_skip_day, "Günü anında bitirip özet ekranını açar.")
 
 	_log_info("[color=#70a5ff][ Dive&Find Hile & Geliştirici Konsolu Hazır ][/color]")
 	_log_info("[color=#aaaaaa]Yardım için [b]help[/b] yazabilirsiniz. Kapatmak için [b]é[/b] veya [b]ESC[/b].[/color]\n")
@@ -325,3 +329,63 @@ func _cmd_die() -> void:
 		player.call("_trigger_game_over")
 	set_console_visible(false)
 	_log_success("Oyuncu öldürüldü! Game Over tetiklendi.")
+
+
+func _cmd_time(args: Array) -> void:
+	var time_mgr: Node = _get_time_mgr()
+	if not time_mgr:
+		_log_error("GlobalTime yöneticisi bulunamadı!")
+		return
+	if args.is_empty():
+		_log_info("Mevcut zaman: %s (Gün %d)" % [time_mgr.get_time_string(), int(time_mgr.get("current_day"))])
+		return
+	var h := int(args[0])
+	var m := int(args[1]) if args.size() >= 2 else 0
+	time_mgr.set_time(h, m)
+	_log_success("Saat ayarlandı: %02d:%02d (Dalış serbest mi: %s)" % [
+		int(time_mgr.get("current_hour")), int(time_mgr.get("current_minute")), str(time_mgr.is_dive_allowed())
+	])
+
+
+func _cmd_add_time(args: Array) -> void:
+	var time_mgr: Node = _get_time_mgr()
+	if not time_mgr:
+		_log_error("GlobalTime yöneticisi bulunamadı!")
+		return
+	var minutes := int(args[0]) if not args.is_empty() else 15
+	time_mgr.advance_minutes(minutes)
+	_log_success("Zaman ilerletildi (+%d dk). Yeni saat: %s" % [minutes, time_mgr.get_time_string()])
+
+
+func _cmd_time_speed(args: Array) -> void:
+	var time_mgr: Node = _get_time_mgr()
+	if not time_mgr:
+		_log_error("GlobalTime yöneticisi bulunamadı!")
+		return
+	if args.is_empty():
+		_log_info("Mevcut zaman hız çarpanı: %.2fx" % float(time_mgr.get("time_speed_multiplier")))
+		return
+	var speed := float(args[0])
+	time_mgr.set("time_speed_multiplier", speed)
+	_log_success("Zaman akış hızı güncellendi: %.2fx" % speed)
+
+
+func _cmd_skip_day() -> void:
+	var time_mgr: Node = _get_time_mgr()
+	if not time_mgr:
+		_log_error("GlobalTime yöneticisi bulunamadı!")
+		return
+	time_mgr.set_time(19, 0)
+	var summary_scene = load("res://Scenes/day_summary.tscn")
+	if summary_scene:
+		set_console_visible(false)
+		var summary = summary_scene.instantiate()
+		get_tree().current_scene.add_child(summary)
+		_log_success("Saat 19:00'a sarıldı ve Gün Özeti Ekranı açıldı!")
+	else:
+		time_mgr.start_new_day()
+		_log_success("Yeni güne geçildi! (Gün %d)" % int(time_mgr.get("current_day")))
+
+
+func _get_time_mgr() -> Node:
+	return get_node_or_null("/root/GlobalTime")

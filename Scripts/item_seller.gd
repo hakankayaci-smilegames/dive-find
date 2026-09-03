@@ -154,6 +154,9 @@ func _on_sell_pressed() -> void:
 
 	if GlobalInventory.remove_item(_selected_item):
 		GlobalEconomy.add_money(sell_price)
+		var time_mgr: Node = _get_time_mgr()
+		if time_mgr:
+			time_mgr.record_sale(sell_price)
 		GlobalSoundManager.play_sfx("sell")
 
 
@@ -163,9 +166,13 @@ func _on_sell_all_pressed() -> void:
 		return
 
 	var total_income: int = 0
+	var time_mgr: Node = _get_time_mgr()
 	for item in items_to_sell:
-		total_income += _get_sell_price(item)
+		var price: int = _get_sell_price(item)
+		total_income += price
 		GlobalInventory.remove_item(item)
+		if time_mgr:
+			time_mgr.record_sale(price)
 
 	GlobalEconomy.add_money(total_income)
 	GlobalSoundManager.play_sfx("sell")
@@ -174,3 +181,7 @@ func _on_sell_all_pressed() -> void:
 
 func _on_sell_button_pressed() -> void:
 	GlobalSoundManager.play_sfx("sell")
+
+
+func _get_time_mgr() -> Node:
+	return get_node_or_null("/root/GlobalTime")

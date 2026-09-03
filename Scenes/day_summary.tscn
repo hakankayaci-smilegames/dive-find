@@ -1,0 +1,287 @@
+[gd_scene format=3 uid="uid://kxakpu7r5aa"]
+
+[ext_resource type="Script" path="res://Scripts/day_summary.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_overlay"]
+bg_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+content_margin_left = 32.0
+content_margin_top = 28.0
+content_margin_right = 32.0
+content_margin_bottom = 28.0
+bg_color = Color(0.12, 0.08, 0.05, 0.98)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+bg_color = Color(0.08, 0.05, 0.03, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.75, 0.45, 0.5)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.85, 0.75, 0.45, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.95, 0.85, 0.55, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.65, 0.55, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="DaySummary" type="CanvasLayer" unique_id=981247192]
+layer = 120
+script = ExtResource("1_script")
+
+[node name="Overlay" type="Panel" parent="." unique_id=18236639]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_overlay")
+
+[node name="Center" type="CenterContainer" parent="." unique_id=456789123]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="PanelContainer" parent="Center" unique_id=987654321]
+custom_minimum_size = Vector2(560, 460)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel" unique_id=123456789]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="DayTitle" type="Label" parent="Center/MainPanel/VBox" unique_id=234567891]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 28
+text = "GÜN 1 TAMAMLANDI"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="Center/MainPanel/VBox" unique_id=345678912]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.8)
+theme_override_font_sizes/font_size = 13
+text = "Günün Operasyon & Bilanço Raporu"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Center/MainPanel/VBox"]
+layout_mode = 2
+
+[node name="Grid" type="GridContainer" parent="Center/MainPanel/VBox" unique_id=456789012]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="CardEarnings" type="PanelContainer" parent="Center/MainPanel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel/VBox/Grid/CardEarnings"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/MainPanel/VBox/Grid/CardEarnings/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "💰 Günün Kazancı"
+
+[node name="EarningsLabel" type="Label" parent="Center/MainPanel/VBox/Grid/CardEarnings/VBox" unique_id=567890123]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 20
+text = "+0 Zurna"
+
+[node name="CardDives" type="PanelContainer" parent="Center/MainPanel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel/VBox/Grid/CardDives"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/MainPanel/VBox/Grid/CardDives/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "🤿 Yapılan Dalış"
+
+[node name="DivesLabel" type="Label" parent="Center/MainPanel/VBox/Grid/CardDives/VBox" unique_id=678901234]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+text = "0 Dalış"
+
+[node name="CardItems" type="PanelContainer" parent="Center/MainPanel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel/VBox/Grid/CardItems"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/MainPanel/VBox/Grid/CardItems/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "📦 Satılan Eşya"
+
+[node name="ItemsSoldLabel" type="Label" parent="Center/MainPanel/VBox/Grid/CardItems/VBox" unique_id=789012345]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+text = "0 Adet"
+
+[node name="CardDepth" type="PanelContainer" parent="Center/MainPanel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel/VBox/Grid/CardDepth"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/MainPanel/VBox/Grid/CardDepth/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "🌊 En Derin Nokta"
+
+[node name="MaxDepthLabel" type="Label" parent="Center/MainPanel/VBox/Grid/CardDepth/VBox" unique_id=890123456]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "0 m"
+
+[node name="CardBag" type="PanelContainer" parent="Center/MainPanel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel/VBox/Grid/CardBag"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/MainPanel/VBox/Grid/CardBag/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "🎒 Çantadaki Eşyalar"
+
+[node name="BagStatusLabel" type="Label" parent="Center/MainPanel/VBox/Grid/CardBag/VBox" unique_id=901234567]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 20
+text = "0 / 5 Eşya"
+
+[node name="CardClosingTime" type="PanelContainer" parent="Center/MainPanel/VBox/Grid"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="Center/MainPanel/VBox/Grid/CardClosingTime"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Center/MainPanel/VBox/Grid/CardClosingTime/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.75, 0.65, 0.9)
+theme_override_font_sizes/font_size = 12
+text = "⏰ Gün Kapanış Saati"
+
+[node name="ClosingTimeLabel" type="Label" parent="Center/MainPanel/VBox/Grid/CardClosingTime/VBox" unique_id=123456780]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.55, 0.35, 1)
+theme_override_font_sizes/font_size = 20
+text = "19:00"
+
+[node name="HSeparator2" type="HSeparator" parent="Center/MainPanel/VBox"]
+layout_mode = 2
+
+[node name="ContinueButton" type="Button" parent="Center/MainPanel/VBox" unique_id=234567801]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+text = "YENİ GÜNE BAŞLA ☀️"

@@ -18,6 +18,10 @@ extends CanvasLayer
 @export var collection_toast_label: Label  # Sağ üst köşede, 3-4sn görünüp solan bildirim
 @export var warning_toast_label: Label     # Mesafe/hata uyarıları için dinamik toast
 
+@export_group("Zaman & Gün Göstergesi")
+@export var time_label: Label
+@export var day_label: Label
+
 @export_group("Ofise Dönüş Erişimi")
 @export var office_button_surface_range: float = 600.0  # Yüzeyin bu kadar üstü/altında ofis butonu aktif olur
 @onready var office_button: Button = $Button2
@@ -38,6 +42,14 @@ func _ready() -> void:
 	$zurna.text = str(GlobalEconomy.money) + " Zurna"
 	_apply_hud_theme()
 
+	var time_mgr: Node = _get_time_mgr()
+	if time_mgr:
+		time_mgr.time_changed.connect(_on_time_changed)
+		time_mgr.day_changed.connect(_on_day_changed)
+		_update_time_display(time_mgr.current_hour, time_mgr.current_minute)
+		_update_day_display(time_mgr.current_day)
+		time_mgr.start_clock()
+
 	if collection_toast_label:
 		collection_toast_label.modulate.a = 0.0
 		GlobalInventory.collection_updated.connect(_on_collection_updated)
@@ -48,21 +60,6 @@ func _ready() -> void:
 
 func _open_office_at_start() -> void:
 	_open_office()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event is InputEventKey and event.pressed and not event.echo and is_instance_valid(player_node):
-		match event.keycode:
-			KEY_F1:
-				GlobalEconomy.add_money(500)
-			KEY_KP_ADD:
-				player_node.set("goggles_level", int(player_node.get("goggles_level")) + 1)
-			KEY_KP_MULTIPLY:
-				player_node.set("fins_level", int(player_node.get("fins_level")) + 1)
-			KEY_KP_DIVIDE:
-				player_node.set("backpack_level", int(player_node.get("backpack_level")) + 1)
-			KEY_KP_3:
-				player_node.set("tube_level", int(player_node.get("tube_level")) + 1)
 
 
 func _process(delta: float) -> void:
@@ -98,8 +95,38 @@ func _process(delta: float) -> void:
 		# Hesaplanan yeni rengi Label'ın yazı rengi olarak uyguluyoruz
 		depth_label.add_theme_color_override("font_color", _current_color)
 
+		var time_mgr: Node = _get_time_mgr()
+		if time_mgr:
+			time_mgr.record_depth(float(depth_meters))
+
 	_update_office_button_availability()
 	_refresh_equipment_panel()
+
+
+func _on_time_changed(hour: int, minute: int) -> void:
+	_update_time_display(hour, minute)
+
+
+func _on_day_changed(day: int) -> void:
+	_update_day_display(day)
+
+
+func _update_time_display(hour: int, minute: int) -> void:
+	if not time_label:
+		return
+	time_label.text = "⏰ %02d:%02d" % [hour, minute]
+	if hour >= 19:
+		time_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
+	elif hour >= 18:
+		time_label.add_theme_color_override("font_color", Color(1.0, 0.75, 0.25, 1.0))
+	else:
+		time_label.add_theme_color_override("font_color", Color(0.95, 0.85, 0.45, 1.0))
+
+
+func _update_day_display(day: int) -> void:
+	if not day_label:
+		return
+	day_label.text = "📅 Gün %d" % day
 
 
 func _update_office_button_availability() -> void:
@@ -276,3 +303,7 @@ func show_warning_toast(msg: String, duration: float = 1.8) -> void:
 	_warning_tween.tween_property(target_label, "modulate:a", 1.0, 0.15)
 	_warning_tween.tween_interval(duration)
 	_warning_tween.tween_property(target_label, "modulate:a", 0.0, 0.6)
+
+
+func _get_time_mgr() -> Node:
+	return get_node_or_null("/root/GlobalTime")

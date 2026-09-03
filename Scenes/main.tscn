@@ -74,7 +74,7 @@ size = Vector2(127, 128)
 
 [node name="Main" type="Node2D" unique_id=1124296121]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "collection_toast_label")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "collection_toast_label", "time_label", "day_label")]
 script = ExtResource("1_ee4r6")
 inventory_scene = ExtResource("2_gt3je")
 invenb = NodePath("Button")
@@ -87,7 +87,42 @@ goggles_level_label = NodePath("EquipmentPanel/VBox/Goggles/Level")
 fins_level_label = NodePath("EquipmentPanel/VBox/Flippers/Level")
 tube_level_label = NodePath("EquipmentPanel/VBox/Tube/Level")
 collection_toast_label = NodePath("Label")
+time_label = NodePath("TimePanel/Margin/HBox/TimeLabel")
+day_label = NodePath("TimePanel/Margin/HBox/DayLabel")
 office_button_surface_range = 1000.0
+
+[node name="TimePanel" type="PanelContainer" parent="CanvasLayer" unique_id=198273645]
+offset_left = 430.0
+offset_top = 20.0
+offset_right = 680.0
+offset_bottom = 68.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_status")
+
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/TimePanel" unique_id=123984712]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 6
+
+[node name="HBox" type="HBoxContainer" parent="CanvasLayer/TimePanel/Margin" unique_id=981726354]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DayLabel" type="Label" parent="CanvasLayer/TimePanel/Margin/HBox" unique_id=817263549]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 15
+text = "📅 Gün 1"
+
+[node name="VSeparator" type="VSeparator" parent="CanvasLayer/TimePanel/Margin/HBox" unique_id=716253489]
+layout_mode = 2
+
+[node name="TimeLabel" type="Label" parent="CanvasLayer/TimePanel/Margin/HBox" unique_id=615243987]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 16
+text = "⏰ 10:00"
 
 [node name="StatusPanel" type="Panel" parent="CanvasLayer" unique_id=160094966]
 offset_left = 20.0

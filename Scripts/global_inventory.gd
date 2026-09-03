@@ -181,6 +181,8 @@ func get_save_summary() -> String:
 		return "Kayıtlı oyun bulunamadı."
 
 	var day: int = int(data.get("current_day", 1))
+	var hour: int = int(data.get("current_hour", 10))
+	var minute: int = int(data.get("current_minute", 0))
 	var money: int = int(data.get("money", 0))
 	var save_time: String = str(data.get("save_time", "Bilinmiyor"))
 	var eq: Dictionary = data.get("equipment", {})
@@ -190,8 +192,8 @@ func get_save_summary() -> String:
 	var bag: int = int(eq.get("backpack_level", 0))
 	var item_count: int = int(data.get("inventory_count", 0))
 
-	return "📅 Gün: %d\n💰 Bakiye: %d Zurna\n🎒 Eşya: %d Adet\n⚙️ Ekipmanlar: Tüp Lvl %d | Palet Lvl %d | Gözlük Lvl %d | Çanta Lvl %d\n🕒 Kayıt: %s" % [
-		day, money, item_count, tube, fins, goggles, bag, save_time
+	return "📅 Gün: %d  |  ⏰ Saat: %02d:%02d\n💰 Bakiye: %d Zurna\n🎒 Eşya: %d Adet\n⚙️ Ekipmanlar: Tüp Lvl %d | Palet Lvl %d | Gözlük Lvl %d | Çanta Lvl %d\n🕒 Kayıt: %s" % [
+		day, hour, minute, money, item_count, tube, fins, goggles, bag, save_time
 	]
 
 
@@ -204,10 +206,13 @@ func save_game(day: int, money: int, equipment: Dictionary) -> bool:
 	var dt := Time.get_datetime_dict_from_system()
 	var time_str := "%02d.%02d.%d %02d:%02d" % [dt.day, dt.month, dt.year, dt.hour, dt.minute]
 
+	var time_mgr: Node = _get_time_mgr()
 	var save_dict: Dictionary = {
 		"version": 1,
 		"save_time": time_str,
 		"current_day": day,
+		"current_hour": int(time_mgr.get("current_hour")) if time_mgr else 10,
+		"current_minute": int(time_mgr.get("current_minute")) if time_mgr else 0,
 		"money": money,
 		"equipment": equipment,
 		"inventory_count": item_paths.size(),
@@ -228,6 +233,13 @@ func apply_save_to_game() -> bool:
 	var data := get_save_data()
 	if data.is_empty():
 		return false
+
+	var time_mgr: Node = _get_time_mgr()
+	if data.has("current_day") and time_mgr:
+		time_mgr.set("current_day", int(data["current_day"]))
+		var h: int = int(data.get("current_hour", 10))
+		var m: int = int(data.get("current_minute", 0))
+		time_mgr.set_time(h, m)
 
 	if data.has("money"):
 		GlobalEconomy.money = int(data["money"])
@@ -261,3 +273,7 @@ func apply_save_to_player(player: Node) -> void:
 func delete_save() -> void:
 	if has_save():
 		DirAccess.remove_absolute(GAME_SAVE_PATH)
+
+
+func _get_time_mgr() -> Node:
+	return get_node_or_null("/root/GlobalTime")

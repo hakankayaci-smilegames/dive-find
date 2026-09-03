@@ -25,7 +25,7 @@ func _ready() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
-			KEY_ESCAPE, KEY_E, KEY_I, KEY_TAB:
+			KEY_ESCAPE, KEY_E, KEY_I, KEY_TAB, KEY_C:
 				queue_free()
 				get_viewport().set_input_as_handled()
 
