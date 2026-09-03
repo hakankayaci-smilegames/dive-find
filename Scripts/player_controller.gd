@@ -8,14 +8,9 @@ const GAME_OVER_SCENE := "res://Scenes/game_over.tscn"
 # ------------------------------------------------------------------
 @export var visual_scale: float = 0.5 # 1.0 orijinal boyuttur, 0.5 yarı yarıya küçültür
 
-@export_group("Zorluk")
-@export var difficulty_multiplier: float = 1.0
-## 1.0 = aşağıdaki tüm export değerleri AYNEN editördeki gibi kullanılır (taban zorluk).
-## >1.0 oyunu zorlaştırır (oksijen daha hızlı biter/daha yavaş dolar, can daha hızlı gider,
-## derinlik cezası daha erken başlar). <1.0 kolaylaştırır. _ready() içinde bir kere uygulanır.
 @export_group("Spawn")
-@export var spawn_above_surface_px: float = 450.0 # Oyuncu oyuna başlarken su yüzeyinin bu kadar yukarısından suya düşer (0 = sahne pozisyonunu kullan)
-@export var spawn_fall_speed: float = 300.0       # Başlangıç düşüş hızı (suya yumuşakça girmek için ilk aşağı hız)
+@export var spawn_above_surface_px: float = 60.0 # Su yüzeyinin hemen azıcık üstünden başlar
+@export var spawn_fall_speed: float = 450.0       # Hızlıca suya giriş
 
 @export_group("Movement")
 @export var max_speed: float = 220.0          
@@ -31,10 +26,9 @@ const GAME_OVER_SCENE := "res://Scenes/game_over.tscn"
 @export var max_oxygen: float = 100.0
 @export var pixels_per_meter: float = 50.0       # 50px = 1 metre (derinlik ölçeği)
 @export var base_oxygen_drain_rate: float = 3.0  # derinlik 0'daki taban tüketim (oksijen/sn)
-@export var depth_penalty_reference: float = 100.0 # Her 100m'de baskı katsayısı ~1 artar (lineer)
+@export var depth_penalty_reference: float = 250.0 # Her 250m'de baskı katsayısı +1 artar (daha adil derinlik ölçeği)
 @export var surface_oxygen_regen_rate: float = 25.0 # Yüzeyde oksijenin yavaşça dolma hızı (oksijen/sn)
-@export var tube_level: int = 1                  # Ekipman geliştikçe (para ile) yükselecek
-@export var tube_efficiency_gain: float = 0.75    # Her tüp seviyesinde +0.75 verimlilik
+@export var tube_efficiency_gain: float = 1.25    # Her tüp seviyesinde +1.25 verimlilik
 
 @export_group("Health")
 @export var max_health: float = 100.0
@@ -43,18 +37,19 @@ const GAME_OVER_SCENE := "res://Scenes/game_over.tscn"
 @export var health_drain_no_oxygen: float = 15.0   # Oksijen sıfırken agresif boğulma (can/sn)
 @export var health_regen_rate: float = 12.0        # Yüzeyde, oksijen tam dolduktan sonra can/sn
 
+var godmode_enabled: bool = false                   # Hile konsolu ile açılıp kapatılır
+
 @export_group("Inventory")
-@export var backpack_level: int = 0                    # Lvl0 = taban kapasite. İleride mağaza/upgrade sistemi bunu artıracak
+@export var backpack_level: int = 0                    # Lvl0 = taban kapasite
 @export var base_backpack_capacity: int = 5             # Lvl0'daki taban slot sayısı
 @export var backpack_capacity_per_level: int = 5        # Her seviyede eklenen slot sayısı
 
-@export_group("Equipment - Fins")
-@export var fins_level: int = 0                  # Palet seviyesi (mağazadan yükseltilecek)
-@export var fins_speed_per_level: float = 15.0   # Her seviyede max_speed'e eklenen bonus (px/s)
-
-@export_group("Equipment - Goggles")
-@export var goggles_level: int = 0                     # Dalış gözlüğü seviyesi (mağazadan yükseltilecek)
-@export var goggles_zoom_min_per_level: float = 0.05   # Her seviyede camera_zoom_min bu kadar azalır (daha geri zoom yapılabilir)
+@export_group("Equipment")
+@export var tube_level: int = 1                  # Oksijen Tüpü Seviyesi
+@export var fins_level: int = 0                  # Palet Seviyesi
+@export var goggles_level: int = 0               # Dalış Gözlüğü Seviyesi
+@export var fins_speed_per_level: float = 25.0   # Her seviyede max_speed ve accel'e eklenen bonus (px/s)
+@export var goggles_zoom_min_per_level: float = 0.04   # Her seviyede camera_zoom_min bu kadar azalır
 
 @export_group("UI Bars")
 @export var health_bar: ProgressBar
@@ -69,8 +64,8 @@ const GAME_OVER_SCENE := "res://Scenes/game_over.tscn"
 
 @export_group("Camera")
 @export var enable_camera: bool = true        
-@export var camera_zoom: float = 0.5          
-@export var camera_zoom_min: float = 0.5     
+@export var camera_zoom: float = 0.45          
+@export var camera_zoom_min: float = 0.45     
 @export var camera_zoom_max: float = 2.0      
 @export var camera_zoom_step: float = 0.1     
 @export var camera_smoothing_speed: float = 5.0       
@@ -104,76 +99,8 @@ var _current_frame: int = 0
 @onready var sprite: Sprite2D = $Sprite2D
 
 
-# ------------------------------------------------------------------
-# ZORLUK ÇARPANI (tek export, tüm zorluk-ilişkili değerleri ölçekler)
-# ------------------------------------------------------------------
-
-# Editördeki taban (multiplier=1.0 karşılığı) değerler; ilk uygulamada saklanır ki
-# spinbox'tan tekrar tekrar çağrıldığında değerler katlanarak bozulmasın.
-var _base_oxygen_drain_rate: float
-var _base_health_drain_low_oxygen: float
-var _base_health_drain_no_oxygen: float
-var _base_depth_penalty_reference: float
-var _base_surface_oxygen_regen_rate: float
-var _base_health_regen_rate: float
-var _base_tube_efficiency_gain: float
-var _base_max_oxygen: float
-var _base_max_health: float
-var _difficulty_base_cached: bool = false
-
-
-func _cache_difficulty_base_values() -> void:
-	if _difficulty_base_cached:
-		return
-	_base_oxygen_drain_rate = base_oxygen_drain_rate
-	_base_health_drain_low_oxygen = health_drain_low_oxygen
-	_base_health_drain_no_oxygen = health_drain_no_oxygen
-	_base_depth_penalty_reference = depth_penalty_reference
-	_base_surface_oxygen_regen_rate = surface_oxygen_regen_rate
-	_base_health_regen_rate = health_regen_rate
-	_base_tube_efficiency_gain = tube_efficiency_gain
-	_base_max_oxygen = max_oxygen
-	_base_max_health = max_health
-	_difficulty_base_cached = true
-
-
-func _apply_difficulty_scaling() -> void:
-	_cache_difficulty_base_values()
-
-	# Zorluğu ARTIRAN yönde büyüyen değerler -> taban * çarpan
-	base_oxygen_drain_rate = _base_oxygen_drain_rate * difficulty_multiplier
-	health_drain_low_oxygen = _base_health_drain_low_oxygen * difficulty_multiplier
-	health_drain_no_oxygen = _base_health_drain_no_oxygen * difficulty_multiplier
-
-	# Zorluğu ARTIRAN yönde küçülmesi gereken değerler -> taban / çarpan
-	depth_penalty_reference = _base_depth_penalty_reference / difficulty_multiplier
-	surface_oxygen_regen_rate = _base_surface_oxygen_regen_rate / difficulty_multiplier
-	health_regen_rate = _base_health_regen_rate / difficulty_multiplier
-	tube_efficiency_gain = _base_tube_efficiency_gain / difficulty_multiplier
-	max_oxygen = _base_max_oxygen / difficulty_multiplier
-	max_health = _base_max_health / difficulty_multiplier
-
-	# Mevcut oksijen/can, yeni tavanı aşmasın; oranı koruyarak yeniden ölçekle
-	if max_oxygen > 0.0:
-		current_oxygen = clamp(current_oxygen, 0.0, max_oxygen)
-	if max_health > 0.0:
-		current_health = clamp(current_health, 0.0, max_health)
-	_broadcast_oxygen()
-	_broadcast_health()
-	if oxygen_bar:
-		oxygen_bar.max_value = max_oxygen
-	if health_bar:
-		health_bar.max_value = max_health
-
-
-func set_difficulty_multiplier(new_value: float) -> void:
-	# HUD'daki SpinBox bunu çağırır; oyun ortasında değer değişirse anında yeniden uygulanır.
-	difficulty_multiplier = max(new_value, 0.05)
-	_apply_difficulty_scaling()
-
-
 func _ready() -> void:
-	_apply_difficulty_scaling()
+	GlobalInventory.apply_save_to_player(self)
 	if has_node("Sprite2D"):
 		$Sprite2D.scale = Vector2(visual_scale, visual_scale)
 	current_oxygen = max_oxygen
@@ -288,6 +215,13 @@ func _update_animation(delta: float) -> void:
 # YÜZEY HİZASI (LVL0 SONU / LVL1 BAŞI) SEKME, NEFES ALMA VE DERİNLİK BAZLI OKSİJEN
 # ------------------------------------------------------------------
 func _handle_surface_and_oxygen(delta: float) -> void:
+	if godmode_enabled:
+		current_oxygen = max_oxygen
+		current_health = max_health
+		_broadcast_oxygen()
+		_broadcast_health()
+		return
+
 	var surface_y = InfiniteMapManager.water_surface_y
 
 	# Su yüzeyi eşiği (surface_y ile bu değer arasındaki dar bant yüzey bandıdır)
@@ -338,8 +272,6 @@ func _calculate_depth_penalty(depth_m: float) -> float:
 
 
 func _get_tube_efficiency() -> float:
-	# tube_level arttıkça (para ile yükseltilecek) derinlik baskısının paydası büyür,
-	# yani aynı derinlikte daha az oksijen harcanır
 	return 1.0 + float(tube_level - 1) * tube_efficiency_gain
 
 
@@ -466,29 +398,22 @@ func _refresh_health_bar() -> void:
 # ------------------------------------------------------------------
 
 func get_backpack_capacity() -> int:
-	# GlobalInventory bu fonksiyonu duck-typing ile çağırıyor (has_method kontrolü ile).
-	# Formülü tek yerde (burada) tutuyoruz ki backpack_level başka bir sistemden
-	# (mağaza/upgrade) değiştirildiğinde kapasite otomatik güncellensin.
 	return base_backpack_capacity + backpack_level * backpack_capacity_per_level
 
 
 # ------------------------------------------------------------------
-# EKİPMAN BONUSLARI (Palet & Dalış Gözlüğü) - equstore.gd bunları duck-typing ile okuyup yazıyor
+# EKİPMAN BONUSLARI (Palet & Dalış Gözlüğü)
 # ------------------------------------------------------------------
 
 func get_effective_max_speed() -> float:
-	# max_speed = taban (Lvl0) hız; fins_level arttıkça üstüne bonus eklenir
 	return max_speed + float(fins_level) * fins_speed_per_level
 	
+
 func get_effective_max_accel() -> float:
-	# max_speed = taban (Lvl0) hız; fins_level arttıkça üstüne bonus eklenir
 	return acceleration + float(fins_level) * fins_speed_per_level
 
 
-
 func get_effective_zoom_min() -> float:
-	# camera_zoom_min = taban (Lvl0) minimum zoom; goggles_level arttıkça daha da küçülür (daha geri gidilebilir)
-	# 0.01 altına düşmesin diye güvenli bir taban koyuyoruz
 	return max(camera_zoom_min - float(goggles_level) * goggles_zoom_min_per_level, 0.01)
 
 

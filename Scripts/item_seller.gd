@@ -2,10 +2,11 @@ extends CanvasLayer
 
 @export var slot_scene: PackedScene              # inventory_slot.tscn (mevcut olan tekrar kullanılıyor)
 @export var shop_title: String = "Antikacı"
+@export_enum("All", "TrashOnly", "NoTrash", "SpecialOnly") var shop_filter: String = "All"
 @export var isOE : bool
-@export var only_special: bool = false           # Kara Borsa: true -> sadece is_special == true eşyalar listelenir
+@export var only_special: bool = false           # Eski uyumluluk için (shop_filter = SpecialOnly ile aynı)
 @export var sell_multiplier: float = 1.0         # İleride Kara Borsa'ya farklı çarpan vermek istersen buradan ayarla
-@export var special_multiplier: float = 1.0      # is_special eşyalar için çarpan (Antikacı: 0.25, Kara Borsa: 1.5)
+@export var special_multiplier: float = 1.0      # is_special eşyalar için çarpan
 
 @onready var title_label: Label = $MainPanel/TitleLabel
 @onready var close_button: Button = $MainPanel/CloseButton
@@ -58,13 +59,30 @@ func _clear_details() -> void:
 
 
 func _get_filtered_items() -> Array:
-	if not only_special:
+	var mode := shop_filter
+	if only_special:
+		mode = "SpecialOnly"
+
+	if mode == "All":
 		return GlobalInventory.collected_items
 
 	var filtered: Array = []
 	for item in GlobalInventory.collected_items:
-		if item and item.get("category") == "Special":
-			filtered.append(item)
+		if not item:
+			continue
+		var cat: String = str(item.get("category"))
+		match mode:
+			"TrashOnly":
+				if cat == "Trash":
+					filtered.append(item)
+			"NoTrash":
+				if cat != "Trash" and cat != "Special" and cat != "Resource":
+					filtered.append(item)
+			"SpecialOnly":
+				if cat == "Special":
+					filtered.append(item)
+			_:
+				filtered.append(item)
 	return filtered
 
 

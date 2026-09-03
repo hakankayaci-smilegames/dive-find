@@ -20,6 +20,7 @@ config/icon="res://Sprites/icon.svg"
 GlobalInventory="*uid://ccmupnkmax1lb"
 GlobalEconomy="*uid://ce5nrs0re56j3"
 GlobalSoundManager="*uid://bh56jss3gi8tp"
+DevConsole="*res://Scenes/dev_console.tscn"
 
 [display]
 

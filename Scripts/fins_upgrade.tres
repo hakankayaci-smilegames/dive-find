@@ -8,4 +8,6 @@ script = ExtResource("1_data")
 display_name = "Palet"
 icon = ExtResource("1_58xbu")
 stat_key = "fins_level"
-description = "Karakter hızı artar"
+description = "Karakter yüzme hızı artar"
+base_cost = 25
+cost_multiplier = 1.65

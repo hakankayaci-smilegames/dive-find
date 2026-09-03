@@ -5,58 +5,178 @@
 [ext_resource type="PackedScene" uid="uid://bdqp5h4m3ejvw" path="res://Scenes/equstore.tscn" id="3_equstore_scene"]
 [ext_resource type="PackedScene" uid="uid://ct77y8qdyllvr" path="res://Scenes/antikaci.tscn" id="4_antikaci_scene"]
 [ext_resource type="PackedScene" uid="uid://drtt8k8d2axic" path="res://Scenes/kara_borsa.tscn" id="5_kara_borsa_scene"]
-[ext_resource type="PackedScene" path="res://Scenes/collection.tscn" id="6_collection_scene"]
+[ext_resource type="PackedScene" uid="uid://c0pcushop001" path="res://Scenes/copcu.tscn" id="6_copcu_scene"]
+[ext_resource type="PackedScene" path="res://Scenes/collection.tscn" id="7_collection_scene"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.15, 0.1, 0.06, 0.95)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.85, 0.75, 0.45, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.07, 0.045, 0.03, 1.0)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_normal"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header_badge"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.14, 0.09, 0.05, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_normal"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
 bg_color = Color(0.85, 0.75, 0.45, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.15, 0.1, 0.06, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_pressed"]
-bg_color = Color(0.65, 0.55, 0.3, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_hover"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_hover"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
 bg_color = Color(0.95, 0.85, 0.55, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(0.15, 0.1, 0.06, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button_focus"]
-bg_color = Color(0, 0, 0, 0)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_pressed"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.65, 0.55, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.06, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_danger_normal"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.38, 0.12, 0.1, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_danger_hover"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.55, 0.18, 0.15, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 0.55, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_normal"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+bg_color = Color(0.14, 0.09, 0.05, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.7)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_hover"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+bg_color = Color(0.2, 0.14, 0.08, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 0.55, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_pressed"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+bg_color = Color(0.1, 0.06, 0.03, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.65, 0.55, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_normal"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.18, 0.12, 0.08, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_secondary_hover"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.28, 0.2, 0.12, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -67,77 +187,53 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button2_normal"]
-bg_color = Color(0.45, 0.38, 0.24, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_normal"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.15, 0.45, 0.65, 0.95)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button2_pressed"]
-bg_color = Color(0.38, 0.32, 0.2, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_hover"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.2, 0.58, 0.85, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(0.95, 0.85, 0.55, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_button2_hover"]
-bg_color = Color(0.52, 0.44, 0.28, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_pressed"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.1, 0.32, 0.48, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mainmenu_normal"]
-bg_color = Color(0.4, 0.18, 0.15, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mainmenu_pressed"]
-bg_color = Color(0.3, 0.13, 0.1, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mainmenu_hover"]
-bg_color = Color(0.52, 0.24, 0.2, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(0.65, 0.55, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="OfficeMenu" type="CanvasLayer" unique_id=1934741022]
 script = ExtResource("1_menu_script")
@@ -145,217 +241,447 @@ inventory_scene = ExtResource("2_inventory_scene")
 equstore_scene = ExtResource("3_equstore_scene")
 antikaci_scene = ExtResource("4_antikaci_scene")
 kara_borsa_scene = ExtResource("5_kara_borsa_scene")
-collection_scene = ExtResource("6_collection_scene")
+copcu_scene = ExtResource("6_copcu_scene")
+collection_scene = ExtResource("7_collection_scene")
 
-[node name="Background" type="ColorRect" parent="." unique_id=18236639]
+[node name="Background" type="Panel" parent="." unique_id=18236639]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 1
-color = Color(0.039215688, 0.019607844, 0.011764706, 1)
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
 
-[node name="OfficePanel" type="Panel" parent="Background" unique_id=960340364]
-custom_minimum_size = Vector2(720, 710)
-layout_mode = 0
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -360.0
-offset_top = -355.0
-offset_right = 360.0
-offset_bottom = 355.0
+[node name="MainMargin" type="MarginContainer" parent="Background" unique_id=960340364]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 24
 
-[node name="TitleLabel" type="Label" parent="Background/OfficePanel" unique_id=1144657616]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -150.0
-offset_top = 22.0
-offset_right = 150.0
-offset_bottom = 92.0
-grow_horizontal = 2
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin" unique_id=1379708942]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="HBoxContainer" parent="Background/MainMargin/VBox" unique_id=1144657616]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TitleBox" type="VBoxContainer" parent="Background/MainMargin/VBox/TopBar" unique_id=2059005920]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="TitleLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/TitleBox"]
+layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
-theme_override_font_sizes/font_size = 46
-text = "OFİS"
-horizontal_alignment = 1
-vertical_alignment = 1
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 30
+text = "OFİS & DALIŞ KARARGAHI"
 
-[node name="SubtitleLabel" type="Label" parent="Background/OfficePanel" unique_id=2059005920]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 96.0
-offset_right = 300.0
-offset_bottom = 118.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.9)
+[node name="SubtitleLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.8)
 theme_override_font_sizes/font_size = 13
-text = "Antikacı, Kara Borsa, Ekipman Mağazası ve Depo"
-horizontal_alignment = 1
-vertical_alignment = 1
+text = "Tesisler, Tüccarlar ve Operasyon Yönetim Merkezi"
 
-[node name="HSeparator" type="HSeparator" parent="Background/OfficePanel" unique_id=756062614]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 126.0
-offset_right = 300.0
-offset_bottom = 130.0
-grow_horizontal = 2
-
-[node name="ButtonGrid" type="GridContainer" parent="Background" unique_id=1379708942]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -310.0
-offset_top = -190.0
-offset_right = 310.0
-offset_bottom = 190.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/h_separation = 30
-theme_override_constants/v_separation = 20
-columns = 2
-
-[node name="AntikaciButton" type="Button" parent="Background/ButtonGrid" unique_id=59658330]
-custom_minimum_size = Vector2(280, 88)
+[node name="DayBox" type="HBoxContainer" parent="Background/MainMargin/VBox/TopBar" unique_id=756062614]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="DayPanel" type="PanelContainer" parent="Background/MainMargin/VBox/TopBar/DayBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_header_badge")
+
+[node name="DayLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/DayBox/DayPanel" unique_id=59658330]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 17
+text = "Gün: 1"
+
+[node name="AdvanceDayButton" type="Button" parent="Background/MainMargin/VBox/TopBar/DayBox" unique_id=120574380]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 44)
+layout_mode = 2
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 17
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "Antikacı"
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_gold_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_gold_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_gold_hover")
+text = "GÜNÜ İLERLET ☀️"
 
-[node name="EquipmentButton" type="Button" parent="Background/ButtonGrid" unique_id=120574380]
-custom_minimum_size = Vector2(280, 88)
+[node name="RightHeader" type="HBoxContainer" parent="Background/MainMargin/VBox/TopBar" unique_id=694991445]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 17
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "Ekipman Mağazası"
-autowrap_mode = 2
+theme_override_constants/separation = 14
 
-[node name="KaraBorsaButton" type="Button" parent="Background/ButtonGrid" unique_id=694991445]
-custom_minimum_size = Vector2(280, 88)
+[node name="WalletPanel" type="PanelContainer" parent="Background/MainMargin/VBox/TopBar/RightHeader"]
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 17
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "Kara Borsa"
+theme_override_styles/panel = SubResource("StyleBoxFlat_header_badge")
 
-[node name="EnvanterButton" type="Button" parent="Background/ButtonGrid" unique_id=983825494]
-custom_minimum_size = Vector2(280, 88)
+[node name="ZurnaLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/RightHeader/WalletPanel" unique_id=983825494]
+unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 17
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "Envanter"
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 18
+text = "0 Zurna"
 
-[node name="KoleksiyonButton" type="Button" parent="Background/ButtonGrid" unique_id=864734015]
-custom_minimum_size = Vector2(280, 88)
+[node name="SaveExitButton" type="Button" parent="Background/MainMargin/VBox/TopBar/RightHeader" unique_id=864734015]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(150, 44)
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.85)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 0.6)
-theme_override_colors/font_hover_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("StyleBoxFlat_button2_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button2_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button2_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "Koleksiyon Defteri"
-autowrap_mode = 2
-
-[node name="MainMenuButton" type="Button" parent="Background/ButtonGrid" unique_id=1087321934]
-custom_minimum_size = Vector2(280, 88)
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 0.7)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_font_sizes/font_size = 15
-theme_override_styles/normal = SubResource("StyleBoxFlat_mainmenu_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_mainmenu_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_mainmenu_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "Ana Menüye Dön"
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_danger_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_danger_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_danger_hover")
+text = "KAYDET & ÇIK"
 
-[node name="CloseButton" type="Button" parent="Background" unique_id=22197275]
+[node name="HSeparator1" type="HSeparator" parent="Background/MainMargin/VBox"]
+layout_mode = 2
+
+[node name="SectionTitle1" type="Label" parent="Background/MainMargin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.9)
+theme_override_font_sizes/font_size = 14
+text = "TÜCCARLAR VE ALIM MERKEZLERİ"
+
+[node name="ShopsGrid" type="HBoxContainer" parent="Background/MainMargin/VBox" unique_id=1087321934]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="CopcuButton" type="Button" parent="Background/MainMargin/VBox/ShopsGrid" unique_id=22197275]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
+
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton"]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 300.0
-offset_top = -280.0
-offset_right = 350.0
-offset_bottom = -230.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 24
-theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
-text = "X"
+mouse_filter = 2
+alignment = 1
 
-[node name="zurna" type="Label" parent="." unique_id=950350598]
-anchors_preset = -1
-anchor_left = 0.781
-anchor_top = 0.008
-anchor_right = 0.781
-anchor_bottom = 0.008
-offset_left = -119.712036
-offset_top = -0.18400002
-offset_right = 0.28796387
-offset_bottom = 23.816
-grow_horizontal = 0
-text = "9999 ZURNA"
-horizontal_alignment = 2
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "🗑️"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+text = "ÇÖPCÜ"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Sadece çöp ve hurda eşyaları alır"
+horizontal_alignment = 1
+
+[node name="AntikaciButton" type="Button" parent="Background/MainMargin/VBox/ShopsGrid" unique_id=950350598]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
+
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "🏛️"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+text = "ANTİKACI"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Çöp hariç değerli buluntuları alır"
+horizontal_alignment = 1
+
+[node name="KaraBorsaButton" type="Button" parent="Background/MainMargin/VBox/ShopsGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
+
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "🕶️"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.45, 0.45, 1)
+theme_override_font_sizes/font_size = 20
+text = "KARA BORSA"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Sadece özel ve gizli ganimetleri alır"
+horizontal_alignment = 1
+
+[node name="SectionTitle2" type="Label" parent="Background/MainMargin/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.9)
+theme_override_font_sizes/font_size = 14
+text = "TESİSLER VE ÜRETİM ALANLARI"
+
+[node name="FacilitiesGrid" type="HBoxContainer" parent="Background/MainMargin/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="EquStoreButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
+
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "⚙️"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 19
+text = "EKİPMAN MAĞAZASI"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Tüp, Palet, Gözlük ve Çanta Yükselt"
+horizontal_alignment = 1
+
+[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ AKTİF ]"
+horizontal_alignment = 1
+
+[node name="LabButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
+
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "🧪"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 19
+text = "LABORATUVAR"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Hammaddeler ile İleri Craft & Sentez"
+horizontal_alignment = 1
+
+[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.7, 0.3, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ ÇOK YAKINDA ]"
+horizontal_alignment = 1
+
+[node name="ShopButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
+
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "📦"
+horizontal_alignment = 1
+
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.55, 1)
+theme_override_font_sizes/font_size = 19
+text = "SATIŞ PAZARI"
+horizontal_alignment = 1
+
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "Üretilen Gelişmiş Eşyaların Satışı"
+horizontal_alignment = 1
+
+[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.7, 0.3, 1)
+theme_override_font_sizes/font_size = 11
+text = "[ ÇOK YAKINDA ]"
+horizontal_alignment = 1
+
+[node name="HSeparator3" type="HSeparator" parent="Background/MainMargin/VBox"]
+layout_mode = 2
+
+[node name="BottomBar" type="HBoxContainer" parent="Background/MainMargin/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="EnvanterButton" type="Button" parent="Background/MainMargin/VBox/BottomBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+text = "🎒 ÇANTA [I]"
+
+[node name="KoleksiyonButton" type="Button" parent="Background/MainMargin/VBox/BottomBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 48)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_secondary_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
+text = "📖 KOLEKSİYON [C]"
+
+[node name="ToastLabel" type="Label" parent="Background/MainMargin/VBox/BottomBar"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
+theme_override_font_sizes/font_size = 14
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DiveButton" type="Button" parent="Background/MainMargin/VBox/BottomBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 52)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_dive_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_dive_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_dive_hover")
+text = "🤿 DALIŞA BAŞLA / OKYANUS"

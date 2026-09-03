@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://c0ns0l3dev001"]
+
+[ext_resource type="Script" path="res://Scripts/dev_console.gd" id="1_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.04, 0.04, 0.07, 0.95)
+border_width_bottom = 3
+border_color = Color(0.85, 0.75, 0.45, 0.9)
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.08, 0.08, 0.12, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.35, 0.35, 0.45, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_input_focus"]
+content_margin_left = 12.0
+content_margin_top = 8.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.1, 0.15, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[node name="DevConsole" type="CanvasLayer" unique_id=129847192]
+process_mode = 3
+layer = 128
+script = ExtResource("1_script")
+
+[node name="ConsolePanel" type="PanelContainer" parent="." unique_id=741029384]
+unique_name_in_owner = true
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 340.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="Margin" type="MarginContainer" parent="ConsolePanel" unique_id=987123456]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="ConsolePanel/Margin" unique_id=567891234]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Header" type="HBoxContainer" parent="ConsolePanel/Margin/VBox" unique_id=234567891]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="ConsolePanel/Margin/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 13
+text = "◆ DIVE & FIND — GELİŞTİRİCİ & HİLE KONSOLU"
+
+[node name="HintLabel" type="Label" parent="ConsolePanel/Margin/VBox/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.6, 0.6, 0.8)
+theme_override_font_sizes/font_size = 12
+text = "[ Kapatmak için: é veya ESC ]"
+
+[node name="OutputLabel" type="RichTextLabel" parent="ConsolePanel/Margin/VBox" unique_id=345678912]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+theme_override_font_sizes/italics_font_size = 14
+bbcode_enabled = true
+scroll_following = true
+selection_enabled = true
+
+[node name="InputLine" type="LineEdit" parent="ConsolePanel/Margin/VBox" unique_id=456789123]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 38)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_placeholder_color = Color(0.5, 0.5, 0.5, 0.7)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_input")
+theme_override_styles/focus = SubResource("StyleBoxFlat_input_focus")
+placeholder_text = "Komut girin... (yardım için: help)"
+clear_button_enabled = true
+caret_blink = true

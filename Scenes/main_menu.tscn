@@ -69,6 +69,18 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
+bg_color = Color(0.28, 0.22, 0.16, 0.6)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.15, 0.1, 0.06, 0.5)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_normal"]
 bg_color = Color(0.35, 0.08, 0.06, 0.9)
 border_width_left = 2
@@ -155,7 +167,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
-game_version = "Dev 0.0.2(Afterjam Remaster)S"
+game_version = "Dev 0.0.4(Afterjam Remaster)"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
@@ -265,19 +277,37 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 16
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer" unique_id=1174683378]
-custom_minimum_size = Vector2(440, 76)
+[node name="NewGameButton" type="Button" parent="Panel/VBoxContainer" unique_id=1174683378]
+custom_minimum_size = Vector2(440, 68)
 layout_mode = 2
 size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 42
+theme_override_font_sizes/font_size = 34
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
-text = "OYNA"
+text = "YENİ OYUN"
+
+[node name="ContinueButton" type="Button" parent="Panel/VBoxContainer" unique_id=1174683379]
+custom_minimum_size = Vector2(440, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.45, 0.6)
+theme_override_font_sizes/font_size = 34
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+text = "DEVAM ET"
 
 [node name="Button2" type="Button" parent="Panel/VBoxContainer" unique_id=467395248]
 custom_minimum_size = Vector2(440, 62)
@@ -455,7 +485,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 
 
 [center][font_size=12][color=#a09080]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
-[font_size=16][color=#e6bf73][i]Smile Games — Afterjam Remaster Edition 2.0 ( Devbuild 0.0.2) [/i][/color][/font_size][/center]"
+[font_size=16][color=#e6bf73][i]Smile Games sunar [/i][/color][/font_size][/center]"
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=830166412]
 visible = false

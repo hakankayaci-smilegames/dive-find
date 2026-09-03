@@ -55,6 +55,7 @@
 [ext_resource type="PackedScene" uid="uid://cx2hc64oty0i8" path="res://all_items_tscn/nahtarlıkplus_r6.tscn" id="34_qnggo"]
 [ext_resource type="PackedScene" uid="uid://bw5gtsku1n8ko" path="res://all_items_tscn/dexter_r6.tscn" id="35_tab3y"]
 [ext_resource type="PackedScene" uid="uid://beef4gip2br2r" path="res://all_items_tscn/nigrce_r6.tscn" id="36_1tvlp"]
+[ext_resource type="PackedScene" uid="uid://yiid1q64k3w6" path="res://all_items_tres/broken_painting.tscn" id="37_ptfg5"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status"]
 bg_color = Color(0.15, 0.1, 0.06, 0.9)
@@ -73,7 +74,7 @@ size = Vector2(127, 128)
 
 [node name="Main" type="Node2D" unique_id=1124296121]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "difficulty_spinbox", "collection_toast_label")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "collection_toast_label")]
 script = ExtResource("1_ee4r6")
 inventory_scene = ExtResource("2_gt3je")
 invenb = NodePath("Button")
@@ -85,33 +86,8 @@ bag_level_label = NodePath("EquipmentPanel/VBox/Bag/Level")
 goggles_level_label = NodePath("EquipmentPanel/VBox/Goggles/Level")
 fins_level_label = NodePath("EquipmentPanel/VBox/Flippers/Level")
 tube_level_label = NodePath("EquipmentPanel/VBox/Tube/Level")
-difficulty_spinbox = NodePath("DifficultyBox/SpinBox")
 collection_toast_label = NodePath("Label")
 office_button_surface_range = 1000.0
-
-[node name="DifficultyBox" type="HBoxContainer" parent="CanvasLayer" unique_id=1015112575]
-visible = false
-offset_left = 20.0
-offset_top = 120.0
-offset_right = 260.0
-offset_bottom = 148.0
-theme_override_constants/separation = 8
-
-[node name="Label" type="Label" parent="CanvasLayer/DifficultyBox" unique_id=2015690335]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 16
-text = "Zorluk:"
-
-[node name="SpinBox" type="SpinBox" parent="CanvasLayer/DifficultyBox" unique_id=976403450]
-custom_minimum_size = Vector2(90, 0)
-layout_mode = 2
-min_value = 0.25
-max_value = 5.0
-step = 0.25
-value = 1.0
 
 [node name="StatusPanel" type="Panel" parent="CanvasLayer" unique_id=160094966]
 offset_left = 20.0
@@ -310,7 +286,7 @@ theme_override_font_sizes/font_size = 25
 [node name="ItemSpawner" type="Node2D" parent="." unique_id=107703476]
 script = ExtResource("1_jkdf5")
 map_manager = NodePath("../MapMaker")
-item_pool = Array[PackedScene]([ExtResource("7_kltya"), ExtResource("8_e08e2"), ExtResource("9_bv80c"), ExtResource("10_ptfg5"), ExtResource("11_2daye"), ExtResource("12_1semv"), ExtResource("13_2060n"), ExtResource("14_6ml46"), ExtResource("15_qax2n"), ExtResource("16_y86h7"), ExtResource("17_my4ki"), ExtResource("18_lx3vj"), ExtResource("19_ynmfv"), ExtResource("20_cblf0"), ExtResource("21_nay3j"), ExtResource("22_ovafv"), ExtResource("23_owhal"), ExtResource("24_uv6w5"), ExtResource("25_r7bbj"), ExtResource("26_e5peh"), ExtResource("27_f6rfp"), ExtResource("28_sasc4"), ExtResource("29_pfx1i"), ExtResource("30_fg68e"), ExtResource("31_jekl6"), ExtResource("32_v1mrv"), ExtResource("33_fd3ed"), ExtResource("34_qnggo"), ExtResource("35_tab3y"), ExtResource("36_1tvlp")])
+item_pool = Array[PackedScene]([ExtResource("7_kltya"), ExtResource("8_e08e2"), ExtResource("9_bv80c"), ExtResource("10_ptfg5"), ExtResource("11_2daye"), ExtResource("12_1semv"), ExtResource("13_2060n"), ExtResource("14_6ml46"), ExtResource("15_qax2n"), ExtResource("16_y86h7"), ExtResource("17_my4ki"), ExtResource("18_lx3vj"), ExtResource("19_ynmfv"), ExtResource("20_cblf0"), ExtResource("21_nay3j"), ExtResource("22_ovafv"), ExtResource("23_owhal"), ExtResource("24_uv6w5"), ExtResource("25_r7bbj"), ExtResource("26_e5peh"), ExtResource("27_f6rfp"), ExtResource("28_sasc4"), ExtResource("29_pfx1i"), ExtResource("30_fg68e"), ExtResource("31_jekl6"), ExtResource("32_v1mrv"), ExtResource("33_fd3ed"), ExtResource("34_qnggo"), ExtResource("35_tab3y"), ExtResource("36_1tvlp"), ExtResource("37_ptfg5")])
 base_spawn_chance = 0.2
 global_loot_multiplier = 0.4
 fallback_item_base_size = 128.0
@@ -329,21 +305,6 @@ ground_texture = ExtResource("13_fdnlq")
 [node name="Diver" type="CharacterBody2D" parent="." unique_id=1779072544 node_paths=PackedStringArray("health_bar", "oxygen_bar") groups=["player"]]
 position = Vector2(16, 2650)
 script = ExtResource("1_bo1nx")
-difficulty_multiplier = 1.3
-max_speed = 280.0
-acceleration = 400.0
-friction = 200.0
-sink_speed = 100.0
-max_sink_velocity = 500.0
-surface_push_force = 750.0
-base_oxygen_drain_rate = 1.0
-depth_penalty_reference = 90.0
-tube_efficiency_gain = 1.45
-health_drain_low_oxygen = 0.9
-health_drain_no_oxygen = 3.0
-base_backpack_capacity = 7
-fins_speed_per_level = 50.0
-goggles_zoom_min_per_level = 0.02
 health_bar = NodePath("../CanvasLayer/StatusPanel/Health")
 oxygen_bar = NodePath("../CanvasLayer/StatusPanel/Oxygen")
 swim_frames = Array[Texture2D]([ExtResource("27_e08e2"), ExtResource("28_neg2b"), ExtResource("29_r33sp"), ExtResource("30_hdf80"), ExtResource("31_jwpg7"), ExtResource("32_k2e45")])

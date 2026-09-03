@@ -14,8 +14,6 @@ func _ready() -> void:
 	close_button.pressed.connect(queue_free)
 
 	_player = get_tree().get_first_node_in_group("player")
-	if not _player:
-		push_warning("EquipmentStore: 'player' grubunda bir node bulunamadı, seviyeler okunamıyor.")
 
 	_build_slots()
 
@@ -64,14 +62,14 @@ func _on_upgrade_requested(slot: EquipmentSlot) -> void:
 	var cost: int = slot.calculate_cost(current_level)
 
 	if not GlobalEconomy.spend_money(cost):
-		return  # Para yetersiz; buton zaten disabled olmalıydı, bu ekstra güvenlik
+		return  # Para yetersiz
 
 	_player.set(slot.data.stat_key, current_level + 1)
+	GlobalSoundManager.play_sfx("upgrade")
 	slot.refresh(current_level + 1)
 
 
 func _on_money_changed(_new_amount: int) -> void:
-	# Para her değiştiğinde tüm slotların "yeterli para var mı" durumunu tazele
 	for slot in slots_container.get_children():
 		if slot is EquipmentSlot:
 			slot.refresh(slot.current_level)

@@ -14,9 +14,6 @@ extends CanvasLayer
 @export var fins_level_label: Label
 @export var tube_level_label: Label
 
-@export_group("Difficulty")
-@export var difficulty_spinbox: SpinBox
-
 @export_group("Koleksiyon Bildirimi")
 @export var collection_toast_label: Label  # Sağ üst köşede, 3-4sn görünüp solan bildirim
 @export var warning_toast_label: Label     # Mesafe/hata uyarıları için dinamik toast
@@ -40,38 +37,32 @@ func _ready() -> void:
 	GlobalEconomy.money_changed.connect(_on_money_changed)
 	$zurna.text = str(GlobalEconomy.money) + " Zurna"
 	_apply_hud_theme()
-	
-	# Zorluk SpinBox senkronizasyonu
-	if difficulty_spinbox and is_instance_valid(player_node):
-		difficulty_spinbox.min_value = 0.25
-		difficulty_spinbox.max_value = 5.0
-		difficulty_spinbox.step = 0.25
-		difficulty_spinbox.value = player_node.difficulty_multiplier
-		difficulty_spinbox.value_changed.connect(_on_difficulty_changed)
 
 	if collection_toast_label:
 		collection_toast_label.modulate.a = 0.0
 		GlobalInventory.collection_updated.connect(_on_collection_updated)
 
+	_refresh_equipment_panel()
+	call_deferred("_open_office_at_start")
 
-func _on_difficulty_changed(value: float) -> void:
-	if is_instance_valid(player_node):
-		player_node.set_difficulty_multiplier(value)
+
+func _open_office_at_start() -> void:
+	_open_office()
+
 
 func _unhandled_input(event: InputEvent) -> void:
-	# Check if it's a keyboard event, is currently pressed, and is NOT being held down (echo)
-	if event is InputEventKey and event.pressed and not event.echo:
+	if event is InputEventKey and event.pressed and not event.echo and is_instance_valid(player_node):
 		match event.keycode:
 			KEY_F1:
 				GlobalEconomy.add_money(500)
 			KEY_KP_ADD:
-				player_node.goggles_level +=1
+				player_node.set("goggles_level", int(player_node.get("goggles_level")) + 1)
 			KEY_KP_MULTIPLY:
-				player_node.fins_level += 1
+				player_node.set("fins_level", int(player_node.get("fins_level")) + 1)
 			KEY_KP_DIVIDE:
-				player_node.backpack_level += 1
+				player_node.set("backpack_level", int(player_node.get("backpack_level")) + 1)
 			KEY_KP_3:
-				player_node.tube_level += 1
+				player_node.set("tube_level", int(player_node.get("tube_level")) + 1)
 
 
 func _process(delta: float) -> void:
@@ -106,8 +97,6 @@ func _process(delta: float) -> void:
 		
 		# Hesaplanan yeni rengi Label'ın yazı rengi olarak uyguluyoruz
 		depth_label.add_theme_color_override("font_color", _current_color)
-		
-		# _last_y değişkenine artık ihtiyacımız kalmadı, hız (velocity) her şeyi çözüyor!
 
 	_update_office_button_availability()
 	_refresh_equipment_panel()
@@ -123,10 +112,6 @@ func _update_office_button_availability() -> void:
 func _refresh_equipment_panel() -> void:
 	if not is_instance_valid(player_node):
 		return
-
-	# .get() kullanıyoruz çünkü player_node Node2D olarak tiplenmiş; bu sayede
-	# backpack_level/goggles_level/fins_level/tube_level gibi player_controller.gd'ye
-	# özel export değişkenlerine cast yapmadan güvenle erişebiliyoruz.
 	if bag_level_label:
 		bag_level_label.text = "Lvl " + str(player_node.get("backpack_level"))
 	if goggles_level_label:
@@ -248,6 +233,9 @@ func _open_office_after_loading() -> void:
 
 
 func _open_office() -> void:
+	if target_scene == null:
+		return
+	GlobalSoundManager.play_sfx("door_open")
 	var office_instance = target_scene.instantiate()
 	get_tree().current_scene.add_child(office_instance)
 		

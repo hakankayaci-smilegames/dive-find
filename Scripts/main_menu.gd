@@ -21,7 +21,8 @@ const SFX_BUS := "SFX"
 @onready var settings_button: Button = $Panel/VBoxContainer/Button2
 @onready var settings_close: Button = $SettingsPanel/CloseButton
 
-@onready var play_button: Button = $Panel/VBoxContainer/Button
+@onready var continue_button: Button = $Panel/VBoxContainer/ContinueButton
+@onready var new_game_button: Button = $Panel/VBoxContainer/NewGameButton
 
 @onready var title_box: Panel = $Panel/TitleBox
 @onready var subtitle_label: Label = $Panel/SubtitleLabel
@@ -51,7 +52,9 @@ func _ready() -> void:
 	settings_button.pressed.connect(_toggle_settings_panel)
 	settings_close.pressed.connect(_close_settings_panel)
 
-	play_button.pressed.connect(_start_game)
+	_refresh_save_buttons()
+	new_game_button.pressed.connect(_on_new_game_pressed)
+	continue_button.pressed.connect(_on_continue_pressed)
 	collection_button.pressed.connect(_open_collection)
 
 	_load_settings()
@@ -181,7 +184,27 @@ func _hide_panel(panel: Panel) -> void:
 	)
 
 
-func _start_game() -> void:
+func _refresh_save_buttons() -> void:
+	var has_save: bool = GlobalInventory.has_save()
+	continue_button.disabled = not has_save
+	if has_save:
+		continue_button.tooltip_text = GlobalInventory.get_save_summary()
+	else:
+		continue_button.tooltip_text = "Kayıtlı oyun bulunamadı."
+
+
+func _on_new_game_pressed() -> void:
+	GlobalSoundManager.play_sfx("click")
+	GlobalInventory.delete_save()
+	GlobalEconomy.money = 0
+	GlobalEconomy.money_changed.emit(0)
+	GlobalInventory.clear_inventory()
+	get_tree().change_scene_to_file(LOADING_SCREEN)
+
+
+func _on_continue_pressed() -> void:
+	GlobalSoundManager.play_sfx("click")
+	GlobalInventory.apply_save_to_game()
 	get_tree().change_scene_to_file(LOADING_SCREEN)
 
 

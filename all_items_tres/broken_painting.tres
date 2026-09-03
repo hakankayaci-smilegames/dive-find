@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bh7qsx7rfvlqk"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_p03kj"]
+[ext_resource type="Texture2D" uid="uid://5al6g4gmokb7" path="res://item_sprites/broken_picture.png" id="2_rg5un"]
+
+[resource]
+script = ExtResource("1_p03kj")
+item_name = "Kırık Altın Çerçeve"
+sprite = ExtResource("2_rg5un")
+description = "Ortadan kırılmış bir altın çerçeve, dışı gerçek altınsa para edebilir. İçindeki resim bulanıklaşmış, ama çok mutlu bir çifti andırıyor."
+rarity = 0.8
+value = 2650
+category = "Valuable"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

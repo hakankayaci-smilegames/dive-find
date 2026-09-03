@@ -4,65 +4,134 @@ extends CanvasLayer
 @export var equstore_scene: PackedScene
 @export var antikaci_scene: PackedScene
 @export var kara_borsa_scene: PackedScene
+@export var copcu_scene: PackedScene
 @export var collection_scene: PackedScene
 @export_file("*.tscn") var main_menu_scene_path: String = "res://Scenes/main_menu.tscn"
 
 @export_group("Oyuna Dönüş")
 @export var teleport_player_on_close: bool = true
 @export var ocean_spawn_x: float = 16.0          # Ofisten çıkınca oyuncunun x konumu (dalış noktası)
-@export var spawn_above_surface_px: float = 450.0 # Oyuncu su yüzeyinin bu kadar yukarısına ışınlanır (suya düşerek başlar)
-@export var spawn_fall_speed: float = 300.0      # Işınlanma sonrası başlangıç düşüş hızı
+@export var spawn_above_surface_px: float = 60.0  # Su yüzeyinin hemen azıcık üstünden suya giriş
+@export var spawn_fall_speed: float = 450.0       # Hızlı düşüş hızı
 
-@onready var close_button: Button = $Background/CloseButton
-@onready var antikaci_button: Button = $Background/ButtonGrid/AntikaciButton
-@onready var kara_borsa_button: Button = $Background/ButtonGrid/KaraBorsaButton
-@onready var koleksiyon_button: Button = $Background/ButtonGrid/KoleksiyonButton
-@onready var envanter_button: Button = $Background/ButtonGrid/EnvanterButton
-@onready var equstore_button: Button = $Background/ButtonGrid/EquipmentButton
-@onready var main_menu_button: Button = $Background/ButtonGrid/MainMenuButton
-@export var title_label_2: Label 
-@export var texture_rect: TextureRect
+# Üst Bar
+@onready var zurna_label: Label = %ZurnaLabel
+@onready var day_label: Label = %DayLabel
+@onready var advance_day_button: Button = %AdvanceDayButton
+@onready var save_exit_button: Button = %SaveExitButton
+
+# Üst Satıcı Kartları
+@onready var copcu_button: Button = %CopcuButton
+@onready var antikaci_button: Button = %AntikaciButton
+@onready var kara_borsa_button: Button = %KaraBorsaButton
+
+# Alt Tesis Kartları (Soldan Sağa: Ekipman, Lab, Dükkan)
+@onready var equstore_button: Button = %EquStoreButton
+@onready var lab_button: Button = %LabButton
+@onready var shop_button: Button = %ShopButton
+
+# Alt Bar Butonları
+@onready var envanter_button: Button = %EnvanterButton
+@onready var koleksiyon_button: Button = %KoleksiyonButton
+@onready var dive_button: Button = %DiveButton
+@onready var toast_label: Label = %ToastLabel
+
+var _toast_tween: Tween = null
+
+
+var _current_day: int = 1
 
 
 func _ready() -> void:
-	var dark_wood_bg = StyleBoxFlat.new()
-	dark_wood_bg.bg_color = Color(0.15, 0.10, 0.06, 0.9) # Tok ve koyu kahverengi
-	dark_wood_bg.set_corner_radius_all(8)
-	dark_wood_bg.set_border_width_all(2)
-	dark_wood_bg.border_color = Color(0.85, 0.75, 0.45, 1.0) # Krem / Eskitilmiş Altın çerçeve
-	var info_bg = dark_wood_bg.duplicate()
-	info_bg.content_margin_left = 12
-	info_bg.content_margin_right = 12
-	info_bg.content_margin_top = 4
-	info_bg.content_margin_bottom = 4
-	$zurna.add_theme_stylebox_override("normal", info_bg)
-	$zurna.add_theme_color_override("font_color", Color(0.95, 0.9, 0.8, 1.0))
-	GlobalEconomy.money_changed.connect(_on_money_changed)
-	$zurna.text = str(GlobalEconomy.money) + " Zurna"
-	# Bu menü ve altındaki her şey (butonlar dahil) pause'dan etkilenmesin
 	process_mode = Node.PROCESS_MODE_ALWAYS
-
-	# Ofis açılınca oyun fiziği (batma, oksijen tüketimi, can) donsun.
-	# player_controller.gd'de process_mode override edilmediği için CharacterBody2D
-	# otomatik olarak pause'a girer, ekstra bir şey yapmamıza gerek yok.
 	get_tree().paused = true
 
-	close_button.pressed.connect(_on_close_pressed)
+	var save_data: Dictionary = GlobalInventory.get_save_data()
+	if not save_data.is_empty():
+		_current_day = int(save_data.get("current_day", 1))
+
+	# Bakiye ve Gün Göstergeleri
+	GlobalEconomy.money_changed.connect(_on_money_changed)
+	_refresh_wallet()
+	_refresh_day()
+
+	# Üst Bar Bağlantıları
+	save_exit_button.pressed.connect(_on_save_exit_pressed)
+	advance_day_button.pressed.connect(_on_advance_day_pressed)
+
+	# Satıcı Butonları
+	copcu_button.pressed.connect(_open_copcu)
 	antikaci_button.pressed.connect(_open_antikaci)
 	kara_borsa_button.pressed.connect(_open_kara_borsa)
-	koleksiyon_button.pressed.connect(_open_koleksiyon)
-	envanter_button.pressed.connect(_open_envanter)
+
+	# Tesis Butonları
 	equstore_button.pressed.connect(_open_equstore)
-	main_menu_button.pressed.connect(_on_main_menu_pressed)
+	lab_button.pressed.connect(_on_lab_pressed)
+	shop_button.pressed.connect(_on_shop_pressed)
+
+	# Alt Bar Butonları
+	envanter_button.pressed.connect(_open_envanter)
+	koleksiyon_button.pressed.connect(_open_koleksiyon)
+	dive_button.pressed.connect(_on_dive_pressed)
+
+	if toast_label:
+		toast_label.modulate.a = 0.0
 
 
-func _on_close_pressed() -> void:
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_ESCAPE:
+				_on_dive_pressed()
+				get_viewport().set_input_as_handled()
+			KEY_I:
+				_open_envanter()
+				get_viewport().set_input_as_handled()
+			KEY_C:
+				_open_koleksiyon()
+				get_viewport().set_input_as_handled()
+
+
+func _refresh_wallet() -> void:
+	if zurna_label:
+		zurna_label.text = "%d Zurna" % GlobalEconomy.money
+
+
+func _refresh_day() -> void:
+	if day_label:
+		day_label.text = "Gün: %d" % _current_day
+
+
+func _on_money_changed(_amount: int) -> void:
+	_refresh_wallet()
+
+
+func _on_advance_day_pressed() -> void:
+	_current_day += 1
+	_refresh_day()
+	GlobalSoundManager.play_sfx("click")
+	_show_toast("Gün ilerletildi! (Gün %d)" % _current_day)
+
+
+func _on_save_exit_pressed() -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	var equipment_dict: Dictionary = {
+		"tube_level": int(player.get("tube_level")) if player else 1,
+		"fins_level": int(player.get("fins_level")) if player else 0,
+		"goggles_level": int(player.get("goggles_level")) if player else 0,
+		"backpack_level": int(player.get("backpack_level")) if player else 0
+	}
+	GlobalInventory.save_game(_current_day, GlobalEconomy.money, equipment_dict)
+	GlobalSoundManager.play_sfx("door")
+	get_tree().paused = false
+	get_tree().change_scene_to_file(main_menu_scene_path)
+
+
+func _on_dive_pressed() -> void:
+	GlobalSoundManager.play_sfx("door_close")
 	if teleport_player_on_close:
 		var player = get_tree().get_first_node_in_group("player")
 		if player:
-			# .set() kullanıyoruz çünkü player değişkeni generic Node tipinde;
-			# bu şekilde CharacterBody2D olduğunu varsaymadan güvenle pozisyon/hız set edebiliyoruz.
-			# Oyuncu, su yüzeyinin üstüne ışınlanıp suya düşerek oyuna döner (oyun başlangıcıyla aynı).
 			var spawn_y = InfiniteMapManager.water_surface_y - spawn_above_surface_px
 			player.set("global_position", Vector2(ocean_spawn_x, spawn_y))
 			player.set("velocity", Vector2(0, spawn_fall_speed))
@@ -73,46 +142,65 @@ func _on_close_pressed() -> void:
 
 
 func _exit_tree() -> void:
-	# Güvenlik ağı: menü her nasılsa close butonundan geçmeden yok edilirse
-	# (ör. sahne yeniden yüklenirse) oyun kalıcı olarak donmuş kalmasın.
 	get_tree().paused = false
+	if GlobalEconomy.money_changed.is_connected(_on_money_changed):
+		GlobalEconomy.money_changed.disconnect(_on_money_changed)
+
+
+# ------------------------------------------------------------------
+# SAHNE AÇICILAR
+# ------------------------------------------------------------------
+
+func _open_popup(scene: PackedScene) -> void:
+	if not scene:
+		push_warning("OfficeMenu: Açılmak istenen sahne atanmamış!")
+		return
+	GlobalSoundManager.play_sfx("click")
+	get_tree().current_scene.add_child(scene.instantiate())
+
+
+func _open_copcu() -> void:
+	_open_popup(copcu_scene)
 
 
 func _open_antikaci() -> void:
-	_open_preconfigured(antikaci_scene)
+	_open_popup(antikaci_scene)
 
 
 func _open_kara_borsa() -> void:
-	_open_preconfigured(kara_borsa_scene)
+	_open_popup(kara_borsa_scene)
 
 
-func _open_preconfigured(shop_scene: PackedScene) -> void:
-	if not shop_scene:
-		push_warning("OfficeMenu: Satıcı sahnesi atanmamış!")
-		return
-	get_tree().current_scene.add_child(shop_scene.instantiate())
-
-
-func _open_koleksiyon() -> void:
-	_open_preconfigured(collection_scene)
+func _open_equstore() -> void:
+	_open_popup(equstore_scene)
 
 
 func _open_envanter() -> void:
-	if not inventory_scene:
-		push_warning("OfficeMenu: inventory_scene atanmamış!")
+	_open_popup(inventory_scene)
+
+
+func _open_koleksiyon() -> void:
+	_open_popup(collection_scene)
+
+
+func _on_lab_pressed() -> void:
+	GlobalSoundManager.play_sfx("click")
+	_show_toast("🧪 Laboratuvar (Crafting Sistemi) Çok Yakında!")
+
+
+func _on_shop_pressed() -> void:
+	GlobalSoundManager.play_sfx("click")
+	_show_toast("📦 Satış Pazarı (Üretilen Eşyalar) Çok Yakında!")
+
+
+func _show_toast(msg: String) -> void:
+	if not toast_label:
 		return
-	get_tree().current_scene.add_child(inventory_scene.instantiate())
-
-
-func _on_main_menu_pressed() -> void:
-	get_tree().paused = false
-	get_tree().change_scene_to_file(main_menu_scene_path)
-	GlobalSoundManager.play_sfx("door")
-
-func _open_equstore() -> void:
-	if not equstore_scene:
-		push_warning("OfficeMenu: equstore_scene atanmamış!")
-		return
-	get_tree().current_scene.add_child(equstore_scene.instantiate())
-func _on_money_changed(amount) -> void:
-	$zurna.text = str(amount) + " Zurna"
+	toast_label.text = msg
+	if _toast_tween and _toast_tween.is_valid():
+		_toast_tween.kill()
+	_toast_tween = create_tween()
+	toast_label.modulate.a = 0.0
+	_toast_tween.tween_property(toast_label, "modulate:a", 1.0, 0.2)
+	_toast_tween.tween_interval(1.8)
+	_toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.5)
