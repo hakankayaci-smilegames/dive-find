@@ -38,6 +38,9 @@ func _ready() -> void:
 	register_command("add_time", _cmd_add_time, "Saati ileri sarar. (Kullanım: add_time <dakika> - Örn: add_time 30)")
 	register_command("time_speed", _cmd_time_speed, "Zaman akış hızını çarpar. (Kullanım: time_speed <çarpan> - Örn: time_speed 5)")
 	register_command("skip_day", _cmd_skip_day, "Günü anında bitirip özet ekranını açar.")
+	register_command("unlock_all", _cmd_unlock_all, "Koleksiyon defterindeki tüm eşyaları anında açar.")
+	register_command("unlockall", _cmd_unlock_all, "unlock_all komutunun kısayolu.")
+	register_command("reset_collection", _cmd_reset_collection, "Koleksiyon defterindeki tüm keşifleri sıfırlar.")
 
 	_log_info("[color=#70a5ff][ Dive&Find Hile & Geliştirici Konsolu Hazır ][/color]")
 	_log_info("[color=#aaaaaa]Yardım için [b]help[/b] yazabilirsiniz. Kapatmak için [b]é[/b] veya [b]ESC[/b].[/color]\n")
@@ -385,6 +388,17 @@ func _cmd_skip_day() -> void:
 	else:
 		time_mgr.start_new_day()
 		_log_success("Yeni güne geçildi! (Gün %d)" % int(time_mgr.get("current_day")))
+
+
+func _cmd_unlock_all() -> void:
+	var unlocked: int = GlobalInventory.unlock_all_collection()
+	var total: int = GlobalInventory.get_all_items().size()
+	_log_success("Koleksiyon defteri tamamen açıldı! (Toplam: %d eşya, Yeni açılan: %d)" % [total, unlocked])
+
+
+func _cmd_reset_collection() -> void:
+	GlobalInventory.reset_collection()
+	_log_info("[color=#ffaa00]Koleksiyon defterindeki tüm keşifler sıfırlandı![/color]")
 
 
 func _get_time_mgr() -> Node:

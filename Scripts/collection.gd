@@ -30,6 +30,15 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 
 
+const CATEGORY_ORDER: Dictionary = {
+	"Trash": 0,       # Gri (Çöp)
+	"Resource": 1,    # Cyan (Hammadde)
+	"Rare Found": 2,  # Mor (Nadir Buluntu)
+	"Valuable": 3,    # Altın Sarısı (Değerli)
+	"Special": 4      # Kırmızı (Özel)
+}
+
+
 func _populate_grid() -> void:
 	for child in grid_container.get_children():
 		child.queue_free()
@@ -38,7 +47,16 @@ func _populate_grid() -> void:
 		push_warning("Koleksiyon: slot_scene atanmamış!")
 		return
 
-	var all_items := GlobalInventory.get_all_items()
+	var all_items: Array[ItemData] = GlobalInventory.get_all_items().duplicate()
+	all_items.sort_custom(func(a: ItemData, b: ItemData) -> bool:
+		var order_a: int = CATEGORY_ORDER.get(a.category, 99)
+		var order_b: int = CATEGORY_ORDER.get(b.category, 99)
+		if order_a != order_b:
+			return order_a < order_b
+		if a.value != b.value:
+			return a.value < b.value
+		return a.item_name.naturalnocasecmp_to(b.item_name) < 0
+	)
 	var discovered_count := 0
 	for item in all_items:
 		var slot = slot_scene.instantiate() as CollectionSlot

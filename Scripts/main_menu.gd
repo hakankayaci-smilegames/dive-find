@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "v0.0.2 (Devbuild)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "Pre-Beta 0.5 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -25,19 +25,27 @@ const SFX_BUS := "SFX"
 @onready var new_game_button: Button = $Panel/VBoxContainer/NewGameButton
 
 @onready var title_box: Panel = $Panel/TitleBox
+@onready var remastered_label: Label = get_node_or_null("Panel/TitleBox/RemasteredLabel")
 @onready var subtitle_label: Label = $Panel/SubtitleLabel
 @onready var menu_buttons: VBoxContainer = $Panel/VBoxContainer
+@onready var changelog_panel: Panel = $Panel/ChangelogPanel
 @onready var exit_button: Button = $Panel/Button
 @onready var sunan_label: Label = $Panel/Label2
 @onready var version_label: Label = $Panel/VersionLabel
+
+@onready var sky_texture: TextureRect = $SkyTexture
+@onready var ocean_texture: TextureRect = $OceanTexture
+@onready var deep_texture: TextureRect = $DeepTexture
 
 @onready var music_slider: HSlider = $SettingsPanel/Content/MusicRow/MusicSlider
 @onready var sfx_slider: HSlider = $SettingsPanel/Content/SfxRow/SfxSlider
 @onready var fullscreen_check: CheckButton = $SettingsPanel/Content/FullscreenRow/FullscreenCheck
 @onready var reset_collection_button: Button = $SettingsPanel/Content/CollectionRow/ResetCollectionButton
 
-var _panel_tweens := {}
-var _base_positions := {}
+var _panel_tweens: Dictionary = {}
+var _base_positions: Dictionary = {}
+var _target_parallax: Vector2 = Vector2.ZERO
+var _current_parallax: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
@@ -63,8 +71,14 @@ func _ready() -> void:
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
 
+	_setup_button_hover_sfx()
 	_play_entrance_animation()
 	call_deferred("_preload_collection_cache")
+
+
+func _process(delta: float) -> void:
+	_update_parallax(delta)
+	_update_title_bobbing()
 
 
 func _apply_game_version() -> void:
@@ -72,7 +86,6 @@ func _apply_game_version() -> void:
 		version_label.text = game_version
 
 	if is_instance_valid(info_text):
-		# Bilgi panelindeki en alt sürüm satırını dinamik senkronize eder
 		var bbcode := info_text.text
 		var old_ver_pattern := "Smile Games — Afterjam Remaster Edition 2.0"
 		if bbcode.contains(old_ver_pattern):
@@ -94,25 +107,41 @@ func _ensure_audio_buses() -> void:
 
 
 func _capture_positions() -> void:
-	for node in [info_panel, settings_panel, title_box, menu_buttons, subtitle_label, exit_button, sunan_label, version_label]:
+	var nodes := [
+		info_panel, settings_panel, title_box, menu_buttons,
+		subtitle_label, exit_button, sunan_label, version_label,
+		changelog_panel, sky_texture, ocean_texture, deep_texture
+	]
+	for node in nodes:
 		if is_instance_valid(node):
 			_base_positions[node] = node.position
 
 
 func _play_entrance_animation() -> void:
-	_animate_enter(title_box, _base_positions[title_box] + Vector2(0, -40), 0.45)
-	_fade_in(subtitle_label, 0.5)
-	_animate_enter(menu_buttons, _base_positions[menu_buttons] + Vector2(420, 0), 0.5)
+	if _base_positions.has(title_box):
+		_animate_enter(title_box, _base_positions[title_box] + Vector2(-60.0, 0.0), 0.45)
+	if is_instance_valid(subtitle_label):
+		_fade_in(subtitle_label, 0.3)
+	if _base_positions.has(menu_buttons):
+		_animate_enter(menu_buttons, _base_positions[menu_buttons] + Vector2(-80.0, 0.0), 0.5)
+	if is_instance_valid(changelog_panel) and _base_positions.has(changelog_panel):
+		_animate_enter(changelog_panel, _base_positions[changelog_panel] + Vector2(80.0, 0.0), 0.55)
+
 	var buttons: Array[Node] = menu_buttons.get_children()
 	for i in buttons.size():
-		_fade_in(buttons[i], 0.08 * i)
-	_fade_in(exit_button, 0.6)
-	_fade_in(sunan_label, 0.7)
+		_fade_in(buttons[i] as Control, 0.06 * i)
+
+	if is_instance_valid(exit_button):
+		_fade_in(exit_button, 0.5)
+	if is_instance_valid(sunan_label):
+		_fade_in(sunan_label, 0.6)
 	if is_instance_valid(version_label):
-		_fade_in(version_label, 0.7)
+		_fade_in(version_label, 0.6)
 
 
 func _animate_enter(control: Control, from: Vector2, duration: float) -> void:
+	if not is_instance_valid(control) or not _base_positions.has(control):
+		return
 	control.position = from
 	control.modulate.a = 0.0
 	var tween := create_tween().set_parallel(true)
@@ -121,10 +150,57 @@ func _animate_enter(control: Control, from: Vector2, duration: float) -> void:
 
 
 func _fade_in(control: Control, delay: float) -> void:
+	if not is_instance_valid(control):
+		return
 	control.modulate.a = 0.0
 	var tween := create_tween()
 	tween.tween_interval(delay)
 	tween.tween_property(control, "modulate:a", 1.0, 0.35)
+
+
+func _setup_button_hover_sfx() -> void:
+	var buttons: Array[Node] = menu_buttons.get_children()
+	for child in buttons:
+		if child is Button:
+			var btn := child as Button
+			btn.mouse_entered.connect(func() -> void:
+				if not btn.disabled:
+					GlobalSoundManager.play_sfx("click")
+			)
+
+
+func _update_parallax(delta: float) -> void:
+	var vp := get_viewport()
+	if not vp:
+		return
+	var vp_size := vp.get_visible_rect().size
+	if vp_size.x <= 0.0 or vp_size.y <= 0.0:
+		return
+
+	var mouse_pos := vp.get_mouse_position()
+	var center := vp_size * 0.5
+	_target_parallax = (mouse_pos - center) / center
+	_target_parallax.x = clampf(_target_parallax.x, -1.0, 1.0)
+	_target_parallax.y = clampf(_target_parallax.y, -1.0, 1.0)
+
+	_current_parallax = _current_parallax.lerp(_target_parallax, delta * 3.5)
+
+	if is_instance_valid(sky_texture) and _base_positions.has(sky_texture):
+		sky_texture.position = _base_positions[sky_texture] - _current_parallax * 4.0
+	if is_instance_valid(ocean_texture) and _base_positions.has(ocean_texture):
+		ocean_texture.position = _base_positions[ocean_texture] - _current_parallax * 12.0
+	if is_instance_valid(deep_texture) and _base_positions.has(deep_texture):
+		deep_texture.position = _base_positions[deep_texture] - _current_parallax * 22.0
+
+
+func _update_title_bobbing() -> void:
+	if is_instance_valid(title_box) and _base_positions.has(title_box):
+		var float_y := sin(Time.get_ticks_msec() * 0.002) * 3.5
+		title_box.position.y = _base_positions[title_box].y + float_y
+
+	if is_instance_valid(remastered_label):
+		var glow_pulse := sin(Time.get_ticks_msec() * 0.004) * 0.18 + 0.82
+		remastered_label.modulate.a = glow_pulse
 
 
 func _toggle_info_panel() -> void:
@@ -162,10 +238,10 @@ func _panel_tween(panel: Panel) -> Tween:
 
 func _show_panel(panel: Panel) -> void:
 	var tween := _panel_tween(panel)
-	var base: Vector2 = _base_positions[panel]
+	var base: Vector2 = _base_positions.get(panel, panel.position)
 	panel.visible = true
 	panel.modulate.a = 0.0
-	panel.position = base + Vector2(120, 0)
+	panel.position = base + Vector2(100.0, 0.0)
 	tween.set_parallel(true)
 	tween.tween_property(panel, "position", base, 0.25).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tween.tween_property(panel, "modulate:a", 1.0, 0.25)
@@ -173,9 +249,9 @@ func _show_panel(panel: Panel) -> void:
 
 func _hide_panel(panel: Panel) -> void:
 	var tween := _panel_tween(panel)
-	var base: Vector2 = _base_positions[panel]
+	var base: Vector2 = _base_positions.get(panel, panel.position)
 	tween.set_parallel(true)
-	tween.tween_property(panel, "position", base + Vector2(80, 0), 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	tween.tween_property(panel, "position", base + Vector2(60.0, 0.0), 0.15).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tween.tween_property(panel, "modulate:a", 0.0, 0.15)
 	tween.chain().tween_callback(func() -> void:
 		panel.visible = false
@@ -188,8 +264,13 @@ func _refresh_save_buttons() -> void:
 	var has_save: bool = GlobalInventory.has_save()
 	continue_button.disabled = not has_save
 	if has_save:
+		var save_data := GlobalInventory.get_save_data()
+		var day := int(save_data.get("current_day", 1))
+		var money := int(save_data.get("money", 0))
+		continue_button.text = "DEVAM ET  (Gün %d • %d Zurna)" % [day, money]
 		continue_button.tooltip_text = GlobalInventory.get_save_summary()
 	else:
+		continue_button.text = "DEVAM ET"
 		continue_button.tooltip_text = "Kayıtlı oyun bulunamadı."
 
 
@@ -209,7 +290,6 @@ func _on_continue_pressed() -> void:
 
 
 func _preload_collection_cache() -> void:
-	# "OYNA"ya hiç basmadan doğrudan ana menüden Koleksiyon'a tıklanırsa da donma yaşanmasın.
 	GlobalInventory.get_all_items()
 
 

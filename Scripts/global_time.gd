@@ -15,7 +15,7 @@ const CUTOFF_HOUR: int = 19
 const CUTOFF_MINUTE: int = 0
 
 const MINUTE_STEP: int = 15       # Her dilimde 15 dakika artar
-const STEP_INTERVAL_SEC: float = 30.0 # Her 30 saniyede bir (toplam mesai ~18 dakika)
+const STEP_INTERVAL_SEC: float = 20.0 # Her 20 saniyede bir (toplam mesai ~12 dakika, 10-15 dk aralığı)
 
 var current_day: int = 1
 var current_hour: int = START_HOUR

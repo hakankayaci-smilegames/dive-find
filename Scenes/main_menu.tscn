@@ -10,52 +10,91 @@
 bg_color = Color(0, 0, 0, 0)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_title_bg"]
-bg_color = Color(0.15, 0.1, 0.06, 0.85)
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
+bg_color = Color(0.03, 0.08, 0.16, 0.88)
 border_width_left = 3
-border_width_top = 3
-border_width_right = 3
+border_width_top = 2
+border_width_right = 2
 border_width_bottom = 3
-border_color = Color(0.85, 0.75, 0.45, 1)
-corner_radius_top_left = 16
-corner_radius_top_right = 16
-corner_radius_bottom_right = 16
-corner_radius_bottom_left = 16
+border_color = Color(0, 0.85, 0.95, 0.85)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.45)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
-bg_color = Color(0.85, 0.75, 0.45, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_continue_normal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.06, 0.18, 0.3, 0.9)
+border_width_left = 5
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.85, 0.95, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0.65, 0.85, 0.25)
+shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
-bg_color = Color(0.65, 0.55, 0.3, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.02, 0.07, 0.14, 0.95)
+border_width_left = 4
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.9, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
-bg_color = Color(0.95, 0.85, 0.55, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08, 0.2, 0.35, 0.95)
+border_width_left = 6
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.95, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0.85, 1, 0.25)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.03, 0.07, 0.12, 0.5)
+border_width_left = 4
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.12, 0.2, 0.28, 0.4)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_focus"]
 bg_color = Color(0, 0, 0, 0)
@@ -63,87 +102,144 @@ border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.95, 0.85, 0.55, 0.9)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
-bg_color = Color(0.28, 0.22, 0.16, 0.6)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.15, 0.1, 0.06, 0.5)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_normal"]
-bg_color = Color(0.35, 0.08, 0.06, 0.9)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.85, 0.75, 0.45, 0.9)
+border_color = Color(0, 0.9, 1, 0.8)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_pressed"]
-bg_color = Color(0.25, 0.05, 0.04, 1)
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.05, 0.12, 0.22, 0.85)
+border_width_left = 4
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.18, 0.55, 0.78, 0.7)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 6
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_changelog"]
+content_margin_left = 20.0
+content_margin_top = 18.0
+content_margin_right = 20.0
+content_margin_bottom = 18.0
+bg_color = Color(0.03, 0.07, 0.14, 0.85)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.65, 0.55, 0.32, 1)
+border_color = Color(0.18, 0.55, 0.8, 0.75)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 12
+shadow_offset = Vector2(0, 4)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_normal"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.24, 0.05, 0.06, 0.85)
+border_width_left = 2
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.75, 0.25, 0.25, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_pressed"]
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.15, 0.03, 0.04, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.3, 0.3, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_hover"]
-bg_color = Color(0.5, 0.13, 0.1, 1)
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.38, 0.08, 0.1, 0.95)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.95, 0.85, 0.55, 1)
+border_color = Color(1, 0.45, 0.45, 1)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+shadow_color = Color(0.8, 0.1, 0.15, 0.3)
+shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_sunan_bg"]
-content_margin_left = 12.0
-content_margin_top = 5.0
-content_margin_right = 12.0
-content_margin_bottom = 5.0
-bg_color = Color(0, 0, 0, 0.55)
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.02, 0.05, 0.1, 0.7)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.35, 0.5, 0.5)
 corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info"]
-bg_color = Color(0.15, 0.1, 0.06, 0.95)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.85, 0.75, 0.45, 1)
-corner_radius_top_left = 12
-corner_radius_top_right = 12
-corner_radius_bottom_right = 12
-corner_radius_bottom_left = 12
+content_margin_left = 24.0
+content_margin_top = 18.0
+content_margin_right = 24.0
+content_margin_bottom = 18.0
+bg_color = Color(0.03, 0.07, 0.14, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.65, 0.88, 0.85)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_size = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_bg"]
 content_margin_top = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.1, 0.07, 0.04, 1)
+bg_color = Color(0.02, 0.05, 0.1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.3, 0.45, 0.8)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -152,7 +248,7 @@ corner_radius_bottom_left = 5
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_fill"]
 content_margin_top = 4.0
 content_margin_bottom = 4.0
-bg_color = Color(0.85, 0.75, 0.45, 1)
+bg_color = Color(0, 0.85, 0.95, 1)
 corner_radius_top_left = 5
 corner_radius_top_right = 5
 corner_radius_bottom_right = 5
@@ -167,7 +263,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
-game_version = "Dev 0.0.4(Afterjam Remaster)"
+game_version = "Pre-Alpha 1.0 (Afterjam Remaster)"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
@@ -206,6 +302,16 @@ texture = ExtResource("4_ocean_deep")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="BackgroundTint" type="ColorRect" parent="." unique_id=194821034]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.01, 0.04, 0.08, 0.38)
+
 [node name="Panel" type="Panel" parent="." unique_id=408007492]
 layout_mode = 1
 anchors_preset = 15
@@ -217,139 +323,189 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel_clear")
 
 [node name="TitleBox" type="Panel" parent="Panel" unique_id=2089779631]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -400.0
-offset_top = 55.0
-offset_right = 400.0
-offset_bottom = 195.0
-grow_horizontal = 2
+offset_left = 64.0
+offset_top = 38.0
+offset_right = 474.0
+offset_bottom = 142.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_title_bg")
 
 [node name="TitleLabel" type="Label" parent="Panel/TitleBox" unique_id=1751736272]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
+offset_bottom = 70.0
 grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_color = Color(0.95, 0.85, 0.55, 1)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
 theme_override_constants/shadow_offset_x = 3
 theme_override_constants/shadow_offset_y = 3
-theme_override_font_sizes/font_size = 96
-text = "Dive&Find"
+theme_override_font_sizes/font_size = 56
+text = "Dive & Find"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RemasteredLabel" type="Label" parent="Panel/TitleBox" unique_id=1751736273]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -32.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
+theme_override_colors/font_shadow_color = Color(1, 0.45, 0.05, 0.85)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 0
+theme_override_constants/shadow_outline_size = 6
+theme_override_font_sizes/font_size = 14
+text = "✦ REMASTERED ✦"
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="SubtitleLabel" type="Label" parent="Panel" unique_id=188992538]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -300.0
-offset_top = 205.0
-offset_right = 300.0
-offset_bottom = 232.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.9)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+offset_left = 68.0
+offset_top = 148.0
+offset_right = 474.0
+offset_bottom = 176.0
+theme_override_colors/font_color = Color(0.72, 0.9, 0.98, 0.9)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.75)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 18
-text = "Derinliklerin Hazinelerini Bul"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 17
+text = "Derinliklerin Gizemli Hazinelerini Keşfet"
 vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Panel" unique_id=791433441]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -220.0
-offset_top = -35.0
-offset_right = 220.0
-offset_bottom = 295.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 16
-
-[node name="NewGameButton" type="Button" parent="Panel/VBoxContainer" unique_id=1174683378]
-custom_minimum_size = Vector2(440, 68)
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
-text = "YENİ OYUN"
+offset_left = 64.0
+offset_top = 190.0
+offset_right = 454.0
+offset_bottom = 546.0
+theme_override_constants/separation = 12
 
 [node name="ContinueButton" type="Button" parent="Panel/VBoxContainer" unique_id=1174683379]
-custom_minimum_size = Vector2(440, 68)
+custom_minimum_size = Vector2(390, 58)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_default_cursor_shape = 2
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_disabled_color = Color(0.6, 0.55, 0.45, 0.6)
-theme_override_font_sizes/font_size = 34
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_colors/font_color = Color(0.95, 0.98, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.4, 0.5, 0.6, 0.5)
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_continue_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_disabled")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
 text = "DEVAM ET"
 
-[node name="Button2" type="Button" parent="Panel/VBoxContainer" unique_id=467395248]
-custom_minimum_size = Vector2(440, 62)
+[node name="NewGameButton" type="Button" parent="Panel/VBoxContainer" unique_id=1174683378]
+custom_minimum_size = Vector2(390, 54)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 32
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 26
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+text = "YENİ OYUN"
+
+[node name="Button3" type="Button" parent="Panel/VBoxContainer" unique_id=1185158574]
+custom_minimum_size = Vector2(390, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+text = "KOLEKSİYON"
+
+[node name="Button2" type="Button" parent="Panel/VBoxContainer" unique_id=467395248]
+custom_minimum_size = Vector2(390, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
 text = "AYARLAR"
 
-[node name="Button3" type="Button" parent="Panel/VBoxContainer" unique_id=1185158574]
-custom_minimum_size = Vector2(440, 62)
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 32
-theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
-theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
-theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
-theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
-text = "KOLEKSIYON"
-
 [node name="Button4" type="Button" parent="Panel/VBoxContainer" unique_id=1782982533]
-custom_minimum_size = Vector2(440, 62)
+custom_minimum_size = Vector2(390, 50)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 32
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.85, 0.92, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 24
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
-text = "BİLGİ"
+text = "BİLGİ & YARDIM"
+
+[node name="ChangelogPanel" type="Panel" parent="Panel" unique_id=883192011]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -490.0
+offset_top = 42.0
+offset_right = -64.0
+offset_bottom = 548.0
+grow_horizontal = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_changelog")
+
+[node name="ChangelogTitle" type="Label" parent="Panel/ChangelogPanel" unique_id=883192012]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 14.0
+offset_right = -18.0
+offset_bottom = 44.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "📋 YENİLİKLER & GÜNCELLEMELER"
+vertical_alignment = 1
+
+[node name="ChangelogText" type="RichTextLabel" parent="Panel/ChangelogPanel" unique_id=883192013]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 52.0
+offset_right = -18.0
+offset_bottom = -16.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/default_color = Color(0.85, 0.92, 1, 1)
+theme_override_font_sizes/normal_font_size = 14
+bbcode_enabled = true
 
 [node name="Button" type="Button" parent="Panel" unique_id=1797594709]
 layout_mode = 1
@@ -358,52 +514,54 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -230.0
-offset_top = -70.0
-offset_right = -40.0
-offset_bottom = -22.0
+offset_left = -224.0
+offset_top = -64.0
+offset_right = -64.0
+offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_pressed_color = Color(0.85, 0.75, 0.45, 1)
-theme_override_colors/font_hover_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_font_sizes/font_size = 24
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.9, 1)
+theme_override_colors/font_pressed_color = Color(1, 0.5, 0.5, 1)
+theme_override_colors/font_hover_color = Color(1, 0.95, 0.95, 1)
+theme_override_font_sizes/font_size = 20
 theme_override_styles/normal = SubResource("StyleBoxFlat_exit_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_exit_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_exit_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
-text = "ÇIKIŞ"
+text = "OYUNDAN ÇIK"
 
 [node name="Label2" type="Label" parent="Panel" unique_id=662203969]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 30.0
-offset_top = -64.0
-offset_right = 280.0
-offset_bottom = -30.0
+offset_left = 64.0
+offset_top = -58.0
+offset_right = 260.0
+offset_bottom = -24.0
 grow_vertical = 0
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.65, 0.85, 0.95, 0.85)
+theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_sunan_bg")
-text = "Smile Games Sunar"
+text = "⚓ Smile Games Sunar"
+vertical_alignment = 1
 
 [node name="VersionLabel" type="Label" parent="Panel" unique_id=992837461]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -260.0
-offset_top = 18.0
-offset_right = -20.0
-offset_bottom = 44.0
+offset_left = -320.0
+offset_top = 12.0
+offset_right = -64.0
+offset_bottom = 36.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.7)
+theme_override_colors/font_color = Color(0.4, 0.75, 0.9, 0.7)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 14
+theme_override_font_sizes/font_size = 13
 text = "v0.0.2 (Devbuild)"
 horizontal_alignment = 2
 vertical_alignment = 1
@@ -431,9 +589,9 @@ offset_left = 24.0
 offset_top = 14.0
 offset_right = 400.0
 offset_bottom = 48.0
-theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 26
-text = "BİLGİ"
+text = "BİLGİ & YARDIM"
 vertical_alignment = 1
 
 [node name="CloseButton" type="Button" parent="InfoPanel" unique_id=2083881931]
@@ -446,10 +604,11 @@ offset_top = 10.0
 offset_right = -10.0
 offset_bottom = 50.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 24
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
@@ -466,26 +625,26 @@ offset_right = -24.0
 offset_bottom = -20.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_colors/default_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/default_color = Color(0.9, 0.95, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/normal_font_size = 16
 bbcode_enabled = true
-text = "[center][font_size=22][color=#e6bf73][b]🤿 DIVE & FIND 🤿[/b][/color][/font_size][/center]
+text = "[center][font_size=24][color=#00e5ff][b]🤿 DIVE & FIND 🤿[/b][/color][/font_size][/center]
 
-[color=#f2eaed][b]Hikaye:[/b][/color]
-Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eserleri, değerli kalıntıları ve tuhaf objeleri topla, yüzeye çıkarıp sat ve ekipmanlarını geliştir. 
+[color=#72b5ff][b]Hikaye & Konsept:[/b][/color]
+Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eserleri, değerli kalıntıları ve tuhaf objeleri topla, yüzeye çıkarıp sat ve ekipmanlarını geliştir.
 
-[color=#f2eaed][b]Kontroller:[/b][/color]
-• [color=#e6bf73]WASD / Yön Tuşları:[/color] Yüzme ve Hareket
-• [color=#e6bf73]Sol Tık:[/color] Nesneleri İncele / Topla
-• [color=#e6bf73]Fare Tekerleği:[/color] Yakınlaştır / Uzaklaştır (Kamera)
-• [color=#e6bf73]E :[/color] Eşya İncele, Çantaya at
+[color=#72b5ff][b]Kontroller:[/b][/color]
+• [color=#00e5ff]WASD / Yön Tuşları:[/color] Yüzme ve Hareket
+• [color=#00e5ff]Sol Tık:[/color] Nesneleri İncele / Topla
+• [color=#00e5ff]Fare Tekerleği / P & O:[/color] Yakınlaştır / Uzaklaştır (Kamera)
+• [color=#00e5ff]E :[/color] Eşya İncele, Çantaya at
+• [color=#00e5ff]é / ~ Tuşu:[/color] Geliştirici & Hile Konsolu
 
-
-[center][font_size=12][color=#a09080]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
-[font_size=16][color=#e6bf73][i]Smile Games sunar [/i][/color][/font_size][/center]"
+[center][font_size=13][color=#5e8ca8]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
+[font_size=15][color=#00e5ff][i]⚓ Smile Games sunar[/i][/color][/font_size][/center]"
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=830166412]
 visible = false
@@ -510,7 +669,7 @@ offset_left = 24.0
 offset_top = 14.0
 offset_right = 400.0
 offset_bottom = 48.0
-theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 26
 text = "AYARLAR"
 vertical_alignment = 1
@@ -525,10 +684,11 @@ offset_top = 10.0
 offset_right = -10.0
 offset_bottom = 50.0
 grow_horizontal = 0
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_font_sizes/font_size = 24
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 22
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
@@ -553,7 +713,7 @@ layout_mode = 2
 [node name="MusicLabel" type="Label" parent="SettingsPanel/Content/MusicRow" unique_id=588272636]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "Müzik"
 vertical_alignment = 1
@@ -573,7 +733,7 @@ layout_mode = 2
 [node name="SfxLabel" type="Label" parent="SettingsPanel/Content/SfxRow" unique_id=1477140035]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "Ses Efektleri"
 vertical_alignment = 1
@@ -593,7 +753,7 @@ layout_mode = 2
 [node name="FullscreenLabel" type="Label" parent="SettingsPanel/Content/FullscreenRow" unique_id=899049230]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "Tam Ekran"
 vertical_alignment = 1
@@ -608,7 +768,7 @@ layout_mode = 2
 [node name="CollectionLabel" type="Label" parent="SettingsPanel/Content/CollectionRow" unique_id=1068706638]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 20
 text = "Koleksiyon"
 vertical_alignment = 1
@@ -617,15 +777,16 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(260, 40)
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
-theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
-text = "KOLEKSIYONU SIFIRLA"
+text = "KOLEKSİYONU SIFIRLA"
 
 [connection signal="pressed" from="Panel/VBoxContainer/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

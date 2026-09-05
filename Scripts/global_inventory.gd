@@ -111,6 +111,19 @@ func reset_collection() -> void:
 	emit_signal("collection_updated", null)
 
 
+func unlock_all_collection() -> int:
+	var items: Array[ItemData] = get_all_items()
+	var new_unlocked: int = 0
+	for item in items:
+		if item and item.resource_path != "":
+			if not discovered_items.has(item.resource_path):
+				new_unlocked += 1
+			discovered_items[item.resource_path] = true
+	_save_collection()
+	emit_signal("collection_updated", null)
+	return new_unlocked
+
+
 func _save_collection() -> void:
 	var file := FileAccess.open(COLLECTION_SAVE_PATH, FileAccess.WRITE)
 	if not file:

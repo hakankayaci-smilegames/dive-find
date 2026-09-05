@@ -76,7 +76,9 @@ var godmode_enabled: bool = false                   # Hile konsolu ile açılıp
 
 @export_group("Animation")
 @export var swim_frames: Array[Texture2D] = [] 
-@export var base_anim_speed: float = 12.0 
+@export var idle_anim_speed: float = 2.5
+@export var max_anim_speed: float = 8.0
+@export var base_anim_speed: float = 8.0 
 
 # ------------------------------------------------------------------
 # SİNYALLER & DURUM
@@ -180,7 +182,7 @@ func _handle_movement(delta: float) -> void:
 # ANİMASYON SİSTEMİ
 # ------------------------------------------------------------------
 func _update_animation(delta: float) -> void:
-	if swim_frames.is_empty():
+	if swim_frames.is_empty() or not is_instance_valid(sprite):
 		return
 
 	# Sağa/Sola dönme (Mirror) - Yalnızca yatay hız varsa yön değiştirir
@@ -189,26 +191,18 @@ func _update_animation(delta: float) -> void:
 	elif velocity.x > 10.0:
 		sprite.flip_h = false
 
-	var current_speed = velocity.length()
-	var effective_max = get_effective_max_speed()
+	var current_speed: float = velocity.length()
+	var effective_max: float = maxf(get_effective_max_speed(), 1.0)
+	var speed_ratio: float = clampf(current_speed / effective_max, 0.0, 1.0)
 
-	# Karakter hareket ediyorsa animasyonu oynat
-	if current_speed > 10.0:
-		# Animasyon hızı, karakterin mevcut hızıyla (current_speed) doğru orantılıdır
-		# Bonus hızlardan etkilenmemesi için effective_max kullanıyoruz.
-		var speed_multiplier = (current_speed / effective_max) * base_anim_speed
-		_anim_timer += delta * speed_multiplier
+	# Dururken yavaşça süzülür (idle), hızlandıkça abartmadan max hızına yumuşakça yaklaşır
+	var anim_speed: float = lerpf(idle_anim_speed, max_anim_speed, speed_ratio)
+	_anim_timer += delta * anim_speed
 
-		# Timer dolduğunda bir sonraki frame'e geç
-		if _anim_timer >= 1.0:
-			_anim_timer = 0.0
-			_current_frame = (_current_frame + 1) % swim_frames.size()
-			sprite.texture = swim_frames[_current_frame]
-	else:
-		# Karakter duruyorsa sıfırıncı (bekleme) frame'ine sabitlen
-		_current_frame = 0
-		sprite.texture = swim_frames[0]
-		_anim_timer = 0.0
+	while _anim_timer >= 1.0:
+		_anim_timer -= 1.0
+		_current_frame = (_current_frame + 1) % swim_frames.size()
+		sprite.texture = swim_frames[_current_frame]
 
 
 # ------------------------------------------------------------------
