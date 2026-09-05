@@ -40,6 +40,9 @@ const SFX_BUS := "SFX"
 @onready var music_slider: HSlider = $SettingsPanel/Content/MusicRow/MusicSlider
 @onready var sfx_slider: HSlider = $SettingsPanel/Content/SfxRow/SfxSlider
 @onready var fullscreen_check: CheckButton = $SettingsPanel/Content/FullscreenRow/FullscreenCheck
+@onready var joystick_row: HBoxContainer = get_node_or_null("SettingsPanel/Content/JoystickRow")
+@onready var joystick_slider: HSlider = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickSlider")
+@onready var joystick_val_label: Label = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickValueLabel")
 @onready var reset_collection_button: Button = $SettingsPanel/Content/CollectionRow/ResetCollectionButton
 
 var _panel_tweens: Dictionary = {}
@@ -49,6 +52,9 @@ var _current_parallax: Vector2 = Vector2.ZERO
 
 
 func _ready() -> void:
+	if OS.has_feature("mobile"):
+		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_LANDSCAPE)
+
 	_ensure_audio_buses()
 	_apply_game_version()
 	_capture_positions()
@@ -70,6 +76,11 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
+
+	if not OS.has_feature("mobile") and is_instance_valid(joystick_row):
+		joystick_row.visible = false
+	elif is_instance_valid(joystick_slider):
+		joystick_slider.value_changed.connect(_on_joystick_slider_changed)
 
 	_setup_button_hover_sfx()
 	_play_entrance_animation()
@@ -315,10 +326,12 @@ func _load_settings() -> void:
 	var music := 70.0
 	var sfx := 80.0
 	var fullscreen := true
+	var joystick_scale := 1.0
 	if cfg.load(SETTINGS_FILE) == OK:
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
+		joystick_scale = cfg.get_value("controls", "joystick_scale", joystick_scale)
 	_set_bus_volume(MUSIC_BUS, music)
 	_set_bus_volume(SFX_BUS, sfx)
 	if DisplayServer.get_name() != "headless":
@@ -326,6 +339,10 @@ func _load_settings() -> void:
 	music_slider.value = music
 	sfx_slider.value = sfx
 	fullscreen_check.set_pressed_no_signal(fullscreen)
+	if is_instance_valid(joystick_slider):
+		joystick_slider.value = joystick_scale
+	if is_instance_valid(joystick_val_label):
+		joystick_val_label.text = "%%%d" % [int(round(joystick_scale * 100.0))]
 
 
 func _save_settings() -> void:
@@ -333,6 +350,8 @@ func _save_settings() -> void:
 	cfg.set_value("audio", "music", music_slider.value)
 	cfg.set_value("audio", "sfx", sfx_slider.value)
 	cfg.set_value("video", "fullscreen", fullscreen_check.button_pressed)
+	if is_instance_valid(joystick_slider):
+		cfg.set_value("controls", "joystick_scale", joystick_slider.value)
 	cfg.save(SETTINGS_FILE)
 
 
@@ -343,6 +362,12 @@ func _on_music_changed(value: float) -> void:
 
 func _on_sfx_changed(value: float) -> void:
 	_set_bus_volume(SFX_BUS, value)
+	_save_settings()
+
+
+func _on_joystick_slider_changed(value: float) -> void:
+	if is_instance_valid(joystick_val_label):
+		joystick_val_label.text = "%%%d" % [int(round(value * 100.0))]
 	_save_settings()
 
 

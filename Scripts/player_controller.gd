@@ -25,9 +25,9 @@ const GAME_OVER_SCENE := "res://Scenes/game_over.tscn"
 @export_group("Depth & Oxygen")
 @export var max_oxygen: float = 100.0
 @export var pixels_per_meter: float = 50.0       # 50px = 1 metre (derinlik ölçeği)
-@export var base_oxygen_drain_rate: float = 3.0  # derinlik 0'daki taban tüketim (oksijen/sn)
+@export var base_oxygen_drain_rate: float = 1.8  # derinlik 0'daki taban tüketim (oksijen/sn - bufflandı)
 @export var depth_penalty_reference: float = 250.0 # Her 250m'de baskı katsayısı +1 artar (daha adil derinlik ölçeği)
-@export var surface_oxygen_regen_rate: float = 25.0 # Yüzeyde oksijenin yavaşça dolma hızı (oksijen/sn)
+@export var surface_oxygen_regen_rate: float = 30.0 # Yüzeyde oksijenin dolma hızı (oksijen/sn)
 @export var tube_efficiency_gain: float = 1.25    # Her tüp seviyesinde +1.25 verimlilik
 
 @export_group("Health")
@@ -437,3 +437,11 @@ func _setup_camera() -> void:
 func _set_camera_zoom(new_zoom: float) -> void:
 	camera_zoom = clamp(new_zoom, get_effective_zoom_min(), camera_zoom_max)
 	_camera.zoom = Vector2(camera_zoom, camera_zoom)
+
+
+func zoom_in() -> void:
+	_set_camera_zoom(camera_zoom + camera_zoom_step)
+
+
+func zoom_out() -> void:
+	_set_camera_zoom(camera_zoom - camera_zoom_step)

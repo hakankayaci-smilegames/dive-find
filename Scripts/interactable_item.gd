@@ -245,3 +245,24 @@ func play_pickup_vfx_and_destroy() -> void:
 	# 3. Görsel efekti ve sesi ateşledikten sonra eşyayı siliyoruz
 	queue_free()
 
+
+## Doğrudan çantaya atma (İnceleme popup'ı açmadan hızlı alma)
+func quick_pickup() -> bool:
+	if not item_data:
+		return false
+	
+	if GlobalInventory.is_full():
+		GlobalSoundManager.play_sfx("error")
+		var hud = get_tree().get_first_node_in_group("hud")
+		if hud and hud.has_method("show_warning_toast"):
+			hud.show_warning_toast("[!] Çantan Dolu! (Daha fazla eşya alamazsın)")
+		return false
+
+	var added: bool = GlobalInventory.add_item(item_data)
+	if not added:
+		GlobalSoundManager.play_sfx("error")
+		return false
+
+	play_pickup_vfx_and_destroy()
+	return true
+

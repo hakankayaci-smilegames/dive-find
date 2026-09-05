@@ -325,11 +325,11 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - `item_seller.gd` motorunu `shop_filter = "CraftedOnly"` ile kullanan ihracat dükkanı.
   - Üretilen eşyaların toplu satışı, kilit koruması ve kayan altın kazanç efektleri hazır olarak çalışır.
 - **Aktif Tarifler ve Ürünler:**
-  - `Ananas Suyu` (90 Z) ➔ 2x Ananas? + 5 Zurna ([`all_items_tres/ananas_suyu.tres`](file:///home/hakan/dive&find/all_items_tres/ananas_suyu.tres))
-  - `İşlenmiş Plastik Bobini` (35 Z) ➔ 3x Pet şişe + 2x Poşet + 2 Zurna ([`all_items_tres/geri_donusum_plastigi.tres`](file:///home/hakan/dive&find/all_items_tres/geri_donusum_plastigi.tres))
-  - `Preslenmiş Alüminyum Bloğu` (85 Z) ➔ 2x Bükük kola + 2x Bükük pepsi + 1x Monster Kutusu + 1x Bükük Çatal + 10 Zurna ([`all_items_tres/aluminyum_blogu.tres`](file:///home/hakan/dive&find/all_items_tres/aluminyum_blogu.tres))
-  - `Tropikal Radyoaktif Kokteyl` (280 Z) ➔ 1x Gizemli Şişe + 2x Ananas? + 1x Monster Kutusu + 15 Zurna ([`all_items_tres/radyoaktif_kokteyl.tres`](file:///home/hakan/dive&find/all_items_tres/radyoaktif_kokteyl.tres))
-  - `Restore Edilmiş Tablo` (3800 Z) ➔ 1x Kırık Altın Çerçeve + 1x Zoktayın Saç Renginde Boya + 1x Isırılmış Kitap + 150 Zurna ([`all_items_tres/restore_tablo.tres`](file:///home/hakan/dive&find/all_items_tres/restore_tablo.tres))
+  - `İşlenmiş Plastik Bobini` (65 Z) ➔ 3x Pet şişe + 2x Poşet + 2 Zurna ([`all_items_tres/geri_donusum_plastigi.tres`](file:///home/hakan/dive&find/all_items_tres/geri_donusum_plastigi.tres))
+  - `Ananas Suyu` (160 Z) ➔ 2x Ananas? + 5 Zurna ([`all_items_tres/ananas_suyu.tres`](file:///home/hakan/dive&find/all_items_tres/ananas_suyu.tres))
+  - `Preslenmiş Alüminyum Bloğu` (220 Z) ➔ 2x Bükük kola + 2x Bükük pepsi + 1x Monster Kutusu + 1x Bükük Çatal + 10 Zurna ([`all_items_tres/aluminyum_blogu.tres`](file:///home/hakan/dive&find/all_items_tres/aluminyum_blogu.tres))
+  - `Tropikal Radyoaktif Kokteyl` (550 Z) ➔ 1x Gizemli Şişe + 2x Ananas? + 1x Monster Kutusu + 15 Zurna ([`all_items_tres/radyoaktif_kokteyl.tres`](file:///home/hakan/dive&find/all_items_tres/radyoaktif_kokteyl.tres))
+  - `Restore Edilmiş Tablo` (6500 Z) ➔ 1x Kırık Altın Çerçeve + 1x Zoktayın Saç Renginde Boya + 1x Isırılmış Kitap + 150 Zurna ([`all_items_tres/restore_tablo.tres`](file:///home/hakan/dive&find/all_items_tres/restore_tablo.tres))
 - **Koleksiyon Defteri Entegrasyonu:**
   - `collection.gd` ve `collection_slot.gd` içine `Crafted` (amber/turuncu zanaat rengi) eklendi.
   - Koleksiyon arayüzüne `🔨 Üretilen` sekmesi ([`Scenes/collection.tscn`](file:///home/hakan/dive&find/Scenes/collection.tscn)) entegre edildi.
@@ -343,22 +343,26 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Proje klonlanmadan, PC geliştirme akışını (WASD + Fare) %100 koruyarak hibrit girdi desteği sunar.
   - Mobil kontroller yalnızca `OS.has_feature("mobile")` veya `DisplayServer.is_touchscreen_available()` aktif olduğunda yüklenir; masaüstünde sıfır görsel ve işlemci maliyeti vardır.
 - **Proje Seviyesi Dokunmatik Ayarları ([`project.godot`](file:///home/hakan/dive&find/project.godot)):**
-  - `display/window/handheld/orientation = 5` (sensor_landscape - telefon her iki yatay yönde de otomatik döner).
+  - `display/window/handheld/orientation = 0` (landscape - sabit yatay ekran kilidi).
+  - `DisplayServer.screen_set_orientation(SCREEN_LANDSCAPE)` ile açılışta kod seviyesinde yatay zorlama.
   - `pointing/emulate_mouse_from_touch = true` (Telefonda dokunmalar tüm butonları fare gibi tıklar).
   - `boot_splash/show_image = true` (İkonlu açılış ekranı).
 - **İzole Mobil Kontrol Katmanı ([`Scenes/mobile_controls.tscn`](file:///home/hakan/dive&find/Scenes/mobile_controls.tscn) & [`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):**
-  - **Dinamik Sanal Joystick:** Ekranın sol yarısına dokunulduğunda parmak hizasında beliren, 360° analog yüzüş açısı sağlayan vektörel analog stick (`_draw()` ile sıfır harici görsel bağımlılığı).
-  - **Akıllı İncele/Etkileşim Düğmesi (Mobil E Tuşu):** Sağ altta yer alır; dalgıç denizde bir eşyanın menziline girdiğinde dinamik olarak parlar ve üstünde eşyanın adı yazar (`🖐️ [Eşya Adı]`).
-  - **Entegrasyon ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):** `mobile_move_vector` değişkeni ile mevcut dalgıç yüzme fiziğine kesintisiz paralel bağlanır.
+  - **Dinamik Sanal Joystick:** Ekranın sol yarısına dokunulduğunda parmak hizasında beliren, 360° analog yüzüş açısı sağlayan vektörel analog stick. Ayarlar panelindeki `controls/joystick_scale` değeriyle dinamik olarak yeniden ölçeklenir.
+  - **Akıllı İncele/Etkileşim Düğmesi (`🖐️ [Eşya Adı]`):** Sağ altta yer alır; dalgıç denizde bir eşyanın menziline girdiğinde dinamik olarak parlar ve detaylı inceleme penceresini açar.
+  - **Hızlı Alma Butonu (`⚡ DİREKT AL` / `quick_pickup()`):** İncele butonunun hemen üstünde yer alır. Eşyayı popup açmadan doğrudan çantaya atar; çanta doluysa `❌ DOLU` olarak kilitlenir ve sesli/titreşimli geri bildirim verir.
+  - **Mobil Kamera Zoom Tuşları (`🥽+` / `🥽-`):** Sağ orta kenarda yer alır; kamerayı kademeli yaklaştırıp uzaklaştıran kompakt butonlar.
+  - **Entegrasyon ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):** `mobile_move_vector`, `zoom_in()` ve `zoom_out()` metodları ile mevcut PC kontrollerini bozmadan hibrit bağlanır.
+- **Ayarlar Menüsü Joystick Ölçekleyici ([`Scenes/main_menu.tscn`](file:///home/hakan/dive&find/Scenes/main_menu.tscn) & [`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):**
+  - Ayarlar panelinde yer alır; PC'de otomatik gizlenir (`not OS.has_feature("mobile")`). %70 ile %150 arasında analog joystick boyutunu hassas ayarlamayı sağlar.
+- **Dengeleme & Oksijen Buff'ı ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):**
+  - Erken oyun keşif süresini ferahlatmak için `base_oxygen_drain_rate` 3.0'dan **1.8**'e çekildi (taban dalış süresi ~56 saniye). `surface_oxygen_regen_rate` ise 25.0'dan **30.0**'a yükseltildi.
 - **Mobil Kilit Mekanizması ([`Scripts/inventory_slot.gd`](file:///home/hakan/dive&find/Scripts/inventory_slot.gd)):**
   - Dokunmatik ekranlarda sağ tık olmadığı için **Uzun Basma (Long Press - 0.35s)** mekaniği entegre edildi. Oyuncu parmağını slota basılı tuttuğunda kilit açılır/kapanır; normal tıklamada ise detay açılır.
 - **Dinamik Grid Uyarlaması ([`Scripts/collection.gd`](file:///home/hakan/dive&find/Scripts/collection.gd)):**
   - Mobilde parmak tıklamalarını rahatlatmak için koleksiyon defteri sütun sayısı otomatik olarak 6'ya uyarlanır.
 - **Android APK Derleme Hattı (CachyOS / Linux):**
   - Android SDK Yolu: `/home/hakan/Android/Sdk` (`build-tools 34.0.0`, `platforms;android-34`, `platform-tools`).
-  - Debug Keystore: `/home/hakan/.local/share/godot/keystores/debug.keystore` (ve `~/.android/debug.keystore`).
+  - Keystore'lar: Debug (`~/.local/share/godot/keystores/debug.keystore`), Release (`~/.local/share/godot/keystores/release.keystore`).
   - Java: OpenJDK 21 (`/usr/lib/jvm/java-21-openjdk`).
   - Paket: `com.smilegames.diveandfind`, sürüm: `0.5.0` (arm64-v8a ve armeabi-v7a).
-
-
-

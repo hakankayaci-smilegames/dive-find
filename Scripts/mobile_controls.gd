@@ -5,15 +5,19 @@ class_name MobileControls
 ## Sağ taraf: Akıllı İncele/Etkileşim Düğmesi (Menzildeki eşyayı açar)
 
 @onready var interact_button: Button = $InteractButton
+@onready var quick_pickup_button: Button = get_node_or_null("QuickPickupButton")
 @onready var joystick_area: Control = $JoystickZone
+@onready var zoom_in_button: Button = get_node_or_null("ZoomControls/ZoomInButton")
+@onready var zoom_out_button: Button = get_node_or_null("ZoomControls/ZoomOutButton")
 
-# Joystick Görsel Parametreleri
+# Joystick Görsel ve Boyut Parametreleri
 var _touch_index: int = -1
 var _joystick_center: Vector2 = Vector2.ZERO
 var _joystick_current: Vector2 = Vector2.ZERO
 var _joystick_active: bool = false
-const JOYSTICK_RADIUS: float = 70.0
-const JOYSTICK_DEADZONE: float = 8.0
+var joystick_scale: float = 1.0
+var current_radius: float = 70.0
+var current_deadzone: float = 8.0
 
 var move_vector: Vector2 = Vector2.ZERO
 var _player: Node2D = null
@@ -25,35 +29,68 @@ func _ready() -> void:
 		queue_free()
 		return
 
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	visible = true
+	_load_controls_settings()
+
 	interact_button.pressed.connect(_on_interact_pressed)
+	if quick_pickup_button:
+		quick_pickup_button.pressed.connect(_on_quick_pickup_pressed)
 	joystick_area.gui_input.connect(_on_joystick_gui_input)
 	joystick_area.draw.connect(_on_joystick_draw)
+
+	if zoom_in_button:
+		zoom_in_button.pressed.connect(_on_zoom_in_pressed)
+	if zoom_out_button:
+		zoom_out_button.pressed.connect(_on_zoom_out_pressed)
 	
 	# Oyuncuyu bağla
 	_find_player()
 
 
+func _load_controls_settings() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load("user://settings.cfg") == OK:
+		joystick_scale = float(cfg.get_value("controls", "joystick_scale", 1.0))
+	else:
+		joystick_scale = 1.0
+	joystick_scale = clampf(joystick_scale, 0.7, 1.5)
+	current_radius = 70.0 * joystick_scale
+	current_deadzone = 8.0 * joystick_scale
+
+
+func _on_zoom_in_pressed() -> void:
+	if is_instance_valid(_player) and _player.has_method("zoom_in"):
+		_player.zoom_in()
+		GlobalSoundManager.play_sfx("click")
+
+
+func _on_zoom_out_pressed() -> void:
+	if is_instance_valid(_player) and _player.has_method("zoom_out"):
+		_player.zoom_out()
+		GlobalSoundManager.play_sfx("click")
+
+
 func _on_joystick_draw() -> void:
 	if not _joystick_active:
 		# Pasifken sol altta rehber silik bir analog göster
-		var default_pos := Vector2(130.0, joystick_area.size.y - 130.0)
-		joystick_area.draw_circle(default_pos, JOYSTICK_RADIUS, Color(1, 1, 1, 0.06))
-		joystick_area.draw_arc(default_pos, JOYSTICK_RADIUS, 0, TAU, 32, Color(0.85, 0.75, 0.45, 0.2), 2.0)
-		joystick_area.draw_circle(default_pos, 22.0, Color(0.85, 0.75, 0.45, 0.15))
+		var default_pos := Vector2(130.0 * joystick_scale, joystick_area.size.y - (130.0 * joystick_scale))
+		joystick_area.draw_circle(default_pos, current_radius, Color(1, 1, 1, 0.06))
+		joystick_area.draw_arc(default_pos, current_radius, 0, TAU, 32, Color(0.85, 0.75, 0.45, 0.2), 2.0)
+		joystick_area.draw_circle(default_pos, 22.0 * joystick_scale, Color(0.85, 0.75, 0.45, 0.15))
 		return
 
 	# Dış Halka
-	joystick_area.draw_circle(_joystick_center, JOYSTICK_RADIUS, Color(0.05, 0.08, 0.12, 0.45))
-	joystick_area.draw_arc(_joystick_center, JOYSTICK_RADIUS, 0, TAU, 32, Color(0.85, 0.75, 0.45, 0.75), 2.5)
+	joystick_area.draw_circle(_joystick_center, current_radius, Color(0.05, 0.08, 0.12, 0.45))
+	joystick_area.draw_arc(_joystick_center, current_radius, 0, TAU, 32, Color(0.85, 0.75, 0.45, 0.75), 2.5)
 
 	# Yön Çizgisi
 	if move_vector.length_squared() > 0.01:
 		joystick_area.draw_line(_joystick_center, _joystick_current, Color(0.95, 0.85, 0.55, 0.6), 2.0)
 
 	# İç Topuz (Handle)
-	joystick_area.draw_circle(_joystick_current, 28.0, Color(0.85, 0.75, 0.45, 0.85))
-	joystick_area.draw_arc(_joystick_current, 28.0, 0, TAU, 24, Color(1.0, 1.0, 1.0, 0.9), 2.0)
+	joystick_area.draw_circle(_joystick_current, 28.0 * joystick_scale, Color(0.85, 0.75, 0.45, 0.85))
+	joystick_area.draw_arc(_joystick_current, 28.0 * joystick_scale, 0, TAU, 24, Color(1.0, 1.0, 1.0, 0.9), 2.0)
 
 
 
@@ -62,6 +99,15 @@ func _find_player() -> void:
 
 
 func _process(_delta: float) -> void:
+	# Oyun duraklatılmışsa (Ofis Menüsü, Mağazalar vs.) veya popup açıksa kontrolleri gizle
+	if get_tree().paused or get_tree().get_nodes_in_group("popup_ui").size() > 0:
+		if visible:
+			visible = false
+			_reset_joystick()
+		return
+	elif not visible:
+		visible = true
+
 	if not is_instance_valid(_player):
 		_find_player()
 		return
@@ -78,6 +124,9 @@ func _update_interact_button_state() -> void:
 	if not is_instance_valid(_player):
 		interact_button.modulate.a = 0.35
 		interact_button.disabled = true
+		if is_instance_valid(quick_pickup_button):
+			quick_pickup_button.modulate.a = 0.35
+			quick_pickup_button.disabled = true
 		return
 
 	var closest_item: InteractableItem = _get_closest_interactable()
@@ -89,10 +138,23 @@ func _update_interact_button_state() -> void:
 			interact_button.text = "🖐️ " + str(closest_item.item_data.item_name)
 		else:
 			interact_button.text = "🖐️ İNCELE"
+
+		if is_instance_valid(quick_pickup_button):
+			quick_pickup_button.modulate.a = 1.0
+			if GlobalInventory.is_full():
+				quick_pickup_button.disabled = true
+				quick_pickup_button.text = "❌ DOLU"
+			else:
+				quick_pickup_button.disabled = false
+				quick_pickup_button.text = "⚡ DİREKT AL"
 	else:
 		interact_button.modulate.a = 0.4
 		interact_button.disabled = true
 		interact_button.text = "🖐️ İNCELE"
+		if is_instance_valid(quick_pickup_button):
+			quick_pickup_button.modulate.a = 0.4
+			quick_pickup_button.disabled = true
+			quick_pickup_button.text = "⚡ DİREKT AL"
 
 
 func _get_closest_interactable() -> InteractableItem:
@@ -123,6 +185,17 @@ func _on_interact_pressed() -> void:
 		target_item._check_interaction()
 
 
+func _on_quick_pickup_pressed() -> void:
+	# Açık popup varsa tüketme
+	if get_tree().get_nodes_in_group("popup_ui").size() > 0:
+		return
+
+	var target_item: InteractableItem = _get_closest_interactable()
+	if target_item and is_instance_valid(target_item):
+		target_item.quick_pickup()
+		_update_interact_button_state()
+
+
 func _on_joystick_gui_input(event: InputEvent) -> void:
 	if event is InputEventScreenTouch:
 		if event.pressed and _touch_index == -1:
@@ -138,13 +211,13 @@ func _on_joystick_gui_input(event: InputEvent) -> void:
 		var diff: Vector2 = event.position - _joystick_center
 		var dist: float = diff.length()
 
-		if dist > JOYSTICK_RADIUS:
-			_joystick_current = _joystick_center + diff.normalized() * JOYSTICK_RADIUS
+		if dist > current_radius:
+			_joystick_current = _joystick_center + diff.normalized() * current_radius
 		else:
 			_joystick_current = event.position
 
-		if dist > JOYSTICK_DEADZONE:
-			move_vector = diff.normalized() * clampf((dist - JOYSTICK_DEADZONE) / (JOYSTICK_RADIUS - JOYSTICK_DEADZONE), 0.0, 1.0)
+		if dist > current_deadzone:
+			move_vector = diff.normalized() * clampf((dist - current_deadzone) / (current_radius - current_deadzone), 0.0, 1.0)
 		else:
 			move_vector = Vector2.ZERO
 
@@ -165,13 +238,13 @@ func _on_joystick_gui_input(event: InputEvent) -> void:
 	elif event is InputEventMouseMotion and _touch_index == 999:
 		var diff: Vector2 = event.position - _joystick_center
 		var dist: float = diff.length()
-		if dist > JOYSTICK_RADIUS:
-			_joystick_current = _joystick_center + diff.normalized() * JOYSTICK_RADIUS
+		if dist > current_radius:
+			_joystick_current = _joystick_center + diff.normalized() * current_radius
 		else:
 			_joystick_current = event.position
 
-		if dist > JOYSTICK_DEADZONE:
-			move_vector = diff.normalized() * clampf((dist - JOYSTICK_DEADZONE) / (JOYSTICK_RADIUS - JOYSTICK_DEADZONE), 0.0, 1.0)
+		if dist > current_deadzone:
+			move_vector = diff.normalized() * clampf((dist - current_deadzone) / (current_radius - current_deadzone), 0.0, 1.0)
 		else:
 			move_vector = Vector2.ZERO
 

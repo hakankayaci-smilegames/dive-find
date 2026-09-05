@@ -9,6 +9,6 @@ item_name = "Tropikal Radyoaktif Kokteyl"
 sprite = ExtResource("2_sprite")
 description = "Gizemli şişedeki kimyasallarla sentezlenen ve monster enerjisiyle köpürtülen egzotik karışım. Hafifçe yeşil parıldıyor..."
 rarity = 1.0
-value = 280
+value = 550
 category = "Crafted"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

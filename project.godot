@@ -29,7 +29,7 @@ DevConsole="*uid://c0ns0l3dev001"
 
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/handheld/orientation=5
+window/handheld/orientation=0
 
 [global_group]
 
@@ -37,7 +37,7 @@ player=""
 
 [input_devices]
 
-pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=true
 
 [physics]
 

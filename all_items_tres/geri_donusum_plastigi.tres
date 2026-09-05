@@ -9,6 +9,6 @@ item_name = "İşlenmiş Plastik Bobini"
 sprite = ExtResource("2_sprite")
 description = "Pet şişeler ve poşetlerin laboratuvarda eritilip sıkıştırılmasıyla elde edilen geri dönüştürülmüş plastik hammadde."
 rarity = 1.0
-value = 35
+value = 65
 category = "Crafted"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"
