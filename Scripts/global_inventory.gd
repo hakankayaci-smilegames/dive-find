@@ -26,8 +26,8 @@ func _ready() -> void:
 	_load_collection()
 
 
-func get_all_items() -> Array[ItemData]:
-	if _items_cached:
+func get_all_items(force_reload: bool = false) -> Array[ItemData]:
+	if _items_cached and not force_reload:
 		return _all_items_cache
 
 	_all_items_cache.clear()
@@ -100,10 +100,19 @@ func add_item(item: ItemData) -> bool:
 
 
 func _mark_discovered(item: ItemData) -> void:
-	if not item or item.resource_path == "":
+	if not item:
 		return
-	if not discovered_items.has(item.resource_path):
-		discovered_items[item.resource_path] = true
+	var path: String = item.resource_path
+	if path == "":
+		for cached_item in get_all_items():
+			if cached_item and cached_item.item_name == item.item_name and cached_item.resource_path != "":
+				path = cached_item.resource_path
+				item.resource_path = path
+				break
+	if path == "":
+		return
+	if not discovered_items.has(path):
+		discovered_items[path] = true
 		_save_collection()
 		emit_signal("collection_updated", item)
 
@@ -281,6 +290,7 @@ func apply_save_to_game() -> bool:
 					if i < locked_flags.size():
 						item_inst.is_locked = bool(locked_flags[i])
 					collected_items.append(item_inst)
+					_mark_discovered(item_inst)
 	emit_signal("inventory_updated")
 	return true
 

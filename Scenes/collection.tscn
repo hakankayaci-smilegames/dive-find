@@ -147,7 +147,7 @@ layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -545.0
+offset_left = -635.0
 offset_top = 38.0
 offset_right = -50.0
 offset_bottom = 68.0
@@ -214,6 +214,16 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
 text = "🔴 Özel"
+
+[node name="TabCrafted" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "🔨 Üretilen"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainPanel"]
 layout_mode = 1

@@ -18,6 +18,7 @@ extends CanvasLayer
 @onready var tab_rare: Button = get_node_or_null("MainPanel/CategoryTabs/TabRare")
 @onready var tab_valuable: Button = get_node_or_null("MainPanel/CategoryTabs/TabValuable")
 @onready var tab_special: Button = get_node_or_null("MainPanel/CategoryTabs/TabSpecial")
+@onready var tab_crafted: Button = get_node_or_null("MainPanel/CategoryTabs/TabCrafted")
 
 var _current_filter: String = "All"
 
@@ -26,7 +27,8 @@ const CATEGORY_ORDER: Dictionary = {
 	"Resource": 1,    # Cyan (Hammadde)
 	"Rare Found": 2,  # Mor (Nadir Buluntu)
 	"Valuable": 3,    # Altın Sarısı (Değerli)
-	"Special": 4      # Kırmızı (Özel)
+	"Special": 4,     # Kırmızı (Özel)
+	"Crafted": 5      # Amber (Üretilen)
 }
 
 const CATEGORY_LABELS: Dictionary = {
@@ -35,7 +37,8 @@ const CATEGORY_LABELS: Dictionary = {
 	"Resource": "Hammaddeler",
 	"Rare Found": "Nadir Buluntular",
 	"Valuable": "Değerli Eşyalar",
-	"Special": "Özel Eşyalar"
+	"Special": "Özel Eşyalar",
+	"Crafted": "Üretilenler"
 }
 
 
@@ -64,7 +67,8 @@ func _setup_tabs() -> void:
 		tab_resource: "Resource",
 		tab_rare: "Rare Found",
 		tab_valuable: "Valuable",
-		tab_special: "Special"
+		tab_special: "Special",
+		tab_crafted: "Crafted"
 	}
 	for btn in tabs.keys():
 		if is_instance_valid(btn):
@@ -89,7 +93,8 @@ func _update_tab_highlights() -> void:
 		tab_resource: "Resource",
 		tab_rare: "Rare Found",
 		tab_valuable: "Valuable",
-		tab_special: "Special"
+		tab_special: "Special",
+		tab_crafted: "Crafted"
 	}
 	for btn in tabs.keys():
 		if is_instance_valid(btn):
@@ -105,7 +110,7 @@ func _populate_grid() -> void:
 		push_warning("Koleksiyon: slot_scene atanmamış!")
 		return
 
-	var all_items: Array[ItemData] = GlobalInventory.get_all_items().duplicate()
+	var all_items: Array[ItemData] = GlobalInventory.get_all_items(true).duplicate()
 	all_items.sort_custom(func(a: ItemData, b: ItemData) -> bool:
 		var order_a: int = CATEGORY_ORDER.get(a.category, 99)
 		var order_b: int = CATEGORY_ORDER.get(b.category, 99)

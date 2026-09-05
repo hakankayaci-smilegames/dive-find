@@ -285,6 +285,7 @@ func _on_craft_pressed() -> void:
 		var res = load(output_tres)
 		if res is ItemData:
 			product = res.duplicate() as ItemData
+			product.resource_path = output_tres
 	
 	if not product:
 		# Fallback dinamik üretim
@@ -293,6 +294,7 @@ func _on_craft_pressed() -> void:
 		product.description = str(_selected_recipe.get("description", ""))
 		product.category = "Crafted"
 		product.value = int(_selected_recipe.get("value", 80))
+		product.resource_path = output_tres
 
 	GlobalInventory.add_item(product)
 
