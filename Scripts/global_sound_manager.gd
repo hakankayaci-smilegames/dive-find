@@ -21,6 +21,7 @@ var sfx_paths: Dictionary = {
 
 var music_player: AudioStreamPlayer
 var _shuffled_playlist: Array[String] = []
+var _sfx_cache: Dictionary = {}
 
 
 func _ready() -> void:
@@ -32,6 +33,14 @@ func _ready() -> void:
 	
 	music_player.finished.connect(_play_next_shuffled_music)
 	_play_next_shuffled_music()
+
+
+func preload_all_sfx() -> void:
+	for s_name in sfx_paths:
+		if not _sfx_cache.has(s_name):
+			var stream = load(sfx_paths[s_name])
+			if stream:
+				_sfx_cache[s_name] = stream
 
 
 # SPOTIFY SHUFFLE MÜZİK ÇALMA SİSTEMİ
@@ -58,12 +67,19 @@ func play_sfx(sound_name: String) -> void:
 		push_warning("SFX bulunamadı: " + sound_name)
 		return
 	
-	var sfx_player = AudioStreamPlayer.new()
-	sfx_player.bus = "SFX" # SFX ses kanalından çıksın
-	
-	var stream = load(sfx_paths[sound_name])
+	var stream: AudioStream = null
+	if _sfx_cache.has(sound_name):
+		stream = _sfx_cache[sound_name]
+	else:
+		stream = load(sfx_paths[sound_name])
+		if stream:
+			_sfx_cache[sound_name] = stream
+
 	if stream:
+		var sfx_player := AudioStreamPlayer.new()
+		sfx_player.bus = "SFX" # SFX ses kanalından çıksın
 		sfx_player.stream = stream
 		add_child(sfx_player)
 		sfx_player.play()
 		sfx_player.finished.connect(sfx_player.queue_free)
+

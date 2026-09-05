@@ -67,6 +67,7 @@ func _on_upgrade_requested(slot: EquipmentSlot) -> void:
 	_player.set(slot.data.stat_key, current_level + 1)
 	GlobalSoundManager.play_sfx("upgrade")
 	slot.refresh(current_level + 1)
+	slot.play_upgrade_feedback()
 
 
 func _on_money_changed(_new_amount: int) -> void:

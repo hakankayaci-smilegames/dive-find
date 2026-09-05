@@ -7,7 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://dr1s8h1754al" path="res://Scenes/inventory.tscn" id="2_gt3je"]
 [ext_resource type="Script" uid="uid://cpqichuujekfq" path="res://Scripts/depth.gd" id="3_3pmx8"]
 [ext_resource type="Script" uid="uid://ca8rnlu58thx" path="res://Scripts/map_maker.gd" id="3_8gbba"]
-[ext_resource type="PackedScene" path="res://Scenes/loading_screen.tscn" id="3_loading"]
+[ext_resource type="PackedScene" uid="uid://diwauuci51k6c" path="res://Scenes/loading_screen.tscn" id="3_loading"]
 [ext_resource type="PackedScene" uid="uid://d0gcvvqn2n874" path="res://Scenes/office_menu.tscn" id="3_u50mg"]
 [ext_resource type="Texture2D" uid="uid://b32d7g2ddahnw" path="res://Sprites/sky.png" id="4_jjvhh"]
 [ext_resource type="Texture2D" uid="uid://b27bdcio2wc8k" path="res://Sprites/lvl0.png" id="5_6iyac"]
@@ -56,6 +56,10 @@
 [ext_resource type="PackedScene" uid="uid://bw5gtsku1n8ko" path="res://all_items_tscn/dexter_r6.tscn" id="35_tab3y"]
 [ext_resource type="PackedScene" uid="uid://beef4gip2br2r" path="res://all_items_tscn/nigrce_r6.tscn" id="36_1tvlp"]
 [ext_resource type="PackedScene" uid="uid://yiid1q64k3w6" path="res://all_items_tres/broken_painting.tscn" id="37_ptfg5"]
+[ext_resource type="Texture2D" uid="uid://b1g3pvbtv8dlp" path="res://Sprites/canta.png" id="icon_bag"]
+[ext_resource type="Texture2D" uid="uid://dsygmr1m6g3hd" path="res://Sprites/palet.png" id="icon_fins"]
+[ext_resource type="Texture2D" uid="uid://4amo7h3j07ut" path="res://Sprites/dalis_gozluk.png" id="icon_goggles"]
+[ext_resource type="Texture2D" uid="uid://dokneaa3ssegb" path="res://Sprites/oksijen_tupu.png" id="icon_tube"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status"]
 bg_color = Color(0.15, 0.1, 0.06, 0.9)
@@ -64,6 +68,22 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.85, 0.75, 0.45, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dock"]
+content_margin_left = 10.0
+content_margin_top = 6.0
+content_margin_right = 10.0
+content_margin_bottom = 6.0
+bg_color = Color(0.12, 0.08, 0.04, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.8)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -82,20 +102,24 @@ player_node = NodePath("../Diver")
 depth_label = NodePath("Depth")
 target_scene = ExtResource("3_u50mg")
 loading_scene = ExtResource("3_loading")
-bag_level_label = NodePath("EquipmentPanel/VBox/Bag/Level")
-goggles_level_label = NodePath("EquipmentPanel/VBox/Goggles/Level")
-fins_level_label = NodePath("EquipmentPanel/VBox/Flippers/Level")
-tube_level_label = NodePath("EquipmentPanel/VBox/Tube/Level")
+bag_level_label = NodePath("EquipmentDock/Margin/HBox/BagSlot/Level")
+goggles_level_label = NodePath("EquipmentDock/Margin/HBox/GogglesSlot/Level")
+fins_level_label = NodePath("EquipmentDock/Margin/HBox/FinsSlot/Level")
+tube_level_label = NodePath("EquipmentDock/Margin/HBox/TubeSlot/Level")
 collection_toast_label = NodePath("Label")
 time_label = NodePath("TimePanel/Margin/HBox/TimeLabel")
 day_label = NodePath("TimePanel/Margin/HBox/DayLabel")
 office_button_surface_range = 1000.0
 
 [node name="TimePanel" type="PanelContainer" parent="CanvasLayer" unique_id=198273645]
-offset_left = 430.0
-offset_top = 20.0
-offset_right = 680.0
-offset_bottom = 68.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -130.0
+offset_top = 16.0
+offset_right = 130.0
+offset_bottom = 64.0
+grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_status")
 
 [node name="Margin" type="MarginContainer" parent="CanvasLayer/TimePanel" unique_id=123984712]
@@ -138,7 +162,7 @@ offset_top = 15.0
 offset_right = 95.0
 offset_bottom = 40.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
-text = "CAN:"
+text = "❤️ CAN:"
 vertical_alignment = 1
 
 [node name="Health" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=268147023]
@@ -159,7 +183,7 @@ offset_top = 50.0
 offset_right = 95.0
 offset_bottom = 75.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
-text = "OKSİJEN:"
+text = "🫧 OKSİJEN:"
 vertical_alignment = 1
 
 [node name="Oxygen" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=1118594691]
@@ -177,133 +201,160 @@ value = 100.0
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -160.0
-offset_top = 20.0
+offset_left = -190.0
+offset_top = 16.0
 offset_right = -20.0
-offset_bottom = 75.0
+offset_bottom = 56.0
 grow_horizontal = 0
-theme_override_font_sizes/font_size = 18
-text = "ÇANTA"
+theme_override_font_sizes/font_size = 15
+text = "🎒 Çanta [I]"
 
 [node name="zurna" type="Label" parent="CanvasLayer" unique_id=152403093]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -300.0
-offset_top = 35.0
-offset_right = -180.0
-offset_bottom = 59.0
+offset_left = -350.0
+offset_top = 16.0
+offset_right = -200.0
+offset_bottom = 56.0
 grow_horizontal = 0
-text = "9999 ZURNA"
-horizontal_alignment = 2
+theme_override_font_sizes/font_size = 15
+text = "💰 0 Zurna"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Depth" type="Label" parent="CanvasLayer" unique_id=103934392]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
 offset_left = 20.0
-offset_top = 587.0
-offset_right = 347.0
-offset_bottom = 610.0
-text = "DERİNLİK:  - 15"
+offset_top = -50.0
+offset_right = 380.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_outline_size = 2
+theme_override_font_sizes/font_size = 17
+text = "⚓ DERİNLİK: 0m"
 script = ExtResource("3_3pmx8")
 
-[node name="EquipmentPanel" type="Panel" parent="CanvasLayer" unique_id=2127577143]
+[node name="EquipmentDock" type="PanelContainer" parent="CanvasLayer" unique_id=2127577143]
 anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -260.0
-offset_top = -220.0
-offset_right = -20.0
-offset_bottom = -20.0
-grow_horizontal = 0
-grow_vertical = 0
-
-[node name="VBox" type="VBoxContainer" parent="CanvasLayer/EquipmentPanel" unique_id=229736089]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 15.0
-offset_top = 15.0
+offset_left = -215.0
+offset_top = -65.0
 offset_right = -15.0
 offset_bottom = -15.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/separation = 12
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_dock")
 
-[node name="Title" type="Label" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=1715808154]
+[node name="Margin" type="MarginContainer" parent="CanvasLayer/EquipmentDock" unique_id=98371264]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.301961, 0.85098, 1, 1)
-theme_override_font_sizes/font_size = 18
-text = "EKİPMANLAR"
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 2
+
+[node name="HBox" type="HBoxContainer" parent="CanvasLayer/EquipmentDock/Margin" unique_id=87263514]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="TubeSlot" type="VBoxContainer" parent="CanvasLayer/EquipmentDock/Margin/HBox" unique_id=76512349]
+layout_mode = 2
+tooltip_text = "Oksijen Tüpü: Oksijen tüketimini azaltır"
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/EquipmentDock/Margin/HBox/TubeSlot" unique_id=65412398]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("icon_tube")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentDock/Margin/HBox/TubeSlot" unique_id=23603963]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Lv.1"
 horizontal_alignment = 1
 
-[node name="HSeparator" type="HSeparator" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=1969820343]
+[node name="FinsSlot" type="VBoxContainer" parent="CanvasLayer/EquipmentDock/Margin/HBox" unique_id=54321987]
 layout_mode = 2
+tooltip_text = "Palet: Yüzme hızını artırır"
+theme_override_constants/separation = 1
+alignment = 1
 
-[node name="Bag" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=950407019]
+[node name="Icon" type="TextureRect" parent="CanvasLayer/EquipmentDock/Margin/HBox/FinsSlot" unique_id=43219876]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
+texture = ExtResource("icon_fins")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Bag" unique_id=484292680]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Çanta:"
-
-[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Bag" unique_id=1420078453]
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentDock/Margin/HBox/FinsSlot" unique_id=864542962]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
-text = "Lvl 1"
+theme_override_font_sizes/font_size = 11
+text = "Lv.1"
+horizontal_alignment = 1
 
-[node name="Goggles" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=18039505]
+[node name="GogglesSlot" type="VBoxContainer" parent="CanvasLayer/EquipmentDock/Margin/HBox" unique_id=32198765]
 layout_mode = 2
+tooltip_text = "Dalış Gözlüğü: Görüş açısını ve zoom'u genişletir"
+theme_override_constants/separation = 1
+alignment = 1
 
-[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Goggles" unique_id=1155232441]
+[node name="Icon" type="TextureRect" parent="CanvasLayer/EquipmentDock/Margin/HBox/GogglesSlot" unique_id=21987654]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Gözlük:"
+texture = ExtResource("icon_goggles")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Goggles" unique_id=296157470]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
-text = "Lvl 1"
-
-[node name="Flippers" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=1562410588]
-layout_mode = 2
-
-[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Flippers" unique_id=600924533]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Palet:"
-
-[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Flippers" unique_id=864542962]
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentDock/Margin/HBox/GogglesSlot" unique_id=296157470]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
-text = "Lvl 1"
+theme_override_font_sizes/font_size = 11
+text = "Lv.1"
+horizontal_alignment = 1
 
-[node name="Tube" type="HBoxContainer" parent="CanvasLayer/EquipmentPanel/VBox" unique_id=2069411519]
+[node name="BagSlot" type="VBoxContainer" parent="CanvasLayer/EquipmentDock/Margin/HBox" unique_id=19876543]
 layout_mode = 2
+tooltip_text = "Çanta: Envanter kapasitesini artırır (+5 slot)"
+theme_override_constants/separation = 1
+alignment = 1
 
-[node name="Name" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Tube" unique_id=637020991]
+[node name="Icon" type="TextureRect" parent="CanvasLayer/EquipmentDock/Margin/HBox/BagSlot" unique_id=98765432]
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
-size_flags_horizontal = 3
-text = "Oksijen Tüpü:"
+texture = ExtResource("icon_bag")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Level" type="Label" parent="CanvasLayer/EquipmentPanel/VBox/Tube" unique_id=23603963]
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentDock/Margin/HBox/BagSlot" unique_id=1420078453]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
-text = "Lvl 1"
+theme_override_font_sizes/font_size = 11
+text = "Lv.1"
+horizontal_alignment = 1
 
 [node name="Button2" type="Button" parent="CanvasLayer" unique_id=47944296]
-anchors_preset = -1
-anchor_left = 0.984
-anchor_top = 0.136
-anchor_right = 0.984
-anchor_bottom = 0.136
-offset_left = -140.568
-offset_top = -0.12800598
-offset_right = 0.43200684
-offset_bottom = 50.871994
-text = "Back To Office"
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -260.0
+offset_top = 66.0
+offset_right = -20.0
+offset_bottom = 108.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 15
+text = "🚤 Tekneye Çık [E]"
 
 [node name="Label" type="Label" parent="CanvasLayer" unique_id=222879002]
 anchors_preset = 4

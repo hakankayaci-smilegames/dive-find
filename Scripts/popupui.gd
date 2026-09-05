@@ -148,13 +148,26 @@ func _refresh_pickup_state() -> void:
 		return
 
 	if GlobalInventory.is_full():
-		pickup_button.disabled = true
 		pickup_button.text = "DOLU (%d/%d)" % [GlobalInventory.collected_items.size(), GlobalInventory.get_capacity()]
-		pickup_button.tooltip_text = "Çantan dolu! (%d/%d)" % [GlobalInventory.collected_items.size(), GlobalInventory.get_capacity()]
+		pickup_button.tooltip_text = "Çantan dolu! Boşaltman gerek."
 	else:
-		pickup_button.disabled = false
 		pickup_button.text = "AL [E]"
 		pickup_button.tooltip_text = ""
+
+
+func _trigger_full_warning() -> void:
+	GlobalSoundManager.play_sfx("error")
+	if is_instance_valid(pickup_button):
+		var orig_x: float = pickup_button.position.x
+		var tw := create_tween()
+		tw.tween_property(pickup_button, "position:x", orig_x - 6.0, 0.04)
+		tw.tween_property(pickup_button, "position:x", orig_x + 6.0, 0.04)
+		tw.tween_property(pickup_button, "position:x", orig_x - 4.0, 0.04)
+		tw.tween_property(pickup_button, "position:x", orig_x, 0.04)
+
+		pickup_button.modulate = Color(1.8, 0.3, 0.3, 1.0)
+		var c_tw := create_tween()
+		c_tw.tween_property(pickup_button, "modulate", Color.WHITE, 0.35)
 
 
 func _on_close_pressed() -> void:
@@ -172,11 +185,13 @@ func _on_backdrop_gui_input(event: InputEvent) -> void:
 
 func _on_pickup_pressed() -> void:
 	if GlobalInventory.is_full():
+		_trigger_full_warning()
 		_refresh_pickup_state()
 		return
 
 	var added: bool = GlobalInventory.add_item(_item_data)
 	if not added:
+		_trigger_full_warning()
 		_refresh_pickup_state()
 		return
 

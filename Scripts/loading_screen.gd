@@ -1,39 +1,159 @@
 extends Control
 
 @export_file("*.tscn") var target_scene_path: String = "res://Scenes/main.tscn"
-@export var duration: float = 2.0
-@export var auto_change_scene: bool = true  # false ise sahne geçişi yapmaz, finished sinyalini yayınlar (overlay olarak kullanım)
+@export_file("*.json") var tips_file_path: String = "res://Data/loading_tips.json"
+@export var min_display_time: float = 1.2  # İpuçlarının okunabilirliği ve akıcılık için taban süre
+@export var auto_change_scene: bool = true  # false ise sahne geçişi yapmaz, finished sinyalini yayınlar (overlay mod)
 
 signal finished
 
-@onready var dots_label: Label = $Panel/HBoxContainer/DotsLabel
-@onready var progress_bar: ProgressBar = $Panel/ProgressBar
+@onready var tip_label: Label = $BottomContainer/TipLabel
+@onready var stage_label: Label = $BottomContainer/StatusRow/StageLabel
+@onready var percent_label: Label = $BottomContainer/StatusRow/PercentLabel
+@onready var progress_bar: ProgressBar = $BottomContainer/ProgressBar
+@onready var fade_overlay: ColorRect = $FadeOverlay
+
+var _tips: Array[String] = []
+var _elapsed_time: float = 0.0
+var _displayed_progress: float = 0.0
+var _real_progress: float = 0.0
+var _is_finishing: bool = false
+var _scene_loaded: bool = false
+var _loaded_packed_scene: PackedScene = null
 
 
 func _ready() -> void:
-	# Overlay modda oyun pause'a alınır (ofis zaten pause yapar, bu aradaki boşlukta oyuncu hareket etmesin)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if not auto_change_scene:
 		get_tree().paused = true
 
-	# Koleksiyon .tres/ikon önbelleğini burada, görünür yükleme ekranının arkasında dolduruyoruz.
-	# İlk çağrıda gerçek disk taraması yapılır; sonrasında koleksiyon defteri anında açılır.
+	# 1. Gerçek Arka Plan Yüklemeleri:
+	# Ses dosyalarını diskten RAM'e önbellekle (audio lag'ini sıfırla)
+	GlobalSoundManager.preload_all_sfx()
+	# Koleksiyon ve eşya .tres'lerini RAM'e önbellekle
 	GlobalInventory.get_all_items()
 
+	# 2. İpucu yükleme ve gösterme
+	_load_tips()
+	_display_random_tip()
+
+	# 3. Gerçek Arka Plan Sahne Talebi (Threaded Loading)
+	if auto_change_scene:
+		ResourceLoader.load_threaded_request(target_scene_path)
+
 	progress_bar.value = 0.0
-	var dots := [".", "..", "..."]
-	var loop := create_tween().set_loops()
-	for d in dots:
-		loop.tween_callback(func() -> void: dots_label.text = d)
-		loop.tween_interval(0.3)
-	var tween := create_tween()
-	tween.tween_property(progress_bar, "value", 100.0, duration)
-	tween.tween_callback(_finish)
+	_update_progress_ui(0.0)
+
+
+func _process(delta: float) -> void:
+	if _is_finishing:
+		return
+
+	_elapsed_time += delta
+
+	var target_progress: float = 0.0
+
+	if auto_change_scene:
+		if not _scene_loaded:
+			var progress_arr: Array = []
+			var status = ResourceLoader.load_threaded_get_status(target_scene_path, progress_arr)
+			if not progress_arr.is_empty():
+				_real_progress = float(progress_arr[0]) * 100.0
+
+			if status == ResourceLoader.THREAD_LOAD_LOADED:
+				_scene_loaded = true
+				_loaded_packed_scene = ResourceLoader.load_threaded_get(target_scene_path) as PackedScene
+			elif status == ResourceLoader.THREAD_LOAD_FAILED or status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+				# Hata durumunda da takılı kalmasın
+				_scene_loaded = true
+
+		var time_progress: float = clamp((_elapsed_time / min_display_time) * 100.0, 0.0, 100.0)
+		if _scene_loaded and _elapsed_time >= min_display_time:
+			target_progress = 100.0
+		else:
+			target_progress = min(_real_progress, time_progress) if _real_progress > 0.0 else time_progress
+
+		_displayed_progress = move_toward(_displayed_progress, target_progress, 160.0 * delta)
+		_update_progress_ui(_displayed_progress)
+
+		if _displayed_progress >= 99.9 and _scene_loaded and _elapsed_time >= min_display_time:
+			_is_finishing = true
+			_finish()
+
+	else:
+		# Overlay mod (örn. ofisten ofise gün geçişi)
+		var time_progress: float = clamp((_elapsed_time / min_display_time) * 100.0, 0.0, 100.0)
+		_displayed_progress = move_toward(_displayed_progress, time_progress, 120.0 * delta)
+		_update_progress_ui(_displayed_progress)
+
+		if _displayed_progress >= 99.9:
+			_is_finishing = true
+			_finish()
+
+
+func _load_tips() -> void:
+	_tips.clear()
+	if FileAccess.file_exists(tips_file_path):
+		var file := FileAccess.open(tips_file_path, FileAccess.READ)
+		if file:
+			var json_text := file.get_as_text()
+			var json := JSON.new()
+			if json.parse(json_text) == OK and json.data is Array:
+				for item in json.data:
+					_tips.append(str(item))
+
+	if _tips.is_empty():
+		_tips = [
+			"💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin.",
+			"💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin.",
+			"💡 Güvenli Satış: 'Hepsini Sat' butonu kilitli eşyalarını asla satmaz.",
+			"💡 Derinlik & Basınç: Derinlere indikçe oksijenin çok daha hızlı tükenir, Atölye'den tüpünü geliştirmeyi unutma!"
+		]
+
+
+func _display_random_tip() -> void:
+	if tip_label and not _tips.is_empty():
+		tip_label.text = _tips.pick_random()
+
+
+func _update_progress_ui(val: float) -> void:
+	if is_instance_valid(progress_bar):
+		progress_bar.value = val
+
+	var int_val := int(val)
+	if is_instance_valid(percent_label):
+		percent_label.text = "%%%d" % int_val
+
+	if is_instance_valid(stage_label):
+		if int_val < 30:
+			stage_label.text = "Eski kalıntılar ve hazineler taranıyor..."
+		elif int_val < 65:
+			stage_label.text = "Ses dosyaları ve harita katmanları hazırlanıyor..."
+		elif int_val < 95:
+			stage_label.text = "Dalış ekipmanları kontrol ediliyor..."
+		else:
+			stage_label.text = "Dalışa Hazır!"
 
 
 func _finish() -> void:
+	_update_progress_ui(100.0)
+	if is_instance_valid(fade_overlay):
+		var fade := create_tween()
+		fade.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		fade.tween_property(fade_overlay, "color:a", 1.0, 0.25)
+		fade.tween_callback(_complete_transition)
+	else:
+		_complete_transition()
+
+
+func _complete_transition() -> void:
 	if auto_change_scene:
-		get_tree().change_scene_to_file(target_scene_path)
+		if _loaded_packed_scene:
+			get_tree().change_scene_to_packed(_loaded_packed_scene)
+		else:
+			get_tree().change_scene_to_file(target_scene_path)
 	else:
 		finished.emit()
 		queue_free()
+
+

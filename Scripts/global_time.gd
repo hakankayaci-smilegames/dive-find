@@ -134,3 +134,27 @@ func start_new_day() -> void:
 	day_changed.emit(current_day)
 	time_changed.emit(current_hour, current_minute)
 	dive_lock_changed.emit(false)
+
+
+func set_day(day: int) -> void:
+	current_day = max(1, day)
+	day_changed.emit(current_day)
+
+
+func reset_to_new_game() -> void:
+	current_day = 1
+	current_hour = START_HOUR
+	current_minute = START_MINUTE
+	time_speed_multiplier = 1.0
+	is_clock_running = true
+	_step_accumulator = 0.0
+
+	# Günlük istatistikleri sıfırla
+	daily_earnings = 0
+	daily_dives = 0
+	daily_items_sold = 0
+	daily_max_depth_m = 0.0
+
+	day_changed.emit(current_day)
+	time_changed.emit(current_hour, current_minute)
+	dive_lock_changed.emit(false)

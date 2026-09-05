@@ -30,6 +30,9 @@ var _active_inventory: Node = null
 var _office_loading: Node = null
 var _toast_tween: Tween = null
 var _warning_tween: Tween = null
+var _displayed_money: int = 0
+var _money_tween: Tween = null
+var _office_btn_tween: Tween = null
 
 # YENİ: Renk geçişi ve yön bulmak için hafıza değişkenleri
 var _last_y: float = 0.0
@@ -39,8 +42,14 @@ func _ready() -> void:
 	add_to_group("hud")
 	invenb.pressed.connect(_on_inventory_button_pressed)
 	GlobalEconomy.money_changed.connect(_on_money_changed)
-	$zurna.text = str(GlobalEconomy.money) + " Zurna"
+	_displayed_money = GlobalEconomy.money
+	$zurna.text = "💰 %d Zurna" % _displayed_money
 	_apply_hud_theme()
+	_setup_button_juice(invenb)
+	_setup_button_juice(office_button)
+	if office_button:
+		office_button.modulate.a = 0.0
+		office_button.disabled = true
 
 	var time_mgr: Node = _get_time_mgr()
 	if time_mgr:
@@ -54,6 +63,8 @@ func _ready() -> void:
 		collection_toast_label.modulate.a = 0.0
 		GlobalInventory.collection_updated.connect(_on_collection_updated)
 
+	GlobalInventory.inventory_updated.connect(_update_bag_button)
+	_update_bag_button()
 	_refresh_equipment_panel()
 	call_deferred("_open_office_at_start")
 
@@ -70,7 +81,10 @@ func _process(delta: float) -> void:
 		var depth_pixels = max(0.0, player_y - surface_y)
 		var depth_meters = int(depth_pixels / 50.0)
 		
-		depth_label.text = "Derinlik: " + str(depth_meters) + "m"
+		if depth_meters <= 0:
+			depth_label.text = "⚓ YÜZEYDESİN (0m)"
+		else:
+			depth_label.text = "⚓ %dm  |  ↑ Yüzey: %dm" % [depth_meters, depth_meters]
 		
 		# --- DİNAMİK RENK GEÇİŞİ MANTIĞI ---
 		var target_color = Color(0.85, 0.95, 1.0, 1.0) # Hareketsizken sabit mavi
@@ -98,6 +112,15 @@ func _process(delta: float) -> void:
 		var time_mgr: Node = _get_time_mgr()
 		if time_mgr:
 			time_mgr.record_depth(float(depth_meters))
+
+		# Kritik Oksijen Nabız Uyarısı (< %25)
+		if has_node("StatusPanel/Oxygen"):
+			var ox: float = float(player_node.get("current_oxygen")) if player_node.get("current_oxygen") != null else 100.0
+			if ox < 25.0:
+				var pulse = 0.5 + 0.5 * sin(Time.get_ticks_msec() * 0.012)
+				$StatusPanel/Oxygen.modulate = Color(1.0, 0.2 + 0.8 * pulse, 0.2 + 0.8 * pulse, 1.0)
+			else:
+				$StatusPanel/Oxygen.modulate = Color.WHITE
 
 	_update_office_button_availability()
 	_refresh_equipment_panel()
@@ -129,24 +152,63 @@ func _update_day_display(day: int) -> void:
 	day_label.text = "📅 Gün %d" % day
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_I or event.keycode == KEY_TAB:
+			_on_inventory_button_pressed()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_E:
+			if office_button and not office_button.disabled and office_button.modulate.a > 0.5:
+				_on_button_2_pressed()
+				get_viewport().set_input_as_handled()
+
+
 func _update_office_button_availability() -> void:
 	if not office_button or not is_instance_valid(player_node):
 		return
 	var surface_y: float = InfiniteMapManager.water_surface_y
 	var distance: float = abs(player_node.global_position.y - surface_y)
-	office_button.disabled = distance > office_button_surface_range
+	var is_near_surface: bool = distance <= office_button_surface_range
+
+	if is_near_surface:
+		if office_button.disabled or office_button.modulate.a < 0.9:
+			office_button.disabled = false
+			if _office_btn_tween and _office_btn_tween.is_valid():
+				_office_btn_tween.kill()
+			_office_btn_tween = create_tween()
+			_office_btn_tween.tween_property(office_button, "modulate:a", 1.0, 0.25)
+	else:
+		if not office_button.disabled or office_button.modulate.a > 0.05:
+			office_button.disabled = true
+			if _office_btn_tween and _office_btn_tween.is_valid():
+				_office_btn_tween.kill()
+			_office_btn_tween = create_tween()
+			_office_btn_tween.tween_property(office_button, "modulate:a", 0.0, 0.25)
 
 func _refresh_equipment_panel() -> void:
 	if not is_instance_valid(player_node):
 		return
 	if bag_level_label:
-		bag_level_label.text = "Lvl " + str(player_node.get("backpack_level"))
+		bag_level_label.text = "Lv." + str(player_node.get("backpack_level"))
 	if goggles_level_label:
-		goggles_level_label.text = "Lvl " + str(player_node.get("goggles_level"))
+		goggles_level_label.text = "Lv." + str(player_node.get("goggles_level"))
 	if fins_level_label:
-		fins_level_label.text = "Lvl " + str(player_node.get("fins_level"))
+		fins_level_label.text = "Lv." + str(player_node.get("fins_level"))
 	if tube_level_label:
-		tube_level_label.text = "Lvl " + str(player_node.get("tube_level"))
+		tube_level_label.text = "Lv." + str(player_node.get("tube_level"))
+
+
+func _update_bag_button() -> void:
+	if not invenb:
+		return
+	var count: int = GlobalInventory.collected_items.size()
+	var cap: int = GlobalInventory.get_capacity()
+	invenb.text = "🎒 Çanta [I] (%d/%d)" % [count, cap]
+	if count >= cap and cap > 0:
+		invenb.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25, 1.0))
+	else:
+		invenb.add_theme_color_override("font_color", Color(0.15, 0.10, 0.06, 1.0))
+
 
 func _on_inventory_button_pressed() -> void:
 	if is_instance_valid(_active_inventory):
@@ -175,7 +237,7 @@ func _apply_hud_theme() -> void:
 	info_bg.content_margin_top = 4
 	info_bg.content_margin_bottom = 4
 	$zurna.add_theme_stylebox_override("normal", info_bg)
-	$zurna.add_theme_color_override("font_color", Color(0.95, 0.9, 0.8, 1.0))
+	$zurna.add_theme_color_override("font_color", Color(1.0, 0.9, 0.45, 1.0))
 	
 	# ---------------------------------------------------------
 	# 2. ÇANTA BUTONU (Krem zemin, Koyu Kahve çerçeve ve yazı)
@@ -216,20 +278,15 @@ func _apply_hud_theme() -> void:
 	$Button2.add_theme_stylebox_override("disabled", btn_disabled)
 	$Button2.add_theme_color_override("font_disabled_color", Color(0.7, 0.7, 0.7, 0.8))
 	# ---------------------------------------------------------
-	# 3. EKİPMAN PANELİ (Yazıların okunması için Koyu Ahşap zemin)
+	# 3. EKİPMAN DOCK'U (Kompakt Koyu Ahşap zemin)
 	# ---------------------------------------------------------
-	if has_node("EquipmentPanel"):
-		var panel_style = StyleBoxFlat.new()
-		panel_style.bg_color = Color(0.12, 0.08, 0.04, 0.95) # Barlardan bir tık daha koyu arka plan
-		panel_style.set_corner_radius_all(12)
-		panel_style.set_border_width_all(3)
-		panel_style.border_color = Color(0.85, 0.75, 0.45, 1.0) # Altın/Krem çerçeve
-		
-		$EquipmentPanel.add_theme_stylebox_override("panel", panel_style)
-		
-		# Başlık rengini çerçevenin krem/altın sarısı rengiyle aynı yapıyoruz
-		if has_node("EquipmentPanel/VBox/Title"):
-			$EquipmentPanel/VBox/Title.add_theme_color_override("font_color", Color(0.85, 0.75, 0.45, 1.0))
+	if has_node("EquipmentDock"):
+		var dock_style = StyleBoxFlat.new()
+		dock_style.bg_color = Color(0.12, 0.08, 0.04, 0.90)
+		dock_style.set_corner_radius_all(8)
+		dock_style.set_border_width_all(2)
+		dock_style.border_color = Color(0.85, 0.75, 0.45, 0.8)
+		$EquipmentDock.add_theme_stylebox_override("panel", dock_style)
 
 
 func _on_button_2_pressed() -> void:
@@ -266,8 +323,68 @@ func _open_office() -> void:
 	var office_instance = target_scene.instantiate()
 	get_tree().current_scene.add_child(office_instance)
 		
-func _on_money_changed(amount) -> void:
-	$zurna.text = str(amount) + " Zurna"
+func _on_money_changed(amount: Variant) -> void:
+	var target_amount: int = int(amount)
+	var diff: int = target_amount - _displayed_money
+	if diff > 0:
+		_spawn_floating_cash(diff)
+
+	if _money_tween and _money_tween.is_valid():
+		_money_tween.kill()
+
+	var start_amount: int = _displayed_money
+	_money_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_money_tween.tween_method(func(val: int) -> void:
+		_displayed_money = val
+		if has_node("zurna"):
+			$zurna.text = "💰 %d Zurna" % val
+	, start_amount, target_amount, 0.45)
+
+
+func _spawn_floating_cash(diff: int) -> void:
+	if not has_node("zurna"):
+		return
+	var float_label := Label.new()
+	float_label.text = "+%d Zurna" % diff
+	float_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2, 1.0))
+	float_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
+	float_label.add_theme_constant_override("shadow_outline_size", 2)
+	float_label.add_theme_font_size_override("font_size", 14)
+
+	var base_pos: Vector2 = $zurna.global_position + Vector2(25.0, 42.0)
+	float_label.global_position = base_pos
+	add_child(float_label)
+
+	var tw: Tween = create_tween().set_parallel(true)
+	tw.tween_property(float_label, "global_position:y", base_pos.y - 28.0, 0.85).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(float_label, "modulate:a", 0.0, 0.85).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.chain().tween_callback(float_label.queue_free)
+
+
+func _setup_button_juice(btn: Button) -> void:
+	if not is_instance_valid(btn):
+		return
+	btn.pivot_offset = btn.size / 2.0
+	btn.resized.connect(func() -> void:
+		if is_instance_valid(btn):
+			btn.pivot_offset = btn.size / 2.0
+	)
+	btn.mouse_entered.connect(func() -> void:
+		if is_instance_valid(btn) and not btn.disabled:
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(1.04, 1.04), 0.08)
+	)
+	btn.mouse_exited.connect(func() -> void:
+		if is_instance_valid(btn):
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.08)
+	)
+	btn.pressed.connect(func() -> void:
+		if is_instance_valid(btn):
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(0.95, 0.95), 0.05)
+			tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
+	)
 
 
 func _on_collection_updated(item: ItemData) -> void:

@@ -44,11 +44,21 @@ var _current_day: int = 1
 
 var _active_collection: Node = null
 var _active_inventory: Node = null
+var _active_popup: Node = null
+var _badge_tweens: Array[Tween] = []
+var _displayed_money: int = 0
+var _money_tween: Tween = null
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
+
+	# Hafif solma (fade-in) ile ofise pürüzsüz giriş
+	if has_node("Background"):
+		$Background.modulate.a = 0.0
+		var fade_in := create_tween()
+		fade_in.tween_property($Background, "modulate:a", 1.0, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 
 	var time_mgr: Node = _get_time_mgr()
 	if time_mgr:
@@ -62,10 +72,17 @@ func _ready() -> void:
 			_current_day = int(save_data.get("current_day", 1))
 
 	# Bakiye ve Gün Göstergeleri
+	_displayed_money = GlobalEconomy.money
 	GlobalEconomy.money_changed.connect(_on_money_changed)
+	GlobalInventory.inventory_updated.connect(_update_merchant_badges)
 	_refresh_wallet()
 	_refresh_day()
 	_update_dive_button_state()
+	_update_merchant_badges()
+
+	# Buton Juice (Mikro-punch)
+	for b in [copcu_button, antikaci_button, kara_borsa_button, equstore_button, lab_button, shop_button, envanter_button, koleksiyon_button, dive_button, advance_day_button, save_exit_button]:
+		_setup_button_juice(b)
 
 	# Üst Bar Bağlantıları
 	save_exit_button.pressed.connect(_on_save_exit_pressed)
@@ -94,6 +111,23 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_ESCAPE:
+				# 1. Öncelik: Açık bir tüccar veya alt menü varsa önce onu kapat
+				if is_instance_valid(_active_popup):
+					_active_popup.queue_free()
+					_active_popup = null
+					get_viewport().set_input_as_handled()
+					return
+				if is_instance_valid(_active_inventory):
+					_active_inventory.queue_free()
+					_active_inventory = null
+					get_viewport().set_input_as_handled()
+					return
+				if is_instance_valid(_active_collection):
+					_active_collection.queue_free()
+					_active_collection = null
+					get_viewport().set_input_as_handled()
+					return
+				# Hiçbir alt pencere yoksa dalışa geç
 				_on_dive_pressed()
 				get_viewport().set_input_as_handled()
 			KEY_I:
@@ -106,7 +140,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _refresh_wallet() -> void:
 	if zurna_label:
-		zurna_label.text = "%d Zurna" % GlobalEconomy.money
+		zurna_label.text = "%d Zurna" % _displayed_money
 
 
 func _refresh_day() -> void:
@@ -275,8 +309,70 @@ func _on_new_day_started() -> void:
 	_show_toast("☀️ Yeni gün başladı! (Gün %d)" % cur_day)
 
 
-func _on_money_changed(_amount: int) -> void:
-	_refresh_wallet()
+func _on_money_changed(amount: int) -> void:
+	var target_amount: int = amount
+	var diff: int = target_amount - _displayed_money
+	if diff > 0:
+		_spawn_floating_cash(diff)
+
+	if _money_tween and _money_tween.is_valid():
+		_money_tween.kill()
+
+	var start_amount: int = _displayed_money
+	_money_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_money_tween.tween_method(func(val: int) -> void:
+		_displayed_money = val
+		if zurna_label:
+			zurna_label.text = "%d Zurna" % val
+	, start_amount, target_amount, 0.45)
+
+	_update_merchant_badges()
+
+
+func _spawn_floating_cash(diff: int) -> void:
+	if not is_instance_valid(zurna_label):
+		return
+	var float_label := Label.new()
+	float_label.text = "+%d Zurna" % diff
+	float_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2, 1.0))
+	float_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
+	float_label.add_theme_constant_override("shadow_outline_size", 2)
+	float_label.add_theme_font_size_override("font_size", 15)
+
+	var base_pos: Vector2 = zurna_label.global_position + Vector2(10.0, 36.0)
+	float_label.global_position = base_pos
+	add_child(float_label)
+
+	var tw: Tween = create_tween().set_parallel(true)
+	tw.tween_property(float_label, "global_position:y", base_pos.y - 28.0, 0.85).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(float_label, "modulate:a", 0.0, 0.85).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.chain().tween_callback(float_label.queue_free)
+
+
+func _setup_button_juice(btn: Button) -> void:
+	if not is_instance_valid(btn):
+		return
+	btn.pivot_offset = btn.size / 2.0
+	btn.resized.connect(func() -> void:
+		if is_instance_valid(btn):
+			btn.pivot_offset = btn.size / 2.0
+	)
+	btn.mouse_entered.connect(func() -> void:
+		if is_instance_valid(btn) and not btn.disabled:
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(1.03, 1.03), 0.08)
+	)
+	btn.mouse_exited.connect(func() -> void:
+		if is_instance_valid(btn):
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.08)
+	)
+	btn.pressed.connect(func() -> void:
+		if is_instance_valid(btn):
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(0.96, 0.96), 0.05)
+			tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
+	)
 
 
 func _on_save_exit_pressed() -> void:
@@ -324,6 +420,12 @@ func _exit_tree() -> void:
 	get_tree().paused = false
 	if GlobalEconomy.money_changed.is_connected(_on_money_changed):
 		GlobalEconomy.money_changed.disconnect(_on_money_changed)
+	if GlobalInventory.inventory_updated.is_connected(_update_merchant_badges):
+		GlobalInventory.inventory_updated.disconnect(_update_merchant_badges)
+	for tw in _badge_tweens:
+		if tw and tw.is_valid():
+			tw.kill()
+	_badge_tweens.clear()
 
 
 # ------------------------------------------------------------------
@@ -334,8 +436,12 @@ func _open_popup(scene: PackedScene) -> void:
 	if not scene:
 		push_warning("OfficeMenu: Açılmak istenen sahne atanmamış!")
 		return
+	if is_instance_valid(_active_popup):
+		_active_popup.queue_free()
+		_active_popup = null
 	GlobalSoundManager.play_sfx("click")
-	get_tree().current_scene.add_child(scene.instantiate())
+	_active_popup = scene.instantiate()
+	get_tree().current_scene.add_child(_active_popup)
 
 
 func _open_copcu() -> void:
@@ -407,3 +513,144 @@ func _show_toast(msg: String) -> void:
 
 func _get_time_mgr() -> Node:
 	return get_node_or_null("/root/GlobalTime")
+
+
+# ------------------------------------------------------------------
+# CANLI TÜCCAR ROZETLERİ (LOOT BADGES & GLOW)
+# ------------------------------------------------------------------
+
+func _update_merchant_badges() -> void:
+	# Önceki animasyonları temizle
+	for tw in _badge_tweens:
+		if tw and tw.is_valid():
+			tw.kill()
+	_badge_tweens.clear()
+
+	# Çantayı tara
+	var trash_count: int = 0
+	var trash_val: int = 0
+	var antika_count: int = 0
+	var antika_val: int = 0
+	var special_count: int = 0
+	var special_val: int = 0
+
+	for item in GlobalInventory.collected_items:
+		if not item or bool(item.get("is_locked")):
+			continue
+		var cat: String = str(item.get("category"))
+		var val: int = int(item.get("value"))
+		if cat == "Trash":
+			trash_count += 1
+			trash_val += val
+		elif cat == "Special":
+			special_count += 1
+			special_val += val
+		elif cat != "Resource": # Sadece Rare Found ve Valuable (Resource craft için, tüccarda satılmaz)
+			antika_count += 1
+			antika_val += val
+
+	# 1. ÇÖPÇÜ ROZETİ
+	if trash_count > 0:
+		_set_badge(copcu_button, "🟢 %d Hurda (+%d Z)" % [trash_count, trash_val], true, Color(0.25, 0.85, 0.45, 1.0))
+	else:
+		_set_badge(copcu_button, "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+
+	# 2. ANTİKACI ROZETİ
+	if antika_count > 0:
+		_set_badge(antikaci_button, "🟢 %d Antika (+%d Z)" % [antika_count, antika_val], true, Color(0.95, 0.85, 0.35, 1.0))
+	else:
+		_set_badge(antikaci_button, "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+
+	# 3. KARA BORSA ROZETİ
+	if special_count > 0:
+		_set_badge(kara_borsa_button, "🔴 %d Özel (+%d Z)" % [special_count, special_val], true, Color(0.95, 0.35, 0.45, 1.0))
+	else:
+		_set_badge(kara_borsa_button, "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+
+	# 4. EKİPMAN ATÖLYESİ ROZETİ (Geliştirme Kontrolü)
+	var player = get_tree().get_first_node_in_group("player")
+	var can_upgrade: bool = false
+	var upgrades_info = [
+		{"key": "tube_level", "base": 40, "mult": 1.75},
+		{"key": "fins_level", "base": 25, "mult": 1.65},
+		{"key": "goggles_level", "base": 60, "mult": 1.90},
+		{"key": "backpack_level", "base": 20, "mult": 1.50}
+	]
+	for u in upgrades_info:
+		var lvl = int(player.get(u["key"])) if player else 0
+		var cost = int(round(float(u["base"]) * pow(float(u["mult"]), float(lvl))))
+		if GlobalEconomy.money >= cost:
+			can_upgrade = true
+			break
+
+	if can_upgrade:
+		_set_badge(equstore_button, "✨ Yükseltme Hazır!", true, Color(0.35, 0.85, 1.0, 1.0))
+	else:
+		_set_badge(equstore_button, "", false, Color.TRANSPARENT)
+
+
+func _set_badge(button: Button, text: String, is_active: bool, accent_color: Color) -> void:
+	if not is_instance_valid(button):
+		return
+
+	var badge = button.get_node_or_null("LootBadge") as PanelContainer
+	if not badge:
+		badge = PanelContainer.new()
+		badge.name = "LootBadge"
+		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		badge.anchors_preset = Control.PRESET_TOP_RIGHT
+		badge.anchor_left = 1.0
+		badge.anchor_right = 1.0
+		badge.offset_left = -165
+		badge.offset_top = 8
+		badge.offset_right = -10
+		badge.offset_bottom = 32
+		badge.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+
+		var lbl = Label.new()
+		lbl.name = "BadgeText"
+		lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lbl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lbl.add_theme_font_size_override("font_size", 11)
+		badge.add_child(lbl)
+		button.add_child(badge)
+
+	if text == "":
+		badge.visible = false
+		return
+	badge.visible = true
+
+	var lbl = badge.get_node("BadgeText") as Label
+	lbl.text = text
+
+	var style = StyleBoxFlat.new()
+	style.set_corner_radius_all(10)
+	style.content_margin_left = 8
+	style.content_margin_right = 8
+	style.content_margin_top = 3
+	style.content_margin_bottom = 3
+
+	if is_active:
+		style.bg_color = Color(0.10, 0.08, 0.05, 0.95)
+		style.set_border_width_all(2)
+		style.border_color = accent_color
+		lbl.add_theme_color_override("font_color", accent_color)
+		
+		# Şık Parlama & Nefes Alma Efekti (Glow / Pulse Tween)
+		badge.pivot_offset = Vector2(75, 12)
+		badge.scale = Vector2(1.0, 1.0)
+		var tw = create_tween().set_loops()
+		tw.tween_property(badge, "scale", Vector2(1.05, 1.05), 0.65).set_trans(Tween.TRANS_SINE)
+		tw.parallel().tween_property(badge, "modulate", Color(1.2, 1.2, 1.2, 1.0), 0.65)
+		tw.tween_property(badge, "scale", Vector2(1.0, 1.0), 0.65).set_trans(Tween.TRANS_SINE)
+		tw.parallel().tween_property(badge, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.65)
+		_badge_tweens.append(tw)
+	else:
+		style.bg_color = Color(0.12, 0.12, 0.12, 0.5)
+		style.set_border_width_all(1)
+		style.border_color = Color(0.4, 0.4, 0.4, 0.4)
+		badge.scale = Vector2(1.0, 1.0)
+		badge.modulate = Color(1.0, 1.0, 1.0, 0.7)
+		lbl.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65, 0.8))
+
+	badge.add_theme_stylebox_override("panel", style)

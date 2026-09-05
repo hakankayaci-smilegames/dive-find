@@ -135,12 +135,85 @@ text = "Koleksiyon Defteri"
 [node name="ProgressLabel" type="Label" parent="MainPanel"]
 layout_mode = 1
 offset_left = 20.0
-offset_top = 42.0
-offset_right = 400.0
-offset_bottom = 64.0
+offset_top = 44.0
+offset_right = 210.0
+offset_bottom = 68.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.85)
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 text = "Keşfedilen: 0 / 0"
+
+[node name="CategoryTabs" type="HBoxContainer" parent="MainPanel"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -545.0
+offset_top = 38.0
+offset_right = -50.0
+offset_bottom = 68.0
+grow_horizontal = 0
+theme_override_constants/separation = 6
+alignment = 2
+
+[node name="TabAll" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "Hepsi"
+
+[node name="TabTrash" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "🗑️ Çöp"
+
+[node name="TabResource" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "🧪 Madde"
+
+[node name="TabRare" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "🏛️ Nadir"
+
+[node name="TabValuable" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "💎 Değerli"
+
+[node name="TabSpecial" type="Button" parent="MainPanel/CategoryTabs"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
+theme_override_font_sizes/font_size = 11
+theme_override_styles/normal = SubResource("StyleBoxFlat_button_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_button_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_button_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_button_focus")
+text = "🔴 Özel"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainPanel"]
 layout_mode = 1

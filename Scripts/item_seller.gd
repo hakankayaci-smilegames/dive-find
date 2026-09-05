@@ -32,6 +32,11 @@ func _ready() -> void:
 	if is_instance_valid(sell_all_button):
 		sell_all_button.pressed.connect(_on_sell_all_pressed)
 
+	_setup_button_juice(close_button)
+	_setup_button_juice(sell_button)
+	if is_instance_valid(sell_all_button):
+		_setup_button_juice(sell_all_button)
+
 	# isOE değerine göre resim ve label görünürlüğünü ayarla
 	texture_rect.visible = isOE
 	title_label_2.visible = isOE
@@ -98,6 +103,7 @@ func _populate_list() -> void:
 
 	var items := _get_filtered_items()
 	var total_sell_value: int = 0
+	var unlocked_count: int = 0
 
 	for item_data in items:
 		if slot_scene:
@@ -105,13 +111,22 @@ func _populate_list() -> void:
 			grid_container.add_child(slot_instance)
 			slot_instance.setup(item_data)
 			slot_instance.slot_clicked.connect(_on_item_selected)
-		total_sell_value += _get_sell_price(item_data)
+			slot_instance.slot_hovered.connect(_on_item_hovered)
+			slot_instance.slot_lock_toggled.connect(_on_slot_lock_toggled)
+
+		if not bool(item_data.get("is_locked")):
+			total_sell_value += _get_sell_price(item_data)
+			unlocked_count += 1
 
 	if is_instance_valid(sell_all_button):
-		sell_all_button.disabled = items.is_empty()
 		if items.is_empty():
+			sell_all_button.disabled = true
 			sell_all_button.text = "HEPSİNİ SAT"
+		elif unlocked_count == 0:
+			sell_all_button.disabled = true
+			sell_all_button.text = "TÜMÜ KİLİTLİ 🔒"
 		else:
+			sell_all_button.disabled = false
 			sell_all_button.text = "HEPSİNİ SAT (%d Zurna)" % total_sell_value
 
 	# Seçili eşya listeden çıktıysa (satıldıysa/filtreye artık uymuyorsa) detay panelini temizle
@@ -119,18 +134,45 @@ func _populate_list() -> void:
 		_clear_details()
 
 
+func _on_item_hovered(data: ItemData) -> void:
+	if not data:
+		return
+	_display_item_details(data)
+
+
+func _on_slot_lock_toggled(_data: Resource) -> void:
+	_populate_list()
+	if _selected_item:
+		_display_item_details(_selected_item)
+
+
 func _on_item_selected(data: ItemData) -> void:
 	if not data:
 		return
 
 	_selected_item = data
+	_display_item_details(data)
+
+
+func _display_item_details(data: ItemData) -> void:
+	if not data:
+		return
 
 	big_image.texture = data.get("sprite")
-	name_label.text = data.get("item_name")
-	desc_label.text = data.get("description")
+	var is_locked: bool = bool(data.get("is_locked"))
+	var lock_tag: String = " 🔒 [KİLİTLİ]" if is_locked else ""
+	name_label.text = str(data.get("item_name")) + lock_tag
+	desc_label.text = str(data.get("description"))
 
 	var sell_price: int = _get_sell_price(data)
-	value_label.text = "Satış Fiyatı: %d Zurna" % sell_price
+	if is_locked:
+		value_label.text = "Satış Fiyatı: %d Zurna (Korumalı)" % sell_price
+		sell_button.disabled = true
+		sell_button.text = "🔒 KİLİTLİ"
+	else:
+		value_label.text = "Satış Fiyatı: %d Zurna" % sell_price
+		sell_button.disabled = false
+		sell_button.text = "SAT (%d Zurna)" % sell_price
 
 	var category_text := ""
 	match data.get("category"):
@@ -142,12 +184,13 @@ func _on_item_selected(data: ItemData) -> void:
 		_: category_text = "Kategori: Bilinmeyen"
 	rarity_label.text = category_text
 
-	sell_button.disabled = false
-	sell_button.text = "SAT (%d Zurna)" % sell_price
-
 
 func _on_sell_pressed() -> void:
 	if not _selected_item:
+		return
+
+	if bool(_selected_item.get("is_locked")):
+		GlobalSoundManager.play_sfx("error")
 		return
 
 	var sell_price: int = _get_sell_price(_selected_item)
@@ -158,6 +201,8 @@ func _on_sell_pressed() -> void:
 		if time_mgr:
 			time_mgr.record_sale(sell_price)
 		GlobalSoundManager.play_sfx("sell")
+		if is_instance_valid(sell_button):
+			_spawn_floating_cash(sell_price, sell_button.global_position + Vector2(sell_button.size.x * 0.5, 0.0))
 
 
 func _on_sell_all_pressed() -> void:
@@ -166,17 +211,68 @@ func _on_sell_all_pressed() -> void:
 		return
 
 	var total_income: int = 0
+	var sold_any: bool = false
 	var time_mgr: Node = _get_time_mgr()
+
 	for item in items_to_sell:
+		if bool(item.get("is_locked")):
+			continue  # Kilitli eşyayı koru, satma!
 		var price: int = _get_sell_price(item)
 		total_income += price
 		GlobalInventory.remove_item(item)
+		sold_any = true
 		if time_mgr:
 			time_mgr.record_sale(price)
 
-	GlobalEconomy.add_money(total_income)
-	GlobalSoundManager.play_sfx("sell")
+	if sold_any:
+		GlobalEconomy.add_money(total_income)
+		GlobalSoundManager.play_sfx("sell")
+		if is_instance_valid(sell_all_button):
+			_spawn_floating_cash(total_income, sell_all_button.global_position + Vector2(sell_all_button.size.x * 0.5, 0.0))
 	_clear_details()
+
+
+func _spawn_floating_cash(diff: int, origin_pos: Vector2) -> void:
+	var float_label := Label.new()
+	float_label.text = "+%d Zurna" % diff
+	float_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.2, 1.0))
+	float_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.8))
+	float_label.add_theme_constant_override("shadow_outline_size", 2)
+	float_label.add_theme_font_size_override("font_size", 16)
+
+	float_label.global_position = origin_pos - Vector2(40.0, 20.0)
+	add_child(float_label)
+
+	var tw: Tween = create_tween().set_parallel(true)
+	tw.tween_property(float_label, "global_position:y", origin_pos.y - 48.0, 0.85).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(float_label, "modulate:a", 0.0, 0.85).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	tw.chain().tween_callback(float_label.queue_free)
+
+
+func _setup_button_juice(btn: Button) -> void:
+	if not is_instance_valid(btn):
+		return
+	btn.pivot_offset = btn.size / 2.0
+	btn.resized.connect(func() -> void:
+		if is_instance_valid(btn):
+			btn.pivot_offset = btn.size / 2.0
+	)
+	btn.mouse_entered.connect(func() -> void:
+		if is_instance_valid(btn) and not btn.disabled:
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(1.03, 1.03), 0.08)
+	)
+	btn.mouse_exited.connect(func() -> void:
+		if is_instance_valid(btn):
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.08)
+	)
+	btn.pressed.connect(func() -> void:
+		if is_instance_valid(btn):
+			var tw := create_tween()
+			tw.tween_property(btn, "scale", Vector2(0.96, 0.96), 0.05)
+			tw.tween_property(btn, "scale", Vector2(1.0, 1.0), 0.1)
+	)
 
 
 func _on_sell_button_pressed() -> void:

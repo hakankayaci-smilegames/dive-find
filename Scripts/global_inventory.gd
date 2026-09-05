@@ -89,10 +89,13 @@ func add_item(item: ItemData) -> bool:
 		print(item.item_name + " alınamadı, çanta dolu! (" + str(collected_items.size()) + "/" + str(get_capacity()) + ")")
 		return false
 
-	collected_items.append(item)
-	_mark_discovered(item)
+	var item_instance: ItemData = item.duplicate() as ItemData
+	if item.resource_path != "":
+		item_instance.resource_path = item.resource_path
+	collected_items.append(item_instance)
+	_mark_discovered(item_instance)
 	emit_signal("inventory_updated")
-	print(item.item_name + " çantaya eklendi! Toplam: ", collected_items.size(), "/", get_capacity())
+	print(item_instance.item_name + " çantaya eklendi! Toplam: ", collected_items.size(), "/", get_capacity())
 	return true
 
 
@@ -212,9 +215,11 @@ func get_save_summary() -> String:
 
 func save_game(day: int, money: int, equipment: Dictionary) -> bool:
 	var item_paths: Array[String] = []
+	var item_locks: Array[bool] = []
 	for item in collected_items:
 		if item and item.resource_path != "":
 			item_paths.append(item.resource_path)
+			item_locks.append(bool(item.get("is_locked")))
 
 	var dt := Time.get_datetime_dict_from_system()
 	var time_str := "%02d.%02d.%d %02d:%02d" % [dt.day, dt.month, dt.year, dt.hour, dt.minute]
@@ -229,7 +234,8 @@ func save_game(day: int, money: int, equipment: Dictionary) -> bool:
 		"money": money,
 		"equipment": equipment,
 		"inventory_count": item_paths.size(),
-		"inventory_paths": item_paths
+		"inventory_paths": item_paths,
+		"inventory_locked": item_locks
 	}
 
 	var file := FileAccess.open(GAME_SAVE_PATH, FileAccess.WRITE)
@@ -249,7 +255,10 @@ func apply_save_to_game() -> bool:
 
 	var time_mgr: Node = _get_time_mgr()
 	if data.has("current_day") and time_mgr:
-		time_mgr.set("current_day", int(data["current_day"]))
+		if time_mgr.has_method("set_day"):
+			time_mgr.set_day(int(data["current_day"]))
+		else:
+			time_mgr.set("current_day", int(data["current_day"]))
 		var h: int = int(data.get("current_hour", 10))
 		var m: int = int(data.get("current_minute", 0))
 		time_mgr.set_time(h, m)
@@ -261,13 +270,40 @@ func apply_save_to_game() -> bool:
 	collected_items.clear()
 	if data.has("inventory_paths"):
 		var paths: Array = data["inventory_paths"]
-		for p in paths:
+		var locked_flags: Array = data.get("inventory_locked", [])
+		for i in range(paths.size()):
+			var p = paths[i]
 			if ResourceLoader.exists(str(p)):
 				var item_res = load(str(p))
 				if item_res is ItemData:
-					collected_items.append(item_res)
+					var item_inst = item_res.duplicate() as ItemData
+					item_inst.resource_path = str(p)
+					if i < locked_flags.size():
+						item_inst.is_locked = bool(locked_flags[i])
+					collected_items.append(item_inst)
 	emit_signal("inventory_updated")
 	return true
+
+
+func sort_inventory_by_value() -> void:
+	collected_items.sort_custom(func(a: ItemData, b: ItemData) -> bool:
+		if a.value != b.value:
+			return a.value > b.value
+		return a.rarity > b.rarity
+	)
+	emit_signal("inventory_updated")
+
+
+func sort_inventory_by_category() -> void:
+	const ORDER = {"Special": 0, "Valuable": 1, "Rare Found": 2, "Resource": 3, "Trash": 4}
+	collected_items.sort_custom(func(a: ItemData, b: ItemData) -> bool:
+		var oa: int = int(ORDER.get(a.category, 99))
+		var ob: int = int(ORDER.get(b.category, 99))
+		if oa != ob:
+			return oa < ob
+		return a.value > b.value
+	)
+	emit_signal("inventory_updated")
 
 
 func apply_save_to_player(player: Node) -> void:
@@ -275,12 +311,26 @@ func apply_save_to_player(player: Node) -> void:
 		return
 	var data := get_save_data()
 	if data.is_empty():
+		player.set("tube_level", 1)
+		player.set("fins_level", 0)
+		player.set("goggles_level", 0)
+		player.set("backpack_level", 0)
 		return
 	var eq: Dictionary = data.get("equipment", {})
-	if eq.has("tube_level"): player.set("tube_level", int(eq["tube_level"]))
-	if eq.has("fins_level"): player.set("fins_level", int(eq["fins_level"]))
-	if eq.has("goggles_level"): player.set("goggles_level", int(eq["goggles_level"]))
-	if eq.has("backpack_level"): player.set("backpack_level", int(eq["backpack_level"]))
+	player.set("tube_level", int(eq.get("tube_level", 1)))
+	player.set("fins_level", int(eq.get("fins_level", 0)))
+	player.set("goggles_level", int(eq.get("goggles_level", 0)))
+	player.set("backpack_level", int(eq.get("backpack_level", 0)))
+
+
+func start_new_game() -> void:
+	delete_save()
+	clear_inventory()
+	GlobalEconomy.money = 0
+	GlobalEconomy.money_changed.emit(0)
+	var time_mgr: Node = _get_time_mgr()
+	if time_mgr and time_mgr.has_method("reset_to_new_game"):
+		time_mgr.reset_to_new_game()
 
 
 func delete_save() -> void:

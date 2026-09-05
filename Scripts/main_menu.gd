@@ -276,10 +276,7 @@ func _refresh_save_buttons() -> void:
 
 func _on_new_game_pressed() -> void:
 	GlobalSoundManager.play_sfx("click")
-	GlobalInventory.delete_save()
-	GlobalEconomy.money = 0
-	GlobalEconomy.money_changed.emit(0)
-	GlobalInventory.clear_inventory()
+	GlobalInventory.start_new_game()
 	get_tree().change_scene_to_file(LOADING_SCREEN)
 
 

@@ -32,3 +32,20 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
+
+[node name="LockBadge" type="Label" parent="." unique_id=2089401234]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -26.0
+offset_top = 2.0
+offset_right = -4.0
+offset_bottom = 26.0
+grow_horizontal = 0
+theme_override_font_sizes/font_size = 15
+text = "🔒"
+horizontal_alignment = 2
+vertical_alignment = 0
+mouse_filter = 2
