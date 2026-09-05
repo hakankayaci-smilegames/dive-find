@@ -45,6 +45,12 @@ const CATEGORY_LABELS: Dictionary = {
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS  # Ofis pause'ken de çalışsın
 	close_button.pressed.connect(queue_free)
+
+	# Mobil dokunmatik ekran optimizasyonu (daha geniş butonlar)
+	var is_touch: bool = OS.has_feature("mobile") or DisplayServer.is_touchscreen_available()
+	if is_touch and grid_container:
+		grid_container.columns = 6
+
 	_setup_tabs()
 	_populate_grid()
 

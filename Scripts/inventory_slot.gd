@@ -48,11 +48,39 @@ func _on_mouse_entered() -> void:
 		slot_hovered.emit(_item_data)
 
 
+var _press_timer: float = 0.0
+var _is_pressing: bool = false
+var _long_pressed_triggered: bool = false
+const LONG_PRESS_DURATION: float = 0.35
+
+
+func _process(delta: float) -> void:
+	if _is_pressing and not _long_pressed_triggered:
+		_press_timer += delta
+		if _press_timer >= LONG_PRESS_DURATION:
+			_long_pressed_triggered = true
+			toggle_lock()
+
+
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_RIGHT:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
 			toggle_lock()
 			accept_event()
+		elif event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				_is_pressing = true
+				_long_pressed_triggered = false
+				_press_timer = 0.0
+			else:
+				_is_pressing = false
+	elif event is InputEventScreenTouch:
+		if event.pressed:
+			_is_pressing = true
+			_long_pressed_triggered = false
+			_press_timer = 0.0
+		else:
+			_is_pressing = false
 
 
 func toggle_lock() -> void:
@@ -78,10 +106,12 @@ func _update_lock_display() -> void:
 
 	var item_name: String = str(_item_data.get("item_name"))
 	if is_locked:
-		tooltip_text = "%s [🔒 KİLİTLİ]\n(Sağ tık: Kilidi aç)" % item_name
+		tooltip_text = "%s [🔒 KİLİTLİ]\n(Sağ tık / Basılı tut: Kilidi aç)" % item_name
 	else:
-		tooltip_text = "%s\n(Sağ tık: Kilitle)" % item_name
+		tooltip_text = "%s\n(Sağ tık / Basılı tut: Kilitle)" % item_name
 
 
 func _on_pressed() -> void:
+	if _long_pressed_triggered:
+		return
 	emit_signal("slot_clicked", _item_data)

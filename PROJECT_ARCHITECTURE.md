@@ -335,3 +335,30 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Koleksiyon arayüzüne `🔨 Üretilen` sekmesi ([`Scenes/collection.tscn`](file:///home/hakan/dive&find/Scenes/collection.tscn)) entegre edildi.
   - Laboratuvarda ürün üretildiğinde `resource_path` kaybı engellenerek `GlobalInventory._mark_discovered()` tetiklemesi sağlandı; üretilen ürün anında koleksiyon defterinde keşfedilmiş olarak açılır.
 
+---
+
+## 15. Mobil & Dokunmatik Uyumluluk Mimarisi (Cross-Platform / Hybrid Input)
+
+- **Tek Kod Tabanı (Single Codebase, Zero PC Overhead):**
+  - Proje klonlanmadan, PC geliştirme akışını (WASD + Fare) %100 koruyarak hibrit girdi desteği sunar.
+  - Mobil kontroller yalnızca `OS.has_feature("mobile")` veya `DisplayServer.is_touchscreen_available()` aktif olduğunda yüklenir; masaüstünde sıfır görsel ve işlemci maliyeti vardır.
+- **Proje Seviyesi Dokunmatik Ayarları ([`project.godot`](file:///home/hakan/dive&find/project.godot)):**
+  - `display/window/handheld/orientation = 5` (sensor_landscape - telefon her iki yatay yönde de otomatik döner).
+  - `pointing/emulate_mouse_from_touch = true` (Telefonda dokunmalar tüm butonları fare gibi tıklar).
+  - `boot_splash/show_image = true` (İkonlu açılış ekranı).
+- **İzole Mobil Kontrol Katmanı ([`Scenes/mobile_controls.tscn`](file:///home/hakan/dive&find/Scenes/mobile_controls.tscn) & [`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):**
+  - **Dinamik Sanal Joystick:** Ekranın sol yarısına dokunulduğunda parmak hizasında beliren, 360° analog yüzüş açısı sağlayan vektörel analog stick (`_draw()` ile sıfır harici görsel bağımlılığı).
+  - **Akıllı İncele/Etkileşim Düğmesi (Mobil E Tuşu):** Sağ altta yer alır; dalgıç denizde bir eşyanın menziline girdiğinde dinamik olarak parlar ve üstünde eşyanın adı yazar (`🖐️ [Eşya Adı]`).
+  - **Entegrasyon ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):** `mobile_move_vector` değişkeni ile mevcut dalgıç yüzme fiziğine kesintisiz paralel bağlanır.
+- **Mobil Kilit Mekanizması ([`Scripts/inventory_slot.gd`](file:///home/hakan/dive&find/Scripts/inventory_slot.gd)):**
+  - Dokunmatik ekranlarda sağ tık olmadığı için **Uzun Basma (Long Press - 0.35s)** mekaniği entegre edildi. Oyuncu parmağını slota basılı tuttuğunda kilit açılır/kapanır; normal tıklamada ise detay açılır.
+- **Dinamik Grid Uyarlaması ([`Scripts/collection.gd`](file:///home/hakan/dive&find/Scripts/collection.gd)):**
+  - Mobilde parmak tıklamalarını rahatlatmak için koleksiyon defteri sütun sayısı otomatik olarak 6'ya uyarlanır.
+- **Android APK Derleme Hattı (CachyOS / Linux):**
+  - Android SDK Yolu: `/home/hakan/Android/Sdk` (`build-tools 34.0.0`, `platforms;android-34`, `platform-tools`).
+  - Debug Keystore: `/home/hakan/.local/share/godot/keystores/debug.keystore` (ve `~/.android/debug.keystore`).
+  - Java: OpenJDK 21 (`/usr/lib/jvm/java-21-openjdk`).
+  - Paket: `com.smilegames.diveandfind`, sürüm: `0.5.0` (arm64-v8a ve armeabi-v7a).
+
+
+

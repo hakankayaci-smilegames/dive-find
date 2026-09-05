@@ -38,6 +38,7 @@ const GAME_OVER_SCENE := "res://Scenes/game_over.tscn"
 @export var health_regen_rate: float = 12.0        # Yüzeyde, oksijen tam dolduktan sonra can/sn
 
 var godmode_enabled: bool = false                   # Hile konsolu ile açılıp kapatılır
+var mobile_move_vector: Vector2 = Vector2.ZERO         # Sanal joystick tarafından güncellenir
 
 @export_group("Inventory")
 @export var backpack_level: int = 0                    # Lvl0 = taban kapasite
@@ -152,22 +153,26 @@ func _unhandled_input(event: InputEvent) -> void:
 # ------------------------------------------------------------------
 
 func _handle_movement(delta: float) -> void:
-	var input_x: float = Input.get_axis("ui_left", "ui_right")
-	var input_y: float = Input.get_axis("ui_up", "ui_down")
+	var input_direction: Vector2 = Vector2.ZERO
 
-	if Input.is_key_pressed(KEY_A):
-		input_x -= 1.0
-	if Input.is_key_pressed(KEY_D):
-		input_x += 1.0
-	if Input.is_key_pressed(KEY_W):
-		input_y -= 1.0
-	if Input.is_key_pressed(KEY_S):
-		input_y += 1.0
+	if mobile_move_vector.length_squared() > 0.001:
+		input_direction = mobile_move_vector
+	else:
+		var input_x: float = Input.get_axis("ui_left", "ui_right")
+		var input_y: float = Input.get_axis("ui_up", "ui_down")
 
-	input_x = clamp(input_x, -1.0, 1.0)
-	input_y = clamp(input_y, -1.0, 1.0)
+		if Input.is_key_pressed(KEY_A):
+			input_x -= 1.0
+		if Input.is_key_pressed(KEY_D):
+			input_x += 1.0
+		if Input.is_key_pressed(KEY_W):
+			input_y -= 1.0
+		if Input.is_key_pressed(KEY_S):
+			input_y += 1.0
 
-	var input_direction: Vector2 = Vector2(input_x, input_y)
+		input_x = clamp(input_x, -1.0, 1.0)
+		input_y = clamp(input_y, -1.0, 1.0)
+		input_direction = Vector2(input_x, input_y)
 
 	if input_direction.length() > 0.0:
 		input_direction = input_direction.normalized()

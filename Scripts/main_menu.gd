@@ -110,7 +110,7 @@ func _capture_positions() -> void:
 	var nodes := [
 		info_panel, settings_panel, title_box, menu_buttons,
 		subtitle_label, exit_button, sunan_label, version_label,
-		changelog_panel, sky_texture, ocean_texture, deep_texture
+		sky_texture, ocean_texture, deep_texture
 	]
 	for node in nodes:
 		if is_instance_valid(node):
@@ -124,8 +124,8 @@ func _play_entrance_animation() -> void:
 		_fade_in(subtitle_label, 0.3)
 	if _base_positions.has(menu_buttons):
 		_animate_enter(menu_buttons, _base_positions[menu_buttons] + Vector2(-80.0, 0.0), 0.5)
-	if is_instance_valid(changelog_panel) and _base_positions.has(changelog_panel):
-		_animate_enter(changelog_panel, _base_positions[changelog_panel] + Vector2(80.0, 0.0), 0.55)
+	if is_instance_valid(changelog_panel):
+		_fade_in(changelog_panel, 0.35)
 
 	var buttons: Array[Node] = menu_buttons.get_children()
 	for i in buttons.size():

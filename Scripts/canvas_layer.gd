@@ -59,6 +59,12 @@ func _ready() -> void:
 		_update_day_display(time_mgr.current_day)
 		time_mgr.start_clock()
 
+	# Mobil / Dokunmatik Kontrolleri Ekle (Sadece gerçek mobil platformlarda)
+	if OS.has_feature("mobile"):
+		var mob_scene = load("res://Scenes/mobile_controls.tscn")
+		if mob_scene:
+			add_child(mob_scene.instantiate())
+
 	if collection_toast_label:
 		collection_toast_label.modulate.a = 0.0
 		GlobalInventory.collection_updated.connect(_on_collection_updated)
