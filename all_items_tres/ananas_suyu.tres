@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://craft_ananas_suyu001"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bff6ulm7wqukj" path="res://item_sprites/Sprites new/su_sisesi.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_script")
+item_name = "Ananas Suyu"
+sprite = ExtResource("2_sprite")
+description = "Laboratuvarda 2 adet Ananas'ın distile edilip şişelenmesiyle elde edilen ferahlatıcı tropikal içecek. Pazarda yüksek fiyata alıcı bulur."
+rarity = 1.0
+value = 90
+category = "Crafted"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

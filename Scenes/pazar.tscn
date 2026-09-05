@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://pazar_shop_scene001"]
+
+[ext_resource type="PackedScene" uid="uid://vdjhdig54wo8" path="res://Scenes/item_seller.tscn" id="1_base"]
+
+[node name="ItemSeller" unique_id=305131774 instance=ExtResource("1_base")]
+shop_title = "Satış Pazarı"
+shop_filter = "CraftedOnly"
+isOE = false
+
+[connection signal="pressed" from="MainPanel/DetailPanel/SellButton" to="." method="_on_sell_button_pressed"]

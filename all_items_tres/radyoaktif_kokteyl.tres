@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://craft_kokteyl_003"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dhduqsbwaiwfp" path="res://items_diver/Sprites new/gizemli_sise.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_script")
+item_name = "Tropikal Radyoaktif Kokteyl"
+sprite = ExtResource("2_sprite")
+description = "Gizemli şişedeki kimyasallarla sentezlenen ve monster enerjisiyle köpürtülen egzotik karışım. Hafifçe yeşil parıldıyor..."
+rarity = 1.0
+value = 280
+category = "Crafted"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

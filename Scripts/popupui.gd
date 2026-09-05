@@ -22,7 +22,8 @@ const CATEGORY_NAMES := {
 	"Resource": "[ HAMMADDE ]",
 	"Rare Found": "[ NADİR BULUNTU ]",
 	"Valuable": "[ DEĞERLİ ]",
-	"Special": "[ ÖZEL ]"
+	"Special": "[ ÖZEL ]",
+	"Crafted": "[ ÜRETİLMİŞ ]"
 }
 
 const CATEGORY_COLORS := {
@@ -30,7 +31,8 @@ const CATEGORY_COLORS := {
 	"Resource": Color(0.30, 0.80, 1.00),
 	"Rare Found": Color(0.80, 0.50, 1.00),
 	"Valuable": Color(1.00, 0.85, 0.25),
-	"Special": Color(1.00, 0.35, 0.50)
+	"Special": Color(1.00, 0.35, 0.50),
+	"Crafted": Color(1.00, 0.55, 0.15)
 }
 
 const RARITY_NAMES := {

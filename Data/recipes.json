@@ -1,0 +1,99 @@
+[
+  {
+	"id": "ananas_suyu",
+	"name": "Ananas Suyu",
+	"description": "Laboratuvarda 2 adet taze Ananas distile edilerek üretilen değerli tropikal içecek. Pazarda yüksek fiyata satılır.",
+	"output_tres_path": "res://all_items_tres/ananas_suyu.tres",
+	"required_money": 5,
+	"ingredients": [
+	  {
+		"item_name": "Ananas?",
+		"count": 2
+	  }
+	]
+  },
+  {
+	"id": "geri_donusum_plastigi",
+	"name": "İşlenmiş Plastik Bobini",
+	"description": "Pet şişeler ve poşetlerin laboratuvarda eritilip sıkıştırılmasıyla elde edilen geri dönüştürülmüş hammadde.",
+	"output_tres_path": "res://all_items_tres/geri_donusum_plastigi.tres",
+	"required_money": 2,
+	"ingredients": [
+	  {
+		"item_name": "Pet şişe",
+		"count": 3
+	  },
+	  {
+		"item_name": "Poşet",
+		"count": 2
+	  }
+	]
+  },
+  {
+	"id": "aluminyum_blogu",
+	"name": "Preslenmiş Alüminyum Bloğu",
+	"description": "Ezilmiş kutular ve bükük çatalların yüksek basınçla eritilip kalıplanmasıyla elde edilen metal blok.",
+	"output_tres_path": "res://all_items_tres/aluminyum_blogu.tres",
+	"required_money": 10,
+	"ingredients": [
+	  {
+		"item_name": "Bükük kola",
+		"count": 2
+	  },
+	  {
+		"item_name": "Bükük pepsi",
+		"count": 2
+	  },
+	  {
+		"item_name": "Monster Kutusu",
+		"count": 1
+	  },
+	  {
+		"item_name": "Bükük Çatal",
+		"count": 1
+	  }
+	]
+  },
+  {
+	"id": "radyoaktif_kokteyl",
+	"name": "Tropikal Radyoaktif Kokteyl",
+	"description": "Gizemli kimyasallar, taze ananas ve monster enerjisiyle sentezlenen nükleer lezzet.",
+	"output_tres_path": "res://all_items_tres/radyoaktif_kokteyl.tres",
+	"required_money": 15,
+	"ingredients": [
+	  {
+		"item_name": "Gizemli Şişe",
+		"count": 1
+	  },
+	  {
+		"item_name": "Ananas?",
+		"count": 2
+	  },
+	  {
+		"item_name": "Monster Kutusu",
+		"count": 1
+	  }
+	]
+  },
+  {
+	"id": "restore_tablo",
+	"name": "Restore Edilmiş Tablo",
+	"description": "Kırık altın çerçevenin saç boyası ve antik kitap kağıtlarıyla sanatsal restorasyonu. Pazarda servet eder.",
+	"output_tres_path": "res://all_items_tres/restore_tablo.tres",
+	"required_money": 150,
+	"ingredients": [
+	  {
+		"item_name": "Kırık Altın Çerçeve",
+		"count": 1
+	  },
+	  {
+		"item_name": "Zoktayın Saç Renginde Boya",
+		"count": 1
+	  },
+	  {
+		"item_name": "Isırılmış Kitap",
+		"count": 1
+	  }
+	]
+  }
+]

@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://craft_metal_002"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://dud2qfleyldoa" path="res://items_diver/Sprites new/monster.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_script")
+item_name = "Preslenmiş Alüminyum Bloğu"
+sprite = ExtResource("2_sprite")
+description = "Ezilmiş meşrubat kutuları ve bükük çatalların yüksek basınçlı pres makinesinde eritilip kalıplanmasıyla elde edilen metal blok."
+rarity = 1.0
+value = 85
+category = "Crafted"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

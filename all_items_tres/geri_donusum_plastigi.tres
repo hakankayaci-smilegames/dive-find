@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://craft_plastik_001"]
+
+[ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://cumshla8y56o1" path="res://items_diver/Sprites new/poset.png" id="2_sprite"]
+
+[resource]
+script = ExtResource("1_script")
+item_name = "İşlenmiş Plastik Bobini"
+sprite = ExtResource("2_sprite")
+description = "Pet şişeler ve poşetlerin laboratuvarda eritilip sıkıştırılmasıyla elde edilen geri dönüştürülmüş plastik hammadde."
+rarity = 1.0
+value = 35
+category = "Crafted"
+metadata/_custom_type_script = "uid://cycs7xpstgjii"

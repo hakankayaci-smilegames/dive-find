@@ -2,7 +2,7 @@ extends CanvasLayer
 
 @export var slot_scene: PackedScene              # inventory_slot.tscn (mevcut olan tekrar kullanılıyor)
 @export var shop_title: String = "Antikacı"
-@export_enum("All", "TrashOnly", "NoTrash", "SpecialOnly") var shop_filter: String = "All"
+@export_enum("All", "TrashOnly", "NoTrash", "SpecialOnly", "CraftedOnly") var shop_filter: String = "All"
 @export var isOE : bool
 @export var only_special: bool = false           # Eski uyumluluk için (shop_filter = SpecialOnly ile aynı)
 @export var sell_multiplier: float = 1.0         # İleride Kara Borsa'ya farklı çarpan vermek istersen buradan ayarla
@@ -81,10 +81,13 @@ func _get_filtered_items() -> Array:
 				if cat == "Trash":
 					filtered.append(item)
 			"NoTrash":
-				if cat != "Trash" and cat != "Special" and cat != "Resource":
+				if cat != "Trash" and cat != "Special" and cat != "Resource" and cat != "Crafted":
 					filtered.append(item)
 			"SpecialOnly":
 				if cat == "Special":
+					filtered.append(item)
+			"CraftedOnly":
+				if cat == "Crafted":
 					filtered.append(item)
 			_:
 				filtered.append(item)
@@ -181,6 +184,7 @@ func _display_item_details(data: ItemData) -> void:
 		"Rare Found": category_text = "Kategori: Nadir Buluntu"
 		"Special": category_text = "Kategori: Özel"
 		"Valuable": category_text = "Kategori: Değerli"
+		"Crafted": category_text = "Kategori: Üretilmiş Eşya"
 		_: category_text = "Kategori: Bilinmeyen"
 	rarity_label.text = category_text
 

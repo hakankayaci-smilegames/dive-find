@@ -22,6 +22,7 @@ const CATEGORY_COLORS: Dictionary = {
 	"Rare Found": Color(0.80, 0.45, 1.00),
 	"Valuable": Color(1.00, 0.85, 0.30),
 	"Special": Color(1.00, 0.35, 0.50),
+	"Crafted": Color(1.00, 0.55, 0.15),
 }
 
 func _ready() -> void:
@@ -128,6 +129,7 @@ func _show_item_details(data: Resource) -> void:
 		"Rare Found": category_text = "[ NADİR BULUNTU ]"
 		"Special": category_text = "[ ÖZEL ]"
 		"Valuable": category_text = "[ DEĞERLİ ]"
+		"Crafted": category_text = "[ ÜRETİLMİŞ ]"
 		_: category_text = "[ " + category_key.to_upper() + " ]"
 		
 	rarity_label.text = category_text

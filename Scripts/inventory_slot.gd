@@ -16,6 +16,7 @@ const CATEGORY_COLORS: Dictionary = {
 	"Rare Found": Color(0.75, 0.40, 0.95, 0.9),  # Mor (Nadir Buluntu)
 	"Valuable": Color(0.95, 0.80, 0.20, 0.9),    # Altın Sarısı (Değerli)
 	"Special": Color(0.95, 0.30, 0.45, 0.9),     # Mercan / Kırmızı (Özel)
+	"Crafted": Color(1.0, 0.55, 0.15, 0.9),      # Amber / Turuncu (Üretilmiş)
 }
 const DEFAULT_BG_COLOR := Color(0.2, 0.2, 0.2, 0.9)
 

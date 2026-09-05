@@ -6,6 +6,8 @@ extends CanvasLayer
 @export var kara_borsa_scene: PackedScene
 @export var copcu_scene: PackedScene
 @export var collection_scene: PackedScene
+@export var lab_scene: PackedScene = preload("res://Scenes/laboratory.tscn")
+@export var pazar_scene: PackedScene = preload("res://Scenes/pazar.tscn")
 @export var day_summary_scene: PackedScene = preload("res://Scenes/day_summary.tscn")
 
 @export_group("Görsel & Ses")
@@ -490,12 +492,18 @@ func _open_koleksiyon() -> void:
 
 func _on_lab_pressed() -> void:
 	GlobalSoundManager.play_sfx("click")
-	_show_toast("🧪 Laboratuvar (Crafting Sistemi) Çok Yakında!")
+	if lab_scene:
+		_open_popup(lab_scene)
+	else:
+		_show_toast("🧪 Laboratuvar sahnesi bulunamadı!")
 
 
 func _on_shop_pressed() -> void:
 	GlobalSoundManager.play_sfx("click")
-	_show_toast("📦 Satış Pazarı (Üretilen Eşyalar) Çok Yakında!")
+	if pazar_scene:
+		_open_popup(pazar_scene)
+	else:
+		_show_toast("📦 Satış Pazarı sahnesi bulunamadı!")
 
 
 func _show_toast(msg: String) -> void:
@@ -533,6 +541,8 @@ func _update_merchant_badges() -> void:
 	var antika_val: int = 0
 	var special_count: int = 0
 	var special_val: int = 0
+	var crafted_count: int = 0
+	var crafted_val: int = 0
 
 	for item in GlobalInventory.collected_items:
 		if not item or bool(item.get("is_locked")):
@@ -545,7 +555,10 @@ func _update_merchant_badges() -> void:
 		elif cat == "Special":
 			special_count += 1
 			special_val += val
-		elif cat != "Resource": # Sadece Rare Found ve Valuable (Resource craft için, tüccarda satılmaz)
+		elif cat == "Crafted":
+			crafted_count += 1
+			crafted_val += val
+		elif cat != "Resource": # Sadece Rare Found ve Valuable
 			antika_count += 1
 			antika_val += val
 
@@ -587,6 +600,52 @@ func _update_merchant_badges() -> void:
 		_set_badge(equstore_button, "✨ Yükseltme Hazır!", true, Color(0.35, 0.85, 1.0, 1.0))
 	else:
 		_set_badge(equstore_button, "", false, Color.TRANSPARENT)
+
+	# 5. SATIŞ PAZARI ROZETİ (Üretilmiş Eşyalar)
+	if crafted_count > 0:
+		_set_badge(shop_button, "🟢 %d Ürün (+%d Z)" % [crafted_count, crafted_val], true, Color(1.0, 0.65, 0.2, 1.0))
+	else:
+		_set_badge(shop_button, "⚪ Ürün Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+
+	# 6. LABORATUVAR ROZETİ (Sentezlenebilir Tarif Kontrolü)
+	var can_craft_any: bool = _check_can_craft_any_recipe()
+	if can_craft_any:
+		_set_badge(lab_button, "✨ Sentez Hazır!", true, Color(1.0, 0.75, 0.25, 1.0))
+	else:
+		_set_badge(lab_button, "", false, Color.TRANSPARENT)
+
+
+func _check_can_craft_any_recipe() -> bool:
+	var recipes_path := "res://Data/recipes.json"
+	if not FileAccess.file_exists(recipes_path):
+		return false
+	var file := FileAccess.open(recipes_path, FileAccess.READ)
+	if not file:
+		return false
+	var json := JSON.new()
+	if json.parse(file.get_as_text()) != OK or not (json.data is Array):
+		return false
+
+	for r in json.data:
+		if not (r is Dictionary):
+			continue
+		var req_money: int = int(r.get("required_money", 0))
+		if GlobalEconomy.money < req_money:
+			continue
+		var ing_ok: bool = true
+		for ing in r.get("ingredients", []):
+			var iname: String = str(ing.get("item_name", ""))
+			var needed: int = int(ing.get("count", 1))
+			var cur: int = 0
+			for item in GlobalInventory.collected_items:
+				if item and not bool(item.get("is_locked")) and str(item.get("item_name")) == iname:
+					cur += 1
+			if cur < needed:
+				ing_ok = false
+				break
+		if ing_ok:
+			return true
+	return false
 
 
 func _set_badge(button: Button, text: String, is_active: bool, accent_color: Color) -> void:
