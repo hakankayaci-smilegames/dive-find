@@ -64,10 +64,13 @@ func _on_upgrade_requested(slot: EquipmentSlot) -> void:
 	if not GlobalEconomy.spend_money(cost):
 		return  # Para yetersiz
 
-	_player.set(slot.data.stat_key, current_level + 1)
+	var new_level: int = current_level + 1
+	_player.set(slot.data.stat_key, new_level)
 	GlobalSoundManager.play_sfx("upgrade")
-	slot.refresh(current_level + 1)
+	slot.refresh(new_level)
 	slot.play_upgrade_feedback()
+
+	GlobalInventory.inventory_updated.emit()
 
 
 func _on_money_changed(_new_amount: int) -> void:

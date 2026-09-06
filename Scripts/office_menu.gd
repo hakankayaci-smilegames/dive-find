@@ -15,7 +15,8 @@ extends CanvasLayer
 
 @export_group("Oyuna Dönüş")
 @export var teleport_player_on_close: bool = true
-@export var ocean_spawn_x: float = 16.0          # Ofisten çıkınca oyuncunun x konumu (dalış noktası)
+@export var ocean_spawn_x: float = 16.0          # Ofisten çıkınca oyuncunun merkez x konumu (dalış noktası)
+@export var ocean_spawn_x_variance: float = 3000.0 # Yatay rastgele sapma aralığı (± piksel, geniş keşif)
 @export var spawn_above_surface_px: float = 60.0  # Su yüzeyinin hemen azıcık üstünden suya giriş
 @export var spawn_fall_speed: float = 450.0       # Hızlı düşüş hızı
 
@@ -47,6 +48,7 @@ var _current_day: int = 1
 var _active_collection: Node = null
 var _active_inventory: Node = null
 var _active_popup: Node = null
+var _active_popup_scene: PackedScene = null
 var _badge_tweens: Array[Tween] = []
 var _displayed_money: int = 0
 var _money_tween: Tween = null
@@ -55,6 +57,7 @@ var _money_tween: Tween = null
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
+	add_to_group("office_menu")
 
 	# Hafif solma (fade-in) ile ofise pürüzsüz giriş
 	if has_node("Background"):
@@ -75,6 +78,7 @@ func _ready() -> void:
 
 	# Bakiye ve Gün Göstergeleri
 	_displayed_money = GlobalEconomy.money
+
 	GlobalEconomy.money_changed.connect(_on_money_changed)
 	GlobalInventory.inventory_updated.connect(_update_merchant_badges)
 	_refresh_wallet()
@@ -114,19 +118,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_ESCAPE:
 				# 1. Öncelik: Açık bir tüccar veya alt menü varsa önce onu kapat
-				if is_instance_valid(_active_popup):
-					_active_popup.queue_free()
-					_active_popup = null
-					get_viewport().set_input_as_handled()
-					return
-				if is_instance_valid(_active_inventory):
-					_active_inventory.queue_free()
-					_active_inventory = null
-					get_viewport().set_input_as_handled()
-					return
-				if is_instance_valid(_active_collection):
-					_active_collection.queue_free()
-					_active_collection = null
+				if is_instance_valid(_active_popup) or is_instance_valid(_active_inventory) or is_instance_valid(_active_collection):
+					_close_all_submenus()
 					get_viewport().set_input_as_handled()
 					return
 				# Hiçbir alt pencere yoksa dalışa geç
@@ -400,6 +393,7 @@ func _on_dive_pressed() -> void:
 		_show_toast("⚠️ Hava karardı (19:00+). Yeni dalış için günü ilerletmelisiniz!")
 		return
 
+	_close_all_submenus()
 	GlobalSoundManager.play_sfx("door_close")
 
 	if time_mgr:
@@ -410,7 +404,10 @@ func _on_dive_pressed() -> void:
 		var player = get_tree().get_first_node_in_group("player")
 		if player:
 			var spawn_y = InfiniteMapManager.water_surface_y - spawn_above_surface_px
-			player.set("global_position", Vector2(ocean_spawn_x, spawn_y))
+			var spawn_x: float = ocean_spawn_x
+			if ocean_spawn_x_variance > 0.0:
+				spawn_x += randf_range(-ocean_spawn_x_variance, ocean_spawn_x_variance)
+			player.set("global_position", Vector2(spawn_x, spawn_y))
 			player.set("velocity", Vector2(0, spawn_fall_speed))
 			player.set("current_oxygen", 100.0)
 			player.set("current_health", 100.0)
@@ -419,6 +416,7 @@ func _on_dive_pressed() -> void:
 
 
 func _exit_tree() -> void:
+	_close_all_submenus()
 	get_tree().paused = false
 	if GlobalEconomy.money_changed.is_connected(_on_money_changed):
 		GlobalEconomy.money_changed.disconnect(_on_money_changed)
@@ -431,18 +429,41 @@ func _exit_tree() -> void:
 
 
 # ------------------------------------------------------------------
-# SAHNE AÇICILAR
+# SAHNE AÇICILAR & ALT MENÜ YÖNETİMİ (TOGGLE)
 # ------------------------------------------------------------------
+
+func _close_all_submenus() -> void:
+	if is_instance_valid(_active_popup):
+		_active_popup.queue_free()
+		_active_popup = null
+		_active_popup_scene = null
+	if is_instance_valid(_active_inventory):
+		_active_inventory.queue_free()
+		_active_inventory = null
+	if is_instance_valid(_active_collection):
+		_active_collection.queue_free()
+		_active_collection = null
+
 
 func _open_popup(scene: PackedScene) -> void:
 	if not scene:
 		push_warning("OfficeMenu: Açılmak istenen sahne atanmamış!")
 		return
-	if is_instance_valid(_active_popup):
-		_active_popup.queue_free()
-		_active_popup = null
+
+	# Eğer bu pencere zaten açıksa kapat (Toggle)
+	if is_instance_valid(_active_popup) and _active_popup_scene == scene:
+		_close_all_submenus()
+		GlobalSoundManager.play_sfx("click")
+		return
+
+	_close_all_submenus()
 	GlobalSoundManager.play_sfx("click")
+	_active_popup_scene = scene
 	_active_popup = scene.instantiate()
+	_active_popup.tree_exited.connect(func() -> void:
+		_active_popup = null
+		_active_popup_scene = null
+	)
 	get_tree().current_scene.add_child(_active_popup)
 
 
@@ -468,11 +489,16 @@ func _open_envanter() -> void:
 		_active_inventory = null
 		GlobalSoundManager.play_sfx("click")
 		return
+
+	_close_all_submenus()
 	if not inventory_scene:
 		push_warning("OfficeMenu: inventory_scene atanmamış!")
 		return
 	GlobalSoundManager.play_sfx("click")
 	_active_inventory = inventory_scene.instantiate()
+	_active_inventory.tree_exited.connect(func() -> void:
+		_active_inventory = null
+	)
 	get_tree().current_scene.add_child(_active_inventory)
 
 
@@ -482,11 +508,16 @@ func _open_koleksiyon() -> void:
 		_active_collection = null
 		GlobalSoundManager.play_sfx("click")
 		return
+
+	_close_all_submenus()
 	if not collection_scene:
 		push_warning("OfficeMenu: collection_scene atanmamış!")
 		return
 	GlobalSoundManager.play_sfx("click")
 	_active_collection = collection_scene.instantiate()
+	_active_collection.tree_exited.connect(func() -> void:
+		_active_collection = null
+	)
 	get_tree().current_scene.add_child(_active_collection)
 
 

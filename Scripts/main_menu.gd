@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "Pre-Beta 0.5 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "Pre-Alpha 1.5 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -49,6 +49,7 @@ var _panel_tweens: Dictionary = {}
 var _base_positions: Dictionary = {}
 var _target_parallax: Vector2 = Vector2.ZERO
 var _current_parallax: Vector2 = Vector2.ZERO
+var _active_collection: Node = null
 
 
 func _ready() -> void:
@@ -69,7 +70,7 @@ func _ready() -> void:
 	_refresh_save_buttons()
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
-	collection_button.pressed.connect(_open_collection)
+	collection_button.pressed.connect(_toggle_collection)
 
 	_load_settings()
 	music_slider.value_changed.connect(_on_music_changed)
@@ -215,6 +216,9 @@ func _update_title_bobbing() -> void:
 
 
 func _toggle_info_panel() -> void:
+	if is_instance_valid(_active_collection):
+		_active_collection.queue_free()
+		_active_collection = null
 	if info_panel.visible:
 		_hide_panel(info_panel)
 	else:
@@ -227,6 +231,9 @@ func _close_info_panel() -> void:
 
 
 func _toggle_settings_panel() -> void:
+	if is_instance_valid(_active_collection):
+		_active_collection.queue_free()
+		_active_collection = null
 	if settings_panel.visible:
 		_hide_panel(settings_panel)
 	else:
@@ -301,11 +308,40 @@ func _preload_collection_cache() -> void:
 	GlobalInventory.get_all_items()
 
 
-func _open_collection() -> void:
+func _toggle_collection() -> void:
+	GlobalSoundManager.play_sfx("click")
+	if is_instance_valid(_active_collection):
+		_active_collection.queue_free()
+		_active_collection = null
+		return
+
 	if not collection_scene:
 		push_warning("MainMenu: collection_scene atanmamış!")
 		return
-	get_tree().current_scene.add_child(collection_scene.instantiate())
+
+	_hide_panel(settings_panel)
+	_hide_panel(info_panel)
+
+	_active_collection = collection_scene.instantiate()
+	_active_collection.tree_exited.connect(func() -> void:
+		_active_collection = null
+	)
+	get_tree().current_scene.add_child(_active_collection)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_ESCAPE:
+			if is_instance_valid(_active_collection):
+				_active_collection.queue_free()
+				_active_collection = null
+				get_viewport().set_input_as_handled()
+			elif settings_panel.visible:
+				_close_settings_panel()
+				get_viewport().set_input_as_handled()
+			elif info_panel.visible:
+				_close_info_panel()
+				get_viewport().set_input_as_handled()
 
 
 func _on_reset_collection_pressed() -> void:

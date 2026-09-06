@@ -21,6 +21,7 @@ extends CanvasLayer
 @onready var tab_crafted: Button = get_node_or_null("MainPanel/CategoryTabs/TabCrafted")
 
 var _current_filter: String = "All"
+var _cached_sorted_items: Array[ItemData] = []
 
 const CATEGORY_ORDER: Dictionary = {
 	"Trash": 0,       # Gri (Çöp)
@@ -51,11 +52,29 @@ func _ready() -> void:
 	if is_touch and grid_container:
 		grid_container.columns = 6
 
+	_load_sorted_items_cache()
 	_setup_tabs()
 	_populate_grid()
 
 	if GlobalInventory.has_signal("collection_updated"):
-		GlobalInventory.collection_updated.connect(_populate_grid)
+		GlobalInventory.collection_updated.connect(_on_collection_updated_event)
+
+
+func _load_sorted_items_cache() -> void:
+	_cached_sorted_items = GlobalInventory.get_all_items(false).duplicate()
+	_cached_sorted_items.sort_custom(func(a: ItemData, b: ItemData) -> bool:
+		var order_a: int = CATEGORY_ORDER.get(a.category, 99)
+		var order_b: int = CATEGORY_ORDER.get(b.category, 99)
+		if order_a != order_b:
+			return order_a < order_b
+		if a.value != b.value:
+			return a.value < b.value
+		return a.item_name.naturalnocasecmp_to(b.item_name) < 0
+	)
+
+
+func _on_collection_updated_event(_item: ItemData) -> void:
+	_populate_grid()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -116,16 +135,10 @@ func _populate_grid() -> void:
 		push_warning("Koleksiyon: slot_scene atanmamış!")
 		return
 
-	var all_items: Array[ItemData] = GlobalInventory.get_all_items(true).duplicate()
-	all_items.sort_custom(func(a: ItemData, b: ItemData) -> bool:
-		var order_a: int = CATEGORY_ORDER.get(a.category, 99)
-		var order_b: int = CATEGORY_ORDER.get(b.category, 99)
-		if order_a != order_b:
-			return order_a < order_b
-		if a.value != b.value:
-			return a.value < b.value
-		return a.item_name.naturalnocasecmp_to(b.item_name) < 0
-	)
+	if _cached_sorted_items.is_empty():
+		_load_sorted_items_cache()
+
+	var all_items: Array[ItemData] = _cached_sorted_items
 
 	# Genel toplam hesabı (ProgressBar için)
 	var overall_total := all_items.size()

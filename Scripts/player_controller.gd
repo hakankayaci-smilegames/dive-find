@@ -49,7 +49,7 @@ var mobile_move_vector: Vector2 = Vector2.ZERO         # Sanal joystick tarafın
 @export var tube_level: int = 1                  # Oksijen Tüpü Seviyesi
 @export var fins_level: int = 0                  # Palet Seviyesi
 @export var goggles_level: int = 0               # Dalış Gözlüğü Seviyesi
-@export var fins_speed_per_level: float = 25.0   # Her seviyede max_speed ve accel'e eklenen bonus (px/s)
+@export var fins_speed_per_level: float = 55.0   # Her seviyede max_speed ve accel'e eklenen bonus (px/s)
 @export var goggles_zoom_min_per_level: float = 0.04   # Her seviyede camera_zoom_min bu kadar azalır
 
 @export_group("UI Bars")
@@ -191,6 +191,7 @@ func _update_animation(delta: float) -> void:
 		return
 
 	# Sağa/Sola dönme (Mirror) - Yalnızca yatay hız varsa yön değiştirir
+	var prev_flip: bool = sprite.flip_h
 	if velocity.x < -10.0:
 		sprite.flip_h = true
 	elif velocity.x > 10.0:
@@ -204,10 +205,13 @@ func _update_animation(delta: float) -> void:
 	var anim_speed: float = lerpf(idle_anim_speed, max_anim_speed, speed_ratio)
 	_anim_timer += delta * anim_speed
 
+	var frame_changed: bool = false
 	while _anim_timer >= 1.0:
 		_anim_timer -= 1.0
 		_current_frame = (_current_frame + 1) % swim_frames.size()
 		sprite.texture = swim_frames[_current_frame]
+
+	sprite.offset = Vector2.ZERO
 
 
 # ------------------------------------------------------------------
@@ -409,11 +413,40 @@ func get_effective_max_speed() -> float:
 	
 
 func get_effective_max_accel() -> float:
-	return acceleration + float(fins_level) * fins_speed_per_level
+	return acceleration + float(fins_level) * (fins_speed_per_level * 2.5)
 
 
 func get_effective_zoom_min() -> float:
 	return max(camera_zoom_min - float(goggles_level) * goggles_zoom_min_per_level, 0.01)
+
+
+func get_surface_return_info() -> Dictionary:
+	var surface_y: float = InfiniteMapManager.water_surface_y
+	var dist_pixels: float = max(0.0, global_position.y - surface_y)
+	var depth_m: float = dist_pixels / pixels_per_meter
+	var swim_speed: float = max(get_effective_max_speed(), 1.0)
+	var time_to_surface: float = dist_pixels / swim_speed
+
+	var tube_eff: float = _get_tube_efficiency()
+	var current_drain: float = base_oxygen_drain_rate * (_calculate_depth_penalty(depth_m) / tube_eff)
+	var surface_drain: float = base_oxygen_drain_rate * (1.0 / tube_eff)
+	var avg_drain: float = (current_drain + surface_drain) * 0.5
+
+	var oxygen_needed: float = time_to_surface * avg_drain
+	var oxygen_seconds_left: float = current_oxygen / max(avg_drain, 0.01) if current_oxygen > 0.0 else 0.0
+	var is_critical: bool = (current_oxygen <= oxygen_needed) and (depth_m >= 2.0) and not godmode_enabled
+	var is_warning: bool = (current_oxygen <= oxygen_needed * 1.25) and (depth_m >= 2.0) and not godmode_enabled
+
+	return {
+		"depth_m": depth_m,
+		"time_to_surface": time_to_surface,
+		"oxygen_needed": oxygen_needed,
+		"oxygen_seconds_left": oxygen_seconds_left,
+		"is_critical": is_critical,
+		"is_warning": is_warning,
+		"current_oxygen": current_oxygen,
+		"godmode": godmode_enabled
+	}
 
 
 # ------------------------------------------------------------------
@@ -424,6 +457,7 @@ func _setup_camera() -> void:
 	_camera = Camera2D.new()
 	_camera.name = "PlayerCamera"
 	_camera.zoom = Vector2(camera_zoom, camera_zoom)
+	_camera.process_callback = Camera2D.CAMERA2D_PROCESS_IDLE
 	_camera.position_smoothing_enabled = true
 	_camera.position_smoothing_speed = camera_smoothing_speed
 	_camera.limit_left = camera_limit_left

@@ -12,6 +12,7 @@ signal finished
 @onready var percent_label: Label = $BottomContainer/StatusRow/PercentLabel
 @onready var progress_bar: ProgressBar = $BottomContainer/ProgressBar
 @onready var fade_overlay: ColorRect = $FadeOverlay
+@onready var continue_prompt: PanelContainer = get_node_or_null("ContinuePrompt")
 
 var _tips: Array[String] = []
 var _elapsed_time: float = 0.0
@@ -20,6 +21,8 @@ var _real_progress: float = 0.0
 var _is_finishing: bool = false
 var _scene_loaded: bool = false
 var _loaded_packed_scene: PackedScene = null
+var _waiting_for_input: bool = false
+var _prompt_tween: Tween = null
 
 
 func _ready() -> void:
@@ -77,8 +80,8 @@ func _process(delta: float) -> void:
 		_update_progress_ui(_displayed_progress)
 
 		if _displayed_progress >= 99.9 and _scene_loaded and _elapsed_time >= min_display_time:
-			_is_finishing = true
-			_finish()
+			if not _waiting_for_input:
+				_ready_for_continue()
 
 	else:
 		# Overlay mod (örn. ofisten ofise gün geçişi)
@@ -124,7 +127,7 @@ func _update_progress_ui(val: float) -> void:
 	if is_instance_valid(percent_label):
 		percent_label.text = "%%%d" % int_val
 
-	if is_instance_valid(stage_label):
+	if is_instance_valid(stage_label) and not _waiting_for_input:
 		if int_val < 30:
 			stage_label.text = "Eski kalıntılar ve hazineler taranıyor..."
 		elif int_val < 65:
@@ -133,6 +136,55 @@ func _update_progress_ui(val: float) -> void:
 			stage_label.text = "Dalış ekipmanları kontrol ediliyor..."
 		else:
 			stage_label.text = "Dalışa Hazır!"
+
+
+func _ready_for_continue() -> void:
+	_waiting_for_input = true
+	_displayed_progress = 100.0
+	_update_progress_ui(100.0)
+
+	if is_instance_valid(continue_prompt):
+		continue_prompt.visible = true
+		continue_prompt.pivot_offset = continue_prompt.size * 0.5
+		if _prompt_tween and _prompt_tween.is_valid():
+			_prompt_tween.kill()
+		_prompt_tween = create_tween().set_loops()
+		_prompt_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_prompt_tween.tween_property(continue_prompt, "scale", Vector2(1.05, 1.05), 0.55).set_trans(Tween.TRANS_SINE)
+		_prompt_tween.tween_property(continue_prompt, "scale", Vector2(1.0, 1.0), 0.55).set_trans(Tween.TRANS_SINE)
+
+	if is_instance_valid(stage_label):
+		stage_label.text = "✦ DALIŞA HAZIR! (Devam etmek için ekrana dokunun veya bir tuşa basın) ✦"
+		stage_label.add_theme_color_override("font_color", Color(1.0, 0.95, 0.4, 1.0))
+
+
+func _input(event: InputEvent) -> void:
+	if not _waiting_for_input or _is_finishing:
+		return
+
+	var is_trigger: bool = false
+	if event is InputEventKey and event.pressed and not event.echo:
+		is_trigger = true
+	elif event is InputEventMouseButton and event.pressed:
+		is_trigger = true
+	elif event is InputEventScreenTouch and event.pressed:
+		is_trigger = true
+	elif event is InputEventJoypadButton and event.pressed:
+		is_trigger = true
+
+	if is_trigger:
+		_waiting_for_input = false
+		if _prompt_tween and _prompt_tween.is_valid():
+			_prompt_tween.kill()
+		if is_instance_valid(continue_prompt):
+			continue_prompt.scale = Vector2.ONE
+			continue_prompt.visible = false
+		if is_instance_valid(stage_label):
+			stage_label.modulate.a = 1.0
+		get_viewport().set_input_as_handled()
+		GlobalSoundManager.play_sfx("click")
+		_is_finishing = true
+		_finish()
 
 
 func _finish() -> void:

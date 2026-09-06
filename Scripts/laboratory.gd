@@ -238,14 +238,18 @@ func _select_recipe(recipe: Dictionary) -> void:
 		craft_cost_label.text = "Laboratuvar Masrafı: Ücretsiz"
 		craft_cost_label.add_theme_color_override("font_color", Color(0.6, 0.9, 0.6, 1.0))
 
-	# Çanta Kapasite Kontrolü
-	var is_bag_full: bool = GlobalInventory.collected_items.size() >= GlobalInventory.get_capacity()
+	# Çanta Kapasite Kontrolü (Net slot değişimi: üretilen 1 eşya - harcanacak malzemeler)
+	var total_consumed: int = 0
+	for ing in ingredients:
+		total_consumed += int(ing.get("count", 1))
+	var net_slot_change: int = 1 - total_consumed
+	var projected_count: int = GlobalInventory.collected_items.size() + net_slot_change
+	var has_space: bool = projected_count <= GlobalInventory.get_capacity()
 
-	craft_button.disabled = not can_craft
+	craft_button.disabled = not can_craft or not has_space
 	if not can_craft:
 		craft_button.text = "YETERSİZ MALZEME"
-	elif is_bag_full:
-		craft_button.disabled = true
+	elif not has_space:
 		craft_button.text = "ÇANTA DOLU 🎒"
 	else:
 		craft_button.text = "SENTEZLE / ÜRET ✨"
@@ -259,8 +263,14 @@ func _on_craft_pressed() -> void:
 		GlobalSoundManager.play_sfx("error")
 		return
 
-	# 1. Malzemeleri çantadan tüket (yalnızca kilitsizleri sil)
 	var ingredients: Array = _selected_recipe.get("ingredients", [])
+	var total_consumed: int = 0
+	for ing in ingredients:
+		total_consumed += int(ing.get("count", 1))
+	var net_slot_change: int = 1 - total_consumed
+	if GlobalInventory.collected_items.size() + net_slot_change > GlobalInventory.get_capacity():
+		GlobalSoundManager.play_sfx("error")
+		return
 	for ing in ingredients:
 		var iname: String = str(ing.get("item_name", ""))
 		var need_count: int = int(ing.get("count", 1))

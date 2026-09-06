@@ -24,6 +24,7 @@ const DEFAULT_CAPACITY: int = 5
 
 func _ready() -> void:
 	_load_collection()
+	get_all_items()
 
 
 func get_all_items(force_reload: bool = false) -> Array[ItemData]:

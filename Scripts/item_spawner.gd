@@ -45,12 +45,19 @@ var _category_cache: Dictionary = {}
 # runtime boyunca değişmez -> her chunk'ta yeniden birleştirmek yerine bir kez hesaplanır.
 var _layer_pool_cache: Dictionary = {}
 
+# Gün içinde ziyaret edilen/spawn yapılan chunk indeksleri (aynı gün içi farm sömürüsünü önler)
+var _spawned_chunk_indices_today: Dictionary = {}
+
 
 func _ready() -> void:
+	add_to_group("item_spawner")
 	_map_manager_node = get_node_or_null(map_manager)
 
 	_build_category_cache()
 	_build_layer_pool_cache()
+
+	if GlobalTime and GlobalTime.has_signal("day_changed"):
+		GlobalTime.day_changed.connect(_on_day_changed)
 
 	_check_timer = Timer.new()
 	_check_timer.wait_time = spawn_check_interval
@@ -58,6 +65,19 @@ func _ready() -> void:
 	_check_timer.timeout.connect(_on_check_timer_timeout)
 	add_child(_check_timer)
 	_check_timer.start()
+
+
+func _on_day_changed(_new_day: int) -> void:
+	# Yeni güne geçildiğinde okyanus akıntıları gelir: Tüm chunk'lar taze eşyalar için sıfırlanır
+	_spawned_chunk_indices_today.clear()
+	if is_instance_valid(_map_manager_node):
+		for key in _map_manager_node._active_chunks.keys():
+			var chunk: Node2D = _map_manager_node._active_chunks[key]
+			if is_instance_valid(chunk):
+				chunk.remove_meta("items_spawned")
+				for child in chunk.get_children():
+					if child.is_in_group("interactable_items"):
+						child.queue_free()
 
 
 ## ------------------------------------------------------------------
@@ -131,7 +151,14 @@ func _on_check_timer_timeout() -> void:
 		if chunk.has_meta("items_spawned"):
 			continue
 
+		var chunk_idx: int = int(key)
+		# Günlük Akıntı Kontrolü: Bu chunk bugün zaten ziyaret edilmişse o gün tekrar eşya üretmez
+		if _spawned_chunk_indices_today.has(chunk_idx):
+			chunk.set_meta("items_spawned", true)
+			continue
+
 		_spawn_items_for_chunk(chunk)
+		_spawned_chunk_indices_today[chunk_idx] = true
 		chunk.set_meta("items_spawned", true)
 
 
@@ -155,14 +182,11 @@ func _spawn_items_for_chunk(chunk: Node2D) -> void:
 		var min_y: float = layer.get("min_y", 0.0)
 		var max_y: float = layer.get("max_y", 0.0)
 
-		# Yoğunluk hesabı hâlâ derinlik tabanlı (rarity sistemiyle ilgisi yok).
+		# Yoğunluk hesabı derinlik tabanlı (rarity sistemiyle ilgisi yok).
 		# math_depth 0 = LVL1 (en sığ, en yoğun), arttıkça yoğunluk azalır.
 		var math_depth: int = layer_index - 1
 		var density_modifier: float = 1.0 / (1.0 + float(math_depth) * 0.25)
 
-		# NOT: İlk katmanların belirgin şekilde daha yoğun olması istendiği için
-		# (rapor: "base_items artırılmalı") çarpanı 40 -> 60 yükselttim; varsayılan
-		# base_spawn_chance=0.5 ile LVL1'de ~30 eşya hedefine oturuyor.
 		var base_items: float = 60.0 * base_spawn_chance
 		var items_to_spawn: int = int(round(base_items * density_modifier))
 		items_to_spawn = max(0, items_to_spawn + randi_range(-1, 2))

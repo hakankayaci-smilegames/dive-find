@@ -70,8 +70,8 @@ func _get_stat_preview(stat_key: String, lvl: int) -> String:
 			var next_cap: int = 5 + (lvl + 1) * 5
 			return "Kapasite: %d ➔ %d Slot" % [cur_cap, next_cap]
 		"fins_level":
-			var cur_spd: int = int(round(lvl * 25.0))
-			var next_spd: int = int(round((lvl + 1) * 25.0))
+			var cur_spd: int = int(round(lvl * 55.0))
+			var next_spd: int = int(round((lvl + 1) * 55.0))
 			return "Hız: +%d ➔ +%d px/s" % [cur_spd, next_spd]
 		"goggles_level":
 			return "Görüş: Lvl %d ➔ %d" % [lvl, lvl + 1]

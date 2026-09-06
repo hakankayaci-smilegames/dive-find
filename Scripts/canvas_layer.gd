@@ -33,6 +33,13 @@ var _warning_tween: Tween = null
 var _displayed_money: int = 0
 var _money_tween: Tween = null
 var _office_btn_tween: Tween = null
+var _o2_danger_alerted: bool = false
+var _o2_caution_alerted: bool = false
+@onready var o2_return_label: Label = get_node_or_null("StatusPanel/O2ReturnLabel")
+var _o2_hud_style: StyleBoxFlat = null
+var _last_depth_meters: int = -999
+var _o2_hud_timer: float = 0.0
+var _current_hud_mode: String = ""
 
 # YENİ: Renk geçişi ve yön bulmak için hafıza değişkenleri
 var _last_y: float = 0.0
@@ -40,6 +47,11 @@ var _current_color: Color = Color(0.85, 0.95, 1.0, 1.0) # Varsayılan buz mavisi
 
 func _ready() -> void:
 	add_to_group("hud")
+	if o2_return_label:
+		var sb := o2_return_label.get_theme_stylebox("normal")
+		if sb is StyleBoxFlat:
+			_o2_hud_style = sb.duplicate()
+			o2_return_label.add_theme_stylebox_override("normal", _o2_hud_style)
 	invenb.pressed.connect(_on_inventory_button_pressed)
 	GlobalEconomy.money_changed.connect(_on_money_changed)
 	_displayed_money = GlobalEconomy.money
@@ -69,10 +81,14 @@ func _ready() -> void:
 		collection_toast_label.modulate.a = 0.0
 		GlobalInventory.collection_updated.connect(_on_collection_updated)
 
-	GlobalInventory.inventory_updated.connect(_update_bag_button)
+	GlobalInventory.inventory_updated.connect(_on_inventory_or_equipment_updated)
+	_on_inventory_or_equipment_updated()
+	call_deferred("_open_office_at_start")
+
+
+func _on_inventory_or_equipment_updated() -> void:
 	_update_bag_button()
 	_refresh_equipment_panel()
-	call_deferred("_open_office_at_start")
 
 
 func _open_office_at_start() -> void:
@@ -87,33 +103,25 @@ func _process(delta: float) -> void:
 		var depth_pixels = max(0.0, player_y - surface_y)
 		var depth_meters = int(depth_pixels / 50.0)
 		
-		if depth_meters <= 0:
-			depth_label.text = "⚓ YÜZEYDESİN (0m)"
-		else:
-			depth_label.text = "⚓ %dm  |  ↑ Yüzey: %dm" % [depth_meters, depth_meters]
+		if depth_meters != _last_depth_meters:
+			_last_depth_meters = depth_meters
+			if depth_meters <= 0:
+				depth_label.text = "⚓ YÜZEYDESİN (0m)"
+			else:
+				depth_label.text = "⚓ %dm  |  ↑ Yüzey: %dm" % [depth_meters, depth_meters]
 		
 		# --- DİNAMİK RENK GEÇİŞİ MANTIĞI ---
 		var target_color = Color(0.85, 0.95, 1.0, 1.0) # Hareketsizken sabit mavi
-		
-		# Pozisyon yerine doğrudan oyuncunun dikey hızını (velocity.y) okuyoruz.
-		# Bu sayede FPS dalgalanmalarından etkilenmez, kusursuz çalışır.
 		var y_velocity = player_node.velocity.y
 		
-		# Hız eşiğini +/- 15.0 yaptık ki animasyon veya küçük sekmelerden etkilenmesin
 		if y_velocity < -15.0: 
-			# Yukarı çıkıyor -> Fosforlu/Açık Yeşil
 			target_color = Color(0.2, 0.9, 0.3, 1.0)
-			
 		elif y_velocity > 15.0: 
-			# Aşağı batıyor -> Kırmızı (Derinliğe göre koyulaşır)
 			var depth_factor = clamp(float(depth_meters) / 500.0, 0.0, 0.8) 
 			target_color = Color(1.0, 0.2, 0.2, 1.0).lerp(Color(0.3, 0.0, 0.0, 1.0), depth_factor)
 			
-		# Rengi delta ile yumuşakça harmanlıyoruz
 		_current_color = _current_color.lerp(target_color, 6.0 * delta)
-		
-		# Hesaplanan yeni rengi Label'ın yazı rengi olarak uyguluyoruz
-		depth_label.add_theme_color_override("font_color", _current_color)
+		depth_label.self_modulate = _current_color
 
 		var time_mgr: Node = _get_time_mgr()
 		if time_mgr:
@@ -125,11 +133,81 @@ func _process(delta: float) -> void:
 			if ox < 25.0:
 				var pulse = 0.5 + 0.5 * sin(Time.get_ticks_msec() * 0.012)
 				$StatusPanel/Oxygen.modulate = Color(1.0, 0.2 + 0.8 * pulse, 0.2 + 0.8 * pulse, 1.0)
-			else:
+			elif $StatusPanel/Oxygen.modulate != Color.WHITE:
 				$StatusPanel/Oxygen.modulate = Color.WHITE
 
+		# Yüzeye Dönüş & Oksijen Yetme Analizi (Dinamik Belirgin HUD - Optimize & Yüzey Destekli)
+		if is_instance_valid(o2_return_label) and player_node.has_method("get_surface_return_info"):
+			_o2_hud_timer += delta
+			var should_update_text: bool = (_o2_hud_timer >= 0.08)
+
+			var info: Dictionary = player_node.get_surface_return_info()
+			var depth_m: float = float(info.get("depth_m", 0.0))
+			var is_god: bool = bool(info.get("godmode", false))
+			var ox: float = float(info.get("current_oxygen", 100.0))
+
+			if is_god or depth_m < 2.0:
+				# Yüzeydeyken HUD açık kalır ve güvende olduğunu gösterir
+				if _current_hud_mode != "SURFACE":
+					_current_hud_mode = "SURFACE"
+					_o2_danger_alerted = false
+					_o2_caution_alerted = false
+					o2_return_label.visible = true
+					o2_return_label.self_modulate = Color(0.80, 1.0, 0.92, 1.0)
+					if _o2_hud_style:
+						_o2_hud_style.border_color = Color(0.2, 0.75, 0.75, 0.85)
+						_o2_hud_style.bg_color = Color(0.03, 0.08, 0.12, 0.94)
+					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%" % int(round(ox))
+				elif should_update_text:
+					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%" % int(round(ox))
+			else:
+				var time_to_surf: float = float(info.get("time_to_surface", 0.0))
+				var o2_secs: float = float(info.get("oxygen_seconds_left", 0.0))
+				var is_crit: bool = bool(info.get("is_critical", false))
+				var is_warn: bool = bool(info.get("is_warning", false))
+
+				if is_crit:
+					var pulse: float = 0.5 + 0.5 * sin(Time.get_ticks_msec() * 0.015)
+					o2_return_label.self_modulate = Color(1.0, 0.3 + 0.5 * pulse, 0.3 + 0.5 * pulse, 1.0)
+					if _current_hud_mode != "CRIT":
+						_current_hud_mode = "CRIT"
+						if _o2_hud_style:
+							_o2_hud_style.border_color = Color(1.0, 0.15, 0.15, 0.95)
+							_o2_hud_style.bg_color = Color(0.18, 0.03, 0.03, 0.95)
+					if not _o2_danger_alerted:
+						_o2_danger_alerted = true
+						show_warning_toast("🚨 ACİL DURUM: Oksijen yüzeye yetmeyebilir! HEMEN YÜZEYE ÇIK!", 3.0)
+						GlobalSoundManager.play_sfx("error")
+					if should_update_text:
+						o2_return_label.text = "🚨 ACİL DÖNÜŞ! Yüzey: %.1fs > O2: %.1fs" % [time_to_surf, o2_secs]
+				elif is_warn:
+					if _current_hud_mode != "WARN":
+						_current_hud_mode = "WARN"
+						o2_return_label.self_modulate = Color(1.0, 0.88, 0.25, 1.0)
+						if _o2_hud_style:
+							_o2_hud_style.border_color = Color(1.0, 0.75, 0.1, 0.95)
+							_o2_hud_style.bg_color = Color(0.12, 0.08, 0.02, 0.95)
+					if not _o2_caution_alerted:
+						_o2_caution_alerted = true
+						show_warning_toast("⚠️ DÖNÜŞ SINIRI: Yüzeye %.1fs kaldı, oksijen azalıyor!" % time_to_surf, 2.2)
+					if should_update_text:
+						o2_return_label.text = "⚠️ DİKKAT! Yüzey: %.1fs  │  O2: %.1fs" % [time_to_surf, o2_secs]
+				else:
+					if _current_hud_mode != "SAFE":
+						_current_hud_mode = "SAFE"
+						_o2_danger_alerted = false
+						_o2_caution_alerted = false
+						o2_return_label.self_modulate = Color(0.85, 0.96, 1.0, 1.0)
+						if _o2_hud_style:
+							_o2_hud_style.border_color = Color(0.18, 0.65, 0.9, 0.9)
+							_o2_hud_style.bg_color = Color(0.04, 0.08, 0.14, 0.95)
+					if should_update_text:
+						o2_return_label.text = "⏱️ YÜZEY: %.1fs  │  🫧 O2: ~%ds" % [time_to_surf, int(round(o2_secs))]
+
+			if should_update_text:
+				_o2_hud_timer = 0.0
+
 	_update_office_button_availability()
-	_refresh_equipment_panel()
 
 
 func _on_time_changed(hour: int, minute: int) -> void:

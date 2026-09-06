@@ -131,12 +131,17 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Sınıf**: [`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd) (`extends CharacterBody2D`, Grup: `"player"`)
 - **Spawn**: Su yüzeyinin $60\text{px}$ üstünden $450\text{px/s}$ hızla anında ve dinamik dalış.
 - **Ekipman Seviyeleri**: `GlobalInventory.apply_save_to_player(self)` ile kayıtlı oyundan otomatik yüklenir.
-- **Hareket & Yüzme**: `max_speed` ($220 + \text{fins\_level} \times 25$), `acceleration` ($600 + \text{fins\_level} \times 25$), `friction`, `sink_speed`, `max_sink_velocity`.
+- **Hareket & Yüzme**: `max_speed` ($220 + \text{fins\_level} \times 55$), `acceleration` ($600 + \text{fins\_level} \times 137.5$), `friction`, `sink_speed`, `max_sink_velocity`.
 - **Kamera & Görüş**: Başlangıç zoom $0.45$, min zoom $0.45 - (\text{goggles\_level} \times 0.04)$.
 - **Yüzey Sekme Kuvveti**: `InfiniteMapManager.water_surface_y` üstüne çıkmaya çalıştıkça aşağı iten yay kuvveti (`surface_push_force`).
 - **Derinlik & Oksijen Dengesi**:
   $$\text{depth\_m} = \max\left(0, \frac{\text{global\_position.y} - \text{water\_surface\_y}}{\text{pixels\_per\_meter}}\right)$$
   $$\text{drain\_rate} = \text{base\_oxygen\_drain\_rate} \times \left(\frac{1.0 + \frac{\text{depth\_m}}{250.0}}{1.0 + (\text{tube\_level} - 1) \times 1.25}\right)$$
+- **Yüzeye Dönüş & Güvenlik Analizi (`get_surface_return_info()`):**
+  - Dalgıcın anlık derinliğinden yüzeye dikey çıkış süresi: $t_{\text{surface}} = \frac{\text{dist\_y}}{\text{max\_speed}}$
+  - Çıkış esnasında derinlik azaldığı için ortalama tüketim hızı: $\text{drain}_{\text{avg}} = \frac{\text{drain}_{\text{current}} + \text{drain}_{\text{surface}}}{2}$
+  - Yüzeye varış için gereken asgari oksijen: $\text{O2}_{\text{needed}} = t_{\text{surface}} \times \text{drain}_{\text{avg}}$
+  - Güvenlik Payı & Toast Uyarısı: $\text{current\_oxygen} \le \text{O2}_{\text{needed}} \times 1.25$ olduğunda uyarı, $\le \text{O2}_{\text{needed}}$ olduğunda acil durum toast ve ses bildirimi tetiklenir; HUD üzerinde kalan süre dinamik gösterilir.
 - **Can & Boğulma**: Oksijen $\%15$ altındayken yavaş, $\%0$ iken agresif can kaybı. Can sıfırlanınca `Scenes/game_over.tscn` açılır.
 
 ---
@@ -152,14 +157,17 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 ## 7. Eşya Üretim ve Katman Havuzlama — `item_spawner.gd`
 
 - **Script**: [`Scripts/item_spawner.gd`](file:///home/hakan/dive&find/Scripts/item_spawner.gd) (`class_name ItemSpawner`)
-- **Katman Eşleşmesi**:
+- **Katman Eşleşmesi (Derinlik)**:
   - Katman 1: `Trash`
   - Katman 2: `Trash`, `Resource`
   - Katman 3: `Resource`, `Rare Found`
   - Katman 4: `Resource`, `Rare Found`, `Valuable`
   - Katman 5-6: `Valuable`, `Resource`
   - Katman 7: `Resource`, `Special`
-- Ağırlıklı rastgele seçim: `rarity` (weight) üzerinden hesaplanır.
+- **Günlük Akıntı & Restock Döngüsü (Tükenme & Yenilenme)**:
+  - **Aynı Gün İçi Tüketim**: Bir chunk o gün spawn edildiğinde `_spawned_chunk_indices_today` sözlüğüne işlenir. Oyuncu o gün 2 chunk uzağa yüzüp dönse bile o bölgede aynı gün tekrar eşya doğmaz (border-hopping sonsuz farm exploiti engellendi).
+  - **Yeni Gün Yenilenmesi**: `GlobalTime.day_changed` tetiklendiğinde `_spawned_chunk_indices_today.clear()` çalışır, okyanus akıntıları gelir ve tüm okyanus baştan taze eşyalarla donatılır.
+- Ağırlıklı rastgele seçim: `rarity` (weight) üzerinden derinlik katmanlarına göre hesaplanır.
 
 ---
 
@@ -169,7 +177,10 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **YENİ OYUN & DEVAM ET**:
   - `DEVAM ET`: Kayıtlı oyun varsa aktif, fare üzerinde detaylı save özeti tooltip'i (Gün, Para, Eşyalar, Ekipmanlar, Kayıt Tarihi).
   - `YENİ OYUN`: Sıfırdan temiz bir başlangıç açar.
-- **Sürüm Yönetimi**: `@export var game_version: String = "v0.0.2 (Devbuild)"` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
+  - **Toggle Panel Mimarisi:** Ana menüdeki `Koleksiyon`, `Ayarlar` ve `Bilgi` butonları toggle (aç/kapa) mantığıyla çalışır. Açık olan bir pencere varken butona tekrar basıldığında kapanır; başka bir pencere açıldığında önceki pencere otomatik temizlenir. Üst üste birden fazla pencere yığılması engellenmiştir.
+- **Sürüm Yönetimi & Yenilikler Paneli**:
+  - `@export var game_version: String = "Pre-Alpha 1.5 (Afterjam Remaster)"` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
+  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha 1.5 sürüm notlarını (Güncellemeler ve Fixler olarak ayrılmış şekilde) BBCode renkli formatta oyuncuya sunar.
 
 ### 8.2. Ofis & Dalış Karargahı ([`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd) & `Scenes/office_menu.tscn`)
 - **Tam Ekran Opak Yatay Düzen**:
@@ -179,8 +190,12 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - Çantadaki eşyaları anlık tarayarak Çöpçü (`🟢 3 Hurda (+180 Z)`), Antikacı (`🟢 1 Antika (+90 Z)` - Ham maddeler craft için hariç tutulur) ve Kara Borsa (`🔴 1 Özel (+300 Z)`) kartlarının üstünde canlı rozetler gösterir.
     - Satılabilir eşyası olan tüccarlar şık bir nabız / nefes alma animasyonuyla (`Pulse Glow Tween`) hafifçe parıldar.
     - Ekipman Atölyesi kartı, cüzdandaki para herhangi bir geliştirmeye yetiyorsa parıldayan `✨ Yükseltme Hazır!` rozeti takar.
+  - **Alt Menü Toggle & Dalış Temizliği (`_close_all_submenus()`):**
+    - Ofis içindeki tüm satıcılar (Çöpçü, Antikacı, Kara Borsa), tesisler (Atölye, Laboratuvar, Pazar), Çanta ve Koleksiyon butonları toggle mantığına sahiptir; aynı butona tekrar basıldığında pencere kapanır.
+    - Bir alt menü açıkken "Dalışa Başla" basıldığında veya ofis kapandığında `_close_all_submenus()` tetiklenerek okyanusta sahnelerin açık kalması tamamen engellenir.
   - **ESC Kapatma Hiyerarşisi**: Açık bir tüccar, çanta veya koleksiyon penceresi varsa `ESC` önce o alt pencereyi kapatır; alt pencere yoksa dalışı başlatır.
-  - **Alt Tesisler Bölgesi**: Ekipman Mağazası (Aktif), Laboratuvar (Çok Yakında), Satış Pazarı (Çok Yakında).
+  - **Rastgele Dalış Konumu (Keşif Varyansı)**: `@export var ocean_spawn_x_variance: float = 3000.0` ile ofisten her dalışa geçildiğinde dalgıç merkez x: 16 koordinatının sağına veya soluna rastgele saparak (±3000 px aralığında) suya girer. Bu sayede her dalışta farklı bir su altı bölgesi keşfedilir.
+  - **Alt Tesisler Bölgesi**: Ekipman Mağazası, Laboratuvar, Satış Pazarı.
   - **Alt Bar**: Çanta [I], Koleksiyon [C], Dinamik Toast Bildirimleri, Dalışa Başla [ESC].
 
 ---
@@ -220,7 +235,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 | `Scenes/equipment_slot.tscn` | `equipment_slot.gd` | Ekipman yükseltme hücresi |
 | `Scenes/copcu.tscn` | `item_seller.gd` | Sadece Trash kategorisi satış dükkanı |
 | `Scenes/antikaci.tscn` | `item_seller.gd` | Çöp hariç normal & değerli eşya satışı |
-| `Scenes/kara_borsa.tscn` | `item_seller.gd` | Özel kategori eşya satışı (Hepsini Sat destekli) |
+| `Scenes/kara_borsa.tscn` | `item_seller.gd` | Özel kategori eşya satışı (Koyu kırmızı temalı, 2 kolonlu optimize responsive düzen) |
 | `Scenes/collection.tscn` | `collection.gd` | Keşif defteri (Önizleme kartı açılışlı) |
 | `Scenes/collection_slot.tscn` | `collection_slot.gd` | Keşif defteri hücresi (Tıklanabilir keşifler) |
 | `Scenes/game_over.tscn` | `game_over.gd` | Boğulma / ölüm ekranı |
@@ -244,8 +259,18 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Çantaya eklenen `🔄 Sırala` butonu tek tıkla çantayı Fiyata Göre (`sort_inventory_by_value()`) veya Türe/Kategoriye Göre (`sort_inventory_by_category()`) dizer.
 - **Çanta Doluluk Uyarısı (Audio + Visual Shake):**
   - Çanta tamamen doluyken su altında eşya alınmaya çalışıldığında `GlobalSoundManager.play_sfx("error")` çalar ve "DOLU" butonu kırmızı parıldayarak sağa-sola titrer (`Micro-Shake Tween`).
-- **Arayüz İpuçları (Hint Labels):**
-  - Hem çanta panelinde hem de dükkan ekranında oyuncuya sağ tıkla eşya kilitleme ve güvenli satış özelliğini hatırlatan bilgilendirme etiketleri yer alır.
+- **Çantadan Eşya Bırakma / Atma (`🗑️ Bırak`):**
+  - Çantada seçilen eşyayı çıkarmak için `DetailPanel` altına `🗑️ Bırak` butonu entegre edildi.
+  - **Kilit Koruması:** Kilitli (🔒) eşyalar kaza sonucu atılamaz; buton pasifleşir (`Kilitli eşya atılamaz! 🔒`).
+  - **Bağlamsal Bırakma:**
+    - **Ofisteyken:** Eşya çantadan doğrudan çöpe atılır/silinir (`GlobalInventory.remove_item()`). Buton metni: `🗑️ Çantadan At`.
+    - **Dalıştayken:** Eşya oyuncunun okyanustaki konumuna `item_name` eşleştirmesi üzerinden orijinal sahnesiyle (`all_items_tscn/*.tscn`), orijinal boyut ve ölçeğiyle (`scale` korunarak) fiziksel toplanabilir obje olarak spawn olur. Sahnesi bulunmayan özel/craft eşyalarında `item_temp.tscn` kullanılarak sprite ~220px standart oyun içi boyutuna normalize edilir. Dalgıç dilerse sonradan tekrar toplayabilir. HUD üzerinden `🌊 [Eşya] denize bırakıldı.` bildirimi verilir. Buton metni: `🗑️ Denize Bırak`.
+  - **Slot Seçim Göstergesi & İpucu:**
+    - Slot tıklandığında altın sarısı çerçeve (`SelectedBorder`, 3px altın kenarlık ve hafif ışıma efekti) ile aktif olarak seçildiği belirginleştirilir.
+    - Fare başka bir slota hover yaptığında o slot anlık incelenebilir, fare ayrıldığında ise seçili slotun detaylarına otomatik geri dönülür.
+    - Alt kısma `💡 Sol Tık: Eşyayı Seç / Bırak  •  Sağ Tık (Mobilde Basılı Tut): Kilitle 🔒` bilgilendirme ipucu eklendi.
+  - **Açıklama Metni Sığdırma:** `DescLabel` font boyutu 13px ve yüksekliği 75px olarak ayarlandı, oyundaki en uzun eşya açıklamaları dahi taşma yapmadan panele tam oturur.
+
 
 ---
 
@@ -264,8 +289,12 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Maksimum seviyeye ulaşan ekipmanlarda `MAKSİMUM SEVİYE` etiketi ve pasif `MAX` butonu gösterilir.
 - **Canlı Bakiye ve Yetersiz Para Hesabı:**
   - Paranın yetmediği durumlarda buton pasifleşir ve eksik tutar anlık yazılır: `YETERSİZ (-45 Z)` + detaylı tooltip.
-- **Geliştirme Hissiyatı (Micro-Punch Animasyonu):**
+- **Geliştirme Hissiyatı & HUD Senkronizasyonu:**
   - Yükseltme satın alındığında kart hafifçe büyüyüp yerine oturur (`play_upgrade_feedback()`) ve `upgrade` SFX çalar.
+  - Atölyede ekipman (çanta, tüp, palet, gözlük) geliştirildiğinde `GlobalInventory.inventory_updated.emit()` tetiklenerek okyanus HUD'ındaki çanta kapasitesi (`🎒 Çanta [I] (0/10)`) ve ekipman seviye etiketleri (`Lv.X`) anında güncellenir.
+- **Koleksiyon Kitabı Sıfır-Gecikme (RAM Önbellek Mimarisi):**
+  - Oyun açılırken `GlobalInventory._ready()` aşamasında tüm eşya `.tres` dosyaları RAM önbelleğine (`_all_items_cache`) bir kez yüklenir.
+  - `collection.gd` arayüzü açıldığında veya kategori sekmeleri arasında geçiş yapıldığında diske hiçbir okuma yapılmaz (`get_all_items(false)`), eşyalar hafızada bir kez sıralanıp anında gösterilir. Ana menüde veya oyunda donma/kasma tamamen sıfırlanmıştır.
 
 ---
 
@@ -320,6 +349,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Sol taraf: Tarif fihristi (kartlar üzerinde anlık malzeme stok durumu `2/2 ✅` ve üretilebilirlik vurgusu).
   - Sağ taraf: Seçili ürün detayları, çanta stoğu, Zurna maliyeti ve üretim butonu.
   - **Kilit Güvenliği (Right-Click Lock 🔒):** Çantada kilitlenmiş eşyalar asla craft malzemesi olarak harcanmaz.
+  - **Net Slot Hesabı (Çanta Doluluk Fixi):** Üretim öncesi `net_slot_change = 1 - total_consumed` hesabı yapılır. Malzemeler harcandığında yer açılıyorsa çanta başlangıçta full olsa dahi craft'a izin verilir.
   - **Görsel Geri Bildirim:** Üretimde yeşil `✨ +1 [Eşya Adı]` kayan metin efekti, mikro-punch yaylanması ve `upgrade` SFX.
 - **Satış Pazarı ([`Scenes/pazar.tscn`](file:///home/hakan/dive&find/Scenes/pazar.tscn)):**
   - `item_seller.gd` motorunu `shop_filter = "CraftedOnly"` ile kullanan ihracat dükkanı.
@@ -366,3 +396,41 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Keystore'lar: Debug (`~/.local/share/godot/keystores/debug.keystore`), Release (`~/.local/share/godot/keystores/release.keystore`).
   - Java: OpenJDK 21 (`/usr/lib/jvm/java-21-openjdk`).
   - Paket: `com.smilegames.diveandfind`, sürüm: `0.5.0` (arm64-v8a ve armeabi-v7a).
+
+---
+
+## 16. Oksijen Yüzeye Dönüş Sistemi & Giriş Yükleme Protokolü
+
+- **Yüzeye Dönüş Güvenlik Paneli (O2 Return HUD):**
+  - [`Scenes/main.tscn`](file:///home/hakan/dive&find/Scenes/main.tscn) içerisindeki `StatusPanel` 126px yüksekliğe genişletilerek oksijen barı altına yüksek kontrastlı `O2ReturnLabel` yerleştirildi (`StyleBoxFlat_o2_hud`, 15px font, kalın kontur, merkez hizalı).
+  - Su yüzeyindeyken (`depth_m < 2.0`) gizlenmek yerine güven durumu gösterir: `⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%`.
+  - Normal dalışta camgöbeği çerçeveli rozet: `⏱️ YÜZEY: Xs  │  🫧 O2: ~Ys`.
+  - Dönüş sınırına yaklaşıldığında altın sarısı çerçeve: `⚠️ DİKKAT! Yüzey: Xs  │  O2: Ys`.
+  - Kritik eşikte nabız atan kırmızı çerçeveli acil durum: `🚨 ACİL DÖNÜŞ! Yüzey: Xs > O2: Ys`.
+  - Kritik eşikte ekranın üst merkezinde `WarningToast` uyarısı ve `error` SFX tetiklenir.
+  - **Performans Optimizasyonu:** `_process` içindeki gereksiz label shaping çağrıları (`_refresh_equipment_panel`) kaldırıldı, metin güncellemeleri 12 Hz'e sınırlandı ve tema override'ları yerine hafif `self_modulate` yapısına geçildi.
+  - **Sprite & Kamera Akıcılığı:** Yapay sprite offset tablosu kaldırıldı (`Vector2.ZERO`), kamera render interpolasyonunu pürüzsüz kılmak için `CAMERA2D_PROCESS_IDLE` modunda tutularak monitör yenileme hızı uyumsuzlukları giderildi.
+- **Yükleme Ekranı Devam Protokolü (`loading_screen.gd`):**
+  - Sadece Ana Menü'den oyuna girişte (`auto_change_scene == true`) çalışır.
+  - İlerleme %100 olduğunda ekran ortasında altın çerçeveli, parlayan ve nefes alan (scale tween) belirgin bir çağrı paneli (`ContinuePrompt`, 20px font): `▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀`.
+  - Durum çubuğunda ek olarak `✦ DALIŞA HAZIR! (Devam etmek için ekrana dokunun veya bir tuşa basın) ✦` metni belirir.
+  - Herhangi bir klavye, fare tıkı, dokunmatik temas (`InputEventScreenTouch`) veya oyun kolu basımında `click` SFX ile sahne geçişi yapılır.
+  - Gün sonu özetinden ofise dönüş gibi ara geçişlerde (`auto_change_scene == false`) akıcılığı bozmamak için bekleme yapılmaz.
+
+---
+
+## 17. Pre-Alpha 1.5 Sürüm Paketi Özeti
+- **Sürüm Adı:** `Pre-Alpha 1.5 (Afterjam Remaster)`
+- **Tamamlanan Maddeler:**
+  1. Oksijen yüzeye çıkış süresi & güvenli dönüş HUD paneli (`O2ReturnLabel`) ve acil durum uyarı toast'u.
+  2. Yükleme ekranı sonrası interaktif devam tetikleyicisi (dokunmatik & klavye destekli).
+  3. Laboratuvarda çanta doluyken craft yapabilme slot hesabı düzeltmesi (`laboratory.gd`).
+  4. Çantadan eşya atma / denize bırakma mekaniği (`inventory.gd` & `inventory.tscn`).
+  5. Palet (Fins) yükseltme çarpanı buff'ı (+55 px/s ve ivmelenme ölçeklemesi).
+  6. Ekipman yükseltmelerinde HUD çanta kapasitesinin anlık güncellenmesi (`GlobalInventory.inventory_updated`).
+  7. Ana menü koleksiyon ekranı açılışındaki takılmayı önleyen pre-cache mekanizması.
+  8. Günlük akıntı & tek seferlik chunk restock döngüsü (`item_spawner.gd`).
+  9. Kara Borsa UI bozulmalarının (kayan ondalıklı anchor'lar, taşan etiketler) giderilmesi ve responsive 2-kolon düzene oturtulması.
+  10. Dalış noktası yatay varyansı (`ocean_spawn_x_variance = 3000px`) ile her dalışta farklı açık deniz noktasına iniş.
+  11. Yapay sprite titremesinin kaldırılması ve kameranın akıcı `CAMERA2D_PROCESS_IDLE` moduna alınması.
+  12. Mobil dokunmatik kontrollerle tam uyumluluk (uzun basış kilitleme ipuçları, dokunmatik devam desteği).

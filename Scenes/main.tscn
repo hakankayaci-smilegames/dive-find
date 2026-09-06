@@ -73,6 +73,22 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o2_hud"]
+content_margin_left = 10.0
+content_margin_top = 4.0
+content_margin_right = 10.0
+content_margin_bottom = 4.0
+bg_color = Color(0.04, 0.08, 0.14, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.65, 0.9, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dock"]
 content_margin_left = 10.0
 content_margin_top = 6.0
@@ -94,7 +110,7 @@ size = Vector2(127, 128)
 
 [node name="Main" type="Node2D" unique_id=1124296121]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "collection_toast_label", "time_label", "day_label")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "collection_toast_label", "warning_toast_label", "time_label", "day_label")]
 script = ExtResource("1_ee4r6")
 inventory_scene = ExtResource("2_gt3je")
 invenb = NodePath("Button")
@@ -107,6 +123,7 @@ goggles_level_label = NodePath("EquipmentDock/Margin/HBox/GogglesSlot/Level")
 fins_level_label = NodePath("EquipmentDock/Margin/HBox/FinsSlot/Level")
 tube_level_label = NodePath("EquipmentDock/Margin/HBox/TubeSlot/Level")
 collection_toast_label = NodePath("Label")
+warning_toast_label = NodePath("WarningToast")
 time_label = NodePath("TimePanel/Margin/HBox/TimeLabel")
 day_label = NodePath("TimePanel/Margin/HBox/DayLabel")
 office_button_surface_range = 1000.0
@@ -152,25 +169,25 @@ text = "⏰ 10:00"
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 415.0
-offset_bottom = 110.0
+offset_bottom = 126.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_status")
 
 [node name="HealthLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=2146428240]
 layout_mode = 0
-offset_left = 15.0
-offset_top = 15.0
-offset_right = 95.0
-offset_bottom = 40.0
+offset_left = 31.0
+offset_top = 13.0
+offset_right = 111.0
+offset_bottom = 37.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 text = "❤️ CAN:"
 vertical_alignment = 1
 
 [node name="Health" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=268147023]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 15.0
-offset_right = 380.0
-offset_bottom = 40.0
+offset_left = 99.0
+offset_top = 11.0
+offset_right = 379.0
+offset_bottom = 38.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
@@ -178,24 +195,59 @@ value = 100.0
 
 [node name="OxygenLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=1489052818]
 layout_mode = 0
-offset_left = 15.0
-offset_top = 50.0
-offset_right = 95.0
-offset_bottom = 75.0
+offset_left = 9.0
+offset_top = 58.0
+offset_right = 97.0
+offset_bottom = 82.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 text = "🫧 OKSİJEN:"
 vertical_alignment = 1
 
 [node name="Oxygen" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=1118594691]
 layout_mode = 0
-offset_left = 100.0
-offset_top = 50.0
-offset_right = 380.0
-offset_bottom = 75.0
+offset_left = 99.0
+offset_top = 56.0
+offset_right = 379.0
+offset_bottom = 83.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 value = 100.0
+
+[node name="O2ReturnLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=1849204123]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 111.0
+offset_right = 335.0
+offset_bottom = 146.0
+theme_override_colors/font_color = Color(0.85, 0.96, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 3
+theme_override_constants/shadow_outline_size = 2
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_o2_hud")
+text = "⏱️ YÜZEY: --s  │  🫧 KALAN O2: --s"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="WarningToast" type="Label" parent="CanvasLayer" unique_id=314159265]
+modulate = Color(1, 1, 1, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 74.0
+offset_right = 320.0
+offset_bottom = 110.0
+grow_horizontal = 2
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 4
+theme_override_constants/shadow_outline_size = 3
+theme_override_font_sizes/font_size = 17
+text = "⚠️ DİKKAT: Oksijen yüzeye yetmeyebilir!"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Button" type="Button" parent="CanvasLayer" unique_id=1965632290]
 anchors_preset = 1

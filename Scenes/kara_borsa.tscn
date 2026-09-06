@@ -76,7 +76,9 @@ corner_radius_bottom_left = 8
 
 [node name="ItemSeller" unique_id=1804705842 instance=ExtResource("1_base")]
 shop_title = "Kara Borsa"
+shop_filter = "SpecialOnly"
 only_special = true
+isOE = false
 special_multiplier = 1.5
 
 [node name="MainPanel" parent="." index="0" unique_id=1271672358]
@@ -86,85 +88,118 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_panel_dark")
 theme_override_colors/font_color = Color(0.9, 0.32, 0.25, 1)
 
 [node name="CloseButton" parent="MainPanel" index="1" unique_id=979415548]
-anchors_preset = -1
-anchor_left = 0.97400004
-anchor_top = 0.024
-anchor_right = 0.97400004
-anchor_bottom = 0.024
-offset_left = -39.80005
-offset_top = 0.0
-offset_right = 0.19995117
+anchors_preset = 1
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 50.0
 
 [node name="ScrollContainer" parent="MainPanel" index="2" unique_id=951052727]
-offset_top = 68.0
-offset_right = -450.0
+anchors_preset = 9
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 60.0
+offset_right = 440.0
+offset_bottom = -50.0
+grow_vertical = 2
 
 [node name="GridContainer" parent="MainPanel/ScrollContainer" index="0" unique_id=850747675]
 columns = 4
 
 [node name="DetailPanel" parent="MainPanel" index="3" unique_id=342245798]
-anchors_preset = -1
-anchor_left = 0.97
-anchor_top = 0.95600003
-anchor_right = 0.97
-anchor_bottom = 0.95600003
-offset_left = -425.0
-offset_top = -312.60004
-offset_right = 0.0
-offset_bottom = 0.0
+anchors_preset = 11
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -440.0
+offset_top = 60.0
+offset_right = -20.0
+offset_bottom = -20.0
 grow_horizontal = 0
+grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_detail_dark")
 
 [node name="BigItemImage" parent="MainPanel/DetailPanel" index="0" unique_id=527821558]
-offset_right = 185.0
-offset_bottom = 165.0
+offset_left = 15.0
+offset_top = 15.0
+offset_right = 150.0
+offset_bottom = 150.0
 
 [node name="NameLabel" parent="MainPanel/DetailPanel" index="1" unique_id=764419760]
-offset_left = 205.0
-offset_top = 12.0
-offset_right = 410.0
-offset_bottom = 38.0
+offset_left = 165.0
+offset_top = 15.0
+offset_right = 405.0
+offset_bottom = 45.0
 
 [node name="RarityLabel" parent="MainPanel/DetailPanel" index="2" unique_id=53679915]
-offset_left = 205.0
-offset_top = 42.0
-offset_right = 410.0
-offset_bottom = 64.0
+offset_left = 165.0
+offset_top = 50.0
+offset_right = 405.0
+offset_bottom = 75.0
 
 [node name="ValueLabel" parent="MainPanel/DetailPanel" index="3" unique_id=290913151]
-offset_left = 205.0
-offset_top = 68.0
-offset_right = 410.0
-offset_bottom = 90.0
+offset_left = 165.0
+offset_top = 80.0
+offset_right = 405.0
+offset_bottom = 105.0
 
 [node name="DescLabel" parent="MainPanel/DetailPanel" index="4" unique_id=1072968596]
-offset_left = 205.0
-offset_top = 94.0
-offset_right = 410.0
-offset_bottom = 165.0
+offset_left = 15.0
+offset_top = 160.0
+offset_right = 405.0
+offset_bottom = 330.0
 
 [node name="SellButton" parent="MainPanel/DetailPanel" index="5" unique_id=1932424913]
-offset_left = 18.0
-offset_top = 215.0
-offset_right = 408.0
-offset_bottom = 252.0
+offset_left = 15.0
+offset_top = 340.0
+offset_right = 405.0
+offset_bottom = 385.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_sell_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_sell_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_sell_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_sell_focus")
 
 [node name="SellAllButton" parent="MainPanel/DetailPanel" index="6" unique_id=1932424914]
-offset_left = 18.0
-offset_top = 260.0
-offset_right = 408.0
-offset_bottom = 297.0
+offset_left = 15.0
+offset_top = 395.0
+offset_right = 405.0
+offset_bottom = 440.0
 theme_override_styles/normal = SubResource("StyleBoxFlat_sell_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_sell_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_sell_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_sell_focus")
 
-[node name="TextureRect" parent="MainPanel" index="4" unique_id=1401976274]
+[node name="LockHintLabel" parent="MainPanel/DetailPanel" index="7" unique_id=1932424915]
+offset_left = 15.0
+offset_top = 450.0
+offset_right = 405.0
+offset_bottom = 495.0
+text = "🔒 Sağ Tık / Basılı Tut: Eşyayı kilitle
+(Hepsini Sat'ta korunur)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HintLabel" parent="MainPanel" index="4" unique_id=55062603]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -45.0
+offset_right = 440.0
+offset_bottom = -15.0
+grow_vertical = 0
+text = "💡 Sağ Tık / Basılı Tut: Kilitle 🔒"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="TextureRect" parent="MainPanel" index="5" unique_id=1401976274]
 visible = false
 
-[node name="TitleLabel2" parent="MainPanel" index="5" unique_id=663085994]
+[node name="TitleLabel2" parent="MainPanel" index="6" unique_id=663085994]
 visible = false

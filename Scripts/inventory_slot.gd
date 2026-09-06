@@ -3,11 +3,14 @@ class_name InventorySlot
 
 signal slot_clicked(item_data: Resource)
 signal slot_hovered(item_data: Resource)
+signal slot_unhovered(item_data: Resource)
 signal slot_lock_toggled(item_data: Resource)
 
 var _item_data: Resource
+var is_selected: bool = false
 
 @onready var lock_badge: Label = get_node_or_null("LockBadge")
+@onready var selected_border: Panel = get_node_or_null("SelectedBorder")
 
 # Kategori renk tablosu
 const CATEGORY_COLORS: Dictionary = {
@@ -24,10 +27,13 @@ const DEFAULT_BG_COLOR := Color(0.2, 0.2, 0.2, 0.9)
 func _ready() -> void:
 	if not mouse_entered.is_connected(_on_mouse_entered):
 		mouse_entered.connect(_on_mouse_entered)
+	if not mouse_exited.is_connected(_on_mouse_exited):
+		mouse_exited.connect(_on_mouse_exited)
 
 
 func setup(data: Resource) -> void:
 	_item_data = data
+	set_selected(false)
 	if not pressed.is_connected(_on_pressed):
 		pressed.connect(_on_pressed)
 
@@ -43,9 +49,25 @@ func setup(data: Resource) -> void:
 		_update_lock_display()
 
 
+func set_selected(selected: bool) -> void:
+	is_selected = selected
+	if selected_border:
+		selected_border.visible = selected
+
+
+func get_item_data() -> Resource:
+	return _item_data
+
+
 func _on_mouse_entered() -> void:
 	if _item_data:
 		slot_hovered.emit(_item_data)
+
+
+func _on_mouse_exited() -> void:
+	if _item_data:
+		slot_unhovered.emit(_item_data)
+
 
 
 var _press_timer: float = 0.0
