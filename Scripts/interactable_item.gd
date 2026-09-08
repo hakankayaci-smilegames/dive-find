@@ -68,8 +68,8 @@ func _build_hover_badge() -> void:
 	_hover_badge.add_child(panel_container)
 
 	var label := Label.new()
-	label.text = "[E] İncele"
-	label.add_theme_font_size_override("font_size", 16)
+	label.text = "[E] İncele  •  [Sağ Tık] Direkt Al"
+	label.add_theme_font_size_override("font_size", 15)
 	label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.65, 1.0))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
 	label.add_theme_constant_override("outline_size", 2)
@@ -80,6 +80,19 @@ func _build_hover_badge() -> void:
 	# Paneli tam yatayda merkeze ortala
 	panel_container.resized.connect(func():
 		panel_container.position = -panel_container.size / 2.0
+	)
+
+	# Rozet tıklandığında da tıklamaları algıla
+	panel_container.gui_input.connect(func(event: InputEvent) -> void:
+		if get_tree().get_nodes_in_group("popup_ui").size() > 0:
+			return
+		if event is InputEventMouseButton and event.pressed:
+			if event.button_index == MOUSE_BUTTON_LEFT:
+				_check_interaction()
+				get_viewport().set_input_as_handled()
+			elif event.button_index == MOUSE_BUTTON_RIGHT:
+				_check_quick_pickup()
+				get_viewport().set_input_as_handled()
 	)
 
 
@@ -169,9 +182,37 @@ func _is_closest_item_to_player() -> bool:
 
 # Area2D'nin kendi input algılayıcısı (Fare tıklamalarını yakalar)
 func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	# Sadece Sol Tık ile basıldığında çalışır
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		_check_interaction()
+	if get_tree().get_nodes_in_group("popup_ui").size() > 0:
+		return
+
+	if event is InputEventMouseButton and event.pressed:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			_check_interaction()
+			get_viewport().set_input_as_handled()
+		elif event.button_index == MOUSE_BUTTON_RIGHT:
+			_check_quick_pickup()
+			get_viewport().set_input_as_handled()
+
+
+func _check_quick_pickup() -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if player:
+		var distance: float = global_position.distance_to(player.global_position)
+		if distance <= interaction_distance:
+			quick_pickup()
+		else:
+			# 1. Hata sesi çal
+			GlobalSoundManager.play_sfx("error")
+			
+			# 2. HUD'a Toast bildirimi gönder
+			var hud = get_tree().get_first_node_in_group("hud")
+			if hud and hud.has_method("show_warning_toast"):
+				hud.show_warning_toast("[!] Çok Uzaktasın! (Daha yakına yüz)")
+			
+			# 3. Eşya üzerinde anlık kırmızı parlama (flash) efekti
+			_play_out_of_range_feedback()
+	else:
+		push_warning("Sahnede 'player' grubuna ait bir obje bulunamadı!")
 
 
 func _check_interaction() -> void:

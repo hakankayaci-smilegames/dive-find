@@ -13,6 +13,7 @@ signal upgrade_requested(slot: EquipmentSlot)
 var data: EquipmentUpgradeData
 var current_level: int = 0
 var current_cost: int = 0
+var _scale_tween: Tween = null
 
 
 func _ready() -> void:
@@ -122,9 +123,12 @@ func _get_stat_tooltip(stat_key: String, lvl: int) -> String:
 
 
 func play_upgrade_feedback() -> void:
-	var tw := create_tween()
-	tw.tween_property(self, "scale", Vector2(1.04, 1.04), 0.08)
-	tw.tween_property(self, "scale", Vector2.ONE, 0.12)
+	if _scale_tween and _scale_tween.is_valid():
+		_scale_tween.kill()
+	scale = Vector2.ONE
+	_scale_tween = create_tween()
+	_scale_tween.tween_property(self, "scale", Vector2(1.04, 1.04), 0.08)
+	_scale_tween.tween_property(self, "scale", Vector2.ONE, 0.12)
 
 
 func calculate_cost(level: int) -> int:

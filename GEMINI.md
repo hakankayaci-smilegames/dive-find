@@ -35,3 +35,12 @@
 ## 6. Proje Dokümantasyonu & Mimari Senkronizasyonu (Architecture Sync)
 - Yeni projeye başlandığında veya mimari yapının kavranması gerektiğinde, tüm `.tscn`, `.tres`, `.gd` ve yapılandırma dosyalarını okuyarak bağlantıları açıklayan bir `PROJECT_ARCHITECTURE.md` oluşturmayı öner veya oluştur.
 - Projede kod, sahne, resource veya mekanik değişikliği yapıldığında; `PROJECT_ARCHITECTURE.md` dokümanını zorunlu olarak senkronize ve güncel tut.
+
+## 7. Git ve Versiyon Kontrol Dokunulmazlığı (Hands Off Git)
+- **Git ile Dosya Değiştirme / Sıfırlama Kesinlikle Yasak:** Kullanıcı açıkça istemediği sürece (`git checkout`, `git restore`, `git reset`, `git revert`, `git clean` vb.) hiçbir dosya geri alma/sıfırlama komutu çalıştırma.
+- **Kullanıcının Değişikliklerine Saygı:** Çalışma alanındaki (`git status`) herhangi bir değişiklik kullanıcının kendi geliştirmesi olabilir. Asla kendi inisiyatifinle "temizlik" ya da revert yapma.
+- **Yalnızca Salt Okunur:** `git diff` veya `git status` dışında git state'ini değiştiren hiçbir eyleme girişme; commit, stash, checkout ve dal yönetimini tamamen kullanıcıya bırak.
+
+## 8. Optimizasyon & Mantık Bütünlüğü (Logic Preservation)
+- **Çalışma Mantığını Asla Bozma:** Optimizasyon ve performans iyileştirmelerinde (donma, lag spike, fps düşüşü çözümlerinde) esas hedef donmayı çözerken sistemin var olan çalışma mantığını, oyun kurallarını, veri akışını ve hesaplamalarını asla bozmamaktır.
+- **Doğruluk ve Durum Koruması:** Eşya sayıları, bakiye değişimleri, istatistik kayıtları, sinyal tetiklemeleri ve mekanik hesaplamalar optimizasyon sonrasında da birebir aynı doğruluğu ve davranışı korumalıdır.

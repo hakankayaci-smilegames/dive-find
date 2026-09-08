@@ -25,6 +25,7 @@ extends CanvasLayer
 @onready var day_label: Label = %DayLabel
 @onready var advance_day_button: Button = %AdvanceDayButton
 @onready var save_exit_button: Button = %SaveExitButton
+@onready var mobile_console_button: Button = get_node_or_null("%MobileConsoleButton")
 
 # Satıcı Butonları
 @onready var copcu_button: Button = %CopcuButton
@@ -52,12 +53,15 @@ var _active_popup_scene: PackedScene = null
 var _badge_tweens: Array[Tween] = []
 var _displayed_money: int = 0
 var _money_tween: Tween = null
+var _cached_recipes: Array = []
+var _recipes_loaded: bool = false
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().paused = true
 	add_to_group("office_menu")
+	_load_recipes_cache()
 
 	# Hafif solma (fade-in) ile ofise pürüzsüz giriş
 	if has_node("Background"):
@@ -93,6 +97,16 @@ func _ready() -> void:
 	# Üst Bar Bağlantıları
 	save_exit_button.pressed.connect(_on_save_exit_pressed)
 	advance_day_button.pressed.connect(_on_advance_day_pressed)
+	if is_instance_valid(mobile_console_button):
+		if OS.has_feature("mobile"):
+			mobile_console_button.visible = true
+			mobile_console_button.pressed.connect(func() -> void:
+				var dev_console = get_node_or_null("/root/DevConsole")
+				if dev_console and dev_console.has_method("toggle_console"):
+					dev_console.toggle_console()
+			)
+		else:
+			mobile_console_button.visible = false
 
 	# Satıcı Butonları
 	copcu_button.pressed.connect(_open_copcu)
@@ -649,18 +663,31 @@ func _update_merchant_badges() -> void:
 		_set_badge(lab_button, "", false, Color.TRANSPARENT)
 
 
-func _check_can_craft_any_recipe() -> bool:
+func _load_recipes_cache() -> void:
+	if _recipes_loaded:
+		return
+	_recipes_loaded = true
+	_cached_recipes.clear()
 	var recipes_path := "res://Data/recipes.json"
 	if not FileAccess.file_exists(recipes_path):
-		return false
+		return
 	var file := FileAccess.open(recipes_path, FileAccess.READ)
 	if not file:
-		return false
+		return
 	var json := JSON.new()
-	if json.parse(file.get_as_text()) != OK or not (json.data is Array):
+	if json.parse(file.get_as_text()) == OK and json.data is Array:
+		for r in json.data:
+			if r is Dictionary:
+				_cached_recipes.append(r)
+
+
+func _check_can_craft_any_recipe() -> bool:
+	if not _recipes_loaded:
+		_load_recipes_cache()
+	if _cached_recipes.is_empty():
 		return false
 
-	for r in json.data:
+	for r in _cached_recipes:
 		if not (r is Dictionary):
 			continue
 		var req_money: int = int(r.get("required_money", 0))

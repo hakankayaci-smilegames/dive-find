@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bgmoverboxg7d"]
 
-[ext_resource type="Script" path="res://Scripts/game_over.gd" id="1_go"]
+[ext_resource type="Script" uid="uid://c53xysh712lbt" path="res://Scripts/game_over.gd" id="1_go"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.15, 0.1, 0.06, 0.97)
@@ -62,10 +62,10 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[node name="GameOver" type="CanvasLayer"]
+[node name="GameOver" type="CanvasLayer" unique_id=1907857915]
 script = ExtResource("1_go")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1062298397]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -73,9 +73,9 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.72)
 
-[node name="Panel" type="Panel" parent="Background"]
+[node name="Panel" type="Panel" parent="Background" unique_id=1466082523]
 custom_minimum_size = Vector2(620, 360)
-anchors_preset = 8
+layout_mode = 0
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -88,7 +88,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="TitleLabel" type="Label" parent="Background/Panel"]
+[node name="TitleLabel" type="Label" parent="Background/Panel" unique_id=145104581]
 layout_mode = 0
 offset_left = 170.0
 offset_top = 26.0
@@ -96,11 +96,11 @@ offset_right = 450.0
 offset_bottom = 78.0
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
 theme_override_font_sizes/font_size = 40
-text = "OYUN BİTTİ"
+text = "BOĞULDUN"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="MessageLabel" type="Label" parent="Background/Panel"]
+[node name="MessageLabel" type="Label" parent="Background/Panel" unique_id=729131072]
 layout_mode = 0
 offset_left = 45.0
 offset_top = 105.0
@@ -108,12 +108,13 @@ offset_right = 575.0
 offset_bottom = 235.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 17
-text = "Boğuldun! Canın sıfıra düştü.\nEnvanterindeki tüm eşyalar maalesef silindi.\nDevam etmek için TAMAM'a bas, ofise geri gönderileceksin."
+text = "Oksijen tüpün bitti ve yüzeye ulaşamadın, yandan geçen bir balıkçı seni buldu ve kurtardı ancak uyandığında çantan yoktu.
+Devam etmek için TAMAM'a bas, ofise geri gönderileceksin."
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="OkButton" type="Button" parent="Background/Panel"]
+[node name="OkButton" type="Button" parent="Background/Panel" unique_id=380066194]
 layout_mode = 0
 offset_left = 225.0
 offset_top = 268.0

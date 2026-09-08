@@ -46,6 +46,8 @@ var is_sprinting: bool = false
 var godmode_enabled: bool = false                   # Hile konsolu ile açılıp kapatılır
 var mobile_move_vector: Vector2 = Vector2.ZERO         # Sanal joystick tarafından güncellenir
 var mobile_sprint_active: bool = false               # Mobil depar toggle butonu tarafından güncellenir
+var mobile_aim_angle: float = 0.0                    # Mobil fener hedef açısı (radyan)
+var has_mobile_aim: bool = false                     # Mobilde aktif fener hedefi var mı
 
 @export_group("Inventory")
 @export var backpack_level: int = 0                    # Lvl0 = taban kapasite
@@ -65,7 +67,18 @@ var mobile_sprint_active: bool = false               # Mobil depar toggle butonu
 @export var goggles_zoom_min_per_level: float = 0.04   # Her seviyede camera_zoom_min bu kadar azalır
 
 @export_group("Flashlight & Battery")
-@export var is_flashlight_on: bool = false
+@export var is_flashlight_on: bool = false:
+	set(val):
+		is_flashlight_on = val
+		_update_flashlight_visual()
+		flashlight_toggled.emit(is_flashlight_on)
+
+var flashlight_on: bool:
+	get:
+		return is_flashlight_on
+	set(val):
+		self.is_flashlight_on = val
+
 @export var base_battery_capacity: float = 75.0        # Lvl 1 taban batarya (sn)
 @export var battery_per_level: float = 8.93            # Seviye başına eklenen batarya (sn) - Lvl 15'te 200sn (3dk 20sn)
 @export var surface_battery_regen_rate: float = 30.0   # Yüzeyde şarj hızı (sn/sn)
@@ -491,8 +504,16 @@ func _setup_flashlight() -> void:
 		_flashlight_light.blend_mode = PointLight2D.BLEND_MODE_ADD
 		add_child(_flashlight_light)
 
+	var angle_deg: float = get_flashlight_cone_angle_deg()
+	_cached_flashlight_texture = _generate_cone_texture(angle_deg)
+	_cached_flashlight_tex_level = flashlight_level
+	_flashlight_light.texture = _cached_flashlight_texture
+	_flashlight_light.offset = Vector2.ZERO
+	_flashlight_light.color = Color(0.92, 0.95, 1.0, 1.0)
+
 	_update_flashlight_specs()
 	current_battery = max_battery
+	_update_flashlight_visual()
 
 
 func get_flashlight_max_battery() -> float:
@@ -525,9 +546,14 @@ func _update_flashlight_specs() -> void:
 		if not _flashlight_light:
 			return
 
+	var target_range: float = get_flashlight_range()
+	# Doku yarıçapı 125px olduğundan scale faktörü (256x256 doku)
+	_flashlight_light.texture_scale = target_range / 125.0
+	_flashlight_light.color = Color(0.92, 0.95, 1.0, 1.0) # Göz yormayan berrak sualtı ışığı
+
 	if flashlight_level <= 0:
 		is_flashlight_on = false
-		_flashlight_light.visible = false
+		_update_flashlight_visual()
 		_broadcast_battery()
 		return
 
@@ -538,18 +564,15 @@ func _update_flashlight_specs() -> void:
 		_flashlight_light.texture = _cached_flashlight_texture
 		_flashlight_light.offset = Vector2.ZERO # Dalgıç merkezine kilitli, asla sapmaz
 
-	var target_range: float = get_flashlight_range()
-	# Doku yarıçapı 250px olduğundan scale faktörü
-	_flashlight_light.texture_scale = target_range / 250.0
-	_flashlight_light.color = Color(0.92, 0.95, 1.0, 1.0) # Göz yormayan berrak sualtı ışığı
-	_flashlight_light.energy = 0.95                       # Göz alıcı/kör edici patlamayı engelleyen dengeli parlaklık
 	_update_flashlight_visual()
 	_broadcast_battery()
 
 
 func _update_flashlight_visual() -> void:
 	if is_instance_valid(_flashlight_light):
-		_flashlight_light.visible = (flashlight_level > 0) and is_flashlight_on and (current_battery > 0.0)
+		var active: bool = (flashlight_level > 0) and is_flashlight_on and (current_battery > 0.0)
+		_flashlight_light.visible = active
+		_flashlight_light.energy = 0.95 if active else 0.0
 
 
 func toggle_flashlight() -> void:
@@ -565,19 +588,19 @@ func toggle_flashlight() -> void:
 			hud.show_warning_toast("⚡ Fener bataryası tükendi! Yüzeyde şarj et.")
 		return
 
-	is_flashlight_on = not is_flashlight_on
 	GlobalSoundManager.play_sfx("click")
-	_update_flashlight_visual()
-	flashlight_toggled.emit(is_flashlight_on)
+	self.is_flashlight_on = not is_flashlight_on
 
 
-func _generate_cone_texture(angle_deg: float, size: int = 512) -> Texture2D:
-	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
-	var center: float = float(size) * 0.5 # 256.0
-	var max_reach: float = center - 6.0    # 250.0
+func _generate_cone_texture(angle_deg: float, size: int = 256) -> Texture2D:
+	var byte_data := PackedByteArray()
+	byte_data.resize(size * size * 4) # RGBA8: 4 byte / piksel, başlangıçta 0 (şeffaf)
+	var center: float = float(size) * 0.5 # 128.0
+	var max_reach: float = center - 3.0   # 125.0
+	var max_reach_sq: float = max_reach * max_reach
 	var half_angle_rad: float = deg_to_rad(angle_deg * 0.5)
-	var halo_radius: float = 65.0
-	var min_x: int = int(center - halo_radius) # 191
+	var halo_radius: float = 32.5
+	var min_x: int = int(center - halo_radius) # 95
 
 	# İçte dengesiz parlak elips olmasını engelleyen homojen aydınlatma sınırları:
 	var inner_dist_ratio: float = 0.72   # Mesafenin ilk %72'sinde ışık %100 düz ve eşittir
@@ -585,17 +608,19 @@ func _generate_cone_texture(angle_deg: float, size: int = 512) -> Texture2D:
 
 	for y in range(size):
 		var dy: float = float(y) - center
-		if abs(dy) > max_reach:
+		if absf(dy) > max_reach:
 			continue
+		var row_offset: int = y * size * 4
 		for x in range(min_x, size):
 			var dx: float = float(x) - center
-			var dist: float = sqrt(dx * dx + dy * dy)
-			if dist > max_reach:
+			var dist_sq: float = dx * dx + dy * dy
+			if dist_sq > max_reach_sq:
 				continue
+			var dist: float = sqrt(dist_sq)
 
 			var beam: float = 0.0
-			if dx >= -8.0:
-				var angle: float = abs(atan2(dy, maxf(dx, 0.0001)))
+			if dx >= -4.0:
+				var angle: float = absf(atan2(dy, maxf(dx, 0.0001)))
 				if angle <= half_angle_rad:
 					# Mesafe sönümü (Düz plato + yumuşak uç geçişi)
 					var dist_t: float = dist / max_reach
@@ -614,21 +639,31 @@ func _generate_cone_texture(angle_deg: float, size: int = 512) -> Texture2D:
 			# Dalgıç gövdesi etrafındaki yumuşak aura
 			var halo: float = 0.0
 			if dist <= halo_radius:
-				halo = smoothstep(halo_radius, 25.0, dist) * 0.85
+				halo = smoothstep(halo_radius, 12.5, dist) * 0.85
 
 			# maxf ile harmanlama ve yumuşak tepe yoğunluğu (göz almayan, görmeyi kolaylaştıran temiz ışık)
 			var intensity: float = clampf(maxf(beam, halo) * 0.85, 0.0, 0.85)
 			if intensity > 0.002:
-				img.set_pixel(x, y, Color(intensity, intensity, intensity, intensity))
+				var b: int = int(intensity * 255.0)
+				var p_idx: int = row_offset + (x * 4)
+				byte_data[p_idx] = b
+				byte_data[p_idx + 1] = b
+				byte_data[p_idx + 2] = b
+				byte_data[p_idx + 3] = b
 
+	var img := Image.create_from_data(size, size, false, Image.FORMAT_RGBA8, byte_data)
 	return ImageTexture.create_from_image(img)
 
 
 func _handle_battery_and_flashlight(delta: float) -> void:
-	# Mouse cursor yönüne pürüzsüz dönüş (PC)
+	# Fener yönü: Mobilde mobil hedef açısı, PC'de mouse cursor konumu
 	if is_instance_valid(_flashlight_light) and _flashlight_light.visible:
-		var mouse_pos: Vector2 = get_global_mouse_position()
-		var target_angle: float = (mouse_pos - global_position).angle()
+		var target_angle: float
+		if OS.has_feature("mobile") and has_mobile_aim:
+			target_angle = mobile_aim_angle
+		else:
+			var mouse_pos: Vector2 = get_global_mouse_position()
+			target_angle = (mouse_pos - global_position).angle()
 		_flashlight_light.rotation = lerp_angle(_flashlight_light.rotation, target_angle, 14.0 * delta)
 
 	if godmode_enabled:

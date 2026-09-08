@@ -8,10 +8,19 @@ class_name MobileControls
 @onready var sprint_toggle_button: Button = get_node_or_null("SprintToggleButton")
 @onready var quick_pickup_button: Button = get_node_or_null("QuickPickupButton")
 @onready var joystick_area: Control = $JoystickZone
+@onready var flashlight_toggle_button: Button = get_node_or_null("FlashlightToggleButton")
 @onready var zoom_in_button: Button = get_node_or_null("ZoomControls/ZoomInButton")
 @onready var zoom_out_button: Button = get_node_or_null("ZoomControls/ZoomOutButton")
 
 var _sprint_toggled: bool = false
+var _btn_normal_style: StyleBox = null
+var _btn_pressed_style: StyleBox = null
+var _btn_disabled_style: StyleBox = null
+var flashlight_aim_mode: int = 2 # 0: Joystick, 1: Touch, 2: Hybrid
+var _aim_touch_index: int = -1
+var _aim_touch_pos: Vector2 = Vector2.ZERO
+var _aim_touch_active: bool = false
+var _last_aim_angle: float = 0.0
 
 # Joystick Görsel ve Boyut Parametreleri
 var _touch_index: int = -1
@@ -38,8 +47,14 @@ func _ready() -> void:
 
 	interact_button.pressed.connect(_on_interact_pressed)
 	if sprint_toggle_button:
+		_btn_normal_style = sprint_toggle_button.get_theme_stylebox("normal")
+		_btn_pressed_style = sprint_toggle_button.get_theme_stylebox("pressed")
+		_btn_disabled_style = sprint_toggle_button.get_theme_stylebox("disabled")
 		sprint_toggle_button.pressed.connect(_on_sprint_toggle_pressed)
 		_update_sprint_button_visuals()
+	if flashlight_toggle_button:
+		flashlight_toggle_button.pressed.connect(_on_flashlight_toggle_pressed)
+		_update_flashlight_button_visuals()
 	if quick_pickup_button:
 		quick_pickup_button.pressed.connect(_on_quick_pickup_pressed)
 	joystick_area.gui_input.connect(_on_joystick_gui_input)
@@ -58,8 +73,10 @@ func _load_controls_settings() -> void:
 	var cfg := ConfigFile.new()
 	if cfg.load("user://settings.cfg") == OK:
 		joystick_scale = float(cfg.get_value("controls", "joystick_scale", 1.0))
+		flashlight_aim_mode = int(cfg.get_value("controls", "mobile_flashlight_aim", 2))
 	else:
 		joystick_scale = 1.0
+		flashlight_aim_mode = 2
 	joystick_scale = clampf(joystick_scale, 0.7, 1.5)
 	current_radius = 70.0 * joystick_scale
 	current_deadzone = 8.0 * joystick_scale
@@ -102,8 +119,12 @@ func _on_joystick_draw() -> void:
 
 func _find_player() -> void:
 	_player = get_tree().get_first_node_in_group("player") as Node2D
-	if is_instance_valid(_player) and "mobile_sprint_active" in _player:
-		_player.mobile_sprint_active = _sprint_toggled
+	if is_instance_valid(_player):
+		if "mobile_sprint_active" in _player:
+			_player.mobile_sprint_active = _sprint_toggled
+		if _player.has_signal("flashlight_toggled") and not _player.flashlight_toggled.is_connected(_on_player_flashlight_toggled):
+			_player.flashlight_toggled.connect(_on_player_flashlight_toggled)
+		_update_flashlight_button_visuals()
 
 
 func _process(_delta: float) -> void:
@@ -123,6 +144,10 @@ func _process(_delta: float) -> void:
 	# Dalgıca mobil hareket vektörünü aktar
 	if _player and "mobile_move_vector" in _player:
 		_player.mobile_move_vector = move_vector
+
+	# Fener yönünü ve buton görselini güncelle
+	_update_flashlight_aim()
+	_update_flashlight_button_visuals()
 
 	# Oksijen bittiğinde deparı otomatik kapat
 	if is_instance_valid(_player):
@@ -228,13 +253,54 @@ func _update_sprint_button_visuals() -> void:
 	if _sprint_toggled:
 		sprint_toggle_button.text = "⚡ AÇIK"
 		sprint_toggle_button.modulate = Color(1.3, 1.15, 0.4, 1.0)
-		var active_style = sprint_toggle_button.get_theme_stylebox("pressed")
-		if active_style:
-			sprint_toggle_button.add_theme_stylebox_override("normal", active_style)
+		if _btn_pressed_style:
+			sprint_toggle_button.add_theme_stylebox_override("normal", _btn_pressed_style)
 	else:
 		sprint_toggle_button.text = "⚡ DEPAR"
 		sprint_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.85)
-		sprint_toggle_button.remove_theme_stylebox_override("normal")
+		if _btn_normal_style:
+			sprint_toggle_button.add_theme_stylebox_override("normal", _btn_normal_style)
+
+
+func _on_flashlight_toggle_pressed() -> void:
+	if is_instance_valid(_player) and _player.has_method("toggle_flashlight"):
+		_player.toggle_flashlight()
+		_update_flashlight_button_visuals()
+
+
+func _on_player_flashlight_toggled(_is_on: bool) -> void:
+	_update_flashlight_button_visuals()
+
+
+func _update_flashlight_button_visuals() -> void:
+	if not is_instance_valid(flashlight_toggle_button):
+		return
+	if not is_instance_valid(_player):
+		return
+
+	var fl_level: int = int(_player.get("flashlight_level")) if _player.get("flashlight_level") != null else 0
+	if fl_level <= 0:
+		flashlight_toggle_button.text = "🔦 YOK"
+		flashlight_toggle_button.disabled = true
+		flashlight_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.35)
+		if _btn_disabled_style:
+			flashlight_toggle_button.add_theme_stylebox_override("normal", _btn_disabled_style)
+		elif _btn_normal_style:
+			flashlight_toggle_button.add_theme_stylebox_override("normal", _btn_normal_style)
+		return
+
+	flashlight_toggle_button.disabled = false
+	var is_on: bool = bool(_player.get("is_flashlight_on"))
+	if is_on:
+		flashlight_toggle_button.text = "🔦 AÇIK"
+		flashlight_toggle_button.modulate = Color(1.4, 1.25, 0.45, 1.0)
+		if _btn_pressed_style:
+			flashlight_toggle_button.add_theme_stylebox_override("normal", _btn_pressed_style)
+	else:
+		flashlight_toggle_button.text = "🔦 FENER"
+		flashlight_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.85)
+		if _btn_normal_style:
+			flashlight_toggle_button.add_theme_stylebox_override("normal", _btn_normal_style)
 
 
 func _on_joystick_gui_input(event: InputEvent) -> void:
@@ -292,10 +358,95 @@ func _on_joystick_gui_input(event: InputEvent) -> void:
 		joystick_area.queue_redraw()
 
 
+func _unhandled_input(event: InputEvent) -> void:
+	if not is_instance_valid(_player):
+		return
+
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			# Joystick bölgesinin sağındaki dokunmaları fener hedefi olarak al
+			if _aim_touch_index == -1 and event.position.x > 320.0:
+				_aim_touch_index = event.index
+				_aim_touch_pos = event.position
+				_aim_touch_active = true
+		elif not event.pressed and event.index == _aim_touch_index:
+			_aim_touch_active = false
+			_aim_touch_index = -1
+
+	elif event is InputEventScreenDrag:
+		if event.index == _aim_touch_index:
+			_aim_touch_pos = event.position
+			_aim_touch_active = true
+
+	# PC/Editor test desteği
+	elif event is InputEventMouseButton and _touch_index != 999:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed and event.position.x > 320.0:
+				_aim_touch_active = true
+				_aim_touch_pos = event.position
+			elif not event.pressed:
+				_aim_touch_active = false
+
+	elif event is InputEventMouseMotion and _aim_touch_active:
+		_aim_touch_pos = event.position
+
+
+func _update_flashlight_aim() -> void:
+	if not is_instance_valid(_player):
+		return
+
+	var fl_level: int = int(_player.get("flashlight_level")) if _player.get("flashlight_level") != null else 0
+	if fl_level <= 0:
+		_player.has_mobile_aim = false
+		return
+
+	var touch_angle_valid: bool = false
+	var touch_angle: float = 0.0
+
+	if _aim_touch_active:
+		var player_screen_pos: Vector2 = _player.get_global_transform_with_canvas().origin
+		var diff: Vector2 = _aim_touch_pos - player_screen_pos
+		if diff.length_squared() > 100.0:
+			touch_angle = diff.angle()
+			touch_angle_valid = true
+
+	var move_active: bool = move_vector.length_squared() > 0.01
+	var move_angle: float = move_vector.angle() if move_active else _last_aim_angle
+
+	match flashlight_aim_mode:
+		0: # 🕹️ Yüzüş Yönü (Joystick)
+			if move_active:
+				_last_aim_angle = move_angle
+			_player.mobile_aim_angle = _last_aim_angle
+			_player.has_mobile_aim = true
+
+		1: # 👆 Dokunmatik (Serbest Aim)
+			if touch_angle_valid:
+				_last_aim_angle = touch_angle
+			_player.mobile_aim_angle = _last_aim_angle
+			_player.has_mobile_aim = true
+
+		2: # ✨ Akıllı Hibrit (Joystick + Dokunma)
+			if touch_angle_valid:
+				_last_aim_angle = touch_angle
+			elif move_active:
+				_last_aim_angle = move_angle
+			_player.mobile_aim_angle = _last_aim_angle
+			_player.has_mobile_aim = true
+
+		_:
+			if move_active:
+				_last_aim_angle = move_angle
+			_player.mobile_aim_angle = _last_aim_angle
+			_player.has_mobile_aim = true
+
+
 func _reset_joystick() -> void:
 	_touch_index = -1
 	_joystick_active = false
 	move_vector = Vector2.ZERO
+	_aim_touch_active = false
+	_aim_touch_index = -1
 	if is_instance_valid(_player) and "mobile_move_vector" in _player:
 		_player.mobile_move_vector = Vector2.ZERO
 	joystick_area.queue_redraw()

@@ -505,7 +505,23 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.1 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Direkt Alma Özelliği (PC Entegrasyonu):[/color] Eşyaları menü açmadan tek tuşla anında çantaya alma kabiliyeti PC'ye de getirildi (Sağ Klik).
+• [color=#00e5ff]Mobil Fener Nişanlama & Hassasiyet Ayarları:[/color] Ayarlar menüsüne 3 modlu mobil fener hedefleme seçeneği eklendi (Joystick Yüzüş Yönü, Serbest Dokunmatik Aim, Akıllı Hibrit).
+• [color=#00e5ff]Koleksiyon Sıfırlama Güvenlik Onayı:[/color] Koleksiyon defterini sıfırlama butonuna yanlışlıkla basılmaları önleyen denizci temalı iki aşamalı onay penceresi entegre edildi.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Toplu Satış & Hızlı Yükseltme Optimizasyonu:[/color] \"Hepsini Sat\" yapıldığında tek karede yüzlerce slot sahnesi üretilip silinmesi engellendi; hızlı geliştirmedeki gereksiz çifte tetiklemeler ve tween çakışmaları sıfırlandı.
+• [color=#81c784]Yeni Eşya Keşif Takılması (Lag Spike) Giderildi:[/color] Yeni eşyalar ilk kez keşfedildiğinde yaşanan disk yazma takılması WorkerThreadPool arka plan I/O mimarisiyle tamamen akıcı hale getirildi.
+• [color=#81c784]Fener Işık & Fizik (FPS) Optimizasyonu:[/color] Fener doku üretimi ve dinamik ışık motoru optimize edilerek fener ilk açıldığında oluşan fps düşüşü ve takılmalar tamamen giderildi.
+• [color=#81c784]Fener HUD (Ekipman Dock) Senkronizasyonu:[/color] Okyanustaki sağ alt ekipman dock'unda fener seviyesinin (Lv.X) güncellenmeme ve görünmeme sorunu çözüldü.
+• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]Dinamik Okyanus Işığı & Derinlik Kararması:[/color] Derinliğe (0-350m+) ve günün saatine (10:00-19:00) bağlı olarak kademeli kararan atmosferik ışık döngüsü eklendi.
@@ -585,17 +601,17 @@ vertical_alignment = 1
 
 [node name="InfoPanel" type="Panel" parent="." unique_id=947952739]
 visible = false
-custom_minimum_size = Vector2(680, 460)
+custom_minimum_size = Vector2(720, 500)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -340.0
-offset_top = -230.0
-offset_right = 340.0
-offset_bottom = 230.0
+offset_left = -360.0
+offset_top = -250.0
+offset_right = 360.0
+offset_bottom = 250.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_info")
@@ -646,36 +662,52 @@ theme_override_colors/default_color = Color(0.9, 0.95, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.5)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/normal_font_size = 15
 bbcode_enabled = true
 text = "[center][font_size=24][color=#00e5ff][b]🤿 DIVE & FIND 🤿[/b][/color][/font_size][/center]
 
 [color=#72b5ff][b]Hikaye & Konsept:[/b][/color]
 Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eserleri, değerli kalıntıları ve tuhaf objeleri topla, yüzeye çıkarıp sat ve ekipmanlarını geliştir.
 
-[color=#72b5ff][b]Kontroller:[/b][/color]
+[color=#72b5ff][b]Temel Kontroller (PC):[/b][/color]
 • [color=#00e5ff]WASD / Yön Tuşları:[/color] Yüzme ve Hareket
-• [color=#00e5ff]Sol Tık:[/color] Nesneleri İncele / Topla
-• [color=#00e5ff]Fare Tekerleği / P & O:[/color] Yakınlaştır / Uzaklaştır (Kamera)
-• [color=#00e5ff]E :[/color] Eşya İncele, Çantaya at
-• [color=#00e5ff]é / ~ Tuşu:[/color] Geliştirici & Hile Konsolu
+• [color=#00e5ff]Shift (Basılı Tut):[/color] Hızlı Yüzme / Depar (Sprint — %50 hız artışı, 2.6x oksijen tüketimi)
+• [color=#00e5ff]Sol Tık / E Tuşu:[/color] Eşyayı İncele (Detay penceresi ve alma menüsü açar)
+• [color=#00e5ff]Sağ Tık:[/color] Doğrudan Çantaya Al (Pop-up açmadan hızlı alma)
+• [color=#00e5ff]F Tuşu:[/color] Dalış Fenerini Aç / Kapat (Işık mouse imlecine yönelir, batarya tüketir)
+• [color=#00e5ff]Fare Tekerleği / [ + ] [ - ] / P & O:[/color] Kamera Yakınlaştır / Uzaklaştır (Gözlük seviyesiyle genişler)
+• [color=#00e5ff]I / Tab Tuşu:[/color] Sırt Çantasını Aç / Kapat (Envanter)
+• [color=#00e5ff]C Tuşu:[/color] Koleksiyon Defterini Aç / Kapat (Keşfedilenler)
+• [color=#00e5ff]Sağ Tık (Çantada):[/color] Eşyayı Kilitle / Kilidi Aç (🔒 Satış ve craft koruması)
+• [color=#00e5ff]E (Su Yüzeyinde):[/color] Tekneye Çık & Ofis Karargahına Dön
+• [color=#00e5ff]ESC:[/color] Açık pencereleri kapat / Ofisteyken dalışı başlat
+• [color=#00e5ff]é / ~ Tuşu:[/color] Geliştirici & Hile Konsolu (Komut listesi için: [b]help[/b])
+
+[color=#72b5ff][b]Mobil Kontroller (Dokunmatik):[/b][/color]
+• [color=#00e5ff]Sol Ekran:[/color] Dinamik Analog Joystick (360° serbest yüzüş)
+• [color=#00e5ff]⚡ DEPAR:[/color] Hızlı yüzme modunu açar / kapatır
+• [color=#00e5ff]⚡ DİREKT AL:[/color] Menzildeki eşyayı pop-up açmadan çantaya atar
+• [color=#00e5ff]🖐️ İNCELE:[/color] Menzildeki eşyanın detay penceresini açar
+• [color=#00e5ff]🥽+ / 🥽- :[/color] Kamerayı kademeli yakınlaştırıp uzaklaştırır
+• [color=#00e5ff]🔦 FENER:[/color] Dalış fenerini açar / kapatır (Ayarlardan 3 yön modu seçilebilir)
+• [color=#00e5ff]Uzun Basış (0.35s):[/color] Çantada eşyayı kilitler / açar 🔒
 
 [center][font_size=13][color=#5e8ca8]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
 [font_size=15][color=#00e5ff][i]⚓ Smile Games sunar[/i][/color][/font_size][/center]"
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=830166412]
 visible = false
-custom_minimum_size = Vector2(680, 460)
+custom_minimum_size = Vector2(700, 480)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -340.0
-offset_top = -230.0
-offset_right = 340.0
-offset_bottom = 230.0
+offset_left = -350.0
+offset_top = -240.0
+offset_right = 350.0
+offset_bottom = 240.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_info")
@@ -810,6 +842,36 @@ theme_override_font_sizes/font_size = 18
 text = "%100"
 horizontal_alignment = 2
 vertical_alignment = 1
+
+[node name="FlashlightAimRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=987654325]
+layout_mode = 2
+
+[node name="FlashlightAimLabel" type="Label" parent="SettingsPanel/Content/FlashlightAimRow" unique_id=987654326]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Mobil Fener Yönü"
+vertical_alignment = 1
+
+[node name="FlashlightAimOption" type="OptionButton" parent="SettingsPanel/Content/FlashlightAimRow" unique_id=987654327]
+custom_minimum_size = Vector2(260, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+item_count = 3
+popup/item_0/text = "🕹️ Yüzüş Yönü (Joystick)"
+popup/item_0/id = 0
+popup/item_1/text = "👆 Dokunmatik (Serbest Aim)"
+popup/item_1/id = 1
+popup/item_2/text = "✨ Akıllı Hibrit (Joystick + Dokunma)"
+popup/item_2/id = 2
 
 [node name="CollectionRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=2035805353]
 layout_mode = 2

@@ -33,6 +33,7 @@ func _ready() -> void:
 	
 	music_player.finished.connect(_play_next_shuffled_music)
 	_play_next_shuffled_music()
+	preload_all_sfx()
 
 
 func preload_all_sfx() -> void:

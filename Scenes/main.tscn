@@ -112,7 +112,7 @@ size = Vector2(127, 128)
 
 [node name="Main" type="Node2D" unique_id=1124296121]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "collection_toast_label", "warning_toast_label", "time_label", "day_label")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1515945503 node_paths=PackedStringArray("invenb", "player_node", "depth_label", "bag_level_label", "goggles_level_label", "fins_level_label", "tube_level_label", "flashlight_level_label", "collection_toast_label", "warning_toast_label", "time_label", "day_label")]
 script = ExtResource("1_ee4r6")
 inventory_scene = ExtResource("2_gt3je")
 invenb = NodePath("Button")
@@ -124,6 +124,7 @@ bag_level_label = NodePath("EquipmentDock/Margin/HBox/BagSlot/Level")
 goggles_level_label = NodePath("EquipmentDock/Margin/HBox/GogglesSlot/Level")
 fins_level_label = NodePath("EquipmentDock/Margin/HBox/FinsSlot/Level")
 tube_level_label = NodePath("EquipmentDock/Margin/HBox/TubeSlot/Level")
+flashlight_level_label = NodePath("EquipmentDock/Margin/HBox/FlashlightSlot/Level")
 collection_toast_label = NodePath("Label")
 warning_toast_label = NodePath("WarningToast")
 time_label = NodePath("TimePanel/Margin/HBox/TimeLabel")

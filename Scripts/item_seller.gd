@@ -215,20 +215,20 @@ func _on_sell_all_pressed() -> void:
 		return
 
 	var total_income: int = 0
-	var sold_any: bool = false
 	var time_mgr: Node = _get_time_mgr()
+	var to_remove: Array = []
 
 	for item in items_to_sell:
 		if bool(item.get("is_locked")):
 			continue  # Kilitli eşyayı koru, satma!
 		var price: int = _get_sell_price(item)
 		total_income += price
-		GlobalInventory.remove_item(item)
-		sold_any = true
+		to_remove.append(item)
 		if time_mgr:
 			time_mgr.record_sale(price)
 
-	if sold_any:
+	if not to_remove.is_empty():
+		GlobalInventory.remove_items_bulk(to_remove)
 		GlobalEconomy.add_money(total_income)
 		GlobalSoundManager.play_sfx("sell")
 		if is_instance_valid(sell_all_button):

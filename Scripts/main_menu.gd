@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "Pre-Alpha 1.6 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "Pre-Alpha 1.6.1 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -43,6 +43,8 @@ const SFX_BUS := "SFX"
 @onready var joystick_row: HBoxContainer = get_node_or_null("SettingsPanel/Content/JoystickRow")
 @onready var joystick_slider: HSlider = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickSlider")
 @onready var joystick_val_label: Label = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickValueLabel")
+@onready var flashlight_aim_row: HBoxContainer = get_node_or_null("SettingsPanel/Content/FlashlightAimRow")
+@onready var flashlight_aim_option: OptionButton = get_node_or_null("SettingsPanel/Content/FlashlightAimRow/FlashlightAimOption")
 @onready var reset_collection_button: Button = $SettingsPanel/Content/CollectionRow/ResetCollectionButton
 
 var _panel_tweens: Dictionary = {}
@@ -50,6 +52,7 @@ var _base_positions: Dictionary = {}
 var _target_parallax: Vector2 = Vector2.ZERO
 var _current_parallax: Vector2 = Vector2.ZERO
 var _active_collection: Node = null
+var _active_confirm_dialog: CanvasLayer = null
 
 
 func _ready() -> void:
@@ -78,10 +81,16 @@ func _ready() -> void:
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
 
-	if not OS.has_feature("mobile") and is_instance_valid(joystick_row):
-		joystick_row.visible = false
-	elif is_instance_valid(joystick_slider):
-		joystick_slider.value_changed.connect(_on_joystick_slider_changed)
+	if not OS.has_feature("mobile"):
+		if is_instance_valid(joystick_row):
+			joystick_row.visible = false
+		if is_instance_valid(flashlight_aim_row):
+			flashlight_aim_row.visible = false
+	else:
+		if is_instance_valid(joystick_slider):
+			joystick_slider.value_changed.connect(_on_joystick_slider_changed)
+		if is_instance_valid(flashlight_aim_option):
+			flashlight_aim_option.item_selected.connect(_on_flashlight_aim_selected)
 
 	_setup_button_hover_sfx()
 	_play_entrance_animation()
@@ -332,7 +341,11 @@ func _toggle_collection() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ESCAPE:
-			if is_instance_valid(_active_collection):
+			if is_instance_valid(_active_confirm_dialog):
+				_active_confirm_dialog.queue_free()
+				_active_confirm_dialog = null
+				get_viewport().set_input_as_handled()
+			elif is_instance_valid(_active_collection):
 				_active_collection.queue_free()
 				_active_collection = null
 				get_viewport().set_input_as_handled()
@@ -345,15 +358,139 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _on_reset_collection_pressed() -> void:
+	GlobalSoundManager.play_sfx("click")
+	_show_reset_collection_confirmation()
+
+
+func _show_reset_collection_confirmation() -> void:
+	if is_instance_valid(_active_confirm_dialog):
+		_active_confirm_dialog.queue_free()
+		_active_confirm_dialog = null
+
+	var confirm_layer := CanvasLayer.new()
+	confirm_layer.layer = 130
+	_active_confirm_dialog = confirm_layer
+
+	var overlay := Panel.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var overlay_style := StyleBoxFlat.new()
+	overlay_style.bg_color = Color(0.0, 0.0, 0.0, 0.75)
+	overlay.add_theme_stylebox_override("panel", overlay_style)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	confirm_layer.add_child(overlay)
+
+	# Dışarı tıklandığında iptal etme
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed:
+			GlobalSoundManager.play_sfx("click")
+			if is_instance_valid(confirm_layer):
+				confirm_layer.queue_free()
+				_active_confirm_dialog = null
+	)
+
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	confirm_layer.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(460, 220)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.12, 0.08, 0.05, 0.98)
+	panel_style.set_border_width_all(3)
+	panel_style.border_color = Color(0.85, 0.75, 0.45, 1.0)
+	panel_style.set_corner_radius_all(12)
+	panel_style.content_margin_left = 24
+	panel_style.content_margin_right = 24
+	panel_style.content_margin_top = 20
+	panel_style.content_margin_bottom = 20
+	panel.add_theme_stylebox_override("panel", panel_style)
+	center.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = "⚠️ KOLEKSİYONU SIFIRLA"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35, 1.0))
+	title.add_theme_font_size_override("font_size", 20)
+	vbox.add_child(title)
+
+	var desc := Label.new()
+	desc.text = "Tüm keşfettiğin eşyalar koleksiyon defterinden kalıcı olarak silinecektir.\nBu işlem geri alınamaz!\n\nKoleksiyonu sıfırlamak istediğinden emin misin?"
+	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1.0))
+	desc.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(desc)
+
+	var sep := HSeparator.new()
+	vbox.add_child(sep)
+
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 16)
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(hbox)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = "VAZGEÇ"
+	cancel_btn.custom_minimum_size = Vector2(160, 44)
+	cancel_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var cancel_style := StyleBoxFlat.new()
+	cancel_style.bg_color = Color(0.25, 0.20, 0.18, 1.0)
+	cancel_style.border_color = Color(0.50, 0.40, 0.30, 1.0)
+	cancel_style.set_border_width_all(2)
+	cancel_style.set_corner_radius_all(8)
+	cancel_btn.add_theme_stylebox_override("normal", cancel_style)
+	cancel_btn.pressed.connect(func() -> void:
+		GlobalSoundManager.play_sfx("click")
+		if is_instance_valid(confirm_layer):
+			confirm_layer.queue_free()
+			_active_confirm_dialog = null
+	)
+	hbox.add_child(cancel_btn)
+
+	var confirm_btn := Button.new()
+	confirm_btn.text = "EVET, SIFIRLA 🗑️"
+	confirm_btn.custom_minimum_size = Vector2(160, 44)
+	confirm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var confirm_style := StyleBoxFlat.new()
+	confirm_style.bg_color = Color(0.75, 0.22, 0.20, 1.0)
+	confirm_style.border_color = Color(0.95, 0.40, 0.35, 1.0)
+	confirm_style.set_border_width_all(2)
+	confirm_style.set_corner_radius_all(8)
+	confirm_btn.add_theme_stylebox_override("normal", confirm_style)
+	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.95, 0.90, 1.0))
+	confirm_btn.pressed.connect(func() -> void:
+		GlobalSoundManager.play_sfx("click")
+		if is_instance_valid(confirm_layer):
+			confirm_layer.queue_free()
+			_active_confirm_dialog = null
+		_execute_reset_collection()
+	)
+	hbox.add_child(confirm_btn)
+
+	confirm_layer.tree_exited.connect(func() -> void:
+		if _active_confirm_dialog == confirm_layer:
+			_active_confirm_dialog = null
+	)
+	add_child(confirm_layer)
+
+
+func _execute_reset_collection() -> void:
 	GlobalInventory.reset_collection()
 	var original_text := reset_collection_button.text
 	reset_collection_button.text = "SIFIRLANDI!"
 	reset_collection_button.disabled = true
 	var tween := create_tween()
-	tween.tween_interval(1.0)
+	tween.tween_interval(1.5)
 	tween.tween_callback(func() -> void:
-		reset_collection_button.text = original_text
-		reset_collection_button.disabled = false
+		if is_instance_valid(reset_collection_button):
+			reset_collection_button.text = original_text
+			reset_collection_button.disabled = false
 	)
 
 
@@ -363,11 +500,13 @@ func _load_settings() -> void:
 	var sfx := 80.0
 	var fullscreen := true
 	var joystick_scale := 1.0
+	var flashlight_aim := 2
 	if cfg.load(SETTINGS_FILE) == OK:
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
 		joystick_scale = cfg.get_value("controls", "joystick_scale", joystick_scale)
+		flashlight_aim = int(cfg.get_value("controls", "mobile_flashlight_aim", flashlight_aim))
 	_set_bus_volume(MUSIC_BUS, music)
 	_set_bus_volume(SFX_BUS, sfx)
 	if DisplayServer.get_name() != "headless":
@@ -379,6 +518,8 @@ func _load_settings() -> void:
 		joystick_slider.value = joystick_scale
 	if is_instance_valid(joystick_val_label):
 		joystick_val_label.text = "%%%d" % [int(round(joystick_scale * 100.0))]
+	if is_instance_valid(flashlight_aim_option):
+		flashlight_aim_option.select(clampi(flashlight_aim, 0, 2))
 
 
 func _save_settings() -> void:
@@ -388,7 +529,13 @@ func _save_settings() -> void:
 	cfg.set_value("video", "fullscreen", fullscreen_check.button_pressed)
 	if is_instance_valid(joystick_slider):
 		cfg.set_value("controls", "joystick_scale", joystick_slider.value)
+	if is_instance_valid(flashlight_aim_option):
+		cfg.set_value("controls", "mobile_flashlight_aim", flashlight_aim_option.selected)
 	cfg.save(SETTINGS_FILE)
+
+
+func _on_flashlight_aim_selected(_index: int) -> void:
+	_save_settings()
 
 
 func _on_music_changed(value: float) -> void:

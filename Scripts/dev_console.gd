@@ -6,6 +6,7 @@ extends CanvasLayer
 @onready var console_panel: Control = %ConsolePanel
 @onready var output_label: RichTextLabel = %OutputLabel
 @onready var input_line: LineEdit = %InputLine
+@onready var close_button: Button = get_node_or_null("%CloseButton")
 
 var _commands: Dictionary = {}
 var _history: Array[String] = []
@@ -19,6 +20,10 @@ func _ready() -> void:
 	console_panel.visible = false
 
 	input_line.text_submitted.connect(_on_command_submitted)
+	if is_instance_valid(close_button):
+		close_button.pressed.connect(func() -> void:
+			set_console_visible(false)
+		)
 
 	# Temel Sistem Komutları
 	register_command("help", _cmd_help, "Kullanılabilir tüm komutları listeler.")
@@ -268,31 +273,31 @@ func _cmd_flashlight(args: Array) -> void:
 	if args.is_empty():
 		if int(player.get("flashlight_level")) <= 0:
 			player.set("flashlight_level", 1)
-			player.set("flashlight_on", true)
+			player.set("is_flashlight_on", true)
 			GlobalInventory.inventory_updated.emit()
 			_log_success("Fener Lvl 1 olarak açıldı!")
 			return
-		var cur_state: bool = bool(player.get("flashlight_on"))
-		player.set("flashlight_on", not cur_state)
-		_log_success("Fener %s" % ("AÇILDI" if player.get("flashlight_on") else "KAPATILDI"))
+		var cur_state: bool = bool(player.get("is_flashlight_on"))
+		player.set("is_flashlight_on", not cur_state)
+		_log_success("Fener %s" % ("AÇILDI" if player.get("is_flashlight_on") else "KAPATILDI"))
 		return
 	var arg0 := str(args[0]).to_lower()
 	if arg0 == "on" or arg0 == "ac" or arg0 == "aç":
 		if int(player.get("flashlight_level")) <= 0:
 			player.set("flashlight_level", 1)
 			GlobalInventory.inventory_updated.emit()
-		player.set("flashlight_on", true)
+		player.set("is_flashlight_on", true)
 		_log_success("Fener AÇILDI")
 	elif arg0 == "off" or arg0 == "kapat":
-		player.set("flashlight_on", false)
+		player.set("is_flashlight_on", false)
 		_log_success("Fener KAPATILDI")
 	elif arg0.is_valid_int():
 		var lvl := int(arg0)
 		player.set("flashlight_level", lvl)
 		if lvl > 0:
-			player.set("flashlight_on", true)
+			player.set("is_flashlight_on", true)
 		GlobalInventory.inventory_updated.emit()
-		_log_success("Fener seviyesi güncellendi: Lvl %d (Durum: %s)" % [lvl, "AÇIK" if player.get("flashlight_on") else "KAPALI"])
+		_log_success("Fener seviyesi güncellendi: Lvl %d (Durum: %s)" % [lvl, "AÇIK" if player.get("is_flashlight_on") else "KAPALI"])
 	else:
 		_log_error("Geçersiz parametre. Kullanım: flashlight [seviye|on|off]")
 

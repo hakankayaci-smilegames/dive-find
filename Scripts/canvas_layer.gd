@@ -286,6 +286,8 @@ func _refresh_equipment_panel() -> void:
 		player_node = get_tree().get_first_node_in_group("player") as Node2D
 		if not is_instance_valid(player_node):
 			return
+	if not is_instance_valid(flashlight_level_label):
+		flashlight_level_label = get_node_or_null("EquipmentDock/Margin/HBox/FlashlightSlot/Level")
 	if bag_level_label:
 		bag_level_label.text = "Lv." + str(player_node.get("backpack_level"))
 	if goggles_level_label:

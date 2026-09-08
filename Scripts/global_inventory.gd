@@ -16,6 +16,7 @@ const ITEM_TRES_DIR := "res://all_items_tres"
 # loading_screen.gd oyun başında bunu tetikleyerek donmayı yükleme ekranının arkasına saklar.
 var _all_items_cache: Array[ItemData] = []
 var _items_cached: bool = false
+var _collection_save_mutex: Mutex = Mutex.new()
 
 # Player sahnede bulunamazsa (ör. menü/test ortamı) kullanılacak güvenli varsayılan.
 # Normal oyun akışında her zaman player_controller.gd'deki gerçek formül kullanılır.
@@ -155,22 +156,31 @@ func unlock_all_collection() -> int:
 
 
 func _save_collection() -> void:
-	var file := FileAccess.open(COLLECTION_SAVE_PATH, FileAccess.WRITE)
-	if not file:
-		push_warning("GlobalInventory: koleksiyon kaydedilemedi (%s)" % COLLECTION_SAVE_PATH)
-		return
-	file.store_string(JSON.stringify(discovered_items))
-	file.close()
+	var json_data: String = JSON.stringify(discovered_items)
+	WorkerThreadPool.add_task(func() -> void:
+		_collection_save_mutex.lock()
+		var file := FileAccess.open(COLLECTION_SAVE_PATH, FileAccess.WRITE)
+		if not file:
+			push_warning("GlobalInventory: koleksiyon kaydedilemedi (%s)" % COLLECTION_SAVE_PATH)
+			_collection_save_mutex.unlock()
+			return
+		file.store_string(json_data)
+		file.close()
+		_collection_save_mutex.unlock()
+	)
 
 
 func _load_collection() -> void:
 	if not FileAccess.file_exists(COLLECTION_SAVE_PATH):
 		return
+	_collection_save_mutex.lock()
 	var file := FileAccess.open(COLLECTION_SAVE_PATH, FileAccess.READ)
 	if not file:
+		_collection_save_mutex.unlock()
 		return
 	var text := file.get_as_text()
 	file.close()
+	_collection_save_mutex.unlock()
 	var parsed = JSON.parse_string(text)
 	if parsed is Dictionary:
 		discovered_items = parsed
@@ -182,6 +192,19 @@ func remove_item(item: ItemData) -> bool:
 		emit_signal("inventory_updated")
 		return true
 	return false
+
+
+func remove_items_bulk(items: Array) -> int:
+	if items.is_empty():
+		return 0
+	var removed_count: int = 0
+	for item in items:
+		if item in collected_items:
+			collected_items.erase(item)
+			removed_count += 1
+	if removed_count > 0:
+		emit_signal("inventory_updated")
+	return removed_count
 
 
 # Oyuncu boğulduğunda (game over) çanta tamamen boşaltılır.

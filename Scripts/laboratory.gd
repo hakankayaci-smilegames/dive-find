@@ -271,17 +271,18 @@ func _on_craft_pressed() -> void:
 	if GlobalInventory.collected_items.size() + net_slot_change > GlobalInventory.get_capacity():
 		GlobalSoundManager.play_sfx("error")
 		return
+	var consumed_items: Array = []
 	for ing in ingredients:
 		var iname: String = str(ing.get("item_name", ""))
 		var need_count: int = int(ing.get("count", 1))
 		var deleted: int = 0
-		var items_snapshot: Array = GlobalInventory.collected_items.duplicate()
-		for item in items_snapshot:
+		for item in GlobalInventory.collected_items:
 			if deleted >= need_count:
 				break
-			if item and not bool(item.get("is_locked")) and str(item.get("item_name")) == iname:
-				GlobalInventory.remove_item(item)
+			if item and not bool(item.get("is_locked")) and str(item.get("item_name")) == iname and not consumed_items.has(item):
+				consumed_items.append(item)
 				deleted += 1
+	GlobalInventory.remove_items_bulk(consumed_items)
 
 	# 2. Zurna masrafını tahsil et
 	var req_money: int = int(_selected_recipe.get("required_money", 0))

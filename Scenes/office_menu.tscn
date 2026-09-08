@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" path="res://Scenes/collection.tscn" id="7_collection_scene"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.07, 0.045, 0.03, 1.0)
+bg_color = Color(0.07, 0.045, 0.03, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header_badge"]
 content_margin_left = 14.0
@@ -43,12 +43,12 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_hover"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_pressed"]
 content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.95, 0.85, 0.55, 1)
+bg_color = Color(0.65, 0.55, 0.3, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -59,12 +59,12 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_pressed"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_hover"]
 content_margin_left = 16.0
 content_margin_top = 8.0
 content_margin_right = 16.0
 content_margin_bottom = 8.0
-bg_color = Color(0.65, 0.55, 0.3, 1)
+bg_color = Color(0.95, 0.85, 0.55, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -123,22 +123,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_hover"]
-content_margin_left = 16.0
-content_margin_top = 14.0
-content_margin_right = 16.0
-content_margin_bottom = 14.0
-bg_color = Color(0.2, 0.14, 0.08, 0.98)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.95, 0.85, 0.55, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_pressed"]
 content_margin_left = 16.0
 content_margin_top = 14.0
@@ -150,6 +134,22 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 border_color = Color(0.65, 0.55, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card_hover"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+bg_color = Color(0.2, 0.14, 0.08, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.85, 0.55, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -203,22 +203,6 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_hover"]
-content_margin_left = 24.0
-content_margin_top = 10.0
-content_margin_right = 24.0
-content_margin_bottom = 10.0
-bg_color = Color(0.2, 0.58, 0.85, 1)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.95, 0.85, 0.55, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_pressed"]
 content_margin_left = 24.0
 content_margin_top = 10.0
@@ -230,6 +214,22 @@ border_width_top = 3
 border_width_right = 3
 border_width_bottom = 3
 border_color = Color(0.65, 0.55, 0.3, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_hover"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 24.0
+content_margin_bottom = 10.0
+bg_color = Color(0.2, 0.58, 0.85, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.95, 0.85, 0.55, 1)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
@@ -293,7 +293,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
-[node name="TitleLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/TitleBox"]
+[node name="TitleLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/TitleBox" unique_id=1778688764]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
@@ -302,7 +302,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 30
 text = "OFİS & DALIŞ KARARGAHI"
 
-[node name="SubtitleLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/TitleBox"]
+[node name="SubtitleLabel" type="Label" parent="Background/MainMargin/VBox/TopBar/TitleBox" unique_id=170304040]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.8)
 theme_override_font_sizes/font_size = 13
@@ -312,7 +312,7 @@ text = "Tesisler, Tüccarlar ve Operasyon Yönetim Merkezi"
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="DayPanel" type="PanelContainer" parent="Background/MainMargin/VBox/TopBar/DayBox"]
+[node name="DayPanel" type="PanelContainer" parent="Background/MainMargin/VBox/TopBar/DayBox" unique_id=953002371]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_header_badge")
 
@@ -341,7 +341,7 @@ text = "GÜNÜ İLERLET ☀️"
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="WalletPanel" type="PanelContainer" parent="Background/MainMargin/VBox/TopBar/RightHeader"]
+[node name="WalletPanel" type="PanelContainer" parent="Background/MainMargin/VBox/TopBar/RightHeader" unique_id=1695121255]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_header_badge")
 
@@ -351,6 +351,12 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
 theme_override_font_sizes/font_size = 18
 text = "0 Zurna"
+
+[node name="MobileConsoleButton" type="Button" parent="Background/MainMargin/VBox/TopBar/RightHeader" unique_id=987654332]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "[~] KONSOL"
 
 [node name="SaveExitButton" type="Button" parent="Background/MainMargin/VBox/TopBar/RightHeader" unique_id=864734015]
 unique_name_in_owner = true
@@ -366,10 +372,10 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_danger_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_danger_hover")
 text = "KAYDET & ÇIK"
 
-[node name="HSeparator1" type="HSeparator" parent="Background/MainMargin/VBox"]
+[node name="HSeparator1" type="HSeparator" parent="Background/MainMargin/VBox" unique_id=961945491]
 layout_mode = 2
 
-[node name="SectionTitle1" type="Label" parent="Background/MainMargin/VBox"]
+[node name="SectionTitle1" type="Label" parent="Background/MainMargin/VBox" unique_id=223318774]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.9)
 theme_override_font_sizes/font_size = 14
@@ -389,7 +395,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
 
-[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton"]
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton" unique_id=402863965]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -399,20 +405,20 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox"]
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox" unique_id=1514838447]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "🗑️"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox"]
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox" unique_id=1966380618]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
 theme_override_font_sizes/font_size = 20
 text = "ÇÖPCÜ"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox"]
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/CopcuButton/VBox" unique_id=1056989608]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
 theme_override_font_sizes/font_size = 12
@@ -428,7 +434,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
 
-[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton"]
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton" unique_id=198940723]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -438,27 +444,27 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox"]
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox" unique_id=154669819]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "🏛️"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox"]
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox" unique_id=1706582318]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.45, 1)
 theme_override_font_sizes/font_size = 20
 text = "ANTİKACI"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox"]
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/AntikaciButton/VBox" unique_id=39005450]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
 theme_override_font_sizes/font_size = 12
 text = "Çöp hariç değerli buluntuları alır"
 horizontal_alignment = 1
 
-[node name="KaraBorsaButton" type="Button" parent="Background/MainMargin/VBox/ShopsGrid"]
+[node name="KaraBorsaButton" type="Button" parent="Background/MainMargin/VBox/ShopsGrid" unique_id=1892782826]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -467,7 +473,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
 
-[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton"]
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton" unique_id=391833617]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -477,38 +483,38 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox"]
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox" unique_id=913431534]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "🕶️"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox"]
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox" unique_id=365680885]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.45, 0.45, 1)
 theme_override_font_sizes/font_size = 20
 text = "KARA BORSA"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox"]
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/ShopsGrid/KaraBorsaButton/VBox" unique_id=2126223671]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
 theme_override_font_sizes/font_size = 12
 text = "Sadece özel ve gizli ganimetleri alır"
 horizontal_alignment = 1
 
-[node name="SectionTitle2" type="Label" parent="Background/MainMargin/VBox"]
+[node name="SectionTitle2" type="Label" parent="Background/MainMargin/VBox" unique_id=1636405168]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.9)
 theme_override_font_sizes/font_size = 14
 text = "TESİSLER VE ÜRETİM ALANLARI"
 
-[node name="FacilitiesGrid" type="HBoxContainer" parent="Background/MainMargin/VBox"]
+[node name="FacilitiesGrid" type="HBoxContainer" parent="Background/MainMargin/VBox" unique_id=1955447238]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 18
 
-[node name="EquStoreButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid"]
+[node name="EquStoreButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid" unique_id=620666349]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -517,7 +523,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
 
-[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton"]
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton" unique_id=2046778341]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -527,34 +533,34 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox" unique_id=223267389]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "⚙️"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox" unique_id=1890191990]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
 theme_override_font_sizes/font_size = 19
 text = "EKİPMAN MAĞAZASI"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox" unique_id=563344219]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
 theme_override_font_sizes/font_size = 12
 text = "Tüp, Palet, Gözlük ve Çanta Yükselt"
 horizontal_alignment = 1
 
-[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox"]
+[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/EquStoreButton/VBox" unique_id=1968158054]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.85, 0.45, 1)
 theme_override_font_sizes/font_size = 11
 text = "[ AKTİF ]"
 horizontal_alignment = 1
 
-[node name="LabButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid"]
+[node name="LabButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid" unique_id=1694667683]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -563,7 +569,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
 
-[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton"]
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton" unique_id=1102652911]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -573,34 +579,34 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox" unique_id=1548590915]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "🧪"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox" unique_id=596866955]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.6, 0.8, 1, 1)
 theme_override_font_sizes/font_size = 19
 text = "LABORATUVAR"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox" unique_id=292189976]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
 theme_override_font_sizes/font_size = 12
 text = "Hammaddeler ile İleri Craft & Sentez"
 horizontal_alignment = 1
 
-[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox"]
+[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/LabButton/VBox" unique_id=761688168]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.85, 0.45, 1)
 theme_override_font_sizes/font_size = 11
 text = "[ AKTİF ]"
 horizontal_alignment = 1
 
-[node name="ShopButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid"]
+[node name="ShopButton" type="Button" parent="Background/MainMargin/VBox/FacilitiesGrid" unique_id=1632402448]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -609,7 +615,7 @@ theme_override_styles/normal = SubResource("StyleBoxFlat_card_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_card_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_card_hover")
 
-[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton"]
+[node name="VBox" type="VBoxContainer" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton" unique_id=486714675]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -619,41 +625,41 @@ grow_vertical = 2
 mouse_filter = 2
 alignment = 1
 
-[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+[node name="IconLabel" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox" unique_id=902665934]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "📦"
 horizontal_alignment = 1
 
-[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+[node name="Title" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox" unique_id=634591149]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.85, 0.55, 1)
 theme_override_font_sizes/font_size = 19
 text = "SATIŞ PAZARI"
 horizontal_alignment = 1
 
-[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+[node name="Desc" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox" unique_id=530979970]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 0.8)
 theme_override_font_sizes/font_size = 12
 text = "Üretilen Gelişmiş Eşyaların Satışı"
 horizontal_alignment = 1
 
-[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox"]
+[node name="Status" type="Label" parent="Background/MainMargin/VBox/FacilitiesGrid/ShopButton/VBox" unique_id=1357709377]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.3, 0.85, 0.45, 1)
 theme_override_font_sizes/font_size = 11
 text = "[ AKTİF ]"
 horizontal_alignment = 1
 
-[node name="HSeparator3" type="HSeparator" parent="Background/MainMargin/VBox"]
+[node name="HSeparator3" type="HSeparator" parent="Background/MainMargin/VBox" unique_id=1139205757]
 layout_mode = 2
 
-[node name="BottomBar" type="HBoxContainer" parent="Background/MainMargin/VBox"]
+[node name="BottomBar" type="HBoxContainer" parent="Background/MainMargin/VBox" unique_id=1487811889]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="EnvanterButton" type="Button" parent="Background/MainMargin/VBox/BottomBar"]
+[node name="EnvanterButton" type="Button" parent="Background/MainMargin/VBox/BottomBar" unique_id=93615971]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(170, 48)
 layout_mode = 2
@@ -666,7 +672,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
 text = "🎒 ÇANTA [I]"
 
-[node name="KoleksiyonButton" type="Button" parent="Background/MainMargin/VBox/BottomBar"]
+[node name="KoleksiyonButton" type="Button" parent="Background/MainMargin/VBox/BottomBar" unique_id=1795727663]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(190, 48)
 layout_mode = 2
@@ -679,7 +685,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_secondary_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_secondary_hover")
 text = "📖 KOLEKSİYON [C]"
 
-[node name="ToastLabel" type="Label" parent="Background/MainMargin/VBox/BottomBar"]
+[node name="ToastLabel" type="Label" parent="Background/MainMargin/VBox/BottomBar" unique_id=1028352973]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -688,7 +694,7 @@ theme_override_font_sizes/font_size = 14
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="DiveButton" type="Button" parent="Background/MainMargin/VBox/BottomBar"]
+[node name="DiveButton" type="Button" parent="Background/MainMargin/VBox/BottomBar" unique_id=1916697816]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 52)
 layout_mode = 2
@@ -696,10 +702,10 @@ mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
+theme_override_colors/font_disabled_color = Color(0.65, 0.65, 0.7, 0.8)
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn_dive_normal")
 theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_dive_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_dive_hover")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_btn_dive_disabled")
-theme_override_colors/font_disabled_color = Color(0.65, 0.65, 0.7, 0.8)
 text = "🤿 DALIŞA BAŞLA / OKYANUS"
