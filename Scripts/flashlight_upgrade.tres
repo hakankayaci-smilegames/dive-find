@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="EquipmentUpgradeData" format=3 uid="uid://b5x4asfkpnp71"]
+
+[ext_resource type="Texture2D" uid="uid://dvtyw46ohc2nh" path="res://Sprites/flaslight.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://12td2mlom8vk" path="res://Scripts/EquipmentUpgradeData.gd" id="2_data"]
+
+[resource]
+script = ExtResource("2_data")
+display_name = "Dalış Feneri"
+icon = ExtResource("1_icon")
+stat_key = "flashlight_level"
+description = "Karanlık suları aydınlatır; batarya süresini ve ışık açısını artırır"
+base_cost = 50
+max_level = 15

@@ -118,6 +118,23 @@ func _mark_discovered(item: ItemData) -> void:
 		emit_signal("collection_updated", item)
 
 
+func is_item_discovered(item: Resource) -> bool:
+	if not item:
+		return false
+	var path: String = item.resource_path
+	if path != "" and discovered_items.has(path):
+		return true
+	var item_name_val = item.get("item_name")
+	if item_name_val != null and str(item_name_val) != "":
+		var target_name: String = str(item_name_val)
+		for cached_item in get_all_items():
+			if cached_item and cached_item.item_name == target_name:
+				if cached_item.resource_path != "" and discovered_items.has(cached_item.resource_path):
+					return true
+				break
+	return false
+
+
 func reset_collection() -> void:
 	discovered_items.clear()
 	_save_collection()
@@ -326,12 +343,14 @@ func apply_save_to_player(player: Node) -> void:
 		player.set("fins_level", 0)
 		player.set("goggles_level", 0)
 		player.set("backpack_level", 0)
+		player.set("flashlight_level", 0)
 		return
 	var eq: Dictionary = data.get("equipment", {})
 	player.set("tube_level", int(eq.get("tube_level", 1)))
 	player.set("fins_level", int(eq.get("fins_level", 0)))
 	player.set("goggles_level", int(eq.get("goggles_level", 0)))
 	player.set("backpack_level", int(eq.get("backpack_level", 0)))
+	player.set("flashlight_level", int(eq.get("flashlight_level", 0)))
 
 
 func start_new_game() -> void:

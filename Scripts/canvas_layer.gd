@@ -13,6 +13,7 @@ extends CanvasLayer
 @export var goggles_level_label: Label
 @export var fins_level_label: Label
 @export var tube_level_label: Label
+@export var flashlight_level_label: Label
 
 @export_group("Koleksiyon Bildirimi")
 @export var collection_toast_label: Label  # Sağ üst köşede, 3-4sn görünüp solan bildirim
@@ -40,6 +41,7 @@ var _o2_hud_style: StyleBoxFlat = null
 var _last_depth_meters: int = -999
 var _o2_hud_timer: float = 0.0
 var _current_hud_mode: String = ""
+var _prev_sprinting: bool = false
 
 # YENİ: Renk geçişi ve yön bulmak için hafıza değişkenleri
 var _last_y: float = 0.0
@@ -96,6 +98,11 @@ func _open_office_at_start() -> void:
 
 
 func _process(delta: float) -> void:
+	if not is_instance_valid(player_node):
+		player_node = get_tree().get_first_node_in_group("player") as Node2D
+
+	_refresh_equipment_panel()
+
 	if is_instance_valid(player_node) and depth_label:
 		var surface_y = InfiniteMapManager.water_surface_y
 		var player_y = player_node.global_position.y
@@ -139,12 +146,17 @@ func _process(delta: float) -> void:
 		# Yüzeye Dönüş & Oksijen Yetme Analizi (Dinamik Belirgin HUD - Optimize & Yüzey Destekli)
 		if is_instance_valid(o2_return_label) and player_node.has_method("get_surface_return_info"):
 			_o2_hud_timer += delta
-			var should_update_text: bool = (_o2_hud_timer >= 0.08)
 
 			var info: Dictionary = player_node.get_surface_return_info()
 			var depth_m: float = float(info.get("depth_m", 0.0))
 			var is_god: bool = bool(info.get("godmode", false))
 			var ox: float = float(info.get("current_oxygen", 100.0))
+			var is_sprint: bool = bool(info.get("is_sprinting", false))
+			var sprint_tag: String = " ⚡" if is_sprint else ""
+			var sprint_changed: bool = (is_sprint != _prev_sprinting)
+			_prev_sprinting = is_sprint
+
+			var should_update_text: bool = (_o2_hud_timer >= 0.08) or sprint_changed
 
 			if is_god or depth_m < 2.0:
 				# Yüzeydeyken HUD açık kalır ve güvende olduğunu gösterir
@@ -157,9 +169,9 @@ func _process(delta: float) -> void:
 					if _o2_hud_style:
 						_o2_hud_style.border_color = Color(0.2, 0.75, 0.75, 0.85)
 						_o2_hud_style.bg_color = Color(0.03, 0.08, 0.12, 0.94)
-					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%" % int(round(ox))
+					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%%s" % [int(round(ox)), sprint_tag]
 				elif should_update_text:
-					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%" % int(round(ox))
+					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%%s" % [int(round(ox)), sprint_tag]
 			else:
 				var time_to_surf: float = float(info.get("time_to_surface", 0.0))
 				var o2_secs: float = float(info.get("oxygen_seconds_left", 0.0))
@@ -179,7 +191,7 @@ func _process(delta: float) -> void:
 						show_warning_toast("🚨 ACİL DURUM: Oksijen yüzeye yetmeyebilir! HEMEN YÜZEYE ÇIK!", 3.0)
 						GlobalSoundManager.play_sfx("error")
 					if should_update_text:
-						o2_return_label.text = "🚨 ACİL DÖNÜŞ! Yüzey: %.1fs > O2: %.1fs" % [time_to_surf, o2_secs]
+						o2_return_label.text = "🚨 ACİL DÖNÜŞ! Yüzey: %.1fs > O2: %.1fs%s" % [time_to_surf, o2_secs, sprint_tag]
 				elif is_warn:
 					if _current_hud_mode != "WARN":
 						_current_hud_mode = "WARN"
@@ -191,7 +203,7 @@ func _process(delta: float) -> void:
 						_o2_caution_alerted = true
 						show_warning_toast("⚠️ DÖNÜŞ SINIRI: Yüzeye %.1fs kaldı, oksijen azalıyor!" % time_to_surf, 2.2)
 					if should_update_text:
-						o2_return_label.text = "⚠️ DİKKAT! Yüzey: %.1fs  │  O2: %.1fs" % [time_to_surf, o2_secs]
+						o2_return_label.text = "⚠️ DİKKAT! Yüzey: %.1fs  │  O2: %.1fs%s" % [time_to_surf, o2_secs, sprint_tag]
 				else:
 					if _current_hud_mode != "SAFE":
 						_current_hud_mode = "SAFE"
@@ -202,7 +214,7 @@ func _process(delta: float) -> void:
 							_o2_hud_style.border_color = Color(0.18, 0.65, 0.9, 0.9)
 							_o2_hud_style.bg_color = Color(0.04, 0.08, 0.14, 0.95)
 					if should_update_text:
-						o2_return_label.text = "⏱️ YÜZEY: %.1fs  │  🫧 O2: ~%ds" % [time_to_surf, int(round(o2_secs))]
+						o2_return_label.text = "⏱️ YÜZEY: %.1fs  │  🫧 O2: ~%ds%s" % [time_to_surf, int(round(o2_secs)), sprint_tag]
 
 			if should_update_text:
 				_o2_hud_timer = 0.0
@@ -271,7 +283,9 @@ func _update_office_button_availability() -> void:
 
 func _refresh_equipment_panel() -> void:
 	if not is_instance_valid(player_node):
-		return
+		player_node = get_tree().get_first_node_in_group("player") as Node2D
+		if not is_instance_valid(player_node):
+			return
 	if bag_level_label:
 		bag_level_label.text = "Lv." + str(player_node.get("backpack_level"))
 	if goggles_level_label:
@@ -280,6 +294,8 @@ func _refresh_equipment_panel() -> void:
 		fins_level_label.text = "Lv." + str(player_node.get("fins_level"))
 	if tube_level_label:
 		tube_level_label.text = "Lv." + str(player_node.get("tube_level"))
+	if flashlight_level_label:
+		flashlight_level_label.text = "Lv." + str(player_node.get("flashlight_level"))
 
 
 func _update_bag_button() -> void:

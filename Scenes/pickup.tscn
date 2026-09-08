@@ -28,6 +28,20 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_new_badge"]
+bg_color = Color(0.06, 0.22, 0.12, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.3, 0.95, 0.55, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0.1, 0.8, 0.4, 0.25)
+shadow_size = 4
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_icon_slot"]
 bg_color = Color(0.06, 0.04, 0.03, 0.9)
 border_width_left = 2
@@ -185,6 +199,27 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 0.8)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 14
 text = "[ DEĞERLİ ]"
+vertical_alignment = 1
+
+[node name="NewBadge" type="PanelContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar" unique_id=988776655]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_new_badge")
+
+[node name="BadgeMargin" type="MarginContainer" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/NewBadge" unique_id=988776656]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 4
+
+[node name="NewLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/NewBadge/BadgeMargin" unique_id=988776657]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 1, 0.7, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.9)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 13
+text = "✨ YENİ KEŞİF"
 vertical_alignment = 1
 
 [node name="RarityLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar" unique_id=10998864]

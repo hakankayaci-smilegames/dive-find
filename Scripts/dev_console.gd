@@ -26,8 +26,12 @@ func _ready() -> void:
 
 	# Hile & Geliştirici Komutları
 	register_command("money", _cmd_money, "Cüzdana Zurna ekler veya eksiltir. (Kullanım: money <miktar>)")
-	register_command("upgrade", _cmd_upgrade, "Belirtilen ekipmanı geliştirir. (Kullanım: upgrade <tube|fins|goggles|bag> [seviye])")
+	register_command("upgrade", _cmd_upgrade, "Belirtilen ekipmanı geliştirir. (Kullanım: upgrade <tube|fins|goggles|bag|flashlight> [seviye])")
 	register_command("upgrade_all", _cmd_upgrade_all, "Tüm ekipmanları belirtilen seviyeye çeker veya +1 artırır. (Kullanım: upgrade_all [seviye])")
+	register_command("flashlight", _cmd_flashlight, "Feneri açar/kapatır veya seviyesini ayarlar. (Kullanım: flashlight [seviye|on|off])")
+	register_command("fener", _cmd_flashlight, "flashlight komutunun kısayolu.")
+	register_command("battery", _cmd_battery, "Fener bataryasını fuller veya miktar belirler. (Kullanım: battery [miktar])")
+	register_command("batarya", _cmd_battery, "battery komutunun kısayolu.")
 	register_command("fill_inv", _cmd_fill_inv, "Çantayı kapasite dolana kadar rastgele eşyalarla doldurur.")
 	register_command("god", _cmd_god, "Ölümsüzlük modunu açar/kapatır (Can ve oksijen asla bitmez).")
 	register_command("surface", _cmd_surface, "Oyuncuyu anında su yüzeyine ışınlar.")
@@ -217,7 +221,7 @@ func _cmd_upgrade(args: Array) -> void:
 		_log_error("Oyuncu sahnede bulunamadı!")
 		return
 	if args.is_empty():
-		_log_error("Kullanım: upgrade <tube|fins|goggles|bag> [seviye]")
+		_log_error("Kullanım: upgrade <tube|fins|goggles|bag|flashlight> [seviye]")
 		return
 	var target := str(args[0]).to_lower()
 	var stat_key := ""
@@ -226,14 +230,16 @@ func _cmd_upgrade(args: Array) -> void:
 		"fins", "palet", "hiz": stat_key = "fins_level"
 		"goggles", "gozluk", "zoom": stat_key = "goggles_level"
 		"bag", "canta", "backpack", "kapasite": stat_key = "backpack_level"
+		"flashlight", "fener", "isik", "light": stat_key = "flashlight_level"
 		_:
-			_log_error("Bilinmeyen ekipman: '%s'. Geçerli olanlar: tube, fins, goggles, bag" % target)
+			_log_error("Bilinmeyen ekipman: '%s'. Geçerli olanlar: tube, fins, goggles, bag, flashlight" % target)
 			return
 	var cur_val: int = int(player.get(stat_key))
 	var new_val: int = cur_val + 1
 	if args.size() >= 2:
 		new_val = int(args[1])
 	player.set(stat_key, new_val)
+	GlobalInventory.inventory_updated.emit()
 	_log_success("%s seviyesi güncellendi: Lvl %d" % [stat_key, new_val])
 
 
@@ -242,19 +248,74 @@ func _cmd_upgrade_all(args: Array) -> void:
 	if not player:
 		_log_error("Oyuncu sahnede bulunamadı!")
 		return
-	var keys := ["tube_level", "fins_level", "goggles_level", "backpack_level"]
+	var keys := ["tube_level", "fins_level", "goggles_level", "backpack_level", "flashlight_level"]
 	var has_lvl := not args.is_empty()
 	var target_lvl := int(args[0]) if has_lvl else 0
 	for k in keys:
 		var val := target_lvl if has_lvl else int(player.get(k)) + 1
 		player.set(k, val)
-	_log_success("Tüm ekipmanlar güncellendi! (Tüp: Lvl %d, Palet: Lvl %d, Gözlük: Lvl %d, Çanta: Lvl %d)" % [
-		player.get("tube_level"), player.get("fins_level"), player.get("goggles_level"), player.get("backpack_level")
+	GlobalInventory.inventory_updated.emit()
+	_log_success("Tüm ekipmanlar güncellendi! (Tüp: Lvl %d, Palet: Lvl %d, Gözlük: Lvl %d, Çanta: Lvl %d, Fener: Lvl %d)" % [
+		player.get("tube_level"), player.get("fins_level"), player.get("goggles_level"), player.get("backpack_level"), player.get("flashlight_level")
 	])
 
 
+func _cmd_flashlight(args: Array) -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if not player:
+		_log_error("Oyuncu sahnede bulunamadı!")
+		return
+	if args.is_empty():
+		if int(player.get("flashlight_level")) <= 0:
+			player.set("flashlight_level", 1)
+			player.set("flashlight_on", true)
+			GlobalInventory.inventory_updated.emit()
+			_log_success("Fener Lvl 1 olarak açıldı!")
+			return
+		var cur_state: bool = bool(player.get("flashlight_on"))
+		player.set("flashlight_on", not cur_state)
+		_log_success("Fener %s" % ("AÇILDI" if player.get("flashlight_on") else "KAPATILDI"))
+		return
+	var arg0 := str(args[0]).to_lower()
+	if arg0 == "on" or arg0 == "ac" or arg0 == "aç":
+		if int(player.get("flashlight_level")) <= 0:
+			player.set("flashlight_level", 1)
+			GlobalInventory.inventory_updated.emit()
+		player.set("flashlight_on", true)
+		_log_success("Fener AÇILDI")
+	elif arg0 == "off" or arg0 == "kapat":
+		player.set("flashlight_on", false)
+		_log_success("Fener KAPATILDI")
+	elif arg0.is_valid_int():
+		var lvl := int(arg0)
+		player.set("flashlight_level", lvl)
+		if lvl > 0:
+			player.set("flashlight_on", true)
+		GlobalInventory.inventory_updated.emit()
+		_log_success("Fener seviyesi güncellendi: Lvl %d (Durum: %s)" % [lvl, "AÇIK" if player.get("flashlight_on") else "KAPALI"])
+	else:
+		_log_error("Geçersiz parametre. Kullanım: flashlight [seviye|on|off]")
+
+
+func _cmd_battery(args: Array) -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if not player:
+		_log_error("Oyuncu sahnede bulunamadı!")
+		return
+	var max_b: float = float(player.get("max_battery"))
+	if max_b <= 0.0:
+		max_b = 75.0
+	if args.is_empty():
+		player.set("current_battery", max_b)
+		_log_success("Fener bataryası tamamen dolduruldu! (%.1f / %.1f)" % [max_b, max_b])
+		return
+	var amount := float(args[0])
+	player.set("current_battery", clampf(amount, 0.0, max_b))
+	_log_success("Batarya ayarlandı: %.1f / %.1f" % [float(player.get("current_battery")), max_b])
+
+
 func _cmd_fill_inv() -> void:
-	var items := GlobalInventory.get_all_items()
+	var items: Array[ItemData] = GlobalInventory.get_all_items()
 	if items.is_empty():
 		_log_error("all_items_tres klasöründe eşya bulunamadı!")
 		return

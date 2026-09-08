@@ -376,7 +376,8 @@ func _on_save_exit_pressed() -> void:
 		"tube_level": int(player.get("tube_level")) if player else 1,
 		"fins_level": int(player.get("fins_level")) if player else 0,
 		"goggles_level": int(player.get("goggles_level")) if player else 0,
-		"backpack_level": int(player.get("backpack_level")) if player else 0
+		"backpack_level": int(player.get("backpack_level")) if player else 0,
+		"flashlight_level": int(player.get("flashlight_level")) if player else 0
 	}
 	var time_mgr: Node = _get_time_mgr()
 	var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
@@ -615,13 +616,15 @@ func _update_merchant_badges() -> void:
 	var player = get_tree().get_first_node_in_group("player")
 	var can_upgrade: bool = false
 	var upgrades_info = [
-		{"key": "tube_level", "base": 40, "mult": 1.75},
-		{"key": "fins_level", "base": 25, "mult": 1.65},
-		{"key": "goggles_level", "base": 60, "mult": 1.90},
-		{"key": "backpack_level", "base": 20, "mult": 1.50}
+		{"key": "tube_level", "base": 35, "mult": 1.50, "max": 25},
+		{"key": "fins_level", "base": 25, "mult": 1.65, "max": 20},
+		{"key": "goggles_level", "base": 100, "mult": 2.10, "max": 9},
+		{"key": "backpack_level", "base": 20, "mult": 1.50, "max": 20}
 	]
 	for u in upgrades_info:
 		var lvl = int(player.get(u["key"])) if player else 0
+		if int(u.get("max", -1)) >= 0 and lvl >= int(u["max"]):
+			continue
 		var cost = int(round(float(u["base"]) * pow(float(u["mult"]), float(lvl))))
 		if GlobalEconomy.money >= cost:
 			can_upgrade = true

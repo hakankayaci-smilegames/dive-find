@@ -263,7 +263,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
-game_version = "Pre-Alpha 1.5 (Afterjam Remaster)"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
@@ -506,23 +505,24 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.5 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+text = "[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
-• [color=#00e5ff]O2 Dönüş HUD & Alarmı:[/color] Yüzeye kaç saniyede çıkabileceğinizi ve oksijeninizin yetip yetmeyeceğini hesaplayan akıllı HUD paneli ve kritik acil durum uyarısı eklendi.
-• [color=#00e5ff]Yükleme Ekranı Devam Protokolü:[/color] Yükleme bittiğinde otomatik geçiş yerine ekrana dokunma veya bir tuşa basma beklemesi eklendi.
-• [color=#00e5ff]Çantadan Eşya Bırakma:[/color] Eşyalar artık dalıştayken denize bırakılabiliyor, ofisteyken doğrudan çantadan atılabiliyor.
-• [color=#00e5ff]Palet (Fins) Hız Güçlendirmesi:[/color] Palet seviyelerinin yüzme hızı ve ivmelenmeye etkisi belirgin şekilde artırıldı (+55 px/s).
-• [color=#00e5ff]Günlük Okyanus Akıntısı (Chunk Regen):[/color] Gün içinde gezilen bölgeler aynı gün tekrar eşya üretmez; gün atlandığında okyanus akıntıları tüm haritayı taze eşyalarla yeniler.
-• [color=#00e5ff]Açık Deniz Dalış Varyansı:[/color] Her dalışta merkezden ±3000px rastgele koordinata dalarak keşif zenginleştirildi.
+• [color=#00e5ff]Dinamik Okyanus Işığı & Derinlik Kararması:[/color] Derinliğe (0-350m+) ve günün saatine (10:00-19:00) bağlı olarak kademeli kararan atmosferik ışık döngüsü eklendi.
+• [color=#00e5ff]Dalış Feneri & Batarya Mekaniği:[/color] [F] tuşu ile açılıp kapanan, fare imlecine yönelen konik aydınlatma ve HUD batarya barı eklendi (Su yüzeyinde hızlı şarj).
+• [color=#00e5ff]Fener Seviye Geliştirmesi & Yeni İkon:[/color] Mağazada 15 seviyeye kadar geliştirilebilir fener (batarya süresi, ışık açısı ve menzil artışı) ve özel fener ikonu entegre edildi.
+• [color=#00e5ff]Hızlı Yüzme (Sprint):[/color] Shift tuşu ile depar atarak su altında çok daha çevik ve hızlı yüzebilme kabiliyeti eklendi.
+• [color=#00e5ff]Keşfedilmemiş Eşya Belirgin İbaresi:[/color] Henüz deftere kaydedilmemiş yeni eşyalar incelendiğinde popup penceresinde parlayan dikkat çekici özel ibare eklendi.
+• [color=#00e5ff]Ekipman Seviye Limitleri:[/color] Tüm ekipmanlara dengeli maksimum seviye limitleri getirildi (Tüp: 25, Çanta: 20, Palet: 20, Gözlük: 9, Fener: 15).
+• [color=#00e5ff]Özel Eşya Spawn Dengelemesi:[/color] Yüksek nadirlikteki özel eşyaların spawn oranı dengelenerek keşif ve piyasa ekonomisi adilleştirildi.
+• [color=#00e5ff]Mağaza Canlı Stat Önizlemesi & Tooltip:[/color] Ekipman geliştirirken ne kazanılacağını gösteren canlı stat yazısı ve zengin hover bilgi kutuları eklendi.
+• [color=#00e5ff]Geliştirici Konsolu Fener Komutları:[/color] Konsola `flashlight`, `battery` ve fener destekli `upgrade` komutları eklendi.
 
-[color=#ff7043][b]🛠️ HATA DÜZELTMELERİ (FIXES):[/b][/color]
-• [color=#81c784]Laboratuvar Craft Doluluk Bugu:[/color] Eşya üretilince yer açılacak olmasına rağmen çanta dolu sayılan mantık hatası giderildi.
-• [color=#81c784]Çanta HUD Kapasite Göstergesi:[/color] Atölyede çanta yükseltildiğinde dalıştaki çanta butonunda kapasitenin yenilenmemesi düzeltildi.
-• [color=#81c784]Koleksiyon Açılış Kasmaları:[/color] Ana menüde koleksiyon ilk açıldığında yaşanan takılma/lag önden yükleme (pre-cache) ile sıfırlandı.
-• [color=#81c784]Kara Borsa UI Bozulması:[/color] Farklı ekran oranlarında ve mobilde panelin taşması ve yazı kaymaları 2 kolonlu responsive düzene geçirilerek giderildi.
-• [color=#81c784]Yüzme Titremesi (Jitter):[/color] Karakterin kare geçişlerindeki yapay sarsıntı kaldırıldı, kamera interpolasyonu pürüzsüzleştirildi.
-• [color=#81c784]Mobil Dokunmatik Cila:[/color] Kilitleme ipuçları dokunmatik basılı tutma (long press) desteğiyle senkronize edildi."
+[color=#ff7043][b]🛠️ HATA DÜZELTMELERİ (BUG FIXES):[/b][/color]
+• [color=#81c784]Gözlük Zoom & Eşya Culling Hatası:[/color] Gözlükle geniş açıya çıkıldığında ekran dışındaki eşyaların zamansız silinmesi kamera ve zoom oranına duyarlı yeni dinamik culling sistemiyle tamamen çözüldü.
+• [color=#81c784]Ekipman HUD Senkronizasyon Fix:[/color] Ekipman geliştirildiğinde sağ alttaki HUD dock'unun anlık yenilenmeme sorunu giderildi.
+• [color=#81c784]Ekipman Mağazası Panel Taşması:[/color] 5. slot eklendiğinde slotların panel dışına taşması slot ve panel genişlikleri optimize edilerek giderildi.
+• [color=#81c784]Fener Işık Patlaması & Merkez Elips:[/color] Fenerin göz yoran aşırı beyaz patlaması ve merkezdeki yapay elips halka homojen konik ışık dokusuyla düzeltildi."
 
 [node name="Button" type="Button" parent="Panel" unique_id=1797594709]
 layout_mode = 1

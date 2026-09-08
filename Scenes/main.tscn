@@ -56,8 +56,10 @@
 [ext_resource type="PackedScene" uid="uid://bw5gtsku1n8ko" path="res://all_items_tscn/dexter_r6.tscn" id="35_tab3y"]
 [ext_resource type="PackedScene" uid="uid://beef4gip2br2r" path="res://all_items_tscn/nigrce_r6.tscn" id="36_1tvlp"]
 [ext_resource type="PackedScene" uid="uid://yiid1q64k3w6" path="res://all_items_tres/broken_painting.tscn" id="37_ptfg5"]
+[ext_resource type="Script" uid="uid://wog2gngbgvea" path="res://Scripts/ambient_light_controller.gd" id="ext_ambient_light"]
 [ext_resource type="Texture2D" uid="uid://b1g3pvbtv8dlp" path="res://Sprites/canta.png" id="icon_bag"]
 [ext_resource type="Texture2D" uid="uid://dsygmr1m6g3hd" path="res://Sprites/palet.png" id="icon_fins"]
+[ext_resource type="Texture2D" uid="uid://dvtyw46ohc2nh" path="res://Sprites/flaslight.png" id="icon_flashlight"]
 [ext_resource type="Texture2D" uid="uid://4amo7h3j07ut" path="res://Sprites/dalis_gozluk.png" id="icon_goggles"]
 [ext_resource type="Texture2D" uid="uid://dokneaa3ssegb" path="res://Sprites/oksijen_tupu.png" id="icon_tube"]
 
@@ -169,7 +171,7 @@ text = "⏰ 10:00"
 offset_left = 20.0
 offset_top = 20.0
 offset_right = 415.0
-offset_bottom = 126.0
+offset_bottom = 196.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_status")
 
 [node name="HealthLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=2146428240]
@@ -195,9 +197,9 @@ value = 100.0
 
 [node name="OxygenLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=1489052818]
 layout_mode = 0
-offset_left = 9.0
+offset_left = 4.0
 offset_top = 58.0
-offset_right = 97.0
+offset_right = 98.0
 offset_bottom = 82.0
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 text = "🫧 OKSİJEN:"
@@ -214,12 +216,33 @@ theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 4
 value = 100.0
 
+[node name="BatteryLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=-1148539055]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 106.0
+offset_right = 104.0
+offset_bottom = 130.0
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+text = "⚡ BATARYA:"
+vertical_alignment = 1
+
+[node name="Battery" type="ProgressBar" parent="CanvasLayer/StatusPanel" unique_id=368147024]
+layout_mode = 0
+offset_left = 107.0
+offset_top = 104.0
+offset_right = 387.0
+offset_bottom = 131.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 4
+value = 100.0
+
 [node name="O2ReturnLabel" type="Label" parent="CanvasLayer/StatusPanel" unique_id=1849204123]
 layout_mode = 0
-offset_left = 1.0
-offset_top = 111.0
-offset_right = 335.0
-offset_bottom = 146.0
+offset_left = 3.0
+offset_top = 180.0
+offset_right = 337.0
+offset_bottom = 215.0
 theme_override_colors/font_color = Color(0.85, 0.96, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_constants/outline_size = 3
@@ -296,7 +319,7 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -215.0
+offset_left = -265.0
 offset_top = -65.0
 offset_right = -15.0
 offset_bottom = -15.0
@@ -396,6 +419,26 @@ theme_override_font_sizes/font_size = 11
 text = "Lv.1"
 horizontal_alignment = 1
 
+[node name="FlashlightSlot" type="VBoxContainer" parent="CanvasLayer/EquipmentDock/Margin/HBox" unique_id=98712345]
+layout_mode = 2
+tooltip_text = "Dalış Feneri: [F] tuşu ile açılıp kapanır"
+theme_override_constants/separation = 1
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/EquipmentDock/Margin/HBox/FlashlightSlot" unique_id=87654321]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 2
+texture = ExtResource("icon_flashlight")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Level" type="Label" parent="CanvasLayer/EquipmentDock/Margin/HBox/FlashlightSlot" unique_id=76543210]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.6, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 11
+text = "Lv.0"
+horizontal_alignment = 1
+
 [node name="Button2" type="Button" parent="CanvasLayer" unique_id=47944296]
 anchors_preset = 1
 anchor_left = 1.0
@@ -422,12 +465,16 @@ theme_override_constants/shadow_outline_size = 3
 theme_override_font_sizes/font_size = 25
 
 [node name="ItemSpawner" type="Node2D" parent="." unique_id=107703476]
+position = Vector2(-8, 0)
 script = ExtResource("1_jkdf5")
 map_manager = NodePath("../MapMaker")
 item_pool = Array[PackedScene]([ExtResource("7_kltya"), ExtResource("8_e08e2"), ExtResource("9_bv80c"), ExtResource("10_ptfg5"), ExtResource("11_2daye"), ExtResource("12_1semv"), ExtResource("13_2060n"), ExtResource("14_6ml46"), ExtResource("15_qax2n"), ExtResource("16_y86h7"), ExtResource("17_my4ki"), ExtResource("18_lx3vj"), ExtResource("19_ynmfv"), ExtResource("20_cblf0"), ExtResource("21_nay3j"), ExtResource("22_ovafv"), ExtResource("23_owhal"), ExtResource("24_uv6w5"), ExtResource("25_r7bbj"), ExtResource("26_e5peh"), ExtResource("27_f6rfp"), ExtResource("28_sasc4"), ExtResource("29_pfx1i"), ExtResource("30_fg68e"), ExtResource("31_jekl6"), ExtResource("32_v1mrv"), ExtResource("33_fd3ed"), ExtResource("34_qnggo"), ExtResource("35_tab3y"), ExtResource("36_1tvlp"), ExtResource("37_ptfg5")])
 base_spawn_chance = 0.2
 global_loot_multiplier = 0.4
 fallback_item_base_size = 128.0
+
+[node name="AmbientLight" type="CanvasModulate" parent="." unique_id=778899112]
+script = ExtResource("ext_ambient_light")
 
 [node name="MapMaker" type="Node2D" parent="." unique_id=1852815472]
 position = Vector2(-34, 680)
@@ -440,9 +487,10 @@ sky_texture = ExtResource("4_jjvhh")
 ocean_textures = Array[Texture2D]([ExtResource("5_6iyac"), ExtResource("6_fdnlq"), ExtResource("7_jkdf5"), ExtResource("8_wsu2k"), ExtResource("9_k12tt"), ExtResource("10_h1bgf"), ExtResource("11_b3802"), ExtResource("12_fevyy")])
 ground_texture = ExtResource("13_fdnlq")
 
-[node name="Diver" type="CharacterBody2D" parent="." unique_id=1779072544 node_paths=PackedStringArray("health_bar", "oxygen_bar") groups=["player"]]
+[node name="Diver" type="CharacterBody2D" parent="." unique_id=1779072544 node_paths=PackedStringArray("battery_bar", "health_bar", "oxygen_bar") groups=["player"]]
 position = Vector2(16, 2650)
 script = ExtResource("1_bo1nx")
+battery_bar = NodePath("../CanvasLayer/StatusPanel/Battery")
 health_bar = NodePath("../CanvasLayer/StatusPanel/Health")
 oxygen_bar = NodePath("../CanvasLayer/StatusPanel/Oxygen")
 swim_frames = Array[Texture2D]([ExtResource("27_e08e2"), ExtResource("28_neg2b"), ExtResource("29_r33sp"), ExtResource("30_hdf80"), ExtResource("31_jwpg7"), ExtResource("32_k2e45")])
@@ -453,5 +501,11 @@ texture = ExtResource("1_jjgbg")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Diver" unique_id=1445236797]
 position = Vector2(0.5, -1)
 shape = SubResource("RectangleShape2D_itt4d")
+
+[node name="Flashlight" type="PointLight2D" parent="Diver" unique_id=395502024]
+visible = false
+energy = 1.35
+range_layer_min = -10
+range_layer_max = 10
 
 [connection signal="pressed" from="CanvasLayer/Button2" to="CanvasLayer" method="_on_button_2_pressed"]

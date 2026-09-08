@@ -11,3 +11,4 @@ stat_key = "fins_level"
 description = "Karakter yüzme hızı artar"
 base_cost = 25
 cost_multiplier = 1.65
+max_level = 20

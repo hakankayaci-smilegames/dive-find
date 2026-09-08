@@ -9,6 +9,7 @@ class_name ItemSpawner
 @export var item_pool: Array[PackedScene] = []  # Tüm eşya sahneleri, tek düz liste (kategori/rarity sahne içindeki ItemData'dan okunur)
 @export var base_spawn_chance: float = 0.5
 @export var global_loot_multiplier: float = 1.0  # Son adımda tüm spawn sayısını etkileyen global çarpan
+@export_range(0.001, 0.5, 0.005) var special_item_chance: float = 0.05  # Katman 7'de Özel eşya çıkma oranı (%5 = Ultra Nadir)
 
 @export_group("Geçici Görsel (Fallback) Ayarları")
 @export var fallback_item_base_size: float = 64.0
@@ -27,7 +28,7 @@ const LAYER_CATEGORY_TABLE: Dictionary = {
 	4: ["Resource", "Rare Found", "Valuable"],
 	5: ["Valuable", "Resource"],
 	6: ["Valuable", "Resource"],
-	7: ["Resource", "Special"],
+	7: ["Valuable", "Resource"],
 }
 
 ## ------------------------------------------------------------------
@@ -48,10 +49,15 @@ var _layer_pool_cache: Dictionary = {}
 # Gün içinde ziyaret edilen/spawn yapılan chunk indeksleri (aynı gün içi farm sömürüsünü önler)
 var _spawned_chunk_indices_today: Dictionary = {}
 
+# Oyuncudan uzaklaşıp silinen chunk'lardaki henüz toplanmamış eşyaların listesi (Item State Retention)
+# chunk_x_index (int) -> Array[{"scene": PackedScene, "pos": Vector2}]
+var _saved_chunk_items: Dictionary = {}
+
 
 func _ready() -> void:
 	add_to_group("item_spawner")
 	_map_manager_node = get_node_or_null(map_manager)
+	_connect_map_signals()
 
 	_build_category_cache()
 	_build_layer_pool_cache()
@@ -67,9 +73,25 @@ func _ready() -> void:
 	_check_timer.start()
 
 
+func _connect_map_signals() -> void:
+	if not is_instance_valid(_map_manager_node):
+		_map_manager_node = get_node_or_null(map_manager)
+	if is_instance_valid(_map_manager_node):
+		if _map_manager_node.has_signal("chunk_created") and not _map_manager_node.chunk_created.is_connected(_on_chunk_created):
+			_map_manager_node.chunk_created.connect(_on_chunk_created)
+		if _map_manager_node.has_signal("chunk_destroyed") and not _map_manager_node.chunk_destroyed.is_connected(_on_chunk_destroyed):
+			_map_manager_node.chunk_destroyed.connect(_on_chunk_destroyed)
+		# Halihazırda sahnede oluşturulmuş chunk varsa hemen eşyalarını üret
+		for key in _map_manager_node._active_chunks.keys():
+			var c = _map_manager_node._active_chunks[key]
+			if is_instance_valid(c) and not c.has_meta("items_spawned"):
+				_on_chunk_created(c, int(key))
+
+
 func _on_day_changed(_new_day: int) -> void:
 	# Yeni güne geçildiğinde okyanus akıntıları gelir: Tüm chunk'lar taze eşyalar için sıfırlanır
 	_spawned_chunk_indices_today.clear()
+	_saved_chunk_items.clear()
 	if is_instance_valid(_map_manager_node):
 		for key in _map_manager_node._active_chunks.keys():
 			var chunk: Node2D = _map_manager_node._active_chunks[key]
@@ -78,6 +100,7 @@ func _on_day_changed(_new_day: int) -> void:
 				for child in chunk.get_children():
 					if child.is_in_group("interactable_items"):
 						child.queue_free()
+				_on_chunk_created(chunk, int(key))
 
 
 ## ------------------------------------------------------------------
@@ -129,16 +152,75 @@ func _build_layer_pool_cache() -> void:
 
 		_layer_pool_cache[layer_index] = {"entries": entries, "total_weight": total_weight}
 
+	# Katman 7 için bağımsız Özel Eşya ağırlıklı havuzu
+	var special_entries: Array = _category_cache.get("Special", [])
+	var special_weight: float = 0.0
+	for entry in special_entries:
+		special_weight += float(entry.get("rarity", 1.0))
+	_layer_pool_cache["special"] = {"entries": special_entries, "total_weight": special_weight}
+
 
 ## ------------------------------------------------------------------
-## TIMER & CHUNK TARAMA
+## SİNYAL VE CHUNK YAŞAM DÖNGÜSÜ (Zero-Lag + State Retention)
+## ------------------------------------------------------------------
+func _on_chunk_created(chunk: Node2D, chunk_x_index: int) -> void:
+	if not is_instance_valid(chunk):
+		return
+
+	# 1. Eğer bu chunk daha önce bugün ziyaret edilmiş ve kalan eşyaları kaydedilmişse:
+	# Kalan eşyaları aynı yerlerine anında geri yükle!
+	if _saved_chunk_items.has(chunk_x_index):
+		var saved_list: Array = _saved_chunk_items[chunk_x_index]
+		for item_data in saved_list:
+			var scene: PackedScene = item_data.get("scene")
+			if scene:
+				var item_node: Node2D = scene.instantiate() as Node2D
+				if item_node:
+					item_node.position = item_data.get("pos", Vector2.ZERO)
+					item_node.set_meta("item_scene", scene)
+					chunk.add_child(item_node)
+		chunk.set_meta("items_spawned", true)
+		return
+
+	# 2. Eğer bu chunk bugün ilk defa görülüyorsa: Taze eşyalar üret
+	if not _spawned_chunk_indices_today.has(chunk_x_index):
+		_spawn_items_for_chunk(chunk)
+		_spawned_chunk_indices_today[chunk_x_index] = true
+		chunk.set_meta("items_spawned", true)
+
+
+func _on_chunk_destroyed(chunk: Node2D, chunk_x_index: int) -> void:
+	if not is_instance_valid(chunk):
+		return
+
+	# Chunk silinmeden önce toplanmamış tüm eşyaları kaydet (Item State Retention)
+	var remaining_items: Array[Dictionary] = []
+	for child in chunk.get_children():
+		if child.is_in_group("interactable_items") and is_instance_valid(child):
+			var scene: PackedScene = child.get_meta("item_scene", null)
+			if scene == null and child.scene_file_path != "":
+				scene = load(child.scene_file_path) as PackedScene
+			if scene:
+				remaining_items.append({
+					"scene": scene,
+					"pos": child.position
+				})
+	_saved_chunk_items[chunk_x_index] = remaining_items
+
+
+## ------------------------------------------------------------------
+## TIMER GÜVENLİK AĞI (Periyodik Kontrol)
 ## ------------------------------------------------------------------
 func _on_check_timer_timeout() -> void:
 	if not is_instance_valid(_map_manager_node):
 		_map_manager_node = get_node_or_null(map_manager)
-		if not is_instance_valid(_map_manager_node):
-			return
+		if is_instance_valid(_map_manager_node):
+			_connect_map_signals()
 
+	if not is_instance_valid(_map_manager_node):
+		return
+
+	# Güvenlik Ağı: Herhangi bir chunk sinyal kaçırdıysa yakala
 	var active_keys = _map_manager_node._active_chunks.keys()
 	for key in active_keys:
 		if not _map_manager_node._active_chunks.has(key):
@@ -151,15 +233,7 @@ func _on_check_timer_timeout() -> void:
 		if chunk.has_meta("items_spawned"):
 			continue
 
-		var chunk_idx: int = int(key)
-		# Günlük Akıntı Kontrolü: Bu chunk bugün zaten ziyaret edilmişse o gün tekrar eşya üretmez
-		if _spawned_chunk_indices_today.has(chunk_idx):
-			chunk.set_meta("items_spawned", true)
-			continue
-
-		_spawn_items_for_chunk(chunk)
-		_spawned_chunk_indices_today[chunk_idx] = true
-		chunk.set_meta("items_spawned", true)
+		_on_chunk_created(chunk, int(key))
 
 
 ## ------------------------------------------------------------------
@@ -200,7 +274,17 @@ func _spawn_items_for_chunk(chunk: Node2D) -> void:
 			continue  # Bu katman için kategoriye uygun hiç eşya tanımlanmamış
 
 		for i in range(items_to_spawn):
-			_spawn_item(chunk, chunk_w, min_y, max_y, pool)
+			# Katman 7'de (Abis) Ultra Nadir Özel Eşya kontrolü (%5 şans)
+			if layer_index == 7 and randf() < special_item_chance:
+				_spawn_special_item(chunk, chunk_w, min_y, max_y)
+			else:
+				_spawn_item(chunk, chunk_w, min_y, max_y, pool)
+
+
+func _spawn_special_item(chunk: Node2D, chunk_w: float, min_y: float, max_y: float) -> void:
+	var special_pool: Dictionary = _layer_pool_cache.get("special", {})
+	if not special_pool.get("entries", []).is_empty():
+		_spawn_item(chunk, chunk_w, min_y, max_y, special_pool)
 
 
 ## ------------------------------------------------------------------
@@ -241,6 +325,8 @@ func _spawn_item(chunk: Node2D, chunk_w: float, min_y: float, max_y: float, pool
 
 	if item_node:
 		item_node.position = Vector2(rand_x, rand_y)
+		if scene:
+			item_node.set_meta("item_scene", scene)
 		chunk.add_child(item_node)  # Chunk pool'a döndüğünde (_reset_pooled_chunk) bu node'lar temizlenir
 
 

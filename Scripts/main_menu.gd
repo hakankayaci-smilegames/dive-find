@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "Pre-Alpha 1.5 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "Pre-Alpha 1.6 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -282,7 +282,7 @@ func _refresh_save_buttons() -> void:
 	var has_save: bool = GlobalInventory.has_save()
 	continue_button.disabled = not has_save
 	if has_save:
-		var save_data := GlobalInventory.get_save_data()
+		var save_data: Dictionary = GlobalInventory.get_save_data()
 		var day := int(save_data.get("current_day", 1))
 		var money := int(save_data.get("money", 0))
 		continue_button.text = "DEVAM ET  (Gün %d • %d Zurna)" % [day, money]

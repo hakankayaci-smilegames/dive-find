@@ -1,6 +1,9 @@
 extends Node2D
 class_name InfiniteMapManager
 
+signal chunk_created(chunk: Node2D, chunk_x_index: int)
+signal chunk_destroyed(chunk: Node2D, chunk_x_index: int)
+
 ## ------------------------------------------------------------------
 ## EXPORT DEĞİŞKENLERİ
 ## ------------------------------------------------------------------
@@ -115,6 +118,7 @@ func generate_chunk(chunk_x_index: int) -> Node2D:
 	var ground_sprite = create_stretched_sprite.call(ground_texture, y_cursor, ground_h)
 	chunk.add_child(ground_sprite)
 
+	emit_signal("chunk_created", chunk, chunk_x_index)
 	return chunk
 
 
@@ -124,18 +128,22 @@ func _update_chunks() -> void:
 		return
 
 	var screen_size = get_viewport().get_visible_rect().size
-	var zoom = cam.zoom
 	var cam_pos = cam.global_position
 
-	var half_screen_w = (screen_size.x * 0.5) / zoom.x
-	var min_visible_x = cam_pos.x - half_screen_w
-	var max_visible_x = cam_pos.x + half_screen_w
+	# Chunk simülasyon zarfı: Kameranın anlık zoom'u ne olursa olsun,
+	# maksimum gözlük unzoom'u (0.08) referans alınır.
+	# Böylece oyuncu zoom in/out yaptığında chunk'lar asla silinip yeniden üretilmez.
+	const MAX_UNZOOM_REF: float = 0.08
+	var sim_zoom: float = min(cam.zoom.x, MAX_UNZOOM_REF) if cam.zoom.x > 0.0 else MAX_UNZOOM_REF
+	var half_screen_w: float = (screen_size.x * 0.5) / sim_zoom
+	var min_visible_x: float = cam_pos.x - half_screen_w
+	var max_visible_x: float = cam_pos.x + half_screen_w
 
-	var min_chunk_idx = floor((min_visible_x - (chunk_width * safety_buffer_chunks)) / chunk_width)
-	var max_chunk_idx = floor((max_visible_x + (chunk_width * safety_buffer_chunks)) / chunk_width)
+	var min_chunk_idx: int = int(floor((min_visible_x - (chunk_width * safety_buffer_chunks)) / chunk_width))
+	var max_chunk_idx: int = int(floor((max_visible_x + (chunk_width * safety_buffer_chunks)) / chunk_width))
 
 	var needed_indices: Dictionary = {}
-	for i in range(int(min_chunk_idx), int(max_chunk_idx) + 1):
+	for i in range(min_chunk_idx, max_chunk_idx + 1):
 		needed_indices[i] = true
 		if not _active_chunks.has(i):
 			_active_chunks[i] = generate_chunk(i)
@@ -148,6 +156,7 @@ func _update_chunks() -> void:
 	for key in keys_to_remove:
 		var chunk_node: Node2D = _active_chunks[key]
 		if is_instance_valid(chunk_node):
+			emit_signal("chunk_destroyed", chunk_node, int(key))
 			chunk_node.queue_free()
 		_active_chunks.erase(key)
 

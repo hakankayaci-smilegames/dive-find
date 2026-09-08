@@ -50,7 +50,8 @@ func _on_continue_pressed() -> void:
 		"tube_level": int(player.get("tube_level")) if player else 1,
 		"fins_level": int(player.get("fins_level")) if player else 0,
 		"goggles_level": int(player.get("goggles_level")) if player else 0,
-		"backpack_level": int(player.get("backpack_level")) if player else 0
+		"backpack_level": int(player.get("backpack_level")) if player else 0,
+		"flashlight_level": int(player.get("flashlight_level")) if player else 0
 	}
 	var current_day_num: int = int(time_mgr.get("current_day")) if time_mgr else 1
 	GlobalInventory.save_game(current_day_num, GlobalEconomy.money, equipment_dict)

@@ -11,3 +11,4 @@ stat_key = "backpack_level"
 description = "Envanter kapasitesi +5 slot"
 base_cost = 20
 cost_multiplier = 1.5
+max_level = 20

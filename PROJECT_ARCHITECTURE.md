@@ -47,8 +47,10 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 | **`help`** | - | Tüm kayıtlı komutları listeler | `help` |
 | **`clear`** | - | Konsol ekranını temizler | `clear` |
 | **`money`** | `<miktar>` | Cüzdana Zurna ekler / çıkarır | `money 5000` |
-| **`upgrade`** | `<tüp/palet/gözlük/çanta> [seviye]` | Seçilen ekipmanın seviyesini ayarlar veya +1 artırır | `upgrade tube 5`, `upgrade fins` |
-| **`upgrade_all`**| `[seviye]` | 4 ekipmanı birden o seviyeye ayarlar veya +1 artırır | `upgrade_all 4` |
+| **`upgrade`** | `<tube|fins|goggles|bag|flashlight> [seviye]` | Seçilen ekipmanın seviyesini ayarlar veya +1 artırır | `upgrade tube 5`, `upgrade flashlight 10` |
+| **`upgrade_all`**| `[seviye]` | 5 ekipmanı birden o seviyeye ayarlar veya +1 artırır | `upgrade_all 4` |
+| **`flashlight`** / **`fener`** | `[seviye\|on\|off]` | Feneri açıp kapatır veya doğrudan istenen seviyeye çeker | `flashlight`, `flashlight on`, `flashlight 15` |
+| **`battery`** / **`batarya`** | `[miktar]` | Fener bataryasını tamamen doldurur veya istenen değere ayarlar | `battery`, `battery 50` |
 | **`fill_inv`** | - | Çantayı kapasitesi dolana kadar rastgele eşyalarla doldurur | `fill_inv` |
 | **`god`** | - | Ölümsüzlük modunu açar/kapatır (Can ve oksijen tükenmez) | `god` |
 | **`surface`** | - | Karakteri anında su yüzeyine (0 metreye) ışınlar | `surface` |
@@ -119,10 +121,10 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 
 | Ekipman | Başlangıç | Max Level | Base Cost | Cost Multiplier | Açıklama & Etki |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Oksijen Tüpü** | Lvl 1 | **Sınırsız (-1)** | 40 Zurna | **`1.75`** | Her seviyede $+1.25$ verimlilik |
-| **Palet (Hız)** | Lvl 0 | **Sınırsız (-1)** | 25 Zurna | **`1.65`** | Her seviyede $+25\text{ px/s}$ yüzme & ivme hızı |
-| **Gözlük (Görüş)** | Lvl 0 | **Sınırsız (-1)** | 60 Zurna | **`1.90`** | Her seviyede $-0.04$ min zoom |
-| **Çanta** | 5 Slot | **Sınırsız (-1)** | 20 Zurna | **`1.50`** | Her seviyede $+5$ slot kapasite |
+| **Oksijen Tüpü** | Lvl 1 | **Sınırsız (-1)** | **`35 Zurna`** | **`1.50`** | Her seviyede $+1.25$ verimlilik |
+| **Palet (Hız)** | Lvl 0 | **`20`** | 25 Zurna | `1.65` | Her seviyede $+55\text{ px/s}$ yüzme hızı |
+| **Gözlük (Görüş)** | Lvl 0 | **`9`** | **`100 Zurna`** | **`2.10`** | Her seviyede $-0.04$ min zoom (Lvl 9'da max zoom out: 0.09) |
+| **Çanta** | 5 Slot | **`20`** | 20 Zurna | `1.50` | Her seviyede $+5$ slot kapasite (Max 105 slot) |
 
 ---
 
@@ -132,13 +134,19 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Spawn**: Su yüzeyinin $60\text{px}$ üstünden $450\text{px/s}$ hızla anında ve dinamik dalış.
 - **Ekipman Seviyeleri**: `GlobalInventory.apply_save_to_player(self)` ile kayıtlı oyundan otomatik yüklenir.
 - **Hareket & Yüzme**: `max_speed` ($220 + \text{fins\_level} \times 55$), `acceleration` ($600 + \text{fins\_level} \times 137.5$), `friction`, `sink_speed`, `max_sink_velocity`.
+- **Hızlı Yüzme / Depar (Shift Sprint)**:
+  - **Tetikleyici**: `[Shift]` tuşu (yalnızca hareket ederken ve $O_2 > 0$ iken aktifleşir).
+  - **Hız & İvmelenme**: `sprint_speed_bonus = 110.0 px/s`, `sprint_accel_multiplier = 1.45x` (taban hız $220 \rightarrow 330\text{ px/s}$, +%50 hız artışı).
+  - **Oksijen Tüketimi**: `sprint_oxygen_multiplier = 2.6x` (su altında depar atarken tüp 2.6 kat daha agresif tükenir).
+  - **Dinamik HUD Senkronizasyonu**: Dalgıç depar attığı an `get_surface_return_info()` içindeki aktif tüketim anında 2.6 katına çıkar, HUD'daki kalan süre (`oxygen_seconds_left`) 0ms gecikmeyle anında düşer ve yanına `⚡` depar rozeti eklenir (`🫧 O2: ~11s ⚡`). Yüzeye dönüş uyarısı (`time_to_surface`) taban hızı baz alarak gösterge histerezisini (alarm titremesi) önler.
+  - **Animasyon Senkronizasyonu**: Depar anında bacak çırpma animasyon hızı tavanı $\%25$ artarak (`max_anim_speed * 1.25`) akıcı ve tatmin edici bir yüzüş hissiyatı verir.
 - **Kamera & Görüş**: Başlangıç zoom $0.45$, min zoom $0.45 - (\text{goggles\_level} \times 0.04)$.
 - **Yüzey Sekme Kuvveti**: `InfiniteMapManager.water_surface_y` üstüne çıkmaya çalıştıkça aşağı iten yay kuvveti (`surface_push_force`).
 - **Derinlik & Oksijen Dengesi**:
   $$\text{depth\_m} = \max\left(0, \frac{\text{global\_position.y} - \text{water\_surface\_y}}{\text{pixels\_per\_meter}}\right)$$
-  $$\text{drain\_rate} = \text{base\_oxygen\_drain\_rate} \times \left(\frac{1.0 + \frac{\text{depth\_m}}{250.0}}{1.0 + (\text{tube\_level} - 1) \times 1.25}\right)$$
+  $$\text{drain\_rate} = \text{base\_oxygen\_drain\_rate} \times \left(\frac{1.0 + \frac{\text{depth\_m}}{250.0}}{1.0 + (\text{tube\_level} - 1) \times 1.25}\right) \times (\text{sprint\_oxygen\_multiplier if sprinting else } 1.0)$$
 - **Yüzeye Dönüş & Güvenlik Analizi (`get_surface_return_info()`):**
-  - Dalgıcın anlık derinliğinden yüzeye dikey çıkış süresi: $t_{\text{surface}} = \frac{\text{dist\_y}}{\text{max\_speed}}$
+  - Dalgıcın anlık derinliğinden yüzeye dikey çıkış süresi: $t_{\text{surface}} = \frac{\text{dist\_y}}{\text{base\_max\_speed}}$
   - Çıkış esnasında derinlik azaldığı için ortalama tüketim hızı: $\text{drain}_{\text{avg}} = \frac{\text{drain}_{\text{current}} + \text{drain}_{\text{surface}}}{2}$
   - Yüzeye varış için gereken asgari oksijen: $\text{O2}_{\text{needed}} = t_{\text{surface}} \times \text{drain}_{\text{avg}}$
   - Güvenlik Payı & Toast Uyarısı: $\text{current\_oxygen} \le \text{O2}_{\text{needed}} \times 1.25$ olduğunda uyarı, $\le \text{O2}_{\text{needed}}$ olduğunda acil durum toast ve ses bildirimi tetiklenir; HUD üzerinde kalan süre dinamik gösterilir.
@@ -163,11 +171,11 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Katman 3: `Resource`, `Rare Found`
   - Katman 4: `Resource`, `Rare Found`, `Valuable`
   - Katman 5-6: `Valuable`, `Resource`
-  - Katman 7: `Resource`, `Special`
+  - Katman 7: `Valuable`, `Resource` + Ultra Nadir **`Special`** (`special_item_chance = 0.05` / %5 bağımsız zar filtresi)
 - **Günlük Akıntı & Restock Döngüsü (Tükenme & Yenilenme)**:
   - **Aynı Gün İçi Tüketim**: Bir chunk o gün spawn edildiğinde `_spawned_chunk_indices_today` sözlüğüne işlenir. Oyuncu o gün 2 chunk uzağa yüzüp dönse bile o bölgede aynı gün tekrar eşya doğmaz (border-hopping sonsuz farm exploiti engellendi).
   - **Yeni Gün Yenilenmesi**: `GlobalTime.day_changed` tetiklendiğinde `_spawned_chunk_indices_today.clear()` çalışır, okyanus akıntıları gelir ve tüm okyanus baştan taze eşyalarla donatılır.
-- Ağırlıklı rastgele seçim: `rarity` (weight) üzerinden derinlik katmanlarına göre hesaplanır.
+- Ağırlıklı rastgele seçim: `rarity` (weight) üzerinden derinlik katmanlarına göre hesaplanır. Katman 7'de her eşya doğuşunda %5 zar atılarak Özel (Special) kategori seçilir, aksi halde katmanın normal değerli/hammadde havuzu kullanılır.
 
 ---
 
@@ -179,8 +187,9 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - `YENİ OYUN`: Sıfırdan temiz bir başlangıç açar.
   - **Toggle Panel Mimarisi:** Ana menüdeki `Koleksiyon`, `Ayarlar` ve `Bilgi` butonları toggle (aç/kapa) mantığıyla çalışır. Açık olan bir pencere varken butona tekrar basıldığında kapanır; başka bir pencere açıldığında önceki pencere otomatik temizlenir. Üst üste birden fazla pencere yığılması engellenmiştir.
 - **Sürüm Yönetimi & Yenilikler Paneli**:
-  - `@export var game_version: String = "Pre-Alpha 1.5 (Afterjam Remaster)"` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
-  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha 1.5 sürüm notlarını (Güncellemeler ve Fixler olarak ayrılmış şekilde) BBCode renkli formatta oyuncuya sunar.
+  - `@export var game_version: String = "Pre-Alpha 1.6 (Afterjam Remaster)"` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
+  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha 1.6 sürüm notlarını (Güncellemeler ve Fixler olarak ayrılmış şekilde) BBCode renkli formatta oyuncuya sunar.
+
 
 ### 8.2. Ofis & Dalış Karargahı ([`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd) & `Scenes/office_menu.tscn`)
 - **Tam Ekran Opak Yatay Düzen**:
@@ -208,8 +217,8 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - `🚤 Tekneye Çık [E]` (Bağlamsal Ofise Dönüş): Dalgıç suyun dibindeyken ekranda gereksiz yer kaplamaz, tamamen gizlenir (`modulate.a = 0.0`). Yüzeye yaklaşıldığında yumuşakça parıldayarak belirir ve klavyeden `[E]` tuşuyla da tekneye binilebilir.
 - **Kompakt Ekipman Dock'u (`EquipmentDock`):**
   - Eski 260x220 dev kutu yerine sağ altta 195x50 boyutlarında ultra hafif ve ferah yatay dock.
-  - Atölyedeki orijinal ikonlar kullanılır (`oksijen_tupu.png`, `palet.png`, `dalis_gozluk.png`, `canta.png`).
-  - Her ikonun altında anlık seviye (`Lv.1`), üzerine gelindiğinde detaylı bilgilendirme tooltip'i gösterilir.
+  - Atölyedeki orijinal ikonlar kullanılır (`oksijen_tupu.png`, `palet.png`, `dalis_gozluk.png`, `canta.png`, `flaslight.png` [Fener]).
+  - Her ikonun altında anlık seviye (`Lv.0` - `Lv.10`), üzerine gelindiğinde detaylı bilgilendirme tooltip'i gösterilir.
 - **Responsive Anchor Düzeni:**
   - `TimePanel` ekranın tam üst ortasına (`anchors_preset = 5`) kilitlendi, her ekran oranında merkezlenir.
   - `Depth` göstergesi sol alt köşeye bağlandı (`anchors_preset = 2`).
@@ -228,7 +237,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 | `Scenes/main.tscn` | `canvas_layer.gd`, `player_controller.gd`, `map_maker.gd`, `item_spawner.gd` | Ana dalış dünyası ve HUD |
 | `Scenes/office_menu.tscn` | `office_menu.gd` | Ofis & Dalış Karargahı (Tam Ekran Yatay Hub, Kaydet & Çık) |
 | `Scenes/loading_screen.tscn` | `loading_screen.gd` | Yükleme ekranı & `.tres` önbellekleyicisi |
-| `Scenes/pickup.tscn` | `popupui.gd` | Eşya inceleme & alma pop-up'ı (Önizleme modu destekli) |
+| `Scenes/pickup.tscn` | `popupui.gd` | Eşya inceleme & alma pop-up'ı (Keşfedilmemiş eşyalar için nabız animasyonlu `✨ YENİ KEŞİF` rozeti, önizleme modu) |
 | `Scenes/inventory.tscn` | `inventory.gd` | Çanta arayüzü & toplam değer |
 | `Scenes/inventory_slot.tscn` | `inventory_slot.gd` | Kategori renkli dinamik slot |
 | `Scenes/equstore.tscn` | `equstore.gd` | Ekipman mağazası |
@@ -291,7 +300,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Paranın yetmediği durumlarda buton pasifleşir ve eksik tutar anlık yazılır: `YETERSİZ (-45 Z)` + detaylı tooltip.
 - **Geliştirme Hissiyatı & HUD Senkronizasyonu:**
   - Yükseltme satın alındığında kart hafifçe büyüyüp yerine oturur (`play_upgrade_feedback()`) ve `upgrade` SFX çalar.
-  - Atölyede ekipman (çanta, tüp, palet, gözlük) geliştirildiğinde `GlobalInventory.inventory_updated.emit()` tetiklenerek okyanus HUD'ındaki çanta kapasitesi (`🎒 Çanta [I] (0/10)`) ve ekipman seviye etiketleri (`Lv.X`) anında güncellenir.
+  - Atölyede veya geliştirici konsolunda (`upgrade`, `upgrade_all`) ekipman (çanta, tüp, palet, gözlük) geliştirildiğinde `GlobalInventory.inventory_updated.emit()` tetiklenerek okyanus HUD'ındaki çanta kapasitesi (`🎒 Çanta [I] (0/10)`) ve ekipman seviye etiketleri (`Lv.X`) anında güncellenir.
 - **Koleksiyon Kitabı Sıfır-Gecikme (RAM Önbellek Mimarisi):**
   - Oyun açılırken `GlobalInventory._ready()` aşamasında tüm eşya `.tres` dosyaları RAM önbelleğine (`_all_items_cache`) bir kez yüklenir.
   - `collection.gd` arayüzü açıldığında veya kategori sekmeleri arasında geçiş yapıldığında diske hiçbir okuma yapılmaz (`get_all_items(false)`), eşyalar hafızada bir kez sıralanıp anında gösterilir. Ana menüde veya oyunda donma/kasma tamamen sıfırlanmıştır.
@@ -380,9 +389,10 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **İzole Mobil Kontrol Katmanı ([`Scenes/mobile_controls.tscn`](file:///home/hakan/dive&find/Scenes/mobile_controls.tscn) & [`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):**
   - **Dinamik Sanal Joystick:** Ekranın sol yarısına dokunulduğunda parmak hizasında beliren, 360° analog yüzüş açısı sağlayan vektörel analog stick. Ayarlar panelindeki `controls/joystick_scale` değeriyle dinamik olarak yeniden ölçeklenir.
   - **Akıllı İncele/Etkileşim Düğmesi (`🖐️ [Eşya Adı]`):** Sağ altta yer alır; dalgıç denizde bir eşyanın menziline girdiğinde dinamik olarak parlar ve detaylı inceleme penceresini açar.
+  - **Mobil Depar Toggle Butonu (`⚡ DEPAR` / `⚡ AÇIK`):** İncele butonunun hemen solunda yer alır (80x60px). Tek dokunuşla depar modunu açar/kapatır (`mobile_sprint_active`). Aktifken altın rengi parlar, hareketsiz kalındığında oksijen harcamaz, oksijen bittiğinde otomatik kapanır.
   - **Hızlı Alma Butonu (`⚡ DİREKT AL` / `quick_pickup()`):** İncele butonunun hemen üstünde yer alır. Eşyayı popup açmadan doğrudan çantaya atar; çanta doluysa `❌ DOLU` olarak kilitlenir ve sesli/titreşimli geri bildirim verir.
   - **Mobil Kamera Zoom Tuşları (`🥽+` / `🥽-`):** Sağ orta kenarda yer alır; kamerayı kademeli yaklaştırıp uzaklaştıran kompakt butonlar.
-  - **Entegrasyon ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):** `mobile_move_vector`, `zoom_in()` ve `zoom_out()` metodları ile mevcut PC kontrollerini bozmadan hibrit bağlanır.
+  - **Entegrasyon ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):** `mobile_move_vector`, `mobile_sprint_active`, `zoom_in()` ve `zoom_out()` metodları ile mevcut PC kontrollerini bozmadan hibrit bağlanır.
 - **Ayarlar Menüsü Joystick Ölçekleyici ([`Scenes/main_menu.tscn`](file:///home/hakan/dive&find/Scenes/main_menu.tscn) & [`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):**
   - Ayarlar panelinde yer alır; PC'de otomatik gizlenir (`not OS.has_feature("mobile")`). %70 ile %150 arasında analog joystick boyutunu hassas ayarlamayı sağlar.
 - **Dengeleme & Oksijen Buff'ı ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):**
@@ -434,3 +444,74 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   10. Dalış noktası yatay varyansı (`ocean_spawn_x_variance = 3000px`) ile her dalışta farklı açık deniz noktasına iniş.
   11. Yapay sprite titremesinin kaldırılması ve kameranın akıcı `CAMERA2D_PROCESS_IDLE` moduna alınması.
   12. Mobil dokunmatik kontrollerle tam uyumluluk (uzun basış kilitleme ipuçları, dokunmatik devam desteği).
+
+---
+
+## 18. Sonsuz Harita & Eşya Culling Mimarisi (Gözlük Unzoom & State Retention)
+
+- **Sabit Görüş Simülasyon Zarfı (Zoom Decouple — `map_maker.gd`):**
+  - Chunk yükleme/boşaltma sınırları anlık `cam.zoom` değerinden ayrıştırıldı.
+  - `MAX_UNZOOM_REF = 0.08` (Maksimum Dalış Gözlüğü Lvl 9 unzoom eşiği) referans alınarak oyuncunun çevresinde sabit bir yatay simülasyon halkası ($\pm 4$ chunk) korunur.
+  - Oyuncu gözlükle uzaklaşsa (unzoom) veya yakınlaşsa (zoom-in) chunk'lar **asla** silinip yeniden doğmaz; chunk oluşturma/silme yalnızca oyuncu yatayda fiziksel olarak yüzdüğünde gerçekleşir.
+- **Sinyal Güdümlü Sıfır Gecikmeli Doğma (Zero-Lag Spawning — `item_spawner.gd`):**
+  - Eski 1 saniyelik `Timer` polling döngüsü yerine `InfiniteMapManager.chunk_created` ve `chunk_destroyed` sinyalleri dinlenir.
+  - Yeni bir chunk oluşturulduğu mikro-saniyede eşyalar aynı frame içinde yerleştirilir; hızlı yüzmede veya unzoom anında "1 saniyelik boş arazi" görme gecikmesi sıfırlandı.
+- **Kalan Eşya Durumunu Saklama (Item State Retention — `_saved_chunk_items`):**
+  - Bir chunk oyuncudan çok uzaklaşıp sahneden silinirken (`chunk_destroyed`), henüz toplanmamış `interactable_items` düğümleri taranır ve sahne referansı ile yerel koordinatları `_saved_chunk_items[chunk_x_index]` sözlüğünde hafif veri olarak saklanır.
+  - Oyuncu daha sonra aynı gün içinde o chunk'a geri döndüğünde, silinmiş boş kabuk yerine kalan eşyalar birebir aynı koordinatlara anında geri yüklenir.
+  - Oyuncunun daha önce topladığı eşyalar geri gelmez; sömürü (exploit) önlenir.
+- **Günlük Akıntı Sıfırlaması (`_on_day_changed`):**
+  - Yeni güne geçildiğinde `_saved_chunk_items` ve `_spawned_chunk_indices_today` tamamen temizlenir; okyanus akıntıları aktif chunk'ları ve tüm dünyayı taze ganimetlerle yeniler.
+
+---
+
+## 19. Dinamik Çevre Işığı & Kararma Mimarisi (Derinlik + Saat)
+
+- **Script & Düğüm:** [`Scripts/ambient_light_controller.gd`](file:///home/hakan/dive&find/Scripts/ambient_light_controller.gd) (`AmbientLightController`, `extends CanvasModulate`), [`Scenes/main.tscn`](file:///home/hakan/dive&find/Scenes/main.tscn) içinde `AmbientLight` düğümü.
+- **HUD İzolasyonu:** `CanvasModulate` yalnızca CanvasItem Layer 0 (deniz, zemin, eşyalar, dalgıç) katmanını tonlar; `CanvasLayer` üzerindeki HUD, oksijen/can barları ve menüler bundan kesinlikle etkilenmez ve %100 parlaklığını korur.
+- **İki Boyutlu Kararma Eğrisi:**
+  1. **Derinlik Ekseni ($0\text{m} \rightarrow 350\text{m}+$):**
+     - $0\text{m}$: Berrak gün ışığı (`DAY_SURFACE: Color(1, 1, 1)`).
+     - Gerçek okyanus fiziğine uygun olarak $350\text{m}$'de tam abis karanlığına (`DAY_ABYSS: Color(0.02, 0.035, 0.08)`) ulaşılır; ilk $50-150\text{m}$'de su hızla koyulaşır (`pow(depth_t, 0.75)`).
+  2. **Saat/Zaman Ekseni ($10:00 \rightarrow 19:00$):**
+     - $10:00 - 14:00$: Tam parlak gün ışığı.
+     - $14:00 - 17:00$: Sıcak altın ikindi güneşi (`AFTERNOON_SURFACE: Color(0.88, 0.72, 0.55)`).
+     - $17:00 - 19:00$: Yoğun gün batımı ve akşam alacakaranlığı (`DUSK_SURFACE: Color(0.14, 0.15, 0.26)`).
+     - $19:00$ & $350\text{m}+$: Gece abisi (`NIGHT_ABYSS: Color(0.007, 0.01, 0.02)`).
+- **Taban Aydınlık Güvencesi (`min_ambient_floor = 0.015`):**
+  - Genel kararma kontrastı sertleştirildi; derinlikte fener olmadan ilerleme yüksek risk ve atmosferik gerilim sunar.
+- **Yumuşak Geçiş:** Ani dakika atlamalarında ışık sıçramasını önlemek için `color.lerp(target_color, 3.5 * delta)` ile pürüzsüz geçiş sağlanır.
+
+---
+
+## 20. Dalış Feneri & Batarya Sistemi (Flashlight & Battery System)
+
+- **Fener Ekipman Kaynağı (`flashlight_upgrade.tres`):**
+  - `stat_key: "flashlight_level"`, Maks Seviye: 15, Başlangıç: Lvl 0 (Mağazadan 50 Zurna ile açılır, katsayı 1.35).
+  - İkon: `res://Sprites/flaslight.png`.
+  - Ekipman Mağazası (`equstore.tscn`) ve HUD Ekipman Dock'u (`EquipmentDock`) ile tam entegre.
+- **Aç/Kapa (Toggle) & Yönlendirme:**
+  - Klavye `[F]` tuşu ile açılıp kapatılır; klik sesi ve ses efektleri çalar.
+  - Fener açıkken PC mouse imleci yönüne (`get_global_mouse_position()`) tok ve ağırlıklı bir hisle (`lerp_angle`) pürüzsüzce yönelir.
+- **Prosedürel Homojen Konik Işık Dokusu:**
+  - Harici raster kaplama bağımlılığı olmadan, GDScript üzerinden çalışma zamanında 512x512 anti-aliased homojen konik ışık dokusu (`_generate_cone_texture`) üretilir.
+  - İçte aşırı parlayan elips/sıcak nokta oluşmasını engellemek için mesafenin %72'si ve açının %70'i düz plato yapıldı; halo ve hüzme `maxf` ile birleştirildi.
+  - Göz alıcı/kör edici beyaz patlamayı önlemek için tepe yoğunluk 0.85'e ve ışık enerjisi 0.95'e çekildi; doğal ve berrak sualtı aydınlatması sağlandı.
+  - Işığın pivotu `offset = Vector2.ZERO` olarak tam dalgıç merkezine kilitlidir; dalgıç etrafında 65px yumuşak gövde aurası bulunur.
+- **Seviye İlerleme Matrisi (1-15 Seviye):**
+  - **Işık Açısı:** Lvl 1: $95^\circ$ geniş hüzme $\rightarrow$ Lvl 15: $155^\circ$ panoramik projektör ($+4.286^\circ$ / seviye).
+  - **Işık Menzili:** Lvl 1: $1050\text{px}$ $\rightarrow$ Lvl 15: $2600\text{px}$ (Gözlükle en geniş zoom out yapıldığında dahi ekranı ve ufku aydınlatan menzil, $+110.7\text{px}$ / seviye).
+  - **Batarya Kapasitesi:** Lvl 1: $75\text{sn}$ (1dk 15sn) $\rightarrow$ Lvl 15: $200\text{sn}$ (3dk 20sn, $+8.93\text{sn}$ / seviye).
+- **Batarya Tüketim & Şarj Döngüsü:**
+  - Fener açıkken $1\text{sn/sn}$ sabit batarya tüketimi.
+  - Batarya bittiğinde fener otomatik söner ve sesli klik uyarısı verir.
+  - Su yüzeyinde (`surface_band`) teknedeki şarj ünitesi gibi $30\text{sn/sn}$ hızla solar/dinamo şarj olur (75sn batarya ~2.5 saniyede dolar).
+- **HUD Barı (`StatusPanel/Battery`):**
+  - Can ve Oksijen barlarının hemen altına `⚡ BATARYA` barı eklendi.
+  - Renk geçişi: Dolu/Yüksek (>%50) Parlak Kehribar Sarısı (`Color(1.0, 0.85, 0.20)`) $\rightarrow$ Orta (%20-%50) Sıcak Turuncu $\rightarrow$ Kritik (<%20) Kırmızı.
+- **Kayıt & Yükleme Entegrasyonu:**
+  - `GlobalPlayerData`, `GlobalInventory` (`apply_save_to_player`), `day_summary.gd` ve `office_menu.gd` üzerinde `"flashlight_level"` anahtarı tam kalıcı hale getirildi.
+- **Mağaza Stat Önizlemesi & Tooltip Entegrasyonu (`equipment_slot.gd`):**
+  - Kart üzerinde: Lvl 0 için `Batarya: 0s ➔ 75s (95°)`, Lvl 1-14 için `Batarya: %ds ➔ %ds (+4°)`.
+  - Hover Tooltip: Buton ve stat etiketine fareyle gelindiğinde detaylı metrikler (`Batarya Süresi`, `Işık Açısı`, `Işık Menzili`) gösterilir.
+

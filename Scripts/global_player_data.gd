@@ -10,6 +10,7 @@ var tube_level: int = 1        # Oksijen Tüpü (Maks Lvl 8)
 var fins_level: int = 0        # Palet (Maks Lvl 6)
 var goggles_level: int = 0     # Dalış Gözlüğü (Maks Lvl 5)
 var backpack_level: int = 0    # Çanta Kapasitesi (Sınırsız)
+var flashlight_level: int = 0  # Dalış Feneri (Maks Lvl 15)
 
 # İstatistikler & Gün (Gelecekteki İlerleme & Başarım & Save)
 var current_day: int = 1
@@ -29,6 +30,7 @@ func get_stat(stat_key: String) -> int:
 		"fins_level": return fins_level
 		"goggles_level": return goggles_level
 		"backpack_level": return backpack_level
+		"flashlight_level": return flashlight_level
 		_: return int(get(stat_key)) if get(stat_key) != null else 0
 
 
@@ -38,6 +40,7 @@ func set_stat(stat_key: String, new_val: int) -> void:
 		"fins_level": fins_level = new_val
 		"goggles_level": goggles_level = new_val
 		"backpack_level": backpack_level = new_val
+		"flashlight_level": flashlight_level = new_val
 		_:
 			if get(stat_key) != null:
 				set(stat_key, new_val)

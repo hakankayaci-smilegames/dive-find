@@ -5,10 +5,13 @@ class_name MobileControls
 ## Sağ taraf: Akıllı İncele/Etkileşim Düğmesi (Menzildeki eşyayı açar)
 
 @onready var interact_button: Button = $InteractButton
+@onready var sprint_toggle_button: Button = get_node_or_null("SprintToggleButton")
 @onready var quick_pickup_button: Button = get_node_or_null("QuickPickupButton")
 @onready var joystick_area: Control = $JoystickZone
 @onready var zoom_in_button: Button = get_node_or_null("ZoomControls/ZoomInButton")
 @onready var zoom_out_button: Button = get_node_or_null("ZoomControls/ZoomOutButton")
+
+var _sprint_toggled: bool = false
 
 # Joystick Görsel ve Boyut Parametreleri
 var _touch_index: int = -1
@@ -34,6 +37,9 @@ func _ready() -> void:
 	_load_controls_settings()
 
 	interact_button.pressed.connect(_on_interact_pressed)
+	if sprint_toggle_button:
+		sprint_toggle_button.pressed.connect(_on_sprint_toggle_pressed)
+		_update_sprint_button_visuals()
 	if quick_pickup_button:
 		quick_pickup_button.pressed.connect(_on_quick_pickup_pressed)
 	joystick_area.gui_input.connect(_on_joystick_gui_input)
@@ -96,6 +102,8 @@ func _on_joystick_draw() -> void:
 
 func _find_player() -> void:
 	_player = get_tree().get_first_node_in_group("player") as Node2D
+	if is_instance_valid(_player) and "mobile_sprint_active" in _player:
+		_player.mobile_sprint_active = _sprint_toggled
 
 
 func _process(_delta: float) -> void:
@@ -115,6 +123,15 @@ func _process(_delta: float) -> void:
 	# Dalgıca mobil hareket vektörünü aktar
 	if _player and "mobile_move_vector" in _player:
 		_player.mobile_move_vector = move_vector
+
+	# Oksijen bittiğinde deparı otomatik kapat
+	if is_instance_valid(_player):
+		var ox: float = float(_player.get("current_oxygen")) if _player.get("current_oxygen") != null else 100.0
+		if ox <= 0.0 and _sprint_toggled:
+			_sprint_toggled = false
+			if "mobile_sprint_active" in _player:
+				_player.mobile_sprint_active = false
+			_update_sprint_button_visuals()
 
 	# Menzildeki en yakın eşyayı tara ve İncele butonunu güncelle
 	_update_interact_button_state()
@@ -194,6 +211,30 @@ func _on_quick_pickup_pressed() -> void:
 	if target_item and is_instance_valid(target_item):
 		target_item.quick_pickup()
 		_update_interact_button_state()
+
+
+func _on_sprint_toggle_pressed() -> void:
+	_sprint_toggled = not _sprint_toggled
+	GlobalSoundManager.play_sfx("click")
+	if is_instance_valid(_player) and "mobile_sprint_active" in _player:
+		_player.mobile_sprint_active = _sprint_toggled
+	_update_sprint_button_visuals()
+
+
+func _update_sprint_button_visuals() -> void:
+	if not is_instance_valid(sprint_toggle_button):
+		return
+
+	if _sprint_toggled:
+		sprint_toggle_button.text = "⚡ AÇIK"
+		sprint_toggle_button.modulate = Color(1.3, 1.15, 0.4, 1.0)
+		var active_style = sprint_toggle_button.get_theme_stylebox("pressed")
+		if active_style:
+			sprint_toggle_button.add_theme_stylebox_override("normal", active_style)
+	else:
+		sprint_toggle_button.text = "⚡ DEPAR"
+		sprint_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.85)
+		sprint_toggle_button.remove_theme_stylebox_override("normal")
 
 
 func _on_joystick_gui_input(event: InputEvent) -> void:

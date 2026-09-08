@@ -7,6 +7,7 @@ var _is_preview_mode: bool = false
 @onready var backdrop: ColorRect = $Backdrop
 @onready var card_panel: PanelContainer = $Backdrop/CardPanel
 @onready var category_badge: PanelContainer = $Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/CategoryBadge
+@onready var new_badge: PanelContainer = $Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/NewBadge
 @onready var category_label: Label = $Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/CategoryBadge/BadgeMargin/CategoryLabel
 @onready var rarity_label: Label = $Backdrop/CardPanel/MarginContainer/VBoxContainer/TopBar/RarityLabel
 @onready var icon_frame: PanelContainer = $Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/IconFrame
@@ -141,6 +142,21 @@ func setup(data: Resource, physical_item: Node2D = null, preview_mode: bool = fa
 		custom_badge_style.border_color = c_color
 		custom_badge_style.bg_color = Color(c_color.r * 0.18, c_color.g * 0.18, c_color.b * 0.18, 0.95)
 		category_badge.add_theme_stylebox_override("panel", custom_badge_style)
+
+	# Yeni Keşif Rozeti (Eşya daha önce toplanıp deftere kaydedilmemişse göster)
+	var is_discovered: bool = GlobalInventory.is_item_discovered(_item_data)
+	if is_instance_valid(new_badge):
+		new_badge.visible = (not is_discovered) and (not _is_preview_mode)
+		if new_badge.visible:
+			_play_new_badge_pulse()
+
+
+func _play_new_badge_pulse() -> void:
+	if not is_instance_valid(new_badge):
+		return
+	var tw := create_tween().set_loops()
+	tw.tween_property(new_badge, "modulate", Color(1.35, 1.35, 1.35, 1.0), 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(new_badge, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
 func _refresh_pickup_state() -> void:

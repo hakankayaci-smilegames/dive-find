@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://d2bgwwq4x6nyj" path="res://Scripts/goggles_upgrade.tres" id="5_jeuwl"]
 [ext_resource type="Resource" uid="uid://4mnacb6gv17k" path="res://Scripts/fins_upgrade.tres" id="6_ohr5o"]
 [ext_resource type="Resource" uid="uid://d1vidxh8dwtxo" path="res://Scripts/tube_upgrade.tres" id="7_m22qy"]
+[ext_resource type="Resource" uid="uid://c6flash78upgrade99" path="res://Scripts/flashlight_upgrade.tres" id="8_flash"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.15, 0.1, 0.06, 0.95)
@@ -71,18 +72,18 @@ corner_radius_bottom_left = 8
 [node name="EquipmentStore" type="CanvasLayer" unique_id=1608507760]
 script = ExtResource("1_equstore_script")
 slot_scene = ExtResource("2_vbpum")
-upgrades = Array[ExtResource("3_lorrf")]([ExtResource("4_fojvl"), ExtResource("5_jeuwl"), ExtResource("6_ohr5o"), ExtResource("7_m22qy")])
+upgrades = Array[ExtResource("3_lorrf")]([ExtResource("4_fojvl"), ExtResource("5_jeuwl"), ExtResource("6_ohr5o"), ExtResource("7_m22qy"), ExtResource("8_flash")])
 
 [node name="MainPanel" type="Panel" parent="." unique_id=1887603063]
-custom_minimum_size = Vector2(900, 420)
+custom_minimum_size = Vector2(980, 420)
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -450.0
+offset_left = -490.0
 offset_top = -210.0
-offset_right = 450.0
+offset_right = 490.0
 offset_bottom = 210.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -132,7 +133,7 @@ text = "X"
 layout_mode = 0
 offset_left = 20.0
 offset_top = 85.0
-offset_right = 880.0
+offset_right = 960.0
 offset_bottom = 395.0
-theme_override_constants/separation = 24
+theme_override_constants/separation = 16
 alignment = 1
