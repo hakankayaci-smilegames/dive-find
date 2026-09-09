@@ -9,6 +9,6 @@ item_name = "Ananas Suyu"
 sprite = ExtResource("2_sprite")
 description = "Laboratuvarda 2 adet Ananas'ın distile edilip şişelenmesiyle elde edilen ferahlatıcı tropikal içecek. Pazarda yüksek fiyata alıcı bulur."
 rarity = 1.0
-value = 160
+value = 75
 category = "Crafted"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

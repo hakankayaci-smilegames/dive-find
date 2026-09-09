@@ -36,11 +36,11 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 | **`GlobalEconomy`** | [`Scripts/GlobalEconomy.gd`](file:///home/hakan/dive&find/Scripts/GlobalEconomy.gd) | Para (Zurna) yönetimi, harcama ve bakiye sorgulama | `money: int`<br>Signals: `money_changed(new_amount)` |
 | **`GlobalSoundManager`** | [`Scripts/global_sound_manager.gd`](file:///home/hakan/dive&find/Scripts/global_sound_manager.gd) | SFX bus ses yönetimi, Spotify shuffle müzik çaları, kapı sesleri (`door_open`, `door_close`) | `sfx_paths: Dictionary`<br>`play_sfx(sound_name)`<br>Buses: `"Music"`, `"SFX"` |
 | **`GlobalTime`** | [`Scripts/global_time.gd`](file:///home/hakan/dive&find/Scripts/global_time.gd) | Dinamik gün ve saat döngüsü (10:00 başlangıç, 19:00 mesai sonu, 15dk adımlar), dalış kilidi, günlük bilanço takibi | `current_day`, `current_hour`, `current_minute`<br>`start_new_day()`, `is_dive_allowed()` |
-| **`DevConsole`** | [`Scripts/dev_console.gd`](file:///home/hakan/dive&find/Scripts/dev_console.gd) | Küresel hile ve geliştirici konsolu (`é` / `~` tuşu), komut geçmişi, modüler komut sistemi | `money`, `upgrade`, `upgrade_all`, `fill_inv`, `god`, `surface`, `tp`, `office`, `die`, `time`, `add_time`, `time_speed`, `skip_day`<br>Layer: `128` |
+| **`DevConsole`** | [`Scripts/dev_console.gd`](file:///home/hakan/dive&find/Scripts/dev_console.gd) | Küresel hile ve geliştirici konsolu (`é` / `~` tuşu & mobilde `[~] KONSOL` butonu). **DevCode Güvenlik Kilidi:** Ayarlar menüsünden gizli kod girilmedikçe kilitlidir; kilitliyken `é` tuşu ve ofisteki mobil konsol butonu tamamen devre dışıdır. | `is_unlocked: bool`, `is_dev_console_unlocked()`, `set_dev_unlocked(bool)`<br>`money`, `upgrade`, `upgrade_all`, `fill_inv`, `god`, `surface`, `tp`, `office`, `die`, `time`, `add_time`, `time_speed`, `skip_day`<br>Layer: `128` |
 
 ---
 
-## 3. Geliştirici & Hile Konsolu Komutları
+## 3. Geliştirici & Hile Konsolu & DevCode Güvenlik Sistemi
 
 | Komut | Parametre | Açıklama | Örnek Kullanım |
 | :--- | :--- | :--- | :--- |
@@ -61,6 +61,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 | **`add_time`** | `<dakika>` | Saati belirtilen dakika kadar ileri sarar | `add_time 30` |
 | **`time_speed`**| `<çarpan>` | Zaman akış hızını hızlandırır/yavaşlatır | `time_speed 5.0` |
 | **`skip_day`** | - | Günü anında 19:00'a sarıp Gün Özeti Ekranını açar | `skip_day` |
+| **`darkness`** / **`karartma`** | `[0.0-1.0\|reset\|abis\|day]` | Çevre aydınlığını/kararmasını test eder veya ayarlar | `darkness 0.05`, `darkness reset` |
 
 ---
 
@@ -188,7 +189,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - **Toggle Panel Mimarisi:** Ana menüdeki `Koleksiyon`, `Ayarlar` ve `Bilgi` butonları toggle (aç/kapa) mantığıyla çalışır. Açık olan bir pencere varken butona tekrar basıldığında kapanır; başka bir pencere açıldığında önceki pencere otomatik temizlenir. Üst üste birden fazla pencere yığılması engellenmiştir.
 - **Sürüm Yönetimi & Yenilikler Paneli**:
   - `@export var game_version: String = "Pre-Alpha 1.6.1 (Afterjam Remaster)"` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
-  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha 1.6.1 ve Pre-Alpha 1.6 sürüm notlarını (kaydırılabilir, BBCode renkli formatta) oyuncuya sunar.
+  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha 1.6.2 ve Pre-Alpha 1.6.1 sürüm notlarını (kaydırılabilir, BBCode renkli formatta) oyuncuya sunar.
 - **Koleksiyon Sıfırlama Güvenlik Onay Kutusu (`_show_reset_collection_confirmation`):**
   - Ayarlar panelindeki "KOLEKSİYONU SIFIRLA" butonuna tıklandığında doğrudan silmek yerine modal onay penceresi açılır.
   - Karartılmış arka plan (`0.75` alpha), altın kenarlı ahşap denizci paneli (`Color(0.12, 0.08, 0.05, 0.98)`), "VAZGEÇ" ve kırmızı "EVET, SIFIRLA 🗑️" butonları içerir.
@@ -367,12 +368,12 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Satış Pazarı ([`Scenes/pazar.tscn`](file:///home/hakan/dive&find/Scenes/pazar.tscn)):**
   - `item_seller.gd` motorunu `shop_filter = "CraftedOnly"` ile kullanan ihracat dükkanı.
   - Üretilen eşyaların toplu satışı, kilit koruması ve kayan altın kazanç efektleri hazır olarak çalışır.
-- **Aktif Tarifler ve Ürünler:**
-  - `İşlenmiş Plastik Bobini` (65 Z) ➔ 3x Pet şişe + 2x Poşet + 2 Zurna ([`all_items_tres/geri_donusum_plastigi.tres`](file:///home/hakan/dive&find/all_items_tres/geri_donusum_plastigi.tres))
-  - `Ananas Suyu` (160 Z) ➔ 2x Ananas? + 5 Zurna ([`all_items_tres/ananas_suyu.tres`](file:///home/hakan/dive&find/all_items_tres/ananas_suyu.tres))
-  - `Preslenmiş Alüminyum Bloğu` (220 Z) ➔ 2x Bükük kola + 2x Bükük pepsi + 1x Monster Kutusu + 1x Bükük Çatal + 10 Zurna ([`all_items_tres/aluminyum_blogu.tres`](file:///home/hakan/dive&find/all_items_tres/aluminyum_blogu.tres))
-  - `Tropikal Radyoaktif Kokteyl` (550 Z) ➔ 1x Gizemli Şişe + 2x Ananas? + 1x Monster Kutusu + 15 Zurna ([`all_items_tres/radyoaktif_kokteyl.tres`](file:///home/hakan/dive&find/all_items_tres/radyoaktif_kokteyl.tres))
-  - `Restore Edilmiş Tablo` (6500 Z) ➔ 1x Kırık Altın Çerçeve + 1x Zoktayın Saç Renginde Boya + 1x Isırılmış Kitap + 150 Zurna ([`all_items_tres/restore_tablo.tres`](file:///home/hakan/dive&find/all_items_tres/restore_tablo.tres))
+- **Aktif Tarifler ve Ürünler (Dengelenmiş Ekonomi):**
+  - `İşlenmiş Plastik Bobini` (20 Z) ➔ 3x Pet şişe + 2x Poşet + 2 Zurna (Maliyet: 11 Z, Kar: +9 Z) ([`all_items_tres/geri_donusum_plastigi.tres`](file:///home/hakan/dive&find/all_items_tres/geri_donusum_plastigi.tres))
+  - `Ananas Suyu` (75 Z) ➔ 2x Ananas? + 5 Zurna (Maliyet: 45 Z, Kar: +30 Z) ([`all_items_tres/ananas_suyu.tres`](file:///home/hakan/dive&find/all_items_tres/ananas_suyu.tres))
+  - `Preslenmiş Alüminyum Bloğu` (65 Z) ➔ 2x Bükük kola + 2x Bükük pepsi + 1x Monster Kutusu + 1x Bükük Çatal + 10 Zurna (Maliyet: 38 Z, Kar: +27 Z) ([`all_items_tres/aluminyum_blogu.tres`](file:///home/hakan/dive&find/all_items_tres/aluminyum_blogu.tres))
+  - `Tropikal Radyoaktif Kokteyl` (260 Z) ➔ 1x Gizemli Şişe + 2x Ananas? + 1x Monster Kutusu + 15 Zurna (Maliyet: 163 Z, Kar: +97 Z) ([`all_items_tres/radyoaktif_kokteyl.tres`](file:///home/hakan/dive&find/all_items_tres/radyoaktif_kokteyl.tres))
+  - `Restore Edilmiş Tablo` (3950 Z) ➔ 1x Kırık Altın Çerçeve + 1x Zoktayın Saç Renginde Boya + 1x Isırılmış Kitap + 150 Zurna (Maliyet: 2841 Z, Kar: +1109 Z) ([`all_items_tres/restore_tablo.tres`](file:///home/hakan/dive&find/all_items_tres/restore_tablo.tres))
 - **Koleksiyon Defteri Entegrasyonu:**
   - `collection.gd` ve `collection_slot.gd` içine `Crafted` (amber/turuncu zanaat rengi) eklendi.
   - Koleksiyon arayüzüne `🔨 Üretilen` sekmesi ([`Scenes/collection.tscn`](file:///home/hakan/dive&find/Scenes/collection.tscn)) entegre edildi.
@@ -473,17 +474,19 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 
 - **Script & Düğüm:** [`Scripts/ambient_light_controller.gd`](file:///home/hakan/dive&find/Scripts/ambient_light_controller.gd) (`AmbientLightController`, `extends CanvasModulate`), [`Scenes/main.tscn`](file:///home/hakan/dive&find/Scenes/main.tscn) içinde `AmbientLight` düğümü.
 - **HUD İzolasyonu:** `CanvasModulate` yalnızca CanvasItem Layer 0 (deniz, zemin, eşyalar, dalgıç) katmanını tonlar; `CanvasLayer` üzerindeki HUD, oksijen/can barları ve menüler bundan kesinlikle etkilenmez ve %100 parlaklığını korur.
-- **İki Boyutlu Kararma Eğrisi:**
-  1. **Derinlik Ekseni ($0\text{m} \rightarrow 350\text{m}+$):**
+- **İki Boyutlu Kararma Eğrisi (Buffed Rates):**
+  1. **Derinlik Ekseni ($0\text{m} \rightarrow 260\text{m}+$):**
      - $0\text{m}$: Berrak gün ışığı (`DAY_SURFACE: Color(1, 1, 1)`).
-     - Gerçek okyanus fiziğine uygun olarak $350\text{m}$'de tam abis karanlığına (`DAY_ABYSS: Color(0.02, 0.035, 0.08)`) ulaşılır; ilk $50-150\text{m}$'de su hızla koyulaşır (`pow(depth_t, 0.75)`).
+     - Gerçek okyanus fiziğine uygun olarak $260\text{m}$'de tam abis karanlığına (`DAY_ABYSS: Color(0.010, 0.018, 0.040)`) ulaşılır; ilk $30-100\text{m}$'de su daha hızlı ve tok koyulaşır (`pow(depth_t, 0.60)`).
   2. **Saat/Zaman Ekseni ($10:00 \rightarrow 19:00$):**
-     - $10:00 - 14:00$: Tam parlak gün ışığı.
-     - $14:00 - 17:00$: Sıcak altın ikindi güneşi (`AFTERNOON_SURFACE: Color(0.88, 0.72, 0.55)`).
-     - $17:00 - 19:00$: Yoğun gün batımı ve akşam alacakaranlığı (`DUSK_SURFACE: Color(0.14, 0.15, 0.26)`).
-     - $19:00$ & $350\text{m}+$: Gece abisi (`NIGHT_ABYSS: Color(0.007, 0.01, 0.02)`).
-- **Taban Aydınlık Güvencesi (`min_ambient_floor = 0.015`):**
-  - Genel kararma kontrastı sertleştirildi; derinlikte fener olmadan ilerleme yüksek risk ve atmosferik gerilim sunar.
+     - $10:00 - 13:00$: Tam parlak gün ışığı.
+     - $13:00 - 16:30$: Sıcak altın ikindi güneşi (`AFTERNOON_SURFACE: Color(0.78, 0.60, 0.42)`).
+     - $16:30 - 19:00$: Koyu gün batımı ve derin akşam alacakaranlığı (`DUSK_SURFACE: Color(0.06, 0.07, 0.14)`).
+     - $19:00$ & $260\text{m}+$: Gece abisi (`NIGHT_ABYSS: Color(0.003, 0.005, 0.010)`).
+- **Taban Aydınlık Güvencesi (`min_ambient_floor = 0.006`):**
+  - Genel kararma kontrastı atmosferik olarak güçlendirildi; derinlikte fener olmadan ilerleme gerçek bir abis gerilimi sunar.
+- **Geliştirici Konsol Test Kilidi (`override_brightness`):**
+  - `dev_console.gd` üzerindeki `darkness <0.0-1.0>` komutu ile canlı çevre aydınlığı istenen değere anında zorlanabilir, `darkness reset` ile dinamik hesaplamaya geri dönülür.
 - **Yumuşak Geçiş:** Ani dakika atlamalarında ışık sıçramasını önlemek için `color.lerp(target_color, 3.5 * delta)` ile pürüzsüz geçiş sağlanır.
 
 ---
@@ -513,6 +516,15 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Fener açıkken $1\text{sn/sn}$ sabit batarya tüketimi.
   - Batarya bittiğinde fener otomatik söner ve sesli klik uyarısı verir.
   - Su yüzeyinde (`surface_band`) teknedeki şarj ünitesi gibi $30\text{sn/sn}$ hızla solar/dinamo şarj olur (75sn batarya ~2.5 saniyede dolar).
+  - **İlk Satın Alımda Ful Batarya (0 ➔ 1+):** `flashlight_level` setter'ında seviye 0'dan 1'e yükseltildiği an `current_battery = max_battery` tetiklenir ve yeni alınan fener tam dolu teslim edilir.
+- **UI Katman İzolasyonu & Sızıntı Önleme (Layer 0 Lock):**
+  - `_flashlight_light.range_layer_min = 0` ve `range_layer_max = 0` olarak kilitlendi.
+  - Oyun dünyası Layer 0'da kalırken, tüm arayüzler (`CanvasLayer` — Ofis, Çanta, İnceleme Pop-up'ı, Atölye, Dükkanlar vb.) Layer 1+ üzerinde izole edildi. Fener ışığının UI panellerini aydınlatması veya parlatması motor seviyesinde tamamen engellendi.
+- **Ofise Dönüş & Dock Şarj Protokolü (`reset_flashlight_for_office`):**
+  - Dalgıç tekne butonuna bastığında ([`canvas_layer.gd`](file:///home/hakan/dive&find/Scripts/canvas_layer.gd)) veya Ofis Menüsü açıldığında ([`office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)), `turn_off_flashlight()` ve `reset_flashlight_for_office()` tetiklenir.
+  - Ofise girildiğinde fener otomatik olarak kapatılır (`is_flashlight_on = false`), bataryası karargahta %100 tam şarja çekilir (`current_battery = max_battery`) ve HUD senkronize edilir. Ofiste fenerin açık kalması veya yeni dalışa açık fenerle başlanması engellendi.
+- **UI & Duraklatma Sırasında Açı Dondurma:**
+  - Ekranda modal pop-up (`popup_ui`), ofis (`office_menu`) veya oyun duraklatması (`get_tree().paused`) varken, fenerin fare imlecini takip ederek UI arkasında dönmesi engellendi; son bakış açısı korunur.
 - **HUD Barı (`StatusPanel/Battery`) & Ekipman Dock Entegrasyonu:**
   - Can ve Oksijen barlarının hemen altına `⚡ BATARYA` barı eklendi.
   - Renk geçişi: Dolu/Yüksek (>%50) Parlak Kehribar Sarısı (`Color(1.0, 0.85, 0.20)`) $\rightarrow$ Orta (%20-%50) Sıcak Turuncu $\rightarrow$ Kritik (<%20) Kırmızı.
@@ -535,7 +547,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Eşya hover rozeti `[E] İncele  •  [Sağ Tık] Direkt Al` formatına güncellendi; `panel_container.gui_input` ile rozetin kendisine tıklanması da desteklendi.
 - **Genişletilmiş Ana Menü Bilgi & Kontrol Rehberi (`main_menu.tscn`):**
   - Ana menüdeki Bilgi & Yardım paneli 720x500 boyutuna genişletildi.
-  - PC kontrolleri (WASD, Shift Depar, Sol Tık/E İncele, Sağ Tık Hızlı Alma, F Fener, Zoom, I/Tab Çanta, C Koleksiyon, Çantada Sağ Tık Kilit, Yüzeyde Tekneye Çıkış, ESC, é/~) ve Mobil dokunmatik kontroller tam liste olarak BBCode formatında dokümante edildi.
+  - PC kontrolleri (WASD, Shift Depar, Sol Tık/E İncele, Sağ Tık Hızlı Alma, F Fener, Zoom, I/Tab Çanta, C Koleksiyon, Çantada Sağ Tık Kilit, Yüzeyde Tekneye Çıkış, ESC) ve Mobil dokunmatik kontroller tam liste olarak BBCode formatında dokümante edildi. (Konsol tuşu gizlendi).
 
 ---
 
@@ -585,3 +597,165 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Ekipman Atölyesi Hızlı Tıklama Stabilizasyonu (`equstore.gd` & `equipment_slot.gd`):**
   - [`Scripts/equipment_slot.gd`](file:///home/hakan/dive&find/Scripts/equipment_slot.gd) içindeki `play_upgrade_feedback()` fonksiyonuna `_scale_tween` kontrolü eklendi; hızlı tıklandığında eski tween öldürülerek scale sıfırlanır, üst üste binen tween çakışmaları önlendi.
   - [`Scripts/equstore.gd`](file:///home/hakan/dive&find/Scripts/equstore.gd) içinde seviye güncellemesi ve bakiye harcaması temiz sıralamaya alındı.
+
+---
+
+## 25. Ofis İçi Hızlı Ayarlar, Dalış Pause Menüsü & Exploit Önleme Mimarisi
+
+- **Ofis Hızlı Ayarlar Butonu ([`Scenes/office_menu.tscn`](file:///home/hakan/dive&find/Scenes/office_menu.tscn) & [`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)):**
+  - Sağ üst başlık alanına (`RightHeader`), `SaveExitButton` yanına yalnızca çark simgesi içeren (`⚙️`, 44x44) `SettingsButton` entegre edildi.
+  - Oyuncunun ses, görüntü veya kontrolleri değiştirmek için ana menüye çıkıp oyunu yeniden yüklemesi gerekliliği ortadan kaldırıldı.
+  - Tıklandığında modüler [`Scenes/settings_menu.tscn`](file:///home/hakan/dive&find/Scenes/settings_menu.tscn) katmanını açar. ESC ile alt menüler hiyerarşik olarak kapatılabilir.
+- **Dalış İçi Pause Menüsü ([`Scenes/pause_menu.tscn`](file:///home/hakan/dive&find/Scenes/pause_menu.tscn) & [`Scripts/pause_menu.gd`](file:///home/hakan/dive&find/Scripts/pause_menu.gd)):**
+  - **Katman & Duraklatma:** `layer = 125`, `process_mode = Node.PROCESS_MODE_ALWAYS`. Açıldığında oyun dünyasını tamamen duraklatır (`get_tree().paused = true`), kapandığında otomatik devam ettirir (`_exit_tree`).
+  - **Erişim:** Okyanusta serbest dalış esnasında [`Scripts/canvas_layer.gd`](file:///home/hakan/dive&find/Scripts/canvas_layer.gd) üzerinden `KEY_ESCAPE` tuşu ile tetiklenir (envanter, açık popup veya ofis menüsü yokken).
+  - **Görsel Tasarım:** Karartılmış arka plan gölge katmanı (`DimOverlay`, `Color(0, 0, 0, 0.72)`), altın çerçeveli ahşap kabin paneli (`StyleBoxFlat_pause_panel`), `⏸️ DURAKLATILDI` başlığı ve 3 fonksiyonel buton:
+    1. `▶ DEVAM ET`: Menüyü kapatıp oyunu anında devam ettirir.
+    2. `⚙️ AYARLAR`: Dalış sırasında oyundan çıkmadan ayarlar menüsünü (`layer = 129`) duraklatma ekranının üstüne açar.
+    3. `🚪 ANA MENÜYE DÖN`: Ana menüye güvenli geçiş sağlar.
+- **Yüzeye Çıkış Exploit Önleme Protokolü (Anti-Save-Scum Logic):**
+  - **Tasarım Gerekçesi:** Dalgıç sualtındayken (özellikle oksijeni tükenmek üzereyken veya derinliklerdeyken) dalış ekranında "Kaydet & Çık" bulunması, yüzeye tekneye dönme ve hayatta kalma mekaniğini tamamen işlevsizleştireceğinden bu butona bilinçli olarak yer verilmemiştir.
+  - **Onay Modalı (`_show_quit_confirmation`):** "🚪 ANA MENÜYE DÖN" tıklandığında `layer = 135` üzerinde koyu gölgeli bir teyit penceresi açılır:
+    - *`⚠️ DALIŞTAN ÇIKILSIN MI?`*
+    - *`"Bu dalışta topladığın ganimetler kaydedilmeyecektir! Son ofis kayıt durumuna geri dönülecektir. Ana menüye dönmek istediğinden emin misin?"`*
+    - `DALIŞA DÖN` ve `EVET, ÇIK 🚪` butonları sunulur. Onay verildiğinde mevcut dalıştaki geçici loot çantadan silinmiş sayılarak oyun son ofis kaydındaki güvenli duruma döner; ana menü yüklenir.
+- **Modüler Bağımsız Ayarlar Menüsü ([`Scenes/settings_menu.tscn`](file:///home/hakan/dive&find/Scenes/settings_menu.tscn) & [`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)):**
+  - `layer = 129` üzerinde çalışan, hem Ana Menü, hem Ofis Menüsü, hem de Dalış Pause Menüsü tarafından paylaşılan bağımsız sahne mimarisi.
+  - Müzik & SFX ses seviyeleri (AudioServer dinamik bus yönetimi), Tam Ekran (Fullscreen) anahtarı, Mobil Joystick boyutu (%50 - %200), Mobil Fener Yönlendirme modu (Joystick / Dokunmatik / Hibrit), DevCode hile konsolu kilit açıcı LineEdit (`"mercedesforever"`) ve Koleksiyonu Sıfırla (onay pencereli) özelliklerini tek bir merkezden yönetir.
+
+---
+
+## 26. Gün Sonu Geçişi, Fener Dokusu & Kaynak Çakışma Düzeltmeleri
+
+- **Gün Sonu Yükleme Ekranı Çökme Çözümü ([`Scripts/day_summary.gd`](file:///home/hakan/dive&find/Scripts/day_summary.gd) & [`Scripts/loading_screen.gd`](file:///home/hakan/dive&find/Scripts/loading_screen.gd)):**
+  - Gün sonu özetinde "YENİ GÜNE BAŞLA" butonuna tıklandığında meydana gelen `_on_continue_pressed: Invalid assignment of property or key 'duration' on loading_screen.gd` motor çökmesi çözüldü.
+  - `loading_screen.gd` içindeki asıl değişken olan `min_display_time` ile çağrı eşitlendi; ayrıca geriye ve ileriye dönük tam uyumluluk için `duration` property alias'ı (getter/setter) eklendi.
+- **Eşya Kaynak Çakışması Önleme (`source_path` Mimarisi):**
+  - Çantaya eşya eklenirken ([`Scripts/global_inventory.gd`](file:///home/hakan/dive&find/Scripts/global_inventory.gd)) ve Atölyede üretim yapılırken ([`Scripts/laboratory.gd`](file:///home/hakan/dive&find/Scripts/laboratory.gd)) `duplicate()` edilen `ItemData` nesnelerinin `resource_path` özelliğine dosya yolu yazılması, Godot 4 ResourceCache motorunda `Another resource is loaded from path ... (possible cyclic resource inclusion)` uyarısına yol açıyordu.
+  - [`Scripts/ItemData.gd`](file:///home/hakan/dive&find/Scripts/ItemData.gd) sınıfına `source_path: String` alanı eklendi. `get_item_path()` yardımcı fonksiyonu ile nesnelerin orijinal `.tres` yolları `resource_path` çiğnenmeden takip edildi; motor uyarıları sıfırlandı.
+- **Fener Geliştirme Dokusu Bellek Koruması (`_cone_texture_cache`):**
+  - Fener geliştirildiğinde `PointLight2D` üzerindeki `ImageTexture` anında serbest kaldığı için RenderingServer'ın çizim sırasında `Parameter "t" is null` hatası vermesi engellendi.
+  - Üretilen fener koni dokuları [`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd) içinde seviye bazlı `_cone_texture_cache` sözlüğünde kalıcı tutularak gereksiz CPU doku üretimleri ve render null RID hataları tamamen giderildi.
+
+---
+
+## 27. Akışkan Yüzme Fiziği, Dikey Süzülme & Dinamik Yüzüş Eğimi Reworku
+
+- **Bağımsız Eksen Ayrıştırması (Decoupled Fluid Inertia - [`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):**
+  - X ve Y eksenlerinin tek bir blokta birbirine fren yaptırması engellendi; her eksen kendi girdi ve sürtünme durumuna göre bağımsız işlenir.
+  - Çapraz yüzüşten tek yöne geçişlerde (örn. `D + S` dikey dalışından sadece `D` yataya geçiş) dikey hız bir anda sertçe sıfırlanmaz; su sürtünmesiyle yumuşak, tok ve kavisli bir hidrodinamik dönüş sağlanır.
+- **Dikey Snap Bug'ının Giderilmesi & Akışkan Dikey Süzülme:**
+  - Eski kodda `min(velocity.y + sink_speed * delta, max_sink_velocity)` hesabı yüzünden aşağı dalıştan sonra tuş bırakıldığı an hız **1 tek karede (0.016 sn)** 220+'den doğrudan 40'a çakılıyordu (görünmez betona çarpma hissi).
+  - Sistem `move_toward(velocity.y, max_sink_velocity, friction * delta)` yapısına geçirildi. Dalgıç aşağı daldıktan sonra tuşu bıraktığında suyun derinliklerine doğru ~0.35 saniye boyunca akıcı biçimde süzülür ve kademeli olarak doğal batma hızına (`max_sink_velocity = 40`) oturur.
+  - Yukarı yüzüşten sonra tuş bırakıldığında momentum su direnci ve yerçekimi ile sönümlenir (`(friction + sink_speed * 3.0) * delta`), tepe noktasında hafifçe duraklar ve ardından sakin batışa geçer.
+- **Asimetrik Dikey İvme (Gerçekçi Su Direnci Hissi):**
+  - Yukarı yüzüş su kütlesine ve yerçekimine karşı yapıldığı için ivmelenme `base_accel * 0.92` (daha tok ve dirençli), aşağı dalış ise yerçekimiyle desteklendiği için `base_accel * 1.06` olarak dinamikleştirildi.
+  - **Matematiksel Koruma:** `get_effective_max_speed()` ve palet (fins) seviye çarpanları (`fins_speed_per_level`), sprint bonusları ve oksijen formülleri %100 korunmuştur; ulaşılan son hız limitleri milimetrik olarak aynıdır.
+- **Dinamik Yüzüş Eğimi (Sprite Dynamic Pitch / Tilt):**
+  - Dalgıcın Sprite2D düğümü, dikey hız oranına bağlı olarak hareket yönüne doğru doğal bir açıyla ($\pm 12^\circ$) yumuşakça yatar (`lerp_angle(sprite.rotation, target_rotation, 8.0 * delta)`).
+  - Sağa veya sola (`flip_h`) bakış durumuna göre kafa açısı otomatik dengelenir; yatay duruşa geçildiğinde pürüzsüzce sıfırlanır.
+  - Fener (`PointLight2D`) ve çarpışma kutusu (`CollisionShape2D`) bağımsız düğümler olduğu için fenerin nişan alması veya fizik sınırları kesinlikle etkilenmez.
+
+---
+
+## 28. Ofis Şarj İstasyonu & Batarya Yönetim Mimarisi (Charging Station)
+
+- **Ücretsiz Otomatik Şarjın Kaldırılması ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):**
+  - Su yüzeyinde (`surface_battery_regen_rate`) ve ofise girildiğinde (`reset_flashlight_for_office`) çalışan bedava fener bataryası yenileme mekanikleri kaldırıldı.
+  - Batarya artık yalnızca Ofis Şarj İstasyonu üzerinden (veya fener ilk kez 0 -> 1 satın alındığında) doldurulabilir.
+  - `current_battery` seviyesi kayıt/yükleme sistemine ([`Scripts/global_inventory.gd`](file:///home/hakan/dive&find/Scripts/global_inventory.gd)), gün geçişine ([`Scripts/day_summary.gd`](file:///home/hakan/dive&find/Scripts/day_summary.gd)) ve ofis kaydına ([`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)) tam entegre edilerek dalışlar ve günler arasında kalıcı hale getirildi.
+- **Ofis Alt Bar Entegrasyonu ([`Scenes/office_menu.tscn`](file:///home/hakan/dive&find/Scenes/office_menu.tscn) & [`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)):**
+  - Alt kontrol barında `KoleksiyonButton` yanına `ChargeButton` (`⚡ ŞARJ ET`, 150x48) ve kompakt `BatteryBadge` (`PanelContainer`, 95x48) eklendi.
+  - `BatteryBadgeLabel`: Dalgıcın anlık batarya yüzdesini (`🔋 %100`) canlı gösterir; seviyeye göre dinamik renk kodlamasına sahiptir (Yeşil: >%50, Sarı: %21-%50, Kırmızı: ≤%20). Fener yoksa gri renkte `⚡ Fener Yok` yazar.
+  - Fener satın alınmamışsa (seviye 0) şarj butonuna tıklandığında hata sesi (`error`) ve toast bildirimi verilir (*"⚠️ Fenerin yok! Önce Ekipman Mağazasından satın almalısın."*).
+- **Kompakt Şarj İstasyonu Modalı ([`Scenes/charge_station.tscn`](file:///home/hakan/dive&find/Scenes/charge_station.tscn) & [`Scripts/charge_station.gd`](file:///home/hakan/dive&find/Scripts/charge_station.gd)):**
+  - **Boyut & Katman:** Ultra kompakt boyut (`390x260px`), `layer = 126`, karartmalı arka plan (`Backdrop`). ESC veya dış tık ile kapanır.
+  - **Kullanıcı Arayüzü (B2 Modeli):**
+    - Başlık: `⚡ ŞARJ İSTASYONU` ve `Dalış Feneri (Lv. X)`
+    - Cüzdan Bakiye Göstergesi (`Bakiye: X Zurna`)
+    - Canlı Batarya İlerleme Çubuğu (`%cur → %target`)
+    - Hassas HSlider: Mevcut yüzde ile 100 arasında şarj miktarını anlık ayarlar.
+    - Hızlı Kestirme Butonu: `MAX` butonu ile anında %100 seçimi.
+    - Dinamik Eylem Butonu: `⚡ ŞARJ ET (X Zurna)`
+  - **Kapasiteye Göre Dinamik Maliyet Formülü (Dynamic Saniye Başına Model):**
+    $$\text{fark\_yüzde} = \text{hedef\_yüzde} - \text{mevcut\_yüzde}$$
+    $$\text{şarj\_edilen\_saniye} = \frac{\text{fark\_yüzde}}{100} \times \text{maks\_batarya}$$
+    $$\text{ücret} = \lceil \text{şarj\_edilen\_saniye} \times 0.30 \rceil \quad (\text{fark} > 0 \implies \min 1\text{ Zurna})$$
+    - Seviye ilerledikçe batarya boyutuyla orantılı dengeli masraf:
+      - **Lv. 1 (75s Kapasite):** Full dolum $\approx \mathbf{23\text{ Zurna}}$ (erken oyun bütçesine uygun).
+      - **Lv. 5 (110s Kapasite):** Full dolum $\approx \mathbf{33\text{ Zurna}}$.
+      - **Lv. 10 (155s Kapasite):** Full dolum $\approx \mathbf{47\text{ Zurna}}$.
+      - **Lv. 15 (200s Kapasite):** Full dolum $\approx \mathbf{60\text{ Zurna}}$ (ileri safha dev projektör yatırımı).
+  - **Satın Alma & Durum Senkronizasyonu:** `GlobalEconomy.spend_money()` ile bakiye düşülür, oyuncunun `current_battery` değeri güncellenip `_broadcast_battery()` tetiklenir, `upgrade` SFX çalar ve `battery_charged` sinyali ile ofis menüsü alt bar rozeti anında güncellenir.
+- **Toast Bildirim Taşma & Ekran Strech Bug'ının Çözümü ([`Scenes/office_menu.tscn`](file:///home/hakan/dive&find/Scenes/office_menu.tscn) & [`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)):**
+  - Eski yapıda `ToastLabel` doğrudan `BottomBar` (`HBoxContainer`) içinde yer alıyordu. Uzun mesajlar geldiğinde (örn. *"⚠️ Fenerin yok! Önce Ekipman Mağazasından satın almalısın."*) `Label`'ın genişliği 480px'e fırlıyor, toplam bar genişliği 1400px+'e ulaşarak `VBox`, `MainMargin` ve `Background`'ı yatayda gerip ekran kenarlarını dışa taşırıyordu.
+  - `ToastLabel` `BottomBar` içinden söküldü; yerine sadece esnek `Spacer` (`size_flags_horizontal = 3`) yerleştirilerek `BottomBar` genişliği 945px'te sabitlendi (taşma imkansız hale getirildi).
+  - Toast bildirimi `Background` üzerinde bağımsız yüzen altın çerçeveli ahşap bir bildirim hapı (`ToastBanner: PanelContainer`, `anchors_preset = 7`) olarak konumlandırıldı; `mouse_filter = IGNORE` ve yumuşak fade-in/fade-out tween animasyonu ile sıfır düzen bozulması ve sıfır esneme garantilendi.
+- **Anlık Ekipman Satın Alımı & Rozet Senkronizasyonu (`equipment_updated` Sinyali):**
+  - Eski yapıda fener (veya herhangi bir ekipman) mağazadan (`equstore`) satın alındığında ofis alt barındaki batarya rozeti mağaza penceresi kapatılana kadar güncellenmiyordu (`tree_exited` gecikmesi).
+  - [`Scripts/global_inventory.gd`](file:///home/hakan/dive&find/Scripts/global_inventory.gd) içine `signal equipment_updated(stat_key: String, new_level: int)` eklendi; [`Scripts/equstore.gd`](file:///home/hakan/dive&find/Scripts/equstore.gd) ve [`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd) seviye artışı gerçekleştiği mikrosaniyede bu sinyali yayar.
+  - [`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd) `equipment_updated`, `inventory_updated` ve oyuncunun `battery_changed` sinyallerini doğrudan dinler; fener satın alındığı anda mağaza penceresini kapatmaya gerek kalmadan alt bardaki rozet anında `⚡ Fener Yok` halinden `🔋 %100` durumuna canlı olarak dönüşür.
+
+---
+
+## 29. Mobil Dalış Pause Butonu & HUD Entegrasyonu
+
+- **Kompakt Mobil Duraklatma Düğmesi ([`Scenes/mobile_controls.tscn`](file:///home/hakan/dive&find/Scenes/mobile_controls.tscn) & [`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):**
+  - Mobilde dalış esnasında oyunu duraklatıp ana menüye dönmek veya ayarları açmak için sağ üst köşeye (`anchor_left = 1.0, anchor_right = 1.0`, `offset_left = -64, offset_top = 66, offset_right = -20, offset_bottom = 110`) 44x44 piksel boyutunda `PauseButton` (`[ ⏸️ ]`) eklendi.
+  - PC'de yer alan `Çanta [I]` butonunun tam 10px altına ve sağ kenarı ile simetrik hizaya konumlandırılarak parmakla erişimi kolaylaştırıldı, HUD göstergeleriyle çakışması önlendi.
+  - Tıklandığında `click` SFX çalar ve HUD katmanındaki `toggle_pause_menu()` metodunu tetikler.
+- **HUD Güvenlik Katmanı ([`Scripts/canvas_layer.gd`](file:///home/hakan/dive&find/Scripts/canvas_layer.gd)):**
+  - `toggle_pause_menu()` metodu dışarıya açılarak açık bir eşya inceleme popup'ı (`popup_ui`) veya ofis menüsü varsa duraklatmayı engeller, açık çanta varsa güvenle kapatıp ardından `Scenes/pause_menu.tscn` sahnesini çağırır.
+  - Oyun duraklatıldığında veya herhangi bir popup açıldığında mobil kontroller kendini otomatik olarak gizler (`visible = false`), oyun devam ettiğinde geri yüklenir.
+
+---
+
+---
+
+## 31. Çoklu Platform Otomatik Build & Sürüm Yönetim Hattı (`build.py`)
+
+- **Tek Komutla Çoklu Platform Derleme Hattı ([`build.py`](file:///home/hakan/dive&find/build.py)):**
+  - Proje kökünde çalışan interaktif Python CLI derleme aracı (`python build.py`).
+  - Terminalden çalıştırıldığında sırayla kullanıcıdan girdi alır:
+    1. **Model Serisi:** (Varsayılan: `PreAlpha`)
+    2. **Sürüm No:** (Varsayılan: `1.6.2`)
+    3. **Android `version/code`:** Mevcut kodu (`export_presets.cfg`) okuyup otomatik `+1` önerir (örn. `6 → 7`). Enter ile doğrudan onaylanır veya özel değer girilebilir.
+    4. **Android Paket Adı:** Mevcut paket adını (`package/unique_name`) gösterip değiştirme imkanı tanır.
+    5. **Hedef Platform:** `[1] Windows Desktop`, `[2] Linux`, `[3] Android`, `[4] Tümü` (Varsayılan).
+    6. **Derleme Türü:** `Release` (Varsayılan) veya `Debug`.
+- **Otomatik Config & Sürüm Senkronizasyonu:**
+  - [`export_presets.cfg`](file:///home/hakan/dive&find/export_presets.cfg) içindeki `version/code`, `version/name` ve `package/unique_name` değerlerini anında günceller.
+  - [`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd) dosyasındaki `@export var game_version` değişkenini yeni sürüm metniyle (`Model Sürüm (Afterjam Remaster)`) otomatik eşitler.
+- **Masaüstü Klasörleme & Çıktı Standardı:**
+  - Kullanıcının masaüstü dizininde (`~/Masaüstü/`) sürüm adına özel bir klasör açar (`~/Masaüstü/{Model}_{Sürüm}/`).
+  - Dosyaları standart formatta dışa aktarır:
+    - `DiveFind_{Model}_{Sürüm}_Windows.exe`
+    - `DiveFind_{Model}_{Sürüm}_Linux.x86_64`
+    - `DiveFind_{Model}_{Sürüm}_Android.apk`
+- **Canlı İlerleme ve Boyut Raporu:**
+  - `godot --headless --export-release` (veya debug) sürecini arka planda çalıştırır, terminalde renkli ANSI çıktılarıyla canlı ilerleme durumunu gösterir ve bitişte geçen süre ile dosya boyutlarını (MB) raporlar.
+
+---
+
+## 32. Çeviri & Yerelleştirme Altyapısı (Localization Architecture)
+
+- **Doğrudan Türkçe Metin Anahtar Sistemi (Direct String Keys):**
+  - Godot 4'ün yerleşik `TranslationServer` ve `tr()` motoru temel alınarak yapay ID (`KEY_BTN_PLAY` vb.) bağımlılığı kaldırıldı; doğrudan Türkçe arayüz metinleri anahtar (`id`) olarak kullanıldı.
+  - CSV'de karşılığı bulunmayan veya henüz çevrilmemiş metinler için Godot otomatik olarak Türkçe metnin kendisini (fallback) ekrana basar; oyun asla çökmez.
+- **Otomatik Ayıklama & Çeviri Hattı ([`tools/generate_translations.py`](file:///home/hakan/dive&find/tools/generate_translations.py)):**
+  - Tüm `.tscn` sahnelerini, `Data/loading_tips.json` dosyasını ve scriptlerdeki toast/modal metinlerini tarayarak [`Translations/translations.csv`](file:///home/hakan/dive&find/Translations/translations.csv) tablosunu üretir.
+  - Eşyalar (`all_items_tres/*.tres`) bu aşamada hariç tutulmuş olup, arayüz, HUD, menüler, ayarlar, tüccarlar ve ipuçlarını kapsayan 316 benzersiz metin Türkçe ve İngilizce karşılıklarıyla derlenmiştir.
+- **Godot İkili Çeviri Kaynakları (`.translation`):**
+  - CSV import süreciyle Godot tarafından otomatik derlenen ikili kaynaklar:
+    - `Translations/translations.en.translation`
+    - `Translations/translations.tr.translation`
+  - [`project.godot`](file:///home/hakan/dive&find/project.godot) dosyasında `[internationalization]` altında kayıt altına alınarak motor seviyesinde aktif hale getirilmiştir.
+- **Geliştirici Konsolu Dil Test Komutu (`lang` / `dil`) ([`Scripts/dev_console.gd`](file:///home/hakan/dive&find/Scripts/dev_console.gd)):**
+  - Özellik oyuncu arayüzüne (Ayarlar paneli) açılmadan önce geliştirici konsolu üzerinden sessiz ve kontrollü test imkanı sağlandı.
+  - `lang en` / `dil en`: Çalışma zamanında dili İngilizceye geçirir (`TranslationServer.set_locale("en")`).
+  - `lang tr` / `dil tr`: Dili Türkçeye döndürür (`TranslationServer.set_locale("tr")`).
+  - Parametresiz çağrıldığında (`lang`) mevcut aktif yerel dil kodunu raporlar.
+
+
+
+

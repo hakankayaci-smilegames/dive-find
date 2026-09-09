@@ -9,6 +9,6 @@ item_name = "Preslenmiş Alüminyum Bloğu"
 sprite = ExtResource("2_sprite")
 description = "Ezilmiş meşrubat kutuları ve bükük çatalların yüksek basınçlı pres makinesinde eritilip kalıplanmasıyla elde edilen metal blok."
 rarity = 1.0
-value = 220
+value = 65
 category = "Crafted"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

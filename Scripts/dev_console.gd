@@ -8,16 +8,20 @@ extends CanvasLayer
 @onready var input_line: LineEdit = %InputLine
 @onready var close_button: Button = get_node_or_null("%CloseButton")
 
+const SETTINGS_FILE := "user://settings.cfg"
+
 var _commands: Dictionary = {}
 var _history: Array[String] = []
 var _history_index: int = -1
 var _max_history: int = 50
+var is_unlocked: bool = false
 
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 128
 	console_panel.visible = false
+	_load_unlock_state()
 
 	input_line.text_submitted.connect(_on_command_submitted)
 	if is_instance_valid(close_button):
@@ -50,6 +54,10 @@ func _ready() -> void:
 	register_command("unlock_all", _cmd_unlock_all, "Koleksiyon defterindeki tüm eşyaları anında açar.")
 	register_command("unlockall", _cmd_unlock_all, "unlock_all komutunun kısayolu.")
 	register_command("reset_collection", _cmd_reset_collection, "Koleksiyon defterindeki tüm keşifleri sıfırlar.")
+	register_command("darkness", _cmd_darkness, "Çevre kararmasını test eder / ayarlar. (Kullanım: darkness [0.0-1.0|reset|abis|day])")
+	register_command("karartma", _cmd_darkness, "darkness komutunun kısayolu.")
+	register_command("lang", _cmd_lang, "Oyun dilini değiştirir veya mevcut dili gösterir. (Kullanım: lang <tr|en>)")
+	register_command("dil", _cmd_lang, "lang komutunun kısayolu. (Kullanım: dil <tr|en>)")
 
 	_log_info("[color=#70a5ff][ Dive&Find Hile & Geliştirici Konsolu Hazır ][/color]")
 	_log_info("[color=#aaaaaa]Yardım için [b]help[/b] yazabilirsiniz. Kapatmak için [b]é[/b] veya [b]ESC[/b].[/color]\n")
@@ -62,6 +70,8 @@ func _input(event: InputEvent) -> void:
 	var key_event := event as InputEventKey
 
 	if _is_toggle_key(key_event):
+		if not is_unlocked:
+			return
 		toggle_console()
 		get_viewport().set_input_as_handled()
 		return
@@ -81,6 +91,28 @@ func _input(event: InputEvent) -> void:
 			return
 
 
+func is_dev_console_unlocked() -> bool:
+	return is_unlocked
+
+
+func set_dev_unlocked(unlocked: bool) -> void:
+	is_unlocked = unlocked
+	var cfg := ConfigFile.new()
+	var _err := cfg.load(SETTINGS_FILE)
+	cfg.set_value("dev", "dev_console_enabled", unlocked)
+	cfg.save(SETTINGS_FILE)
+	if not unlocked and console_panel.visible:
+		set_console_visible(false)
+
+
+func _load_unlock_state() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_FILE) == OK:
+		is_unlocked = bool(cfg.get_value("dev", "dev_console_enabled", false))
+	else:
+		is_unlocked = false
+
+
 func _is_toggle_key(key_event: InputEventKey) -> bool:
 	if key_event.keycode == KEY_SECTION or key_event.keycode == KEY_QUOTELEFT or key_event.keycode == KEY_ASCIITILDE:
 		return true
@@ -95,6 +127,8 @@ func _is_toggle_key(key_event: InputEventKey) -> bool:
 
 
 func toggle_console() -> void:
+	if not is_unlocked and not console_panel.visible:
+		return
 	set_console_visible(not console_panel.visible)
 
 
@@ -465,6 +499,89 @@ func _cmd_unlock_all() -> void:
 func _cmd_reset_collection() -> void:
 	GlobalInventory.reset_collection()
 	_log_info("[color=#ffaa00]Koleksiyon defterindeki tüm keşifler sıfırlandı![/color]")
+
+
+func _cmd_darkness(args: Array) -> void:
+	var ambient: Node = get_tree().get_first_node_in_group("ambient_light")
+	if not ambient:
+		_log_error("Sahnede AmbientLight bulunamadı! (Okyanus dalış sahnesinde olmalısınız)")
+		return
+
+	if args.is_empty():
+		var override_val: float = float(ambient.get("override_brightness"))
+		var cur_color: Color = ambient.get("color")
+		var status_str := "MANUEL (%.2f)" % override_val if override_val >= 0.0 else "OTOMATİK (Saat + Derinlik)"
+		_log_info("Çevre Kararma Modu: %s | Anlık Renk: (R:%.3f, G:%.3f, B:%.3f)" % [
+			status_str, cur_color.r, cur_color.g, cur_color.b
+		])
+		_log_info("Kullanım: darkness <0.0-1.0> (Örn: darkness 0.05) | darkness reset | darkness abis | darkness day")
+		return
+
+	var arg0: String = str(args[0]).to_lower()
+	if arg0 == "reset" or arg0 == "auto" or arg0 == "otomatik" or arg0 == "normal":
+		ambient.set("override_brightness", -1.0)
+		_log_success("Karartma OTOMATİK moda alındı. (Derinlik ve oyun saati hesaplaması aktif)")
+	elif arg0 == "abis" or arg0 == "dark" or arg0 == "karanlik" or arg0 == "gece":
+		ambient.set("override_brightness", 0.005)
+		_log_success("Zifiri abis karanlığı testi aktif (Aydınlık: 0.005)")
+	elif arg0 == "day" or arg0 == "gunduz" or arg0 == "aydinlik" or arg0 == "light":
+		ambient.set("override_brightness", 1.0)
+		_log_success("Tam gün ışığı testi aktif (Aydınlık: 1.0)")
+	elif arg0.is_valid_float():
+		var val: float = clampf(float(arg0), 0.0, 1.0)
+		ambient.set("override_brightness", val)
+		_log_success("Karartma seviyesi ayarlandı: %.3f (Sıfırlamak için: darkness reset)" % val)
+	else:
+		_log_error("Geçersiz parametre! Kullanım: darkness <0.0-1.0 | reset | abis | day>")
+
+
+func _cmd_lang(args: Array) -> void:
+	if args.is_empty():
+		var cur_locale := TranslationServer.get_locale()
+		_log_info("Mevcut Dil: [b]%s[/b] (Kullanım: lang <tr|en>)" % cur_locale)
+		return
+
+	var target := str(args[0]).to_lower().strip_edges()
+	var new_locale: String = ""
+	if target == "tr" or target == "turkce" or target == "türkçe":
+		new_locale = "tr"
+	elif target == "en" or target == "eng" or target == "english" or target == "ingilizce":
+		new_locale = "en"
+	else:
+		_log_error("Geçersiz dil kodu: '%s'. Desteklenenler: tr, en" % target)
+		return
+
+	TranslationServer.set_locale(new_locale)
+	_refresh_active_uis()
+	if new_locale == "tr":
+		_log_success("Oyun dili TÜRKÇE (tr) olarak ayarlandı. (Arayüz yenilendi)")
+	else:
+		_log_success("Game language set to ENGLISH (en). (UI refreshed)")
+
+
+func _refresh_active_uis() -> void:
+	var cur_scene := get_tree().current_scene
+	if is_instance_valid(cur_scene):
+		if cur_scene.has_method("_refresh_save_buttons"):
+			cur_scene.call("_refresh_save_buttons")
+		if cur_scene.has_method("_apply_game_version"):
+			cur_scene.call("_apply_game_version")
+
+	var office = get_tree().get_first_node_in_group("office_menu")
+	if is_instance_valid(office):
+		if office.has_method("_refresh_day"):
+			office.call("_refresh_day")
+		if office.has_method("_refresh_wallet"):
+			office.call("_refresh_wallet")
+		if office.has_method("_refresh_battery_badge"):
+			office.call("_refresh_battery_badge")
+
+	var mobile_ctrls = get_tree().get_first_node_in_group("mobile_controls")
+	if is_instance_valid(mobile_ctrls):
+		if mobile_ctrls.has_method("_update_sprint_button_visuals"):
+			mobile_ctrls.call("_update_sprint_button_visuals")
+		if mobile_ctrls.has_method("_update_flashlight_button_visuals"):
+			mobile_ctrls.call("_update_flashlight_button_visuals")
 
 
 func _get_time_mgr() -> Node:

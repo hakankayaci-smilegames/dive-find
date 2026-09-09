@@ -9,6 +9,6 @@ item_name = "Restore Edilmiş Tablo"
 sprite = ExtResource("2_sprite")
 description = "Kırık altın çerçevenin özel saç boyası pigmentleri ve eski kitap sayfalarıyla usta bir restorasyondan geçirilmiş hali. Koleksiyoncular bayılır."
 rarity = 1.0
-value = 6500
+value = 3950
 category = "Crafted"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

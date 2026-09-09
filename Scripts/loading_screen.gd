@@ -5,6 +5,12 @@ extends Control
 @export var min_display_time: float = 1.2  # İpuçlarının okunabilirliği ve akıcılık için taban süre
 @export var auto_change_scene: bool = true  # false ise sahne geçişi yapmaz, finished sinyalini yayınlar (overlay mod)
 
+var duration: float:
+	get:
+		return min_display_time
+	set(value):
+		min_display_time = value
+
 signal finished
 
 @onready var tip_label: Label = $BottomContainer/TipLabel
@@ -116,7 +122,7 @@ func _load_tips() -> void:
 
 func _display_random_tip() -> void:
 	if tip_label and not _tips.is_empty():
-		tip_label.text = _tips.pick_random()
+		tip_label.text = tr(_tips.pick_random())
 
 
 func _update_progress_ui(val: float) -> void:

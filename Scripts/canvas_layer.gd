@@ -28,6 +28,7 @@ extends CanvasLayer
 @onready var office_button: Button = $Button2
 
 var _active_inventory: Node = null
+var _active_pause_menu: Node = null
 var _office_loading: Node = null
 var _toast_tween: Tween = null
 var _warning_tween: Tween = null
@@ -57,7 +58,7 @@ func _ready() -> void:
 	invenb.pressed.connect(_on_inventory_button_pressed)
 	GlobalEconomy.money_changed.connect(_on_money_changed)
 	_displayed_money = GlobalEconomy.money
-	$zurna.text = "💰 %d Zurna" % _displayed_money
+	$zurna.text = tr("💰 %d Zurna") % _displayed_money
 	_apply_hud_theme()
 	_setup_button_juice(invenb)
 	_setup_button_juice(office_button)
@@ -113,9 +114,9 @@ func _process(delta: float) -> void:
 		if depth_meters != _last_depth_meters:
 			_last_depth_meters = depth_meters
 			if depth_meters <= 0:
-				depth_label.text = "⚓ YÜZEYDESİN (0m)"
+				depth_label.text = tr("⚓ YÜZEYDESİN (0m)")
 			else:
-				depth_label.text = "⚓ %dm  |  ↑ Yüzey: %dm" % [depth_meters, depth_meters]
+				depth_label.text = tr("⚓ %dm  |  ↑ Yüzey: %dm") % [depth_meters, depth_meters]
 		
 		# --- DİNAMİK RENK GEÇİŞİ MANTIĞI ---
 		var target_color = Color(0.85, 0.95, 1.0, 1.0) # Hareketsizken sabit mavi
@@ -245,7 +246,7 @@ func _update_time_display(hour: int, minute: int) -> void:
 func _update_day_display(day: int) -> void:
 	if not day_label:
 		return
-	day_label.text = "📅 Gün %d" % day
+	day_label.text = tr("📅 Gün %d") % day
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -257,6 +258,46 @@ func _unhandled_input(event: InputEvent) -> void:
 			if office_button and not office_button.disabled and office_button.modulate.a > 0.5:
 				_on_button_2_pressed()
 				get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_ESCAPE:
+			# Ofis menüsü, geçiş ekranı veya ölüm durumu varsa duraklatma menüsü açma
+			if get_tree().get_first_node_in_group("office_menu") != null or is_instance_valid(_office_loading):
+				return
+			if is_instance_valid(_active_inventory):
+				_active_inventory.queue_free()
+				_active_inventory = null
+				get_viewport().set_input_as_handled()
+				return
+			if get_tree().get_first_node_in_group("popup_ui") != null:
+				return
+			if is_instance_valid(_active_pause_menu):
+				return
+			_toggle_pause_menu()
+			get_viewport().set_input_as_handled()
+
+
+func toggle_pause_menu() -> void:
+	if get_tree().get_first_node_in_group("office_menu") != null or is_instance_valid(_office_loading):
+		return
+	if is_instance_valid(_active_inventory):
+		_active_inventory.queue_free()
+		_active_inventory = null
+	if get_tree().get_first_node_in_group("popup_ui") != null:
+		return
+	_toggle_pause_menu()
+
+
+func _toggle_pause_menu() -> void:
+	if is_instance_valid(_active_pause_menu):
+		_active_pause_menu.queue_free()
+		_active_pause_menu = null
+		return
+
+	var pause_scene: PackedScene = preload("res://Scenes/pause_menu.tscn")
+	_active_pause_menu = pause_scene.instantiate()
+	_active_pause_menu.tree_exited.connect(func() -> void:
+		_active_pause_menu = null
+	)
+	get_tree().current_scene.add_child(_active_pause_menu)
 
 
 func _update_office_button_availability() -> void:
@@ -397,6 +438,9 @@ func _on_button_2_pressed() -> void:
 	if target_scene == null:
 		return
 
+	if is_instance_valid(player_node) and player_node.has_method("turn_off_flashlight"):
+		player_node.turn_off_flashlight()
+
 	if loading_scene:
 		# Loading screen'i overlay olarak açar; bitince ofisi açar ve kendini temizler
 		_office_loading = loading_scene.instantiate()
@@ -439,7 +483,7 @@ func _on_money_changed(amount: Variant) -> void:
 	_money_tween.tween_method(func(val: int) -> void:
 		_displayed_money = val
 		if has_node("zurna"):
-			$zurna.text = "💰 %d Zurna" % val
+			$zurna.text = tr("💰 %d Zurna") % val
 	, start_amount, target_amount, 0.45)
 
 

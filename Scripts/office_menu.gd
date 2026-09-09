@@ -9,6 +9,7 @@ extends CanvasLayer
 @export var lab_scene: PackedScene = preload("res://Scenes/laboratory.tscn")
 @export var pazar_scene: PackedScene = preload("res://Scenes/pazar.tscn")
 @export var day_summary_scene: PackedScene = preload("res://Scenes/day_summary.tscn")
+@export var charge_station_scene: PackedScene = preload("res://Scenes/charge_station.tscn")
 
 @export_group("Görsel & Ses")
 @export var main_menu_scene_path: String = "res://Scenes/main_menu.tscn"
@@ -26,6 +27,7 @@ extends CanvasLayer
 @onready var advance_day_button: Button = %AdvanceDayButton
 @onready var save_exit_button: Button = %SaveExitButton
 @onready var mobile_console_button: Button = get_node_or_null("%MobileConsoleButton")
+@onready var settings_button: Button = get_node_or_null("%SettingsButton")
 
 # Satıcı Butonları
 @onready var copcu_button: Button = %CopcuButton
@@ -40,7 +42,10 @@ extends CanvasLayer
 # Alt Bar Butonları
 @onready var envanter_button: Button = %EnvanterButton
 @onready var koleksiyon_button: Button = %KoleksiyonButton
+@onready var charge_button: Button = %ChargeButton
+@onready var battery_badge_label: Label = %BatteryBadgeLabel
 @onready var dive_button: Button = %DiveButton
+@onready var toast_banner: PanelContainer = get_node_or_null("%ToastBanner")
 @onready var toast_label: Label = %ToastLabel
 
 var _toast_tween: Tween = null
@@ -50,6 +55,7 @@ var _active_collection: Node = null
 var _active_inventory: Node = null
 var _active_popup: Node = null
 var _active_popup_scene: PackedScene = null
+var _active_settings: Node = null
 var _badge_tweens: Array[Tween] = []
 var _displayed_money: int = 0
 var _money_tween: Tween = null
@@ -62,6 +68,10 @@ func _ready() -> void:
 	get_tree().paused = true
 	add_to_group("office_menu")
 	_load_recipes_cache()
+
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_method("reset_flashlight_for_office"):
+		player.reset_flashlight_for_office()
 
 	# Hafif solma (fade-in) ile ofise pürüzsüz giriş
 	if has_node("Background"):
@@ -84,24 +94,34 @@ func _ready() -> void:
 	_displayed_money = GlobalEconomy.money
 
 	GlobalEconomy.money_changed.connect(_on_money_changed)
-	GlobalInventory.inventory_updated.connect(_update_merchant_badges)
+	GlobalInventory.inventory_updated.connect(_on_inventory_updated)
+	GlobalInventory.equipment_updated.connect(_on_equipment_updated)
+	if player and player.has_signal("battery_changed") and not player.battery_changed.is_connected(_on_player_battery_changed):
+		player.battery_changed.connect(_on_player_battery_changed)
 	_refresh_wallet()
 	_refresh_day()
+	_refresh_battery_badge()
 	_update_dive_button_state()
 	_update_merchant_badges()
 
 	# Buton Juice (Mikro-punch)
-	for b in [copcu_button, antikaci_button, kara_borsa_button, equstore_button, lab_button, shop_button, envanter_button, koleksiyon_button, dive_button, advance_day_button, save_exit_button]:
+	var all_juice_buttons: Array[Button] = [copcu_button, antikaci_button, kara_borsa_button, equstore_button, lab_button, shop_button, envanter_button, koleksiyon_button, charge_button, dive_button, advance_day_button, save_exit_button]
+	if is_instance_valid(settings_button):
+		all_juice_buttons.append(settings_button)
+	for b in all_juice_buttons:
 		_setup_button_juice(b)
 
 	# Üst Bar Bağlantıları
 	save_exit_button.pressed.connect(_on_save_exit_pressed)
 	advance_day_button.pressed.connect(_on_advance_day_pressed)
+	if is_instance_valid(settings_button):
+		settings_button.pressed.connect(_open_settings)
 	if is_instance_valid(mobile_console_button):
-		if OS.has_feature("mobile"):
+		var dev_console = get_node_or_null("/root/DevConsole")
+		var is_dev_unlocked: bool = dev_console.is_dev_console_unlocked() if dev_console and dev_console.has_method("is_dev_console_unlocked") else false
+		if OS.has_feature("mobile") and is_dev_unlocked:
 			mobile_console_button.visible = true
 			mobile_console_button.pressed.connect(func() -> void:
-				var dev_console = get_node_or_null("/root/DevConsole")
 				if dev_console and dev_console.has_method("toggle_console"):
 					dev_console.toggle_console()
 			)
@@ -121,9 +141,13 @@ func _ready() -> void:
 	# Alt Bar Butonları
 	envanter_button.pressed.connect(_open_envanter)
 	koleksiyon_button.pressed.connect(_open_koleksiyon)
+	charge_button.pressed.connect(_open_charge_station)
 	dive_button.pressed.connect(_on_dive_pressed)
 
-	if toast_label:
+	if toast_banner:
+		toast_banner.modulate.a = 0.0
+		toast_banner.visible = false
+	elif toast_label:
 		toast_label.modulate.a = 0.0
 
 
@@ -132,7 +156,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_ESCAPE:
 				# 1. Öncelik: Açık bir tüccar veya alt menü varsa önce onu kapat
-				if is_instance_valid(_active_popup) or is_instance_valid(_active_inventory) or is_instance_valid(_active_collection):
+				if is_instance_valid(_active_popup) or is_instance_valid(_active_inventory) or is_instance_valid(_active_collection) or is_instance_valid(_active_settings):
 					_close_all_submenus()
 					get_viewport().set_input_as_handled()
 					return
@@ -149,7 +173,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _refresh_wallet() -> void:
 	if zurna_label:
-		zurna_label.text = "%d Zurna" % _displayed_money
+		zurna_label.text = tr("%d Zurna") % _displayed_money
 
 
 func _refresh_day() -> void:
@@ -157,9 +181,9 @@ func _refresh_day() -> void:
 		return
 	var time_mgr: Node = _get_time_mgr()
 	if time_mgr:
-		day_label.text = "Gün: %d  |  ⏰ %s" % [int(time_mgr.get("current_day")), time_mgr.get_time_string()]
+		day_label.text = tr("Gün: %d  |  ⏰ %s") % [int(time_mgr.get("current_day")), time_mgr.get_time_string()]
 	else:
-		day_label.text = "Gün: %d" % _current_day
+		day_label.text = tr("Gün: %d") % _current_day
 
 
 func _on_time_changed(_h: int, _m: int) -> void:
@@ -332,7 +356,7 @@ func _on_money_changed(amount: int) -> void:
 	_money_tween.tween_method(func(val: int) -> void:
 		_displayed_money = val
 		if zurna_label:
-			zurna_label.text = "%d Zurna" % val
+			zurna_label.text = tr("%d Zurna") % val
 	, start_amount, target_amount, 0.45)
 
 	_update_merchant_badges()
@@ -391,7 +415,8 @@ func _on_save_exit_pressed() -> void:
 		"fins_level": int(player.get("fins_level")) if player else 0,
 		"goggles_level": int(player.get("goggles_level")) if player else 0,
 		"backpack_level": int(player.get("backpack_level")) if player else 0,
-		"flashlight_level": int(player.get("flashlight_level")) if player else 0
+		"flashlight_level": int(player.get("flashlight_level")) if player else 0,
+		"current_battery": float(player.get("current_battery")) if player else -1.0
 	}
 	var time_mgr: Node = _get_time_mgr()
 	var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
@@ -435,8 +460,13 @@ func _exit_tree() -> void:
 	get_tree().paused = false
 	if GlobalEconomy.money_changed.is_connected(_on_money_changed):
 		GlobalEconomy.money_changed.disconnect(_on_money_changed)
-	if GlobalInventory.inventory_updated.is_connected(_update_merchant_badges):
-		GlobalInventory.inventory_updated.disconnect(_update_merchant_badges)
+	if GlobalInventory.inventory_updated.is_connected(_on_inventory_updated):
+		GlobalInventory.inventory_updated.disconnect(_on_inventory_updated)
+	if GlobalInventory.equipment_updated.is_connected(_on_equipment_updated):
+		GlobalInventory.equipment_updated.disconnect(_on_equipment_updated)
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.has_signal("battery_changed") and player.battery_changed.is_connected(_on_player_battery_changed):
+		player.battery_changed.disconnect(_on_player_battery_changed)
 	for tw in _badge_tweens:
 		if tw and tw.is_valid():
 			tw.kill()
@@ -458,6 +488,26 @@ func _close_all_submenus() -> void:
 	if is_instance_valid(_active_collection):
 		_active_collection.queue_free()
 		_active_collection = null
+	if is_instance_valid(_active_settings):
+		_active_settings.queue_free()
+		_active_settings = null
+
+
+func _open_settings() -> void:
+	if is_instance_valid(_active_settings):
+		_active_settings.queue_free()
+		_active_settings = null
+		GlobalSoundManager.play_sfx("click")
+		return
+
+	_close_all_submenus()
+	GlobalSoundManager.play_sfx("click")
+	var settings_scn: PackedScene = preload("res://Scenes/settings_menu.tscn")
+	_active_settings = settings_scn.instantiate()
+	_active_settings.tree_exited.connect(func() -> void:
+		_active_settings = null
+	)
+	get_tree().current_scene.add_child(_active_settings)
 
 
 func _open_popup(scene: PackedScene) -> void:
@@ -478,6 +528,7 @@ func _open_popup(scene: PackedScene) -> void:
 	_active_popup.tree_exited.connect(func() -> void:
 		_active_popup = null
 		_active_popup_scene = null
+		_refresh_battery_badge()
 	)
 	get_tree().current_scene.add_child(_active_popup)
 
@@ -496,6 +547,69 @@ func _open_kara_borsa() -> void:
 
 func _open_equstore() -> void:
 	_open_popup(equstore_scene)
+
+
+func _open_charge_station() -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	var flash_lvl: int = int(player.get("flashlight_level")) if player else 0
+	if flash_lvl <= 0:
+		GlobalSoundManager.play_sfx("error")
+		_show_toast("⚠️ Fenerin yok! Önce Ekipman Mağazasından satın almalısın.")
+		return
+
+	if not charge_station_scene:
+		push_warning("OfficeMenu: charge_station_scene atanmamış!")
+		return
+
+	if is_instance_valid(_active_popup) and _active_popup_scene == charge_station_scene:
+		_close_all_submenus()
+		GlobalSoundManager.play_sfx("click")
+		return
+
+	_open_popup(charge_station_scene)
+	if is_instance_valid(_active_popup) and _active_popup.has_signal("battery_charged"):
+		_active_popup.connect("battery_charged", func(_new_b: float) -> void:
+			_refresh_battery_badge()
+		)
+
+
+func _refresh_battery_badge() -> void:
+	if not is_instance_valid(battery_badge_label):
+		return
+	var player = get_tree().get_first_node_in_group("player")
+	var flash_lvl: int = int(player.get("flashlight_level")) if player else 0
+	if flash_lvl <= 0:
+		battery_badge_label.text = tr("⚡ Fener Yok")
+		battery_badge_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 0.7))
+		return
+
+	var max_bat: float = player.get_flashlight_max_battery() if player.has_method("get_flashlight_max_battery") else 60.0
+	var cur_bat: float = float(player.get("current_battery")) if player else 0.0
+	if cur_bat < 0.0:
+		cur_bat = max_bat
+	var pct: int = int(clamp(round((cur_bat / max(max_bat, 0.01)) * 100.0), 0.0, 100.0))
+
+	battery_badge_label.text = tr("🔋 %%%d") % pct
+	if pct > 50:
+		battery_badge_label.add_theme_color_override("font_color", Color(0.3, 0.85, 0.45, 1.0))
+	elif pct > 20:
+		battery_badge_label.add_theme_color_override("font_color", Color(0.95, 0.8, 0.3, 1.0))
+	else:
+		battery_badge_label.add_theme_color_override("font_color", Color(0.95, 0.35, 0.35, 1.0))
+
+
+func _on_inventory_updated() -> void:
+	_update_merchant_badges()
+	_refresh_battery_badge()
+
+
+func _on_equipment_updated(_stat_key: String = "", _new_level: int = 0) -> void:
+	_update_merchant_badges()
+	_refresh_battery_badge()
+
+
+func _on_player_battery_changed(_cur: float, _max: float) -> void:
+	_refresh_battery_badge()
 
 
 func _open_envanter() -> void:
@@ -555,14 +669,22 @@ func _on_shop_pressed() -> void:
 func _show_toast(msg: String) -> void:
 	if not toast_label:
 		return
-	toast_label.text = msg
+	toast_label.text = tr(msg)
+	var target_node: CanvasItem = toast_banner if is_instance_valid(toast_banner) else toast_label
+
 	if _toast_tween and _toast_tween.is_valid():
 		_toast_tween.kill()
+
+	target_node.visible = true
+	target_node.modulate.a = 0.0
 	_toast_tween = create_tween()
-	toast_label.modulate.a = 0.0
-	_toast_tween.tween_property(toast_label, "modulate:a", 1.0, 0.2)
-	_toast_tween.tween_interval(1.8)
-	_toast_tween.tween_property(toast_label, "modulate:a", 0.0, 0.5)
+	_toast_tween.tween_property(target_node, "modulate:a", 1.0, 0.18).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_toast_tween.tween_interval(2.2)
+	_toast_tween.tween_property(target_node, "modulate:a", 0.0, 0.45).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_toast_tween.tween_callback(func() -> void:
+		if is_instance_valid(target_node):
+			target_node.visible = false
+	)
 
 
 func _get_time_mgr() -> Node:

@@ -51,7 +51,8 @@ func _on_continue_pressed() -> void:
 		"fins_level": int(player.get("fins_level")) if player else 0,
 		"goggles_level": int(player.get("goggles_level")) if player else 0,
 		"backpack_level": int(player.get("backpack_level")) if player else 0,
-		"flashlight_level": int(player.get("flashlight_level")) if player else 0
+		"flashlight_level": int(player.get("flashlight_level")) if player else 0,
+		"current_battery": float(player.get("current_battery")) if player else -1.0
 	}
 	var current_day_num: int = int(time_mgr.get("current_day")) if time_mgr else 1
 	GlobalInventory.save_game(current_day_num, GlobalEconomy.money, equipment_dict)
@@ -61,7 +62,7 @@ func _on_continue_pressed() -> void:
 		visible = false # Gün özetini gizle
 		var loading_inst = loading_scene.instantiate()
 		loading_inst.auto_change_scene = false
-		loading_inst.duration = 1.6 # 1.6 saniye tatlı bir geçiş
+		loading_inst.min_display_time = 1.6 # 1.6 saniye tatlı bir geçiş
 		var layer := CanvasLayer.new()
 		layer.layer = 130
 		layer.add_child(loading_inst)

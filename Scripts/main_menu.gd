@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "Pre-Alpha 1.6.1 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "PreAlpha 1.6.2 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -46,6 +46,10 @@ const SFX_BUS := "SFX"
 @onready var flashlight_aim_row: HBoxContainer = get_node_or_null("SettingsPanel/Content/FlashlightAimRow")
 @onready var flashlight_aim_option: OptionButton = get_node_or_null("SettingsPanel/Content/FlashlightAimRow/FlashlightAimOption")
 @onready var reset_collection_button: Button = $SettingsPanel/Content/CollectionRow/ResetCollectionButton
+@onready var dev_code_input: LineEdit = get_node_or_null("SettingsPanel/Content/DevCodeRow/DevCodeInput")
+@onready var dev_code_button: Button = get_node_or_null("SettingsPanel/Content/DevCodeRow/DevCodeButton")
+
+const DEV_SECRET_CODE: String = "mercedesforever" # Kendi belirleyeceğin gizli kod
 
 var _panel_tweens: Dictionary = {}
 var _base_positions: Dictionary = {}
@@ -81,6 +85,13 @@ func _ready() -> void:
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
 
+	if is_instance_valid(dev_code_button):
+		dev_code_button.pressed.connect(_on_dev_code_submitted)
+	if is_instance_valid(dev_code_input):
+		dev_code_input.text_submitted.connect(func(_text: String) -> void:
+			_on_dev_code_submitted()
+		)
+
 	if not OS.has_feature("mobile"):
 		if is_instance_valid(joystick_row):
 			joystick_row.visible = false
@@ -105,15 +116,81 @@ func _process(delta: float) -> void:
 func _apply_game_version() -> void:
 	if is_instance_valid(version_label):
 		version_label.text = game_version
+	_update_info_text()
 
-	if is_instance_valid(info_text):
-		var bbcode := info_text.text
-		var old_ver_pattern := "Smile Games — Afterjam Remaster Edition 2.0"
-		if bbcode.contains(old_ver_pattern):
-			info_text.text = bbcode.replace(
-				"( Devbuild 0.0.2)",
-				"( %s )" % game_version
-			)
+
+func _update_info_text() -> void:
+	if not is_instance_valid(info_text):
+		return
+	var is_en := TranslationServer.get_locale().begins_with("en")
+	if is_en:
+		info_text.text = _get_info_bbcode_en()
+	else:
+		info_text.text = _get_info_bbcode_tr()
+
+
+func _get_info_bbcode_tr() -> String:
+	return """[center][font_size=24][color=#00e5ff][b]🤿 DIVE & FIND 🤿[/b][/color][/font_size][/center]
+
+[color=#72b5ff][b]Hikaye & Konsept:[/b][/color]
+Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eserleri, değerli kalıntıları ve tuhaf objeleri topla, yüzeye çıkarıp sat ve ekipmanlarını geliştir.
+
+[color=#72b5ff][b]Temel Kontroller (PC):[/b][/color]
+• [color=#00e5ff]WASD / Yön Tuşları:[/color] Yüzme ve Hareket
+• [color=#00e5ff]Shift (Basılı Tut):[/color] Hızlı Yüzme / Depar (Sprint — %50 hız artışı, 2.6x oksijen tüketimi)
+• [color=#00e5ff]Sol Tık / E Tuşu:[/color] Eşyayı İncele (Detay penceresi ve alma menüsü açar)
+• [color=#00e5ff]Sağ Tık:[/color] Doğrudan Çantaya Al (Pop-up açmadan hızlı alma)
+• [color=#00e5ff]F Tuşu:[/color] Dalış Fenerini Aç / Kapat (Işık mouse imlecine yönelir, batarya tüketir)
+• [color=#00e5ff]Fare Tekerleği / [ + ] [ - ] / P & O:[/color] Kamera Yakınlaştır / Uzaklaştır (Gözlük seviyesiyle genişler)
+• [color=#00e5ff]I / Tab Tuşu:[/color] Sırt Çantasını Aç / Kapat (Envanter)
+• [color=#00e5ff]C Tuşu:[/color] Koleksiyon Defterini Aç / Kapat (Keşfedilenler)
+• [color=#00e5ff]Sağ Tık (Çantada):[/color] Eşyayı Kilitle / Kilidi Aç (🔒 Satış ve craft koruması)
+• [color=#00e5ff]E (Su Yüzeyinde):[/color] Tekneye Çık & Ofis Karargahına Dön
+• [color=#00e5ff]ESC:[/color] Açık pencereleri kapat / Ofisteyken dalışı başlat
+
+[color=#72b5ff][b]Mobil Kontroller (Dokunmatik):[/b][/color]
+• [color=#00e5ff]Sol Ekran:[/color] Dinamik Analog Joystick (360° serbest yüzüş)
+• [color=#00e5ff]⚡ DEPAR:[/color] Hızlı yüzme modunu açar / kapatır
+• [color=#00e5ff]⚡ DİREKT AL:[/color] Menzildeki eşyayı pop-up açmadan çantaya atar
+• [color=#00e5ff]🖐️ İNCELE:[/color] Menzildeki eşyanın detay penceresini açar
+• [color=#00e5ff]🥽+ / 🥽- :[/color] Kamerayı kademeli yakınlaştırıp uzaklaştırır
+• [color=#00e5ff]🔦 FENER:[/color] Dalış fenerini açar / kapatır (Ayarlardan 3 yön modu seçilebilir)
+• [color=#00e5ff]Uzun Basış (0.35s):[/color] Çantada eşyayı kilitler / açar 🔒
+
+[center][font_size=13][color=#5e8ca8]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
+[font_size=15][color=#00e5ff][i]⚓ Smile Games sunar ( " + game_version + " )[/i][/color][/font_size][/center]"""
+
+
+func _get_info_bbcode_en() -> String:
+	return """[center][font_size=24][color=#00e5ff][b]🤿 DIVE & FIND 🤿[/b][/color][/font_size][/center]
+
+[color=#72b5ff][b]Story & Concept:[/b][/color]
+Plunge into the mysterious depths of the ocean! Gather ancient relics, valuable salvage, and bizarre artifacts resting on the seabed, bring them to the surface to sell, and upgrade your diving gear.
+
+[color=#72b5ff][b]Basic Controls (PC):[/b][/color]
+• [color=#00e5ff]WASD / Arrow Keys:[/color] Swim and Navigate
+• [color=#00e5ff]Shift (Hold):[/color] Fast Swimming / Sprint (+50% speed, 2.6x oxygen drain)
+• [color=#00e5ff]Left Click / E Key:[/color] Examine Item (Opens detail popup and take options)
+• [color=#00e5ff]Right Click:[/color] Quick Pick to Bag (Instantly grabs item without opening popup)
+• [color=#00e5ff]F Key:[/color] Toggle Dive Light (Follows mouse cursor, drains battery)
+• [color=#00e5ff]Scroll Wheel / [ + ] [ - ] / P & O:[/color] Camera Zoom In / Out (Expands with Mask level)
+• [color=#00e5ff]I / Tab Key:[/color] Toggle Backpack (Inventory)
+• [color=#00e5ff]C Key:[/color] Toggle Collection Log (Discovered Items)
+• [color=#00e5ff]Right Click (In Bag):[/color] Lock / Unlock Item (🔒 Sell & craft protection)
+• [color=#00e5ff]E (At Surface):[/color] Board Boat & Return to Office Headquarters
+• [color=#00e5ff]ESC:[/color] Close open windows / Start dive when at Office
+
+[color=#72b5ff][b]Mobile Controls (Touch):[/b][/color]
+• [color=#00e5ff]Left Screen:[/color] Dynamic Analog Joystick (360° free swim)
+• [color=#00e5ff]⚡ SPRINT:[/color] Toggles sprint mode on / off
+• [color=#00e5ff]⚡ QUICK TAKE:[/color] Grabs nearby item directly into bag without popup
+• [color=#00e5ff]🖐️ EXAMINE:[/color] Opens detailed examination window for nearby item
+• [color=#00e5ff]🥽+ / 🥽- :[/color] Zoom camera in and out step by step
+• [color=#00e5ff]🔦 LIGHT:[/color] Toggles dive light (3 aim modes available in Settings)
+• [color=#00e5ff]Long Press (0.35s):[/color] Lock / unlock item in backpack 🔒
+
+[center][font_size=13][color=#5e8ca8]Developers: Queen Of Femboyss & Hakan Bey[/color][/font_size]
+[font_size=15][color=#00e5ff][i]⚓ Smile Games Presents ( " + game_version + " )[/i][/color][/font_size][/center]"""
 
 
 func _ensure_audio_buses() -> void:
@@ -231,6 +308,7 @@ func _toggle_info_panel() -> void:
 	if info_panel.visible:
 		_hide_panel(info_panel)
 	else:
+		_update_info_text()
 		_hide_panel(settings_panel)
 		_show_panel(info_panel)
 
@@ -294,17 +372,147 @@ func _refresh_save_buttons() -> void:
 		var save_data: Dictionary = GlobalInventory.get_save_data()
 		var day := int(save_data.get("current_day", 1))
 		var money := int(save_data.get("money", 0))
-		continue_button.text = "DEVAM ET  (Gün %d • %d Zurna)" % [day, money]
+		continue_button.text = tr("DEVAM ET  (Gün %d • %d Zurna)") % [day, money]
 		continue_button.tooltip_text = GlobalInventory.get_save_summary()
 	else:
-		continue_button.text = "DEVAM ET"
-		continue_button.tooltip_text = "Kayıtlı oyun bulunamadı."
+		continue_button.text = tr("DEVAM ET")
+		continue_button.tooltip_text = tr("Kayıtlı oyun bulunamadı.")
 
 
 func _on_new_game_pressed() -> void:
 	GlobalSoundManager.play_sfx("click")
+	if GlobalInventory.has_save():
+		_show_new_game_confirmation()
+	else:
+		_start_new_game_direct()
+
+
+func _start_new_game_direct() -> void:
 	GlobalInventory.start_new_game()
 	get_tree().change_scene_to_file(LOADING_SCREEN)
+
+
+func _show_new_game_confirmation() -> void:
+	if is_instance_valid(_active_confirm_dialog):
+		_active_confirm_dialog.queue_free()
+		_active_confirm_dialog = null
+
+	var confirm_layer := CanvasLayer.new()
+	confirm_layer.layer = 130
+	_active_confirm_dialog = confirm_layer
+
+	var overlay := Panel.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var overlay_style := StyleBoxFlat.new()
+	overlay_style.bg_color = Color(0.0, 0.0, 0.0, 0.75)
+	overlay.add_theme_stylebox_override("panel", overlay_style)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	confirm_layer.add_child(overlay)
+
+	# Dışarı tıklandığında iptal etme
+	overlay.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed:
+			GlobalSoundManager.play_sfx("click")
+			if is_instance_valid(confirm_layer):
+				confirm_layer.queue_free()
+				_active_confirm_dialog = null
+	)
+
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	confirm_layer.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(480, 230)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.12, 0.08, 0.05, 0.98)
+	panel_style.set_border_width_all(3)
+	panel_style.border_color = Color(0.85, 0.75, 0.45, 1.0)
+	panel_style.set_corner_radius_all(12)
+	panel_style.content_margin_left = 24
+	panel_style.content_margin_right = 24
+	panel_style.content_margin_top = 20
+	panel_style.content_margin_bottom = 20
+	panel.add_theme_stylebox_override("panel", panel_style)
+	center.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 14)
+	panel.add_child(vbox)
+
+	var title := Label.new()
+	title.text = tr("⚠️ MEVCUT KAYIT SİLİNECEK")
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35, 1.0))
+	title.add_theme_font_size_override("font_size", 20)
+	vbox.add_child(title)
+
+	var save_data: Dictionary = GlobalInventory.get_save_data()
+	var day := int(save_data.get("current_day", 1))
+	var money := int(save_data.get("money", 0))
+
+	var desc := Label.new()
+	desc.text = tr("Mevcut kayıtlı oyunun (Gün %d • %d Zurna) ve satın aldığın tüm ekipman seviyeleri sıfırlanacak.\n(Keşfettiğin eşya koleksiyonu korunur)\n\nBu işlem geri alınamaz! Yeni bir oyuna başlamak istediğinden emin misin?") % [day, money]
+	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	desc.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1.0))
+	desc.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(desc)
+
+	var sep := HSeparator.new()
+	vbox.add_child(sep)
+
+	var hbox := HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 16)
+	hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(hbox)
+
+	var cancel_btn := Button.new()
+	cancel_btn.text = tr("VAZGEÇ")
+	cancel_btn.custom_minimum_size = Vector2(160, 44)
+	cancel_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var cancel_style := StyleBoxFlat.new()
+	cancel_style.bg_color = Color(0.25, 0.20, 0.18, 1.0)
+	cancel_style.border_color = Color(0.50, 0.40, 0.30, 1.0)
+	cancel_style.set_border_width_all(2)
+	cancel_style.set_corner_radius_all(8)
+	cancel_btn.add_theme_stylebox_override("normal", cancel_style)
+	cancel_btn.pressed.connect(func() -> void:
+		GlobalSoundManager.play_sfx("click")
+		if is_instance_valid(confirm_layer):
+			confirm_layer.queue_free()
+			_active_confirm_dialog = null
+	)
+	hbox.add_child(cancel_btn)
+
+	var confirm_btn := Button.new()
+	confirm_btn.text = tr("EVET, YENİ OYUN 🚀")
+	confirm_btn.custom_minimum_size = Vector2(170, 44)
+	confirm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var confirm_style := StyleBoxFlat.new()
+	confirm_style.bg_color = Color(0.75, 0.22, 0.20, 1.0)
+	confirm_style.border_color = Color(0.95, 0.40, 0.35, 1.0)
+	confirm_style.set_border_width_all(2)
+	confirm_style.set_corner_radius_all(8)
+	confirm_btn.add_theme_stylebox_override("normal", confirm_style)
+	confirm_btn.add_theme_color_override("font_color", Color(1.0, 0.95, 0.90, 1.0))
+	confirm_btn.pressed.connect(func() -> void:
+		GlobalSoundManager.play_sfx("click")
+		if is_instance_valid(confirm_layer):
+			confirm_layer.queue_free()
+			_active_confirm_dialog = null
+		_start_new_game_direct()
+	)
+	hbox.add_child(confirm_btn)
+
+	confirm_layer.tree_exited.connect(func() -> void:
+		if _active_confirm_dialog == confirm_layer:
+			_active_confirm_dialog = null
+	)
+	add_child(confirm_layer)
+
 
 
 func _on_continue_pressed() -> void:
@@ -413,14 +621,14 @@ func _show_reset_collection_confirmation() -> void:
 	panel.add_child(vbox)
 
 	var title := Label.new()
-	title.text = "⚠️ KOLEKSİYONU SIFIRLA"
+	title.text = tr("⚠️ KOLEKSİYONU SIFIRLA")
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35, 1.0))
 	title.add_theme_font_size_override("font_size", 20)
 	vbox.add_child(title)
 
 	var desc := Label.new()
-	desc.text = "Tüm keşfettiğin eşyalar koleksiyon defterinden kalıcı olarak silinecektir.\nBu işlem geri alınamaz!\n\nKoleksiyonu sıfırlamak istediğinden emin misin?"
+	desc.text = tr("Tüm keşfettiğin eşyalar koleksiyon defterinden kalıcı olarak silinecektir.\nBu işlem geri alınamaz!\n\nKoleksiyonu sıfırlamak istediğinden emin misin?")
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1.0))
@@ -436,7 +644,7 @@ func _show_reset_collection_confirmation() -> void:
 	vbox.add_child(hbox)
 
 	var cancel_btn := Button.new()
-	cancel_btn.text = "VAZGEÇ"
+	cancel_btn.text = tr("VAZGEÇ")
 	cancel_btn.custom_minimum_size = Vector2(160, 44)
 	cancel_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var cancel_style := StyleBoxFlat.new()
@@ -454,7 +662,7 @@ func _show_reset_collection_confirmation() -> void:
 	hbox.add_child(cancel_btn)
 
 	var confirm_btn := Button.new()
-	confirm_btn.text = "EVET, SIFIRLA 🗑️"
+	confirm_btn.text = tr("EVET, SIFIRLA 🗑️")
 	confirm_btn.custom_minimum_size = Vector2(160, 44)
 	confirm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var confirm_style := StyleBoxFlat.new()
@@ -483,7 +691,7 @@ func _show_reset_collection_confirmation() -> void:
 func _execute_reset_collection() -> void:
 	GlobalInventory.reset_collection()
 	var original_text := reset_collection_button.text
-	reset_collection_button.text = "SIFIRLANDI!"
+	reset_collection_button.text = tr("SIFIRLANDI!")
 	reset_collection_button.disabled = true
 	var tween := create_tween()
 	tween.tween_interval(1.5)
@@ -520,6 +728,60 @@ func _load_settings() -> void:
 		joystick_val_label.text = "%%%d" % [int(round(joystick_scale * 100.0))]
 	if is_instance_valid(flashlight_aim_option):
 		flashlight_aim_option.select(clampi(flashlight_aim, 0, 2))
+	_refresh_dev_code_ui()
+
+
+func _refresh_dev_code_ui() -> void:
+	if not is_instance_valid(dev_code_input) or not is_instance_valid(dev_code_button):
+		return
+	var dev_console = get_node_or_null("/root/DevConsole")
+	var is_unlocked: bool = dev_console.is_dev_console_unlocked() if dev_console and dev_console.has_method("is_dev_console_unlocked") else false
+	if is_unlocked:
+		dev_code_input.text = ""
+		dev_code_input.placeholder_text = "AKTİF ✅"
+		dev_code_button.text = "KAPAT"
+		dev_code_button.add_theme_color_override("font_color", Color(0.3, 0.95, 0.4, 1.0))
+	else:
+		dev_code_input.text = ""
+		dev_code_input.placeholder_text = "Gizli kod..."
+		dev_code_button.text = "AKTİF ET"
+		dev_code_button.remove_theme_color_override("font_color")
+
+
+func _on_dev_code_submitted() -> void:
+	if not is_instance_valid(dev_code_input) or not is_instance_valid(dev_code_button):
+		return
+	var dev_console = get_node_or_null("/root/DevConsole")
+	if not dev_console:
+		return
+
+	var is_unlocked: bool = dev_console.is_dev_console_unlocked() if dev_console.has_method("is_dev_console_unlocked") else false
+	var entered_code: String = dev_code_input.text.strip_edges()
+
+	# Eğer zaten aktifse ve kullanıcı KAPAT butonuna bastıysa:
+	if is_unlocked and (entered_code == "" or entered_code == DEV_SECRET_CODE):
+		if dev_console.has_method("set_dev_unlocked"):
+			dev_console.set_dev_unlocked(false)
+		GlobalSoundManager.play_sfx("click")
+		_refresh_dev_code_ui()
+		return
+
+	# Kilidi açma kontrolü:
+	if entered_code == DEV_SECRET_CODE:
+		if dev_console.has_method("set_dev_unlocked"):
+			dev_console.set_dev_unlocked(true)
+		GlobalSoundManager.play_sfx("upgrade")
+		_refresh_dev_code_ui()
+	else:
+		GlobalSoundManager.play_sfx("error")
+		dev_code_button.text = "HATALI! ❌"
+		dev_code_button.add_theme_color_override("font_color", Color(0.95, 0.3, 0.3, 1.0))
+		var tw := create_tween()
+		tw.tween_interval(1.2)
+		tw.tween_callback(func() -> void:
+			if is_instance_valid(dev_code_button):
+				_refresh_dev_code_ui()
+		)
 
 
 func _save_settings() -> void:

@@ -263,6 +263,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
+game_version = "Pre-Alpha 1.6.3 (Afterjam Remaster)"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
@@ -505,7 +506,24 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.1 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Ofis Şarj İstasyonu & Ücretli Batarya:[/color] Yüzeyde ve ofise girişteki ücretsiz otomatik şarj kaldırıldı. Ofis alt barına Şarj İstasyonu (HSlider ve MAX dolum) ile canlı batarya rozeti eklendi.
+• [color=#00e5ff]Dinamik Batarya Fiyatlandırması:[/color] Fener şarj maliyeti sabit fiyattan saniye/kapasite bazlı adil modele geçirildi (0.30 Zurna/sn; Lv.1 ~23Z, Lv.15 ~60Z).
+• [color=#00e5ff]Derinlik & Gece Kararması Buff'ı:[/color] Okyanus kararma eğrisi güçlendirildi (260m referans derinlik, daha dik abis geçişi, zifiri karanlık dip suları).
+• [color=#00e5ff]Yeni Oyun Güvenlik Modalı:[/color] Kayıtlı oyun varken yanlışlıkla \"Yeni Oyun\" denildiğinde ilerlemenin ve ekipmanların silinmesini önleyen onay penceresi eklendi.
+• [color=#00e5ff]Mobil Dalış Duraklatma (Pause) Tuşu:[/color] Mobil dokunmatik arayüzün sağ üst köşesine kompakt duraklatma butonu ([ ⏸️ ]) eklendi.
+• [color=#00e5ff]Laboratuvar Craft Kar Dengelemesi:[/color] Üretilen eşyaların satış gelirleri ve kar marjları piyasa dengesini koruyacak şekilde yeniden dengelendi.
+• [color=#00e5ff]Geliştirici Konsolu Karartma Komutu:[/color] Konsola dinamik test için `darkness` (ve `karartma`) komutu ile hazır önayarlar (abis, day, reset) eklendi.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Toast Bildirim Ekran Esneme (Stretch) Fix'i:[/color] Uzun bildirim mesajlarında ofis menüsü ve ekran kenarlarının dışa taşması ToastLabel bağımsız yüzen panele taşınarak tamamen çözüldü.
+• [color=#81c784]Anlık Ekipman Rozet Senkronizasyonu:[/color] Mağazadan fener veya ekipman satın alındığı anda alt bardaki durum rozetinin mağaza kapanmadan anında güncellenmesi sağlandı.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.1 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]Direkt Alma Özelliği (PC Entegrasyonu):[/color] Eşyaları menü açmadan tek tuşla anında çantaya alma kabiliyeti PC'ye de getirildi (Sağ Klik).
@@ -517,28 +535,7 @@ text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.1 SÜRÜM NOTL
 • [color=#81c784]Yeni Eşya Keşif Takılması (Lag Spike) Giderildi:[/color] Yeni eşyalar ilk kez keşfedildiğinde yaşanan disk yazma takılması WorkerThreadPool arka plan I/O mimarisiyle tamamen akıcı hale getirildi.
 • [color=#81c784]Fener Işık & Fizik (FPS) Optimizasyonu:[/color] Fener doku üretimi ve dinamik ışık motoru optimize edilerek fener ilk açıldığında oluşan fps düşüşü ve takılmalar tamamen giderildi.
 • [color=#81c784]Fener HUD (Ekipman Dock) Senkronizasyonu:[/color] Okyanustaki sağ alt ekipman dock'unda fener seviyesinin (Lv.X) güncellenmeme ve görünmeme sorunu çözüldü.
-• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi.
-
-[center][color=#546e7a]──────────────────────────────────────[/color][/center]
-
-[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
-
-[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
-• [color=#00e5ff]Dinamik Okyanus Işığı & Derinlik Kararması:[/color] Derinliğe (0-350m+) ve günün saatine (10:00-19:00) bağlı olarak kademeli kararan atmosferik ışık döngüsü eklendi.
-• [color=#00e5ff]Dalış Feneri & Batarya Mekaniği:[/color] [F] tuşu ile açılıp kapanan, fare imlecine yönelen konik aydınlatma ve HUD batarya barı eklendi (Su yüzeyinde hızlı şarj).
-• [color=#00e5ff]Fener Seviye Geliştirmesi & Yeni İkon:[/color] Mağazada 15 seviyeye kadar geliştirilebilir fener (batarya süresi, ışık açısı ve menzil artışı) ve özel fener ikonu entegre edildi.
-• [color=#00e5ff]Hızlı Yüzme (Sprint):[/color] Shift tuşu ile depar atarak su altında çok daha çevik ve hızlı yüzebilme kabiliyeti eklendi.
-• [color=#00e5ff]Keşfedilmemiş Eşya Belirgin İbaresi:[/color] Henüz deftere kaydedilmemiş yeni eşyalar incelendiğinde popup penceresinde parlayan dikkat çekici özel ibare eklendi.
-• [color=#00e5ff]Ekipman Seviye Limitleri:[/color] Tüm ekipmanlara dengeli maksimum seviye limitleri getirildi (Tüp: 25, Çanta: 20, Palet: 20, Gözlük: 9, Fener: 15).
-• [color=#00e5ff]Özel Eşya Spawn Dengelemesi:[/color] Yüksek nadirlikteki özel eşyaların spawn oranı dengelenerek keşif ve piyasa ekonomisi adilleştirildi.
-• [color=#00e5ff]Mağaza Canlı Stat Önizlemesi & Tooltip:[/color] Ekipman geliştirirken ne kazanılacağını gösteren canlı stat yazısı ve zengin hover bilgi kutuları eklendi.
-• [color=#00e5ff]Geliştirici Konsolu Fener Komutları:[/color] Konsola `flashlight`, `battery` ve fener destekli `upgrade` komutları eklendi.
-
-[color=#ff7043][b]🛠️ HATA DÜZELTMELERİ (BUG FIXES):[/b][/color]
-• [color=#81c784]Gözlük Zoom & Eşya Culling Hatası:[/color] Gözlükle geniş açıya çıkıldığında ekran dışındaki eşyaların zamansız silinmesi kamera ve zoom oranına duyarlı yeni dinamik culling sistemiyle tamamen çözüldü.
-• [color=#81c784]Ekipman HUD Senkronizasyon Fix:[/color] Ekipman geliştirildiğinde sağ alttaki HUD dock'unun anlık yenilenmeme sorunu giderildi.
-• [color=#81c784]Ekipman Mağazası Panel Taşması:[/color] 5. slot eklendiğinde slotların panel dışına taşması slot ve panel genişlikleri optimize edilerek giderildi.
-• [color=#81c784]Fener Işık Patlaması & Merkez Elips:[/color] Fenerin göz yoran aşırı beyaz patlaması ve merkezdeki yapay elips halka homojen konik ışık dokusuyla düzeltildi."
+• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi."
 
 [node name="Button" type="Button" parent="Panel" unique_id=1797594709]
 layout_mode = 1
@@ -681,7 +678,6 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 • [color=#00e5ff]Sağ Tık (Çantada):[/color] Eşyayı Kilitle / Kilidi Aç (🔒 Satış ve craft koruması)
 • [color=#00e5ff]E (Su Yüzeyinde):[/color] Tekneye Çık & Ofis Karargahına Dön
 • [color=#00e5ff]ESC:[/color] Açık pencereleri kapat / Ofisteyken dalışı başlat
-• [color=#00e5ff]é / ~ Tuşu:[/color] Geliştirici & Hile Konsolu (Komut listesi için: [b]help[/b])
 
 [color=#72b5ff][b]Mobil Kontroller (Dokunmatik):[/b][/color]
 • [color=#00e5ff]Sol Ekran:[/color] Dinamik Analog Joystick (360° serbest yüzüş)
@@ -697,7 +693,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 
 [node name="SettingsPanel" type="Panel" parent="." unique_id=830166412]
 visible = false
-custom_minimum_size = Vector2(700, 480)
+custom_minimum_size = Vector2(700, 520)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -705,9 +701,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -350.0
-offset_top = -240.0
+offset_top = -260.0
 offset_right = 350.0
-offset_bottom = 240.0
+offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_info")
@@ -898,6 +894,41 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
 text = "KOLEKSİYONU SIFIRLA"
+
+[node name="DevCodeRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=987654328]
+layout_mode = 2
+
+[node name="DevCodeLabel" type="Label" parent="SettingsPanel/Content/DevCodeRow" unique_id=987654329]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "DevCode"
+vertical_alignment = 1
+
+[node name="DevCodeInput" type="LineEdit" parent="SettingsPanel/Content/DevCodeRow" unique_id=987654330]
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_placeholder_color = Color(0.5, 0.6, 0.7, 0.6)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+placeholder_text = "Gizli kod..."
+secret = true
+
+[node name="DevCodeButton" type="Button" parent="SettingsPanel/Content/DevCodeRow" unique_id=987654331]
+custom_minimum_size = Vector2(95, 40)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+text = "AKTİF ET"
 
 [connection signal="pressed" from="Panel/VBoxContainer/Button4" to="." method="_on_button_4_pressed"]
 [connection signal="pressed" from="Panel/Button" to="." method="_on_button_pressed"]

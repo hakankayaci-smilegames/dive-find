@@ -77,6 +77,7 @@ func _on_upgrade_requested(slot: EquipmentSlot) -> void:
 	slot.refresh(new_level)
 	slot.play_upgrade_feedback()
 
+	GlobalInventory.equipment_updated.emit(slot.data.stat_key, new_level)
 	GlobalInventory.inventory_updated.emit()
 
 

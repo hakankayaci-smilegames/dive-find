@@ -5,27 +5,28 @@ class_name AmbientLightController
 ## EXPORT AYARLARI
 ## ------------------------------------------------------------------
 @export_group("Derinlik Kararması")
-@export var max_depth_reference: float = 350.0   # Okyanus fiziğine uygun olarak 350 metrede tam abis karanlığına ulaşılır
-@export var depth_curve_exponent: float = 0.75   # İlk 50-150m inişte suyun hızla koyulaşması
+@export var max_depth_reference: float = 260.0   # Okyanus fiziğine uygun olarak 260 metrede tam abis karanlığına ulaşılır
+@export var depth_curve_exponent: float = 0.60   # İlk 30-100m inişte suyun daha hızlı koyulaşması
 
 @export_group("Zemin Aydınlığı (Taban)")
-@export var min_ambient_floor: float = 0.015     # Genel kararma oranını artıran, fener öncesi hafif silüet tabanı
+@export var min_ambient_floor: float = 0.006     # Genel kararma oranını artıran, fener öncesi hafif silüet tabanı
 @export var color_transition_speed: float = 3.5  # Işığın yumuşak geçiş hızı (lerp)
 
 ## ------------------------------------------------------------------
 ## RENK SABİTLERİ (Zaman ve Derinlik Paleti)
 ## ------------------------------------------------------------------
-const DAY_SURFACE: Color = Color(1.0, 1.0, 1.0, 1.0)              # Berrak beyaz gün ışığı (10:00 - 14:00)
-const AFTERNOON_SURFACE: Color = Color(0.88, 0.72, 0.55, 1.0)     # Sıcak ikindi güneşi (14:00 - 17:00)
-const DUSK_SURFACE: Color = Color(0.14, 0.15, 0.26, 1.0)          # Belirgin akşam alacakaranlığı (17:00 - 19:00)
+const DAY_SURFACE: Color = Color(1.0, 1.0, 1.0, 1.0)              # Berrak beyaz gün ışığı (10:00 - 13:00)
+const AFTERNOON_SURFACE: Color = Color(0.78, 0.60, 0.42, 1.0)     # Sıcak ikindi güneşi (13:00 - 16:30)
+const DUSK_SURFACE: Color = Color(0.06, 0.07, 0.14, 1.0)          # Belirgin koyu akşam alacakaranlığı (16:30 - 19:00)
 
-const DAY_ABYSS: Color = Color(0.02, 0.035, 0.08, 1.0)            # Gündüz 350m+ dip (koyu okyanus laciverti)
-const NIGHT_ABYSS: Color = Color(0.007, 0.01, 0.02, 1.0)          # Paydos saati 350m+ dip (zifiri abis)
+const DAY_ABYSS: Color = Color(0.010, 0.018, 0.040, 1.0)          # Gündüz 260m+ dip (koyu okyanus laciverti/abis)
+const NIGHT_ABYSS: Color = Color(0.003, 0.005, 0.010, 1.0)        # Paydos saati 260m+ dip (zifiri abis)
 
 ## ------------------------------------------------------------------
-## INTERNAL STATE
+## INTERNAL STATE & DEV OVERRIDE
 ## ------------------------------------------------------------------
 var _player: Node2D = null
+var override_brightness: float = -1.0  # -1.0: Devre dışı (otomatik hesaplama), >= 0.0: Konsol manuel test
 
 
 func _ready() -> void:
@@ -35,6 +36,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if override_brightness >= 0.0:
+		var target_c := Color(override_brightness, override_brightness, override_brightness, 1.0)
+		color = color.lerp(target_c, 10.0 * delta)
+		return
+
 	if not is_instance_valid(_player):
 		_find_player()
 		if not is_instance_valid(_player):
@@ -49,6 +55,9 @@ func _find_player() -> void:
 
 
 func _calculate_ambient_color() -> Color:
+	if override_brightness >= 0.0:
+		return Color(override_brightness, override_brightness, override_brightness, 1.0)
+
 	# 1. DERİNLİK HESABI (Metre cinsinden)
 	var surface_y: float = InfiniteMapManager.water_surface_y
 	var player_y: float = _player.global_position.y
@@ -62,9 +71,9 @@ func _calculate_ambient_color() -> Color:
 	var time_factor: float = 0.0
 	if GlobalTime:
 		var current_min: float = float(GlobalTime.current_hour * 60 + GlobalTime.current_minute)
-		# 14:00 = 840. dakika, 19:00 = 1140. dakika
-		if current_min > 840.0:
-			time_factor = clamp((current_min - 840.0) / 300.0, 0.0, 1.0)
+		# 13:00 = 780. dakika, 19:00 = 1140. dakika (360 dakika)
+		if current_min > 780.0:
+			time_factor = clamp((current_min - 780.0) / 360.0, 0.0, 1.0)
 
 	# 3. YÜZEY RENGİ GEÇİŞİ (Gündüz -> İkindi -> Akşam)
 	var surface_color: Color

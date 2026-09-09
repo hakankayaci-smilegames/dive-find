@@ -11,6 +11,7 @@ class_name MobileControls
 @onready var flashlight_toggle_button: Button = get_node_or_null("FlashlightToggleButton")
 @onready var zoom_in_button: Button = get_node_or_null("ZoomControls/ZoomInButton")
 @onready var zoom_out_button: Button = get_node_or_null("ZoomControls/ZoomOutButton")
+@onready var pause_button: Button = get_node_or_null("PauseButton")
 
 var _sprint_toggled: bool = false
 var _btn_normal_style: StyleBox = null
@@ -64,6 +65,8 @@ func _ready() -> void:
 		zoom_in_button.pressed.connect(_on_zoom_in_pressed)
 	if zoom_out_button:
 		zoom_out_button.pressed.connect(_on_zoom_out_pressed)
+	if pause_button:
+		pause_button.pressed.connect(_on_pause_pressed)
 	
 	# Oyuncuyu bağla
 	_find_player()
@@ -92,6 +95,13 @@ func _on_zoom_out_pressed() -> void:
 	if is_instance_valid(_player) and _player.has_method("zoom_out"):
 		_player.zoom_out()
 		GlobalSoundManager.play_sfx("click")
+
+
+func _on_pause_pressed() -> void:
+	GlobalSoundManager.play_sfx("click")
+	var hud: Node = get_tree().get_first_node_in_group("hud")
+	if is_instance_valid(hud) and hud.has_method("toggle_pause_menu"):
+		hud.toggle_pause_menu()
 
 
 func _on_joystick_draw() -> void:
@@ -179,24 +189,24 @@ func _update_interact_button_state() -> void:
 		if closest_item.item_data and "item_name" in closest_item.item_data:
 			interact_button.text = "🖐️ " + str(closest_item.item_data.item_name)
 		else:
-			interact_button.text = "🖐️ İNCELE"
+			interact_button.text = tr("🖐️ İNCELE")
 
 		if is_instance_valid(quick_pickup_button):
 			quick_pickup_button.modulate.a = 1.0
 			if GlobalInventory.is_full():
 				quick_pickup_button.disabled = true
-				quick_pickup_button.text = "❌ DOLU"
+				quick_pickup_button.text = tr("❌ DOLU")
 			else:
 				quick_pickup_button.disabled = false
-				quick_pickup_button.text = "⚡ DİREKT AL"
+				quick_pickup_button.text = tr("⚡ DİREKT AL")
 	else:
 		interact_button.modulate.a = 0.4
 		interact_button.disabled = true
-		interact_button.text = "🖐️ İNCELE"
+		interact_button.text = tr("🖐️ İNCELE")
 		if is_instance_valid(quick_pickup_button):
 			quick_pickup_button.modulate.a = 0.4
 			quick_pickup_button.disabled = true
-			quick_pickup_button.text = "⚡ DİREKT AL"
+			quick_pickup_button.text = tr("⚡ DİREKT AL")
 
 
 func _get_closest_interactable() -> InteractableItem:
@@ -251,12 +261,12 @@ func _update_sprint_button_visuals() -> void:
 		return
 
 	if _sprint_toggled:
-		sprint_toggle_button.text = "⚡ AÇIK"
+		sprint_toggle_button.text = tr("⚡ AÇIK")
 		sprint_toggle_button.modulate = Color(1.3, 1.15, 0.4, 1.0)
 		if _btn_pressed_style:
 			sprint_toggle_button.add_theme_stylebox_override("normal", _btn_pressed_style)
 	else:
-		sprint_toggle_button.text = "⚡ DEPAR"
+		sprint_toggle_button.text = tr("⚡ DEPAR")
 		sprint_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.85)
 		if _btn_normal_style:
 			sprint_toggle_button.add_theme_stylebox_override("normal", _btn_normal_style)
@@ -280,7 +290,7 @@ func _update_flashlight_button_visuals() -> void:
 
 	var fl_level: int = int(_player.get("flashlight_level")) if _player.get("flashlight_level") != null else 0
 	if fl_level <= 0:
-		flashlight_toggle_button.text = "🔦 YOK"
+		flashlight_toggle_button.text = tr("🔦 YOK")
 		flashlight_toggle_button.disabled = true
 		flashlight_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.35)
 		if _btn_disabled_style:
@@ -292,12 +302,12 @@ func _update_flashlight_button_visuals() -> void:
 	flashlight_toggle_button.disabled = false
 	var is_on: bool = bool(_player.get("is_flashlight_on"))
 	if is_on:
-		flashlight_toggle_button.text = "🔦 AÇIK"
+		flashlight_toggle_button.text = tr("🔦 AÇIK")
 		flashlight_toggle_button.modulate = Color(1.4, 1.25, 0.45, 1.0)
 		if _btn_pressed_style:
 			flashlight_toggle_button.add_theme_stylebox_override("normal", _btn_pressed_style)
 	else:
-		flashlight_toggle_button.text = "🔦 FENER"
+		flashlight_toggle_button.text = tr("🔦 FENER")
 		flashlight_toggle_button.modulate = Color(1.0, 1.0, 1.0, 0.85)
 		if _btn_normal_style:
 			flashlight_toggle_button.add_theme_stylebox_override("normal", _btn_normal_style)

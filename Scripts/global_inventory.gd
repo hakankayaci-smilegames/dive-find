@@ -2,6 +2,7 @@ extends Node
 
 var collected_items: Array[ItemData] = []
 signal inventory_updated
+signal equipment_updated(stat_key: String, new_level: int)
 
 # Koleksiyon defteri: resource_path -> true. Bir eşya bir kez toplandı mı diye tutar,
 # çanta dolup taşsa/eşya satılsa bile burada kalıcı kalır (kayıt dosyasına yazılır).
@@ -83,6 +84,19 @@ func has_space() -> bool:
 	return not is_full()
 
 
+func get_item_path(item: ItemData) -> String:
+	if not item:
+		return ""
+	if item.source_path != "":
+		return item.source_path
+	if item.resource_path != "":
+		return item.resource_path
+	for cached_item in get_all_items():
+		if cached_item and cached_item.item_name == item.item_name and cached_item.resource_path != "":
+			return cached_item.resource_path
+	return ""
+
+
 func add_item(item: ItemData) -> bool:
 	if not item:
 		return false
@@ -92,8 +106,7 @@ func add_item(item: ItemData) -> bool:
 		return false
 
 	var item_instance: ItemData = item.duplicate() as ItemData
-	if item.resource_path != "":
-		item_instance.resource_path = item.resource_path
+	item_instance.source_path = item.source_path if item.source_path != "" else item.resource_path
 	collected_items.append(item_instance)
 	_mark_discovered(item_instance)
 	emit_signal("inventory_updated")
@@ -104,15 +117,11 @@ func add_item(item: ItemData) -> bool:
 func _mark_discovered(item: ItemData) -> void:
 	if not item:
 		return
-	var path: String = item.resource_path
-	if path == "":
-		for cached_item in get_all_items():
-			if cached_item and cached_item.item_name == item.item_name and cached_item.resource_path != "":
-				path = cached_item.resource_path
-				item.resource_path = path
-				break
+	var path: String = get_item_path(item)
 	if path == "":
 		return
+	if item.source_path == "":
+		item.source_path = path
 	if not discovered_items.has(path):
 		discovered_items[path] = true
 		_save_collection()
@@ -122,7 +131,11 @@ func _mark_discovered(item: ItemData) -> void:
 func is_item_discovered(item: Resource) -> bool:
 	if not item:
 		return false
-	var path: String = item.resource_path
+	var path: String = ""
+	if item is ItemData:
+		path = get_item_path(item as ItemData)
+	else:
+		path = item.resource_path
 	if path != "" and discovered_items.has(path):
 		return true
 	var item_name_val = item.get("item_name")
@@ -267,9 +280,11 @@ func save_game(day: int, money: int, equipment: Dictionary) -> bool:
 	var item_paths: Array[String] = []
 	var item_locks: Array[bool] = []
 	for item in collected_items:
-		if item and item.resource_path != "":
-			item_paths.append(item.resource_path)
-			item_locks.append(bool(item.get("is_locked")))
+		if item:
+			var p := get_item_path(item)
+			if p != "":
+				item_paths.append(p)
+				item_locks.append(bool(item.get("is_locked")))
 
 	var dt := Time.get_datetime_dict_from_system()
 	var time_str := "%02d.%02d.%d %02d:%02d" % [dt.day, dt.month, dt.year, dt.hour, dt.minute]
@@ -327,7 +342,7 @@ func apply_save_to_game() -> bool:
 				var item_res = load(str(p))
 				if item_res is ItemData:
 					var item_inst = item_res.duplicate() as ItemData
-					item_inst.resource_path = str(p)
+					item_inst.source_path = str(p)
 					if i < locked_flags.size():
 						item_inst.is_locked = bool(locked_flags[i])
 					collected_items.append(item_inst)
@@ -374,6 +389,10 @@ func apply_save_to_player(player: Node) -> void:
 	player.set("goggles_level", int(eq.get("goggles_level", 0)))
 	player.set("backpack_level", int(eq.get("backpack_level", 0)))
 	player.set("flashlight_level", int(eq.get("flashlight_level", 0)))
+	if eq.has("current_battery") and float(eq["current_battery"]) >= 0.0:
+		player.set("current_battery", float(eq["current_battery"]))
+		if player.has_method("_broadcast_battery"):
+			player.call("_broadcast_battery")
 
 
 func start_new_game() -> void:

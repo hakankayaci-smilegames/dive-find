@@ -1,0 +1,370 @@
+[gd_scene format=3 uid="uid://c4jgb442wbgyu"]
+
+[ext_resource type="Script" path="res://Scripts/settings_menu.gd" id="1_settings_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info"]
+content_margin_left = 24.0
+content_margin_top = 18.0
+content_margin_right = 24.0
+content_margin_bottom = 18.0
+bg_color = Color(0.03, 0.07, 0.14, 0.98)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.65, 0.88, 0.85)
+corner_radius_top_left = 14
+corner_radius_top_right = 14
+corner_radius_bottom_right = 14
+corner_radius_bottom_left = 14
+shadow_size = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_normal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.05, 0.12, 0.22, 0.85)
+border_width_left = 4
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.18, 0.55, 0.78, 0.7)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.35)
+shadow_size = 6
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_pressed"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.02, 0.07, 0.14, 0.95)
+border_width_left = 4
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.9, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_hover"]
+content_margin_left = 24.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08, 0.2, 0.35, 0.95)
+border_width_left = 6
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.95, 1, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0.85, 1, 0.25)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.9, 1, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_bg"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.02, 0.05, 0.1, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.15, 0.3, 0.45, 0.8)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_fill"]
+content_margin_top = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0.85, 0.95, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[node name="SettingsMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 129
+script = ExtResource("1_settings_script")
+
+[node name="DimOverlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="SettingsPanel" type="Panel" parent="."]
+custom_minimum_size = Vector2(700, 520)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -350.0
+offset_top = -260.0
+offset_right = 350.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_info")
+
+[node name="TitleLabel" type="Label" parent="SettingsPanel"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 14.0
+offset_right = 400.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 26
+text = "AYARLAR"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="SettingsPanel"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -50.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = 50.0
+grow_horizontal = 0
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+text = "X"
+
+[node name="Content" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 60.0
+offset_right = -24.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 14
+
+[node name="MusicRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="SettingsPanel/Content/MusicRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Müzik Sesi"
+vertical_alignment = 1
+
+[node name="MusicSlider" type="HSlider" parent="SettingsPanel/Content/MusicRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider_bg")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_slider_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_slider_fill")
+value = 70.0
+
+[node name="SfxRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+layout_mode = 2
+
+[node name="SfxLabel" type="Label" parent="SettingsPanel/Content/SfxRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Ses Efektleri"
+vertical_alignment = 1
+
+[node name="SfxSlider" type="HSlider" parent="SettingsPanel/Content/SfxRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider_bg")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_slider_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_slider_fill")
+value = 80.0
+
+[node name="FullscreenRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+layout_mode = 2
+
+[node name="FullscreenLabel" type="Label" parent="SettingsPanel/Content/FullscreenRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Tam Ekran"
+vertical_alignment = 1
+
+[node name="FullscreenCheck" type="CheckButton" parent="SettingsPanel/Content/FullscreenRow"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="JoystickRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="JoystickLabel" type="Label" parent="SettingsPanel/Content/JoystickRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Joystick Boyutu"
+vertical_alignment = 1
+
+[node name="JoystickSlider" type="HSlider" parent="SettingsPanel/Content/JoystickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/slider = SubResource("StyleBoxFlat_slider_bg")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_slider_fill")
+theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_slider_fill")
+min_value = 0.7
+max_value = 1.5
+step = 0.05
+value = 1.0
+
+[node name="JoystickValueLabel" type="Label" parent="SettingsPanel/Content/JoystickRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(65, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
+theme_override_font_sizes/font_size = 18
+text = "%100"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="FlashlightAimRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="FlashlightAimLabel" type="Label" parent="SettingsPanel/Content/FlashlightAimRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Mobil Fener Yönü"
+vertical_alignment = 1
+
+[node name="FlashlightAimOption" type="OptionButton" parent="SettingsPanel/Content/FlashlightAimRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+item_count = 3
+popup/item_0/text = "🕹️ Yüzüş Yönü (Joystick)"
+popup/item_0/id = 0
+popup/item_1/text = "👆 Dokunmatik (Serbest Aim)"
+popup/item_1/id = 1
+popup/item_2/text = "✨ Akıllı Hibrit (Joystick + Dokunma)"
+popup/item_2/id = 2
+
+[node name="CollectionRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+layout_mode = 2
+
+[node name="CollectionLabel" type="Label" parent="SettingsPanel/Content/CollectionRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Koleksiyon"
+vertical_alignment = 1
+
+[node name="ResetCollectionButton" type="Button" parent="SettingsPanel/Content/CollectionRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(260, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.1, 0.95, 1, 1)
+theme_override_colors/font_hover_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+text = "KOLEKSİYONU SIFIRLA"
+
+[node name="DevCodeRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+layout_mode = 2
+
+[node name="DevCodeLabel" type="Label" parent="SettingsPanel/Content/DevCodeRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "DevCode"
+vertical_alignment = 1
+
+[node name="DevCodeInput" type="LineEdit" parent="SettingsPanel/Content/DevCodeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
+theme_override_colors/font_placeholder_color = Color(0.5, 0.6, 0.7, 0.6)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+placeholder_text = "Gizli kod..."
+secret = true
+
+[node name="DevCodeButton" type="Button" parent="SettingsPanel/Content/DevCodeRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(95, 40)
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_normal")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
+theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
+text = "AKTİF ET"

@@ -30,6 +30,10 @@ DevConsole="*uid://c0ns0l3dev001"
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor]
+
+movie_writer/movie_file="/home/hakan/Masaüstü/test.ogv"
+
 [global_group]
 
 player=""
@@ -44,3 +48,7 @@ rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://Translations/translations.en.translation", "res://Translations/translations.tr.translation")

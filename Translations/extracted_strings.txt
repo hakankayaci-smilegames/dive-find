@@ -1,0 +1,417 @@
+%0
+---
+%100
+---
+%50 â %100
+---
+* Efsanevi
+---
++0 Zurna
+---
++Stat
+---
+0 / 0
+---
+0 / 5 EÅya
+---
+0 Adet
+---
+0 DalÄ±Å
+---
+0 Zurna
+---
+0 m
+---
+19:00
+---
+AKTÄ°F ET
+---
+AL [E]
+---
+ANTÄ°KACI
+---
+AYARLAR
+---
+AntikacÄ±
+---
+Ayarlar
+---
+AÃ§Ä±klama metni...
+---
+BIRAK [ESC]
+---
+BOÄULDUN
+---
+Bakiye: 0 Zurna
+---
+BÄ°LGÄ° & YARDIM
+---
+DEVAM ET
+---
+DalÄ±Å Feneri (Lv. 1)
+---
+DalÄ±Å Feneri: [F] tuÅu ile aÃ§Ä±lÄ±p kapanÄ±r
+---
+DalÄ±Å GÃ¶zlÃ¼ÄÃ¼: GÃ¶rÃ¼Å aÃ§Ä±sÄ±nÄ± ve zoom'u geniÅletir
+---
+Derinliklerin Gizemli Hazinelerini KeÅfet
+---
+DevCode
+---
+DeÄer: 50 Zurna
+---
+Dive & Find
+---
+EKÄ°PMAN MAÄAZASI
+---
+Ekipman
+---
+Ekipman MaÄazasÄ±
+---
+Envanter (0/5)
+---
+Eski kalÄ±ntÄ±lar ve hazineler taranÄ±yor...
+---
+EÅya AdÄ±
+---
+EÅya SeÃ§in...
+---
+EÅya aÃ§Ä±klamasÄ±...
+---
+Gizli kod...
+---
+GÃN 1 TAMAMLANDI
+---
+GÃNÃ Ä°LERLET âï¸
+---
+GÃ¼n: 1
+---
+GÃ¼nÃ¼n Operasyon & BilanÃ§o Raporu
+---
+HEPSÄ°NÄ° SAT
+---
+Hammaddeler ile Ä°leri Craft & Sentez
+---
+Hepsi
+---
+HoÅgeldin adamÄ±m?, bugun ne pazarlÄ±k ediyoruz?
+---
+Joystick Boyutu
+---
+KARA BORSA
+---
+KAYDET & ÃIK
+---
+KOLEKSÄ°YON
+---
+KOLEKSÄ°YONU SIFIRLA
+---
+KeÅfedilen: 0 / 0
+---
+Koleksiyon
+---
+Koleksiyon Defteri
+---
+Komut girin... (yardÄ±m iÃ§in: help)
+---
+LABORATUVAR
+---
+Laboratuvar MasrafÄ±: 0 Zurna
+---
+Lv.0
+---
+Lv.1
+---
+MAX
+---
+Mobil Fener YÃ¶nÃ¼
+---
+MÃ¼zik
+---
+MÃ¼zik Sesi
+---
+OFÄ°S & DALIÅ KARARGAHI
+---
+OYUNDAN ÃIK
+---
+Oksijen TÃ¼pÃ¼: Oksijen tÃ¼ketimini azaltÄ±r
+---
+Oksijen tÃ¼pÃ¼n bitti ve yÃ¼zeye ulaÅamadÄ±n, yandan geÃ§en bir balÄ±kÃ§Ä± seni buldu ve kurtardÄ± ancak uyandÄ±ÄÄ±nda Ã§antan yoktu.
+Devam etmek iÃ§in TAMAM'a bas, ofise geri gÃ¶nderileceksin.
+---
+Palet: YÃ¼zme hÄ±zÄ±nÄ± artÄ±rÄ±r
+---
+SAT
+---
+SATIÅ PAZARI
+---
+SENTEZLE / ÃRET â¨
+---
+Sadece Ã§Ã¶p ve hurda eÅyalarÄ± alÄ±r
+---
+Sadece Ã¶zel ve gizli ganimetleri alÄ±r
+---
+Ses Efektleri
+---
+Seviye arttÄ±kÃ§a dalÄ±Å gÃ¼cÃ¼n artar
+---
+Seviye: 0
+---
+TAMAM
+---
+TESÄ°SLER VE ÃRETÄ°M ALANLARI
+---
+Tam Ekran
+---
+Tesisler, TÃ¼ccarlar ve Operasyon YÃ¶netim Merkezi
+---
+TÃCCARLAR VE ALIM MERKEZLERÄ°
+---
+TÃ¼p, Palet, GÃ¶zlÃ¼k ve Ãanta YÃ¼kselt
+---
+UPGRADE
+---
+YENÄ° GÃNE BAÅLA âï¸
+---
+YENÄ° OYUN
+---
+[ AKTÄ°F ]
+---
+[ DEÄERLÄ° ]
+---
+[ Kapatmak iÃ§in: Ã© veya ESC ]
+---
+[center][color=#ffd54f][font_size=16][b]â PRE-ALPHA 1.6.2 SÃRÃM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]ð GÃNCELLEMELER & YENÄ°LÄ°KLER:[/b][/color]
+â¢ [color=#00e5ff]Ofis Åarj Ä°stasyonu & Ãcretli Batarya:[/color] YÃ¼zeyde ve ofise giriÅteki Ã¼cretsiz otomatik Åarj kaldÄ±rÄ±ldÄ±. Ofis alt barÄ±na Åarj Ä°stasyonu (HSlider ve MAX dolum) ile canlÄ± batarya rozeti eklendi.
+â¢ [color=#00e5ff]Dinamik Batarya FiyatlandÄ±rmasÄ±:[/color] Fener Åarj maliyeti sabit fiyattan saniye/kapasite bazlÄ± adil modele geÃ§irildi (0.30 Zurna/sn; Lv.1 ~23Z, Lv.15 ~60Z).
+â¢ [color=#00e5ff]Derinlik & Gece KararmasÄ± Buff'Ä±:[/color] Okyanus kararma eÄrisi gÃ¼Ã§lendirildi (260m referans derinlik, daha dik abis geÃ§iÅi, zifiri karanlÄ±k dip sularÄ±).
+â¢ [color=#00e5ff]Yeni Oyun GÃ¼venlik ModalÄ±:[/color] KayÄ±tlÄ± oyun varken yanlÄ±ÅlÄ±kla "Yeni Oyun" denildiÄinde ilerlemenin ve ekipmanlarÄ±n silinmesini Ã¶nleyen onay penceresi eklendi.
+â¢ [color=#00e5ff]Mobil DalÄ±Å Duraklatma (Pause) TuÅu:[/color] Mobil dokunmatik arayÃ¼zÃ¼n saÄ Ã¼st kÃ¶Åesine kompakt duraklatma butonu ([ â¸ï¸ ]) eklendi.
+â¢ [color=#00e5ff]Laboratuvar Craft Kar Dengelemesi:[/color] Ãretilen eÅyalarÄ±n satÄ±Å gelirleri ve kar marjlarÄ± piyasa dengesini koruyacak Åekilde yeniden dengelendi.
+â¢ [color=#00e5ff]GeliÅtirici Konsolu Karartma Komutu:[/color] Konsola dinamik test iÃ§in `darkness` (ve `karartma`) komutu ile hazÄ±r Ã¶nayarlar (abis, day, reset) eklendi.
+
+[color=#ff7043][b]â¡ PERFORMANS & HATA DÃZELTMELERÄ°:[/b][/color]
+â¢ [color=#81c784]Toast Bildirim Ekran Esneme (Stretch) Fix'i:[/color] Uzun bildirim mesajlarÄ±nda ofis menÃ¼sÃ¼ ve ekran kenarlarÄ±nÄ±n dÄ±Åa taÅmasÄ± ToastLabel baÄÄ±msÄ±z yÃ¼zen panele taÅÄ±narak tamamen Ã§Ã¶zÃ¼ldÃ¼.
+â¢ [color=#81c784]AnlÄ±k Ekipman Rozet Senkronizasyonu:[/color] MaÄazadan fener veya ekipman satÄ±n alÄ±ndÄ±ÄÄ± anda alt bardaki durum rozetinin maÄaza kapanmadan anÄ±nda gÃ¼ncellenmesi saÄlandÄ±.
+
+[center][color=#546e7a]ââââââââââââââââââââââââââââââââââââââ[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]â PRE-ALPHA 1.6.1 SÃRÃM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]ð GÃNCELLEMELER & YENÄ°LÄ°KLER:[/b][/color]
+â¢ [color=#00e5ff]Direkt Alma ÃzelliÄi (PC Entegrasyonu):[/color] EÅyalarÄ± menÃ¼ aÃ§madan tek tuÅla anÄ±nda Ã§antaya alma kabiliyeti PC'ye de getirildi (SaÄ Klik).
+â¢ [color=#00e5ff]Mobil Fener NiÅanlama & Hassasiyet AyarlarÄ±:[/color] Ayarlar menÃ¼sÃ¼ne 3 modlu mobil fener hedefleme seÃ§eneÄi eklendi (Joystick YÃ¼zÃ¼Å YÃ¶nÃ¼, Serbest Dokunmatik Aim, AkÄ±llÄ± Hibrit).
+â¢ [color=#00e5ff]Koleksiyon SÄ±fÄ±rlama GÃ¼venlik OnayÄ±:[/color] Koleksiyon defterini sÄ±fÄ±rlama butonuna yanlÄ±ÅlÄ±kla basÄ±lmalarÄ± Ã¶nleyen denizci temalÄ± iki aÅamalÄ± onay penceresi entegre edildi.
+
+[color=#ff7043][b]â¡ PERFORMANS & HATA DÃZELTMELERÄ°:[/b][/color]
+â¢ [color=#81c784]Toplu SatÄ±Å & HÄ±zlÄ± YÃ¼kseltme Optimizasyonu:[/color] "Hepsini Sat" yapÄ±ldÄ±ÄÄ±nda tek karede yÃ¼zlerce slot sahnesi Ã¼retilip silinmesi engellendi; hÄ±zlÄ± geliÅtirmedeki gereksiz Ã§ifte tetiklemeler ve tween Ã§akÄ±ÅmalarÄ± sÄ±fÄ±rlandÄ±.
+â¢ [color=#81c784]Yeni EÅya KeÅif TakÄ±lmasÄ± (Lag Spike) Giderildi:[/color] Yeni eÅyalar ilk kez keÅfedildiÄinde yaÅanan disk yazma takÄ±lmasÄ± WorkerThreadPool arka plan I/O mimarisiyle tamamen akÄ±cÄ± hale getirildi.
+â¢ [color=#81c784]Fener IÅÄ±k & Fizik (FPS) Optimizasyonu:[/color] Fener doku Ã¼retimi ve dinamik Ä±ÅÄ±k motoru optimize edilerek fener ilk aÃ§Ä±ldÄ±ÄÄ±nda oluÅan fps dÃ¼ÅÃ¼ÅÃ¼ ve takÄ±lmalar tamamen giderildi.
+â¢ [color=#81c784]Fener HUD (Ekipman Dock) Senkronizasyonu:[/color] Okyanustaki saÄ alt ekipman dock'unda fener seviyesinin (Lv.X) gÃ¼ncellenmeme ve gÃ¶rÃ¼nmeme sorunu Ã§Ã¶zÃ¼ldÃ¼.
+â¢ [color=#81c784]Mobil Buton TemasÄ± DÃ¼zeltildi:[/color] Mobil fener ve depar butonlarÄ±nÄ±n varsayÄ±lan gri temaya dÃ¼Åme ve temassÄ±z/stilsiz gÃ¶rÃ¼nme hatasÄ± Ã¶nbellek stiliyle dÃ¼zeltildi.
+---
+[center][font_size=24][color=#00e5ff][b]ð¤¿ DIVE & FIND ð¤¿[/b][/color][/font_size][/center]
+
+[color=#72b5ff][b]Hikaye & Konsept:[/b][/color]
+Derin okyanuslarÄ±n gizemli sularÄ±na dalÄ±Å yap! Dipte saklÄ± kalan antik eserleri, deÄerli kalÄ±ntÄ±larÄ± ve tuhaf objeleri topla, yÃ¼zeye Ã§Ä±karÄ±p sat ve ekipmanlarÄ±nÄ± geliÅtir.
+
+[color=#72b5ff][b]Temel Kontroller (PC):[/b][/color]
+â¢ [color=#00e5ff]WASD / YÃ¶n TuÅlarÄ±:[/color] YÃ¼zme ve Hareket
+â¢ [color=#00e5ff]Shift (BasÄ±lÄ± Tut):[/color] HÄ±zlÄ± YÃ¼zme / Depar (Sprint â %50 hÄ±z artÄ±ÅÄ±, 2.6x oksijen tÃ¼ketimi)
+â¢ [color=#00e5ff]Sol TÄ±k / E TuÅu:[/color] EÅyayÄ± Ä°ncele (Detay penceresi ve alma menÃ¼sÃ¼ aÃ§ar)
+â¢ [color=#00e5ff]SaÄ TÄ±k:[/color] DoÄrudan Ãantaya Al (Pop-up aÃ§madan hÄ±zlÄ± alma)
+â¢ [color=#00e5ff]F TuÅu:[/color] DalÄ±Å Fenerini AÃ§ / Kapat (IÅÄ±k mouse imlecine yÃ¶nelir, batarya tÃ¼ketir)
+â¢ [color=#00e5ff]Fare TekerleÄi / [ + ] [ - ] / P & O:[/color] Kamera YakÄ±nlaÅtÄ±r / UzaklaÅtÄ±r (GÃ¶zlÃ¼k seviyesiyle geniÅler)
+â¢ [color=#00e5ff]I / Tab TuÅu:[/color] SÄ±rt ÃantasÄ±nÄ± AÃ§ / Kapat (Envanter)
+â¢ [color=#00e5ff]C TuÅu:[/color] Koleksiyon Defterini AÃ§ / Kapat (KeÅfedilenler)
+â¢ [color=#00e5ff]SaÄ TÄ±k (Ãantada):[/color] EÅyayÄ± Kilitle / Kilidi AÃ§ (ð SatÄ±Å ve craft korumasÄ±)
+â¢ [color=#00e5ff]E (Su YÃ¼zeyinde):[/color] Tekneye ÃÄ±k & Ofis KarargahÄ±na DÃ¶n
+â¢ [color=#00e5ff]ESC:[/color] AÃ§Ä±k pencereleri kapat / Ofisteyken dalÄ±ÅÄ± baÅlat
+
+[color=#72b5ff][b]Mobil Kontroller (Dokunmatik):[/b][/color]
+â¢ [color=#00e5ff]Sol Ekran:[/color] Dinamik Analog Joystick (360Â° serbest yÃ¼zÃ¼Å)
+â¢ [color=#00e5ff]â¡ DEPAR:[/color] HÄ±zlÄ± yÃ¼zme modunu aÃ§ar / kapatÄ±r
+â¢ [color=#00e5ff]â¡ DÄ°REKT AL:[/color] Menzildeki eÅyayÄ± pop-up aÃ§madan Ã§antaya atar
+â¢ [color=#00e5ff]ðï¸ Ä°NCELE:[/color] Menzildeki eÅyanÄ±n detay penceresini aÃ§ar
+â¢ [color=#00e5ff]ð¥½+ / ð¥½- :[/color] KamerayÄ± kademeli yakÄ±nlaÅtÄ±rÄ±p uzaklaÅtÄ±rÄ±r
+â¢ [color=#00e5ff]ð¦ FENER:[/color] DalÄ±Å fenerini aÃ§ar / kapatÄ±r (Ayarlardan 3 yÃ¶n modu seÃ§ilebilir)
+â¢ [color=#00e5ff]Uzun BasÄ±Å (0.35s):[/color] Ãantada eÅyayÄ± kilitler / aÃ§ar ð
+
+[center][font_size=13][color=#5e8ca8]YapÄ±mcÄ±lar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
+[font_size=15][color=#00e5ff][i]â Smile Games sunar[/i][/color][/font_size][/center]
+---
+[~] KONSOL
+---
+v0.0.2 (Devbuild)
+---
+Ãanta: Envanter kapasitesini artÄ±rÄ±r (+5 slot)
+---
+ÃÃPCÃ
+---
+ÃÃ¶p hariÃ§ deÄerli buluntularÄ± alÄ±r
+---
+Ãcret: 20 Zurna (+%50)
+---
+Ãretilen GeliÅmiÅ EÅyalarÄ±n SatÄ±ÅÄ±
+---
+â° 10:00
+---
+â° GÃ¼n KapanÄ±Å Saati
+---
+â±ï¸ YÃZEY: --s  â  ð«§ KALAN O2: --s
+---
+â¸ï¸
+---
+â¸ï¸ DURAKLATILDI
+---
+â¶ DEVAM ET
+---
+â¶ DEVAM ETMEK Ä°ÃÄ°N EKRANA DOKUNUN VEYA BÄ°R TUÅA BASIN â
+---
+â DIVE & FIND â GELÄ°ÅTÄ°RÄ°CÄ° & HÄ°LE KONSOLU
+---
+â DERÄ°NLÄ°K: 0m
+---
+â Smile Games Sunar
+---
+âï¸
+---
+âï¸ AYARLAR
+---
+â ï¸ DÄ°KKAT: Oksijen yÃ¼zeye yetmeyebilir!
+---
+â¡ BATARYA:
+---
+â¡ DEPAR
+---
+â¡ DÄ°REKT AL
+---
+â¡ ÅARJ ET
+---
+â¡ ÅARJ Ä°STASYONU
+---
+â
+---
+â¦ DALIÅA HAZIRLANIYOR â¦
+---
+â¦ REMASTERED â¦
+---
+â¨ AkÄ±llÄ± Hibrit (Joystick + Dokunma)
+---
+â¨ YENÄ° KEÅÄ°F
+---
+â¤ï¸ CAN:
+---
+ð En Derin Nokta
+---
+ð ÃANTA [I]
+---
+ð Ãanta [I]
+---
+ð Ãantadaki EÅyalar
+---
+ðï¸
+---
+ðï¸ Nadir
+---
+ð Dokunmatik (Serbest Aim)
+---
+ð DeÄerli
+---
+ð¡ SaÄ TÄ±k / BasÄ±lÄ± Tut: Kilitle ð
+---
+ð¡ Sol TÄ±k: EÅyayÄ± SeÃ§ / BÄ±rak  â¢  SaÄ TÄ±k (Mobilde BasÄ±lÄ± Tut): Kilitle ð
+---
+ð¡ [E] KÄ±sayolu: Su yÃ¼zeyine Ã§Ä±ktÄ±ÄÄ±nda teknene hÄ±zlÄ±ca binmek iÃ§in [E] tuÅuna basabilirsin.
+---
+ð¡ Ä°pucu: EÅyayÄ± kilitlemek / aÃ§mak iÃ§in SaÄ TÄ±kla veya BasÄ±lÄ± Tut ð (Hepsini Sat kilitli eÅyalarÄ± satmaz)
+---
+ð° 0 Zurna
+---
+ð° GÃ¼nÃ¼n KazancÄ±
+---
+ð° Tahmini SatÄ±Å DeÄeri: 0 Zurna
+---
+ð GÃ¼n 1
+---
+ð TARÄ°F FÄ°HRÄ°STÄ°
+---
+ð YENÄ°LÄ°KLER & GÃNCELLEMELER
+---
+ð KOLEKSÄ°YON [C]
+---
+ð¦
+---
+ð¦ SatÄ±lan EÅya
+---
+ð SÄ±rala
+---
+ð %100
+---
+ð
+---
+ð SaÄ TÄ±k / BasÄ±lÄ± Tut:
+EÅyayÄ± kilitle (Korunur)
+---
+ð SaÄ TÄ±k / BasÄ±lÄ± Tut: EÅyayÄ± kilitle
+(Hepsini Sat'ta korunur)
+---
+ð¦ FENER
+---
+ð¨ Ãretilen
+---
+ð´ Ãzel
+---
+ð¶ï¸
+---
+ð¹ï¸ YÃ¼zÃ¼Å YÃ¶nÃ¼ (Joystick)
+---
+ðï¸ Ä°NCELE
+---
+ðï¸
+---
+ðï¸ BÄ±rak
+---
+ðï¸ ÃÃ¶p
+---
+ð¤ Tekneye ÃÄ±k [E]
+---
+ðª ANA MENÃYE DÃN
+---
+ð¤¿ DALIÅA BAÅLA / OKYANUS
+---
+ð¤¿ YapÄ±lan DalÄ±Å
+---
+ð¥½+
+---
+ð¥½-
+---
+ð§ª
+---
+ð§ª GEREKLÄ° HAMMADDELER (KÄ°LÄ°TSÄ°Z):
+---
+ð§ª LABORATUVAR & SENTEZ MERKEZÄ°
+---
+ð§ª Madde
+---
+ð«§ OKSÄ°JEN:
+---
+💡 Bulanık Derinlikler: Dalış gözlüğünü geliştirerek diplerdeki görüş mesafeni artırabilirsin.
+---
+💡 Derinlik & Basınç: Derinlere indikçe oksijenin çok daha hızlı tükenir, Atölye'den tüpünü geliştirmeyi unutma!
+---
+💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin.
+---
+💡 Güvenli Satış: 'Hepsini Sat' butonu kilitli eşyalarını asla satmaz.
+---
+💡 Hızlı Yüzüş: Palet seviyeni artırarak su altında daha çevik hareket edebilir ve akıntılara karşı koyabilirsin.
+---
+💡 Mesai Saati: Akşam 19:00 olduğunda hava kararır ve dalış kilitlenir; gününü iyi planla!
+---
+💡 Tüccar Uzmanlıkları: Hurda ve çöpleri Çöpçüye, antikaları Antikacıya, gizemli kırmızı eşyaları Kara Borsa'ya sat.
+---
+💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin.
+---
+💡 Çanta Düzeni: Çanta ekranındaki 'Sırala' butonu ile eşyalarını fiyata veya türe göre dizebilirsin.

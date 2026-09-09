@@ -60,8 +60,13 @@ var has_mobile_aim: bool = false                     # Mobilde aktif fener hedef
 @export var goggles_level: int = 0               # Dalış Gözlüğü Seviyesi
 @export var flashlight_level: int = 0:           # Dalış Feneri Seviyesi (0: Yok, 1-15: Seviye)
 	set(val):
+		var prev_lvl: int = flashlight_level
 		flashlight_level = val
 		_update_flashlight_specs()
+		if prev_lvl == 0 and val > 0:
+			current_battery = max_battery
+			_broadcast_battery()
+		GlobalInventory.equipment_updated.emit("flashlight_level", val)
 		GlobalInventory.inventory_updated.emit()
 @export var fins_speed_per_level: float = 55.0   # Her seviyede max_speed ve accel'e eklenen bonus (px/s)
 @export var goggles_zoom_min_per_level: float = 0.04   # Her seviyede camera_zoom_min bu kadar azalır
@@ -140,6 +145,7 @@ var _previous_oxygen: float = 100.0
 var _flashlight_light: PointLight2D = null
 var _cached_flashlight_texture: Texture2D = null
 var _cached_flashlight_tex_level: int = -999
+var _cone_texture_cache: Dictionary = {}
 
 var _anim_timer: float = 0.0
 var _current_frame: int = 0
@@ -228,21 +234,56 @@ func _handle_movement(delta: float) -> void:
 		input_y = clamp(input_y, -1.0, 1.0)
 		input_direction = Vector2(input_x, input_y)
 
-	var wants_sprint: bool = Input.is_key_pressed(KEY_SHIFT) or mobile_sprint_active
-	var has_input: bool = input_direction.length_squared() > 0.001
-	is_sprinting = wants_sprint and has_input and (current_oxygen > 0.0 or godmode_enabled)
+	var has_input_x: bool = absf(input_direction.x) > 0.05
+	var has_input_y: bool = absf(input_direction.y) > 0.05
+	var has_any_input: bool = has_input_x or has_input_y
 
-	if input_direction.length() > 0.0:
-		input_direction = input_direction.normalized()
-		var target_velocity: Vector2 = input_direction * get_effective_max_speed()
-		velocity = velocity.move_toward(target_velocity, get_effective_max_accel() * delta)
+	var wants_sprint: bool = Input.is_key_pressed(KEY_SHIFT) or mobile_sprint_active
+	is_sprinting = wants_sprint and has_any_input and (current_oxygen > 0.0 or godmode_enabled)
+
+	var effective_max_speed: float = get_effective_max_speed()
+	var base_accel: float = get_effective_max_accel()
+
+	# Normalizasyon: Çapraz yüzüşte toplam hız vektörünün max_speed'i aşmaması için
+	var move_dir: Vector2 = input_direction.normalized() if has_any_input else Vector2.ZERO
+
+	# ------------------------------------------------------------------
+	# 1. YATAY EKSEN (X) HAREKET VE SÜZÜLME
+	# ------------------------------------------------------------------
+	if has_input_x:
+		var target_vx: float = move_dir.x * effective_max_speed
+		velocity.x = move_toward(velocity.x, target_vx, base_accel * delta)
 	else:
-		velocity = velocity.move_toward(Vector2.ZERO, friction * delta)
-		velocity.y = min(velocity.y + sink_speed * delta, max_sink_velocity)
+		# Yatayda akışkan su süzülmesi
+		velocity.x = move_toward(velocity.x, 0.0, friction * delta)
+
+	# ------------------------------------------------------------------
+	# 2. DİKEY EKSEN (Y) HAREKET VE AKIŞKAN BATMA / SÜZÜLME (REWORK)
+	# ------------------------------------------------------------------
+	if has_input_y:
+		var target_vy: float = move_dir.y * effective_max_speed
+		# Seçenek B: Aşağı dalış yerçekimiyle hafif daha akıcı, yukarı yüzüş su kütlesine karşı daha tok
+		var accel_y: float = base_accel * (1.06 if target_vy > 0.0 else 0.92)
+		velocity.y = move_toward(velocity.y, target_vy, accel_y * delta)
+	else:
+		if has_input_x:
+			# Oyuncu sadece yatay yüzüyorsa, dikey momentum su sürtünmesiyle yumuşak bir kavis çizerek yataya oturur
+			velocity.y = move_toward(velocity.y, 0.0, friction * delta)
+		else:
+			# Boşta süzülme ve doğal batma:
+			if velocity.y > max_sink_velocity:
+				# Aşağı dalış sonrası tuş bırakıldı: Hız 40'a çakılmaz, kademeli süzülür!
+				velocity.y = move_toward(velocity.y, max_sink_velocity, friction * delta)
+			elif velocity.y < 0.0:
+				# Yukarı yüzüş sonrası tuş bırakıldı: Su direnciyle yumuşakça sönümlenir
+				velocity.y = move_toward(velocity.y, 0.0, (friction + sink_speed * 3.0) * delta)
+			else:
+				# 0 ile max_sink_velocity arasında doğal batma hızına oturma
+				velocity.y = move_toward(velocity.y, max_sink_velocity, sink_speed * delta)
 
 
 # ------------------------------------------------------------------
-# ANİMASYON SİSTEMİ
+# ANİMASYON SİSTEMİ & DİNAMİK YÜZÜŞ EĞİMİ
 # ------------------------------------------------------------------
 func _update_animation(delta: float) -> void:
 	if swim_frames.is_empty() or not is_instance_valid(sprite):
@@ -258,6 +299,14 @@ func _update_animation(delta: float) -> void:
 	var current_speed: float = velocity.length()
 	var effective_max: float = maxf(get_effective_max_speed(), 1.0)
 	var speed_ratio: float = clampf(current_speed / effective_max, 0.0, 1.0)
+
+	# Dinamik Yüzüş Eğimi (Pitch / Tilt):
+	# Dikey hıza göre dalgıcın burnu hareket yönüne doğru doğal bir açıyla (±12°) yatar.
+	var pitch_max_deg: float = 12.0
+	var vert_ratio: float = clampf(velocity.y / effective_max, -1.0, 1.0)
+	var base_tilt: float = deg_to_rad(pitch_max_deg) * vert_ratio
+	var target_rotation: float = -base_tilt if sprite.flip_h else base_tilt
+	sprite.rotation = lerp_angle(sprite.rotation, target_rotation, 8.0 * delta)
 
 	# Dururken yavaşça süzülür (idle), hızlandıkça abartmadan max hızına yumuşakça yaklaşır (sprintte daha dinamik)
 	var target_max_anim: float = max_anim_speed * (1.25 if is_sprinting else 1.0)
@@ -499,13 +548,16 @@ func _setup_flashlight() -> void:
 	if not _flashlight_light:
 		_flashlight_light = PointLight2D.new()
 		_flashlight_light.name = "Flashlight"
-		_flashlight_light.range_layer_min = -10
-		_flashlight_light.range_layer_max = 10
 		_flashlight_light.blend_mode = PointLight2D.BLEND_MODE_ADD
 		add_child(_flashlight_light)
 
-	var angle_deg: float = get_flashlight_cone_angle_deg()
-	_cached_flashlight_texture = _generate_cone_texture(angle_deg)
+	_flashlight_light.range_layer_min = 0
+	_flashlight_light.range_layer_max = 0
+
+	if not _cone_texture_cache.has(flashlight_level):
+		var angle_deg: float = get_flashlight_cone_angle_deg()
+		_cone_texture_cache[flashlight_level] = _generate_cone_texture(angle_deg)
+	_cached_flashlight_texture = _cone_texture_cache[flashlight_level]
 	_cached_flashlight_tex_level = flashlight_level
 	_flashlight_light.texture = _cached_flashlight_texture
 	_flashlight_light.offset = Vector2.ZERO
@@ -558,8 +610,10 @@ func _update_flashlight_specs() -> void:
 		return
 
 	if _cached_flashlight_tex_level != flashlight_level or _cached_flashlight_texture == null:
-		var angle_deg: float = get_flashlight_cone_angle_deg()
-		_cached_flashlight_texture = _generate_cone_texture(angle_deg)
+		if not _cone_texture_cache.has(flashlight_level):
+			var angle_deg: float = get_flashlight_cone_angle_deg()
+			_cone_texture_cache[flashlight_level] = _generate_cone_texture(angle_deg)
+		_cached_flashlight_texture = _cone_texture_cache[flashlight_level]
 		_cached_flashlight_tex_level = flashlight_level
 		_flashlight_light.texture = _cached_flashlight_texture
 		_flashlight_light.offset = Vector2.ZERO # Dalgıç merkezine kilitli, asla sapmaz
@@ -590,6 +644,18 @@ func toggle_flashlight() -> void:
 
 	GlobalSoundManager.play_sfx("click")
 	self.is_flashlight_on = not is_flashlight_on
+
+
+func turn_off_flashlight() -> void:
+	if is_flashlight_on:
+		self.is_flashlight_on = false
+
+
+func reset_flashlight_for_office() -> void:
+	if is_flashlight_on:
+		self.is_flashlight_on = false
+	_update_flashlight_visual()
+	_broadcast_battery()
 
 
 func _generate_cone_texture(angle_deg: float, size: int = 256) -> Texture2D:
@@ -658,13 +724,15 @@ func _generate_cone_texture(angle_deg: float, size: int = 256) -> Texture2D:
 func _handle_battery_and_flashlight(delta: float) -> void:
 	# Fener yönü: Mobilde mobil hedef açısı, PC'de mouse cursor konumu
 	if is_instance_valid(_flashlight_light) and _flashlight_light.visible:
-		var target_angle: float
-		if OS.has_feature("mobile") and has_mobile_aim:
-			target_angle = mobile_aim_angle
-		else:
-			var mouse_pos: Vector2 = get_global_mouse_position()
-			target_angle = (mouse_pos - global_position).angle()
-		_flashlight_light.rotation = lerp_angle(_flashlight_light.rotation, target_angle, 14.0 * delta)
+		var is_ui_blocking: bool = get_tree().paused or get_tree().get_nodes_in_group("popup_ui").size() > 0 or get_tree().get_nodes_in_group("office_menu").size() > 0
+		if not is_ui_blocking:
+			var target_angle: float
+			if OS.has_feature("mobile") and has_mobile_aim:
+				target_angle = mobile_aim_angle
+			else:
+				var mouse_pos: Vector2 = get_global_mouse_position()
+				target_angle = (mouse_pos - global_position).angle()
+			_flashlight_light.rotation = lerp_angle(_flashlight_light.rotation, target_angle, 14.0 * delta)
 
 	if godmode_enabled:
 		current_battery = max_battery
@@ -679,15 +747,7 @@ func _handle_battery_and_flashlight(delta: float) -> void:
 		_refresh_battery_bar()
 		return
 
-	var surface_y: float = InfiniteMapManager.water_surface_y
-	var surface_band: float = 40.0
-
-	# Yüzeyde şarj olma (solar / dinamo)
-	if global_position.y <= surface_y + surface_band:
-		if current_battery < max_battery:
-			current_battery = min(current_battery + surface_battery_regen_rate * delta, max_battery)
-			_broadcast_battery()
-	elif is_flashlight_on:
+	if is_flashlight_on:
 		current_battery = max(0.0, current_battery - 1.0 * delta)
 		_broadcast_battery()
 		if current_battery <= 0.0:
