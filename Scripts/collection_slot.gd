@@ -37,7 +37,7 @@ func setup(item_data: ItemData, discovered: bool) -> void:
 	if discovered:
 		item_icon.modulate = Color(1.0, 1.0, 1.0, 1.0)
 		rarity_bg.color = CATEGORY_COLORS.get(item_data.category, Color(0.2, 0.2, 0.2, 0.8))
-		tooltip_text = item_data.item_name
+		tooltip_text = ItemTranslator.get_item_name(item_data)
 		mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	else:
 		item_icon.modulate = SILHOUETTE_COLOR  # Sprite'ın alfa/şeklini korur, rengini siyaha çeker

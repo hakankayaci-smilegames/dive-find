@@ -24,9 +24,28 @@ extends CanvasLayer
 var _selected_item: ItemData = null
 
 
+const SHOP_TITLES_EN: Dictionary = {
+	"Çöpcü": "Scavenger",
+	"Çöpçü": "Scavenger",
+	"Antikacı": "Antiquarian",
+	"Kara Borsa": "Black Market",
+	"Satış Pazarı": "Marketplace",
+}
+
+
+func _update_shop_header() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	if is_en and SHOP_TITLES_EN.has(shop_title):
+		title_label.text = SHOP_TITLES_EN[shop_title]
+	else:
+		title_label.text = shop_title
+	if is_instance_valid(close_button):
+		close_button.text = "CLOSE" if is_en else "KAPAT"
+
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	title_label.text = shop_title
+	_update_shop_header()
 	close_button.pressed.connect(queue_free)
 	sell_button.pressed.connect(_on_sell_pressed)
 	if is_instance_valid(sell_all_button):
@@ -41,6 +60,7 @@ func _ready() -> void:
 	texture_rect.visible = isOE
 	title_label_2.visible = isOE
 
+	add_to_group("item_seller")
 	_clear_details()
 	_populate_list()
 
@@ -55,12 +75,13 @@ func _exit_tree() -> void:
 func _clear_details() -> void:
 	_selected_item = null
 	big_image.texture = null
-	name_label.text = "Bir Eşya Seçin"
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	name_label.text = "Select an Item" if is_en else "Bir Eşya Seçin"
 	rarity_label.text = ""
 	value_label.text = ""
 	desc_label.text = ""
 	sell_button.disabled = true
-	sell_button.text = "SAT"
+	sell_button.text = "SELL" if is_en else "SAT"
 
 
 func _get_filtered_items() -> Array:
@@ -122,15 +143,16 @@ func _populate_list() -> void:
 			unlocked_count += 1
 
 	if is_instance_valid(sell_all_button):
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
 		if items.is_empty():
 			sell_all_button.disabled = true
-			sell_all_button.text = "HEPSİNİ SAT"
+			sell_all_button.text = "SELL ALL" if is_en else "HEPSİNİ SAT"
 		elif unlocked_count == 0:
 			sell_all_button.disabled = true
-			sell_all_button.text = "TÜMÜ KİLİTLİ 🔒"
+			sell_all_button.text = "ALL LOCKED 🔒" if is_en else "TÜMÜ KİLİTLİ 🔒"
 		else:
 			sell_all_button.disabled = false
-			sell_all_button.text = "HEPSİNİ SAT (%d Zurna)" % total_sell_value
+			sell_all_button.text = ("SELL ALL (%d Zurna)" if is_en else "HEPSİNİ SAT (%d Zurna)") % total_sell_value
 
 	# Seçili eşya listeden çıktıysa (satıldıysa/filtreye artık uymuyorsa) detay panelini temizle
 	if _selected_item and not items.has(_selected_item):
@@ -163,29 +185,46 @@ func _display_item_details(data: ItemData) -> void:
 
 	big_image.texture = data.get("sprite")
 	var is_locked: bool = bool(data.get("is_locked"))
-	var lock_tag: String = " 🔒 [KİLİTLİ]" if is_locked else ""
-	name_label.text = str(data.get("item_name")) + lock_tag
-	desc_label.text = str(data.get("description"))
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	var lock_tag: String = (" 🔒 [LOCKED]" if is_en else " 🔒 [KİLİTLİ]") if is_locked else ""
+	name_label.text = ItemTranslator.get_item_name(data) + lock_tag
+	var desc_text: String = ItemTranslator.get_item_description(data)
+	desc_label.text = desc_text
+	if desc_text.length() > 140:
+		desc_label.add_theme_font_size_override("font_size", 11)
+	else:
+		desc_label.add_theme_font_size_override("font_size", 12)
 
 	var sell_price: int = _get_sell_price(data)
 	if is_locked:
-		value_label.text = "Satış Fiyatı: %d Zurna (Korumalı)" % sell_price
+		value_label.text = ("Sell Price: %d Zurna (Protected)" if is_en else "Satış Fiyatı: %d Zurna (Korumalı)") % sell_price
 		sell_button.disabled = true
-		sell_button.text = "🔒 KİLİTLİ"
+		sell_button.text = "🔒 LOCKED" if is_en else "🔒 KİLİTLİ"
 	else:
-		value_label.text = "Satış Fiyatı: %d Zurna" % sell_price
+		value_label.text = ("Sell Price: %d Zurna" if is_en else "Satış Fiyatı: %d Zurna") % sell_price
 		sell_button.disabled = false
-		sell_button.text = "SAT (%d Zurna)" % sell_price
+		sell_button.text = ("SELL (%d Zurna)" if is_en else "SAT (%d Zurna)") % sell_price
 
+	var category_key: String = str(data.get("category"))
 	var category_text := ""
-	match data.get("category"):
-		"Trash": category_text = "Kategori: Çöp"
-		"Resource": category_text = "Kategori: Ham Madde"
-		"Rare Found": category_text = "Kategori: Nadir Buluntu"
-		"Special": category_text = "Kategori: Özel"
-		"Valuable": category_text = "Kategori: Değerli"
-		"Crafted": category_text = "Kategori: Üretilmiş Eşya"
-		_: category_text = "Kategori: Bilinmeyen"
+	if is_en:
+		match category_key:
+			"Trash": category_text = "Category: Trash"
+			"Resource": category_text = "Category: Resource"
+			"Rare Found": category_text = "Category: Rare Find"
+			"Special": category_text = "Category: Special"
+			"Valuable": category_text = "Category: Valuable"
+			"Crafted": category_text = "Category: Crafted"
+			_: category_text = "Category: " + category_key
+	else:
+		match category_key:
+			"Trash": category_text = "Kategori: Çöp"
+			"Resource": category_text = "Kategori: Ham Madde"
+			"Rare Found": category_text = "Kategori: Nadir Buluntu"
+			"Special": category_text = "Kategori: Özel"
+			"Valuable": category_text = "Kategori: Değerli"
+			"Crafted": category_text = "Kategori: Üretilmiş Eşya"
+			_: category_text = "Kategori: Bilinmeyen"
 	rarity_label.text = category_text
 
 
@@ -285,3 +324,12 @@ func _on_sell_button_pressed() -> void:
 
 func _get_time_mgr() -> Node:
 	return get_node_or_null("/root/GlobalTime")
+
+
+func refresh_ui() -> void:
+	_update_shop_header()
+	_populate_list()
+	if _selected_item:
+		_display_item_details(_selected_item)
+	else:
+		_clear_details()

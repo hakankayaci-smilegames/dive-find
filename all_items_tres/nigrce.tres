@@ -7,7 +7,7 @@
 script = ExtResource("1_thmi3")
 item_name = "Kaslı Adam "
 sprite = ExtResource("2_o2cam")
-description = "Lan ben bukadar ekipman kullanıyorum adam gelmiş burda yatıyor... Reis nabıyon ya!!(para eder bu, kaslıymış)"
+description = "Yüzlerce metre derinlikte tek bir oksijen tüpü bile olmadan suyun dibinde öylece uzanan inanılmaz yapılı bir figür. Bu basınca nasıl dayandığı fizik kurallarını aşıyor; gören hayrete düşer."
 rarity = 6
 value = 9500
 category = "Special"

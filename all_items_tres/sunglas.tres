@@ -7,7 +7,7 @@
 script = ExtResource("1_pj6gf")
 item_name = "Güneş Gözlüğü"
 sprite = ExtResource("2_n4oun")
-description = "Vaaaay, şık bir güneş gözlüğü, tasarlayan ne güzel tasarlamış, tam divalara layık, çakma rayban değilse para eder...(çakma...)"
+description = "Okyanus zemininde bile havalı duruşundan ödün vermeyen şık bir güneş gözlüğü. İtalyan tasarımı havası verse de yakından bakınca sahil tezgahı menşeili olduğu anlaşılıyor."
 rarity = 1
 value = 115
 category = "Rare Found"

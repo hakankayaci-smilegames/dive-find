@@ -7,8 +7,7 @@
 script = ExtResource("1_2gu6h")
 item_name = "İnci Kolye"
 sprite = ExtResource("2_ja7ns")
-description = "Vay be, ne güzel bir kolye, sevgilim ister mi aca-
-pardon ilaçlarımı almalıyım....para eder işte"
+description = "Zarif bir ipe dizilmiş pırıl pırıl doğal inciler. Dalgaların arasında kaybolmuş gerçek bir romantizm kalıntısı. Antikacıda hatırı sayılır bir servet bırakacaktır."
 rarity = 2
 value = 100
 category = "Valuable"

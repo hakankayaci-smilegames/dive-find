@@ -7,6 +7,6 @@
 script = ExtResource("1_qajil")
 item_name = "Bükük Çatal"
 sprite = ExtResource("2_pespg")
-description = "Adam çatal atmış, bükmüş bide maymun...en azından düzgün kullansaydın be adam"
+description = "Matrix filminden fırlamışçasına akıl almaz bir açıyla bükülmüş bir yemek çatalı. Zihin gücüyle mi büküldü yoksa konserve açarken mi harcandı, asla bilemeyeceğiz."
 value = 4
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

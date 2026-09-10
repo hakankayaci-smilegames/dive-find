@@ -7,7 +7,7 @@
 script = ExtResource("1_ab64v")
 item_name = "Zoktayın Saç Renginde Boya"
 sprite = ExtResource("2_qf03g")
-description = "Aha buney la?...Aaa kullanılmış saç boyası, tamda Zoktayın renginde,(at cebe kullanırız dibinde varsa)"
+description = "Kullanılmış tüp içinde kalan parlak tonlu bir saç boyası. Okyanusun en fiyakalı balıklarını bile kıskandıracak canlılıkta; laboratuvarda pigment olarak paha biçilemez."
 rarity = 2
 value = 32
 category = "Rare Found"

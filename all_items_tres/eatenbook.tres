@@ -7,6 +7,6 @@
 script = ExtResource("1_r81fr")
 item_name = "Isırılmış Kitap"
 sprite = ExtResource("2_e781e")
-description = "Biri derste sıkılmış ve açıkmış, tenefüsü bekleseydin kardeşim kitabı niye kemiriyon ya"
+description = "Köşesinde bariz diş izleri olan kalın bir ders kitabı. Bilgiye aç olmak deyimini biraz fazla harfi harfine anlamış bir öğrencinin mirası olmalı."
 value = 9
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

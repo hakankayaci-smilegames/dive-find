@@ -7,7 +7,7 @@
 script = ExtResource("1_qfj3s")
 item_name = "Ekonomi Kitabı"
 sprite = ExtResource("2_dxlfs")
-description = "Meşhur bir ekonomistin kitabıymış, üstünde yüzü var."
+description = "Kapağında kendinden emin bir portrenin yer aldığı meşhur bir ekonomi kitabı. Sayfalarını okumak derin bir faiz-enflasyon aydınlanması vadediyor."
 rarity = 2
 value = 75
 category = "Rare Found"

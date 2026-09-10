@@ -256,24 +256,35 @@ func get_save_data() -> Dictionary:
 
 func get_save_summary() -> String:
 	var data := get_save_data()
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if data.is_empty():
-		return "Kayıtlı oyun bulunamadı."
+		return "No saved game found." if is_en else "Kayıtlı oyun bulunamadı."
 
 	var day: int = int(data.get("current_day", 1))
 	var hour: int = int(data.get("current_hour", 10))
 	var minute: int = int(data.get("current_minute", 0))
 	var money: int = int(data.get("money", 0))
-	var save_time: String = str(data.get("save_time", "Bilinmiyor"))
+	var save_time: String = str(data.get("save_time", "Unknown" if is_en else "Bilinmiyor"))
 	var eq: Dictionary = data.get("equipment", {})
 	var tube: int = int(eq.get("tube_level", 1))
 	var fins: int = int(eq.get("fins_level", 0))
 	var goggles: int = int(eq.get("goggles_level", 0))
 	var bag: int = int(eq.get("backpack_level", 0))
+	var flash: int = int(eq.get("flashlight_level", 0))
 	var item_count: int = int(data.get("inventory_count", 0))
 
-	return "📅 Gün: %d  |  ⏰ Saat: %02d:%02d\n💰 Bakiye: %d Zurna\n🎒 Eşya: %d Adet\n⚙️ Ekipmanlar: Tüp Lvl %d | Palet Lvl %d | Gözlük Lvl %d | Çanta Lvl %d\n🕒 Kayıt: %s" % [
-		day, hour, minute, money, item_count, tube, fins, goggles, bag, save_time
-	]
+	var flash_str: String = ""
+	if flash > 0:
+		flash_str = (" | Light Lvl %d" if is_en else " | Fener Lvl %d") % flash
+
+	if is_en:
+		return "📅 Day: %d  |  ⏰ Time: %02d:%02d\n💰 Balance: %d Zurna\n🎒 Items: %d Qty\n⚙️ Equipment: Tank Lvl %d | Fins Lvl %d | Mask Lvl %d | Bag Lvl %d%s\n🕒 Saved: %s" % [
+			day, hour, minute, money, item_count, tube, fins, goggles, bag, flash_str, save_time
+		]
+	else:
+		return "📅 Gün: %d  |  ⏰ Saat: %02d:%02d\n💰 Bakiye: %d Zurna\n🎒 Eşya: %d Adet\n⚙️ Ekipmanlar: Tüp Lvl %d | Palet Lvl %d | Gözlük Lvl %d | Çanta Lvl %d%s\n🕒 Kayıt: %s" % [
+			day, hour, minute, money, item_count, tube, fins, goggles, bag, flash_str, save_time
+		]
 
 
 func save_game(day: int, money: int, equipment: Dictionary) -> bool:

@@ -7,6 +7,6 @@
 script = ExtResource("1_1qwk2")
 item_name = "Poşet"
 sprite = ExtResource("2_hwdeg")
-description = "Klasik.....10iq maymun atmaz şunu denize bi öğrenemedeniz."
+description = "Suyun akıntısıyla bir denizanası gibi süzülen sıradan bir market poşeti. Deniz canlılarının kabusu olsa da laboratuvar için bedava polimer kaynağı."
 value = 3
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

@@ -7,7 +7,7 @@
 script = ExtResource("1_7pmcg")
 item_name = "Kamera"
 sprite = ExtResource("2_ov4lh")
-description = "FUJISAN marka orjinal kamera..kasası güzelmiş. Sarar"
+description = "Antika değerinde mekanik bir \"Fujisan\" vizörlü kamera. Su altındaki basınç sağlam kasasına zarar verememiş; içindeki film makarasında kim bilir hangi kayıp anılar saklı."
 rarity = 3
 value = 450
 category = "Valuable"

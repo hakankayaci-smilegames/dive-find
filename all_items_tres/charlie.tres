@@ -7,7 +7,7 @@
 script = ExtResource("1_7iufv")
 item_name = "Charlie Kirk Assasin Planı"
 sprite = ExtResource("2_y6rs1")
-description = "Hey deri kapaklı bir ajanda....Bekle..BU KİMİN DEFTERİ LAN?..İçinde Charli Kirkin Suikast planı var....FBI bunun için çok zurna verir!."
+description = "Su geçirmez deri bir ajanda. Sayfalarını araladığınızda üst düzey bir diplomatik komplonun krokileri beliriyor. İstihbarat servisleri ve karaborsacılar bu belgelere servet öder!"
 rarity = 5
 value = 7500
 category = "Special"

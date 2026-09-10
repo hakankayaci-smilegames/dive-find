@@ -7,7 +7,7 @@
 script = ExtResource("1_script")
 item_name = "İşlenmiş Plastik Bobini"
 sprite = ExtResource("2_sprite")
-description = "Pet şişeler ve poşetlerin laboratuvarda eritilip sıkıştırılmasıyla elde edilen geri dönüştürülmüş plastik hammadde."
+description = "Okyanustan toplanan plastik atıkların laboratuvarda arındırılıp preslenmesiyle elde edilen kaliteli polimer bobin. Temiz bir deniz ve karlı bir ticaretin simgesi."
 rarity = 1.0
 value = 20
 category = "Crafted"

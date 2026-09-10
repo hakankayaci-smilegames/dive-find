@@ -27,6 +27,15 @@ const CATEGORY_NAMES := {
 	"Crafted": "[ ÜRETİLMİŞ ]"
 }
 
+const CATEGORY_NAMES_EN := {
+	"Trash": "[ TRASH ]",
+	"Resource": "[ RESOURCE ]",
+	"Rare Found": "[ RARE FIND ]",
+	"Valuable": "[ VALUABLE ]",
+	"Special": "[ SPECIAL ]",
+	"Crafted": "[ CRAFTED ]"
+}
+
 const CATEGORY_COLORS := {
 	"Trash": Color(0.70, 0.65, 0.60),
 	"Resource": Color(0.30, 0.80, 1.00),
@@ -44,6 +53,16 @@ const RARITY_NAMES := {
 	4: "Efsanevi",
 	5: "Mistik",
 	6: "İlahi"
+}
+
+const RARITY_NAMES_EN := {
+	0: "Common",
+	1: "Uncommon",
+	2: "Rare",
+	3: "Epic",
+	4: "Legendary",
+	5: "Mythic",
+	6: "Divine"
 }
 
 const RARITY_COLORS := {
@@ -98,11 +117,16 @@ func setup(data: Resource, physical_item: Node2D = null, preview_mode: bool = fa
 	_physical_item = physical_item
 	_is_preview_mode = preview_mode
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 	if _is_preview_mode:
 		if is_instance_valid(pickup_button):
 			pickup_button.visible = false
 		if is_instance_valid(close_button):
-			close_button.text = "KAPAT [ESC]"
+			close_button.text = "CLOSE [ESC]" if is_en else "KAPAT [ESC]"
+	else:
+		if is_instance_valid(close_button):
+			close_button.text = "LEAVE [ESC]" if is_en else "BIRAK [ESC]"
 
 	if not _item_data:
 		return
@@ -110,13 +134,20 @@ func setup(data: Resource, physical_item: Node2D = null, preview_mode: bool = fa
 	# Görsel ve İsim
 	if _item_data.get("sprite"):
 		item_image.texture = _item_data.get("sprite")
-	name_label.text = str(_item_data.get("item_name"))
-	desc_label.text = str(_item_data.get("description"))
-	value_label.text = "Değer: %s Zurna" % str(_item_data.get("value"))
+
+	var item_obj: ItemData = _item_data as ItemData
+	name_label.text = ItemTranslator.get_item_name(item_obj) if item_obj else str(_item_data.get("item_name"))
+	var desc_text: String = ItemTranslator.get_item_description(item_obj) if item_obj else str(_item_data.get("description"))
+	desc_label.text = desc_text
+	if desc_text.length() > 140:
+		desc_label.add_theme_font_size_override("font_size", 11)
+	else:
+		desc_label.add_theme_font_size_override("font_size", 12)
+	value_label.text = ("Value: %s Zurna" if is_en else "Değer: %s Zurna") % str(_item_data.get("value"))
 
 	# Nadirlik Renk ve Metni
 	var raw_rarity: int = int(_item_data.get("rarity")) if _item_data.get("rarity") != null else 0
-	var r_name: String = RARITY_NAMES.get(raw_rarity, "Bilinmeyen")
+	var r_name: String = RARITY_NAMES_EN.get(raw_rarity, "Unknown") if is_en else RARITY_NAMES.get(raw_rarity, "Bilinmeyen")
 	var r_color: Color = RARITY_COLORS.get(raw_rarity, Color(0.7, 0.7, 0.7))
 	rarity_label.text = "* " + r_name
 	rarity_label.add_theme_color_override("font_color", r_color)
@@ -130,7 +161,7 @@ func setup(data: Resource, physical_item: Node2D = null, preview_mode: bool = fa
 
 	# Kategori Rozeti (Belirgin arka plan ve kenarlık)
 	var category_key: String = str(_item_data.get("category"))
-	var c_display: String = CATEGORY_NAMES.get(category_key, "[ %s ]" % category_key.to_upper())
+	var c_display: String = (CATEGORY_NAMES_EN if is_en else CATEGORY_NAMES).get(category_key, "[ %s ]" % category_key.to_upper())
 	var c_color: Color = CATEGORY_COLORS.get(category_key, Color(0.85, 0.75, 0.45))
 
 	category_label.text = c_display
@@ -165,11 +196,12 @@ func _refresh_pickup_state() -> void:
 	if not is_instance_valid(pickup_button):
 		return
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if GlobalInventory.is_full():
-		pickup_button.text = "DOLU (%d/%d)" % [GlobalInventory.collected_items.size(), GlobalInventory.get_capacity()]
-		pickup_button.tooltip_text = "Çantan dolu! Boşaltman gerek."
+		pickup_button.text = ("FULL (%d/%d)" if is_en else "DOLU (%d/%d)") % [GlobalInventory.collected_items.size(), GlobalInventory.get_capacity()]
+		pickup_button.tooltip_text = "Inventory full! You need to clear space." if is_en else "Çantan dolu! Boşaltman gerek."
 	else:
-		pickup_button.text = "AL [E]"
+		pickup_button.text = "PICK UP [E]" if is_en else "AL [E]"
 		pickup_button.tooltip_text = ""
 
 
@@ -230,6 +262,11 @@ func _animate_and_close() -> void:
 	tw.tween_property(backdrop, "modulate:a", 0.0, 0.12)
 	tw.tween_property(card_panel, "scale", Vector2(0.85, 0.85), 0.12).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	tw.chain().tween_callback(queue_free)
+
+
+func refresh_ui() -> void:
+	if _item_data:
+		setup(_item_data, _physical_item, _is_preview_mode)
 
 
 func _exit_tree() -> void:

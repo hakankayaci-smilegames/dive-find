@@ -7,7 +7,7 @@
 script = ExtResource("1_m80mo")
 item_name = "Kanlı Bıçak?"
 sprite = ExtResource("2_smkh6")
-description = "Denize bıçak atmışlar? Bekle o üstündeki....kan mı?...kenarında az okunur bişey kazılı....\"Dexter Morgan\""
+description = "Dip akıntılarına bırakılmış gizemli bir av bıçağı. Kabzasında silik bir \"Dexter M.\" kazıması seçiliyor. Derin sularda çözülmemiş dosyaların izini sürenler için tüyler ürpertici bir kanıt."
 rarity = 6
 value = 4000
 category = "Special"

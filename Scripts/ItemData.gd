@@ -9,3 +9,9 @@ class_name ItemData
 @export_enum("Trash", "Resource", "Rare Found", "Special", "Valuable", "Crafted") var category: String = "Trash"
 var is_locked: bool = false
 var source_path: String = ""
+
+func get_display_name() -> String:
+	return ItemTranslator.get_item_name(self)
+
+func get_display_description() -> String:
+	return ItemTranslator.get_item_description(self)

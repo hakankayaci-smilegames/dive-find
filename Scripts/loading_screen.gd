@@ -13,12 +13,14 @@ var duration: float:
 
 signal finished
 
-@onready var tip_label: Label = $BottomContainer/TipLabel
+@onready var tip_label: Label = get_node_or_null("TipCard/TipLabel") if has_node("TipCard/TipLabel") else get_node_or_null("BottomContainer/TipLabel")
 @onready var stage_label: Label = $BottomContainer/StatusRow/StageLabel
 @onready var percent_label: Label = $BottomContainer/StatusRow/PercentLabel
 @onready var progress_bar: ProgressBar = $BottomContainer/ProgressBar
 @onready var fade_overlay: ColorRect = $FadeOverlay
 @onready var continue_prompt: PanelContainer = get_node_or_null("ContinuePrompt")
+@onready var prompt_label: Label = get_node_or_null("ContinuePrompt/PromptLabel") if has_node("ContinuePrompt/PromptLabel") else get_node_or_null("ContinuePrompt/Label")
+@onready var header_logo: TextureRect = get_node_or_null("HeaderLogo")
 
 var _tips: Array[String] = []
 var _elapsed_time: float = 0.0
@@ -46,7 +48,13 @@ func _ready() -> void:
 	_load_tips()
 	_display_random_tip()
 
-	# 3. Gerçek Arka Plan Sahne Talebi (Threaded Loading)
+	# 3. Logo hafif giriş animasyonu
+	if is_instance_valid(header_logo):
+		header_logo.modulate.a = 0.0
+		var logo_tw := create_tween()
+		logo_tw.tween_property(header_logo, "modulate:a", 1.0, 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+
+	# 4. Gerçek Arka Plan Sahne Talebi (Threaded Loading)
 	if auto_change_scene:
 		ResourceLoader.load_threaded_request(target_scene_path)
 
@@ -112,12 +120,21 @@ func _load_tips() -> void:
 					_tips.append(str(item))
 
 	if _tips.is_empty():
-		_tips = [
-			"💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin.",
-			"💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin.",
-			"💡 Güvenli Satış: 'Hepsini Sat' butonu kilitli eşyalarını asla satmaz.",
-			"💡 Derinlik & Basınç: Derinlere indikçe oksijenin çok daha hızlı tükenir, Atölye'den tüpünü geliştirmeyi unutma!"
-		]
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
+		if is_en:
+			_tips = [
+				"💡 [E] Shortcut: When you reach the surface, press [E] to quickly board your boat.",
+				"💡 Item Locking: You can Right Click valuable items in your backpack to Lock 🔒 them.",
+				"💡 Safe Selling: The 'Sell All' button will never sell your locked items.",
+				"💡 Depth & Pressure: The deeper you dive, the faster oxygen depletes. Don't forget to upgrade your tank at the Workshop!"
+			]
+		else:
+			_tips = [
+				"💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin.",
+				"💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin.",
+				"💡 Güvenli Satış: 'Hepsini Sat' butonu kilitli eşyalarını asla satmaz.",
+				"💡 Derinlik & Basınç: Derinlere indikçe oksijenin çok daha hızlı tükenir, Atölye'den tüpünü geliştirmeyi unutma!"
+			]
 
 
 func _display_random_tip() -> void:
@@ -134,20 +151,26 @@ func _update_progress_ui(val: float) -> void:
 		percent_label.text = "%%%d" % int_val
 
 	if is_instance_valid(stage_label) and not _waiting_for_input:
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
 		if int_val < 30:
-			stage_label.text = "Eski kalıntılar ve hazineler taranıyor..."
+			stage_label.text = "Scanning ancient relics and treasures..." if is_en else "Eski kalıntılar ve hazineler taranıyor..."
 		elif int_val < 65:
-			stage_label.text = "Ses dosyaları ve harita katmanları hazırlanıyor..."
+			stage_label.text = "Preparing audio files and map layers..." if is_en else "Ses dosyaları ve harita katmanları hazırlanıyor..."
 		elif int_val < 95:
-			stage_label.text = "Dalış ekipmanları kontrol ediliyor..."
+			stage_label.text = "Checking diving gear and equipment..." if is_en else "Dalış ekipmanları kontrol ediliyor..."
 		else:
-			stage_label.text = "Dalışa Hazır!"
+			stage_label.text = "Ready to dive!" if is_en else "Dalışa hazır!"
 
 
 func _ready_for_continue() -> void:
 	_waiting_for_input = true
 	_displayed_progress = 100.0
 	_update_progress_ui(100.0)
+
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
+	if is_instance_valid(prompt_label):
+		prompt_label.text = "▶ TAP SCREEN OR PRESS ANY KEY TO CONTINUE ◀" if is_en else "▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀"
 
 	if is_instance_valid(continue_prompt):
 		continue_prompt.visible = true
@@ -156,11 +179,11 @@ func _ready_for_continue() -> void:
 			_prompt_tween.kill()
 		_prompt_tween = create_tween().set_loops()
 		_prompt_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-		_prompt_tween.tween_property(continue_prompt, "scale", Vector2(1.05, 1.05), 0.55).set_trans(Tween.TRANS_SINE)
+		_prompt_tween.tween_property(continue_prompt, "scale", Vector2(1.04, 1.04), 0.55).set_trans(Tween.TRANS_SINE)
 		_prompt_tween.tween_property(continue_prompt, "scale", Vector2(1.0, 1.0), 0.55).set_trans(Tween.TRANS_SINE)
 
 	if is_instance_valid(stage_label):
-		stage_label.text = "✦ DALIŞA HAZIR! (Devam etmek için ekrana dokunun veya bir tuşa basın) ✦"
+		stage_label.text = "✦ READY TO DIVE! (Tap screen or press any key to continue) ✦" if is_en else "✦ DALIŞA HAZIR! (Devam etmek için ekrana dokunun veya bir tuşa basın) ✦"
 		stage_label.add_theme_color_override("font_color", Color(1.0, 0.95, 0.4, 1.0))
 
 
@@ -213,5 +236,3 @@ func _complete_transition() -> void:
 	else:
 		finished.emit()
 		queue_free()
-
-

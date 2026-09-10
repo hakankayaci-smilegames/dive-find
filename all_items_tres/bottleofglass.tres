@@ -7,8 +7,7 @@
 script = ExtResource("1_xtqqy")
 item_name = "Gizemli Şişe"
 sprite = ExtResource("2_xbt5o")
-description = "Anaa buney la?..içinde kağıt var..dur bakim neymiş...
-(kağıdı açar) adam nah çizmiş lan....napıyon kıtalar arası gif mi atıyon ya"
+description = "Mantar tıpasıyla sımsıkı kapatılmış cam bir şişe. İçinde sararmış bir parşömen rulosu var gibi görünüyor; belki bir korsan haritası, belki de unutulmuş bir sitem mektubu."
 rarity = 5
 value = 100
 category = "Valuable"

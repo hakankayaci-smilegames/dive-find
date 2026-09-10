@@ -1,0 +1,362 @@
+{
+  "res://all_items_tres/MJ.tres": {
+    "name": {
+      "tr": "Smooth Criminal Plak",
+      "en": "Smooth Criminal Vinyl"
+    },
+    "description": {
+      "tr": "İşte gerçek müzik! Tuzlu suların bile ritmini bozamadığı efsanevi bir vinil plak. Plak kapağından hâlâ yankılanan o ikonik \"Annie, are you OK?\" tınısını duyar gibi oluyorum.",
+      "en": "Now this is real music! A legendary vinyl record that even saltwater couldn't silence. You can almost hear that iconic \"Annie, are you OK?\" echoing from the sleeve."
+    }
+  },
+  "res://all_items_tres/adminhat.tres": {
+    "name": {
+      "tr": "Şapka (?)",
+      "en": "Moderator Hat (?)"
+    },
+    "description": {
+      "tr": "Sunucu yöneticilerinden birinin yetki karmaşasında denize düşürdüğü gizemli bir şapka. Taktığınızda içinizde sebepsizce birilerini banlama arzusu uyandırıyor.",
+      "en": "A mysterious hat dropped into the ocean by a server admin during a power struggle. Wearing it fills you with an inexplicable urge to ban someone."
+    }
+  },
+  "res://all_items_tres/ak47.tres": {
+    "name": {
+      "tr": "Keleşnikof",
+      "en": "Kalashnikov"
+    },
+    "description": {
+      "tr": "Okyanus tabanında paslanmaya terk edilmiş efsanevi bir piyade tüfeği. Bir insan denizin yüzlerce metre derinine bunu neden atar ki? Muhtemelen arkasında çözülememiş bir polisiye vaka saklı.",
+      "en": "A legendary assault rifle abandoned to rust on the ocean floor. Why would someone dump this hundreds of meters underwater? There's definitely an unsolved case behind this."
+    }
+  },
+  "res://all_items_tres/altin_bilezik.tres": {
+    "name": {
+      "tr": "Altın Bilezik",
+      "en": "Gold Bracelet"
+    },
+    "description": {
+      "tr": "Pırıl pırıl parıldayan 24 ayar bir altın bilezik. Kim denize böyle bir mücevherle girip onu dipte unutma riskini alır ki? Neyse, denizcilik kanunlarına göre artık bizim.",
+      "en": "A glittering 24-karat gold bracelet. Who risks swimming with jewelry like this and losing it to the abyss? Well, maritime salvage laws say it's ours now."
+    }
+  },
+  "res://all_items_tres/altin_sandvik_heykeli.tres": {
+    "name": {
+      "tr": "Altın Kuş Heykeli",
+      "en": "Golden Bird Figurine"
+    },
+    "description": {
+      "tr": "Kusursuz işçiliği ve altın tüyleriyle dikkat çeken görkemli bir kuş heykeli. Duruşundaki o asil hava ve fiyakalı silüet, karaborsada servet değerinde.",
+      "en": "A magnificent bird figurine boasting flawless craftsmanship and golden feathers. Its noble posture and flashy silhouette make it worth a fortune on the black market."
+    }
+  },
+  "res://all_items_tres/aluminyum_blogu.tres": {
+    "name": {
+      "tr": "Preslenmiş Alüminyum Bloğu",
+      "en": "Pressed Aluminum Ingot"
+    },
+    "description": {
+      "tr": "Ezilmiş meşrubat kutuları ve bükük çatalların laboratuvarda yüksek basınç altında preslenmesiyle üretilmiş endüstriyel metal blok. İhracat pazarında oldukça iyi prim yapar.",
+      "en": "An industrial metal ingot forged in the lab by compacting soda cans and bent forks under immense pressure. Fetches a handsome price in the export market."
+    }
+  },
+  "res://all_items_tres/ananas.tres": {
+    "name": {
+      "tr": "Ananas?",
+      "en": "Pineapple?"
+    },
+    "description": {
+      "tr": "Denizin dibinde tek parça kalmayı başarmış taze bir ananas. SüngerBob\"un emlak krizinde terk ettiği bir gayrimenkul mü, kestirmek güç.",
+      "en": "A fresh pineapple that somehow survived in one piece on the seabed. Hard to tell if it's SpongeBob's abandoned real estate or just a stray tropical fruit."
+    }
+  },
+  "res://all_items_tres/ananas_suyu.tres": {
+    "name": {
+      "tr": "Ananas Suyu",
+      "en": "Pineapple Juice"
+    },
+    "description": {
+      "tr": "Toplanan ananasların laboratuvarda distile edilip şişelenmesiyle elde edilen ferahlatıcı tropikal içecek. Gurmeler ve zengin koleksiyoncular için tam bir lezzet şöleni.",
+      "en": "A refreshing tropical beverage crafted by distilling and bottling salvaged pineapples in the lab. A true delicacy for gourmets and wealthy collectors alike."
+    }
+  },
+  "res://all_items_tres/balbal.tres": {
+    "name": {
+      "tr": "Taş Heykel",
+      "en": "Ancient Stone Balbal"
+    },
+    "description": {
+      "tr": "Eski bozkır kültüründen kalma otantik bir balbal heykeli. Yüzyıllardır suyun altında ifadesizce karşıya bakıyor; gözlerindeki donuk bakışta derin bir bilgelik seziliyor.",
+      "en": "An authentic balbal statue from ancient nomadic steppes. It has been staring blankly underwater for centuries, radiating silent and stoic wisdom."
+    }
+  },
+  "res://all_items_tres/bottle.tres": {
+    "name": {
+      "tr": "Pet şişe",
+      "en": "Plastic Bottle"
+    },
+    "description": {
+      "tr": "Doğal suyun içine ambalajlı su atarak nasıl bir kimyasal seyreltme deneyi hedeflediler acaba? Neyse ki geri dönüşümde değeri var.",
+      "en": "Throwing bottled water into natural ocean water... what kind of dilution experiment were they attempting? Thankfully, it still has scrap value."
+    }
+  },
+  "res://all_items_tres/bottleofglass.tres": {
+    "name": {
+      "tr": "Gizemli Şişe",
+      "en": "Message in a Bottle"
+    },
+    "description": {
+      "tr": "Mantar tıpasıyla sımsıkı kapatılmış cam bir şişe. İçinde sararmış bir parşömen rulosu var gibi görünüyor; belki bir korsan haritası, belki de unutulmuş bir sitem mektubu.",
+      "en": "A glass bottle tightly sealed with a cork stopper. Inside rests a rolled, yellowed parchment—perhaps a treasure map, or maybe a forgotten love letter."
+    }
+  },
+  "res://all_items_tres/broken_painting.tres": {
+    "name": {
+      "tr": "Kırık Altın Çerçeve",
+      "en": "Broken Gilded Frame"
+    },
+    "description": {
+      "tr": "Ortadan çatlamış, yaldızlı bir antika çerçeve. İçindeki tuval suyun etkisiyle solmuş olsa da mutlu bir çiftin portresi seçilebiliyor. Çerçevenin altın varakları kesinlikle iyi para eder.",
+      "en": "A cracked antique frame covered in ornate gold leaf. While the canvas has faded from the deep sea brine, the gilded trim will fetch great coin from collectors."
+    }
+  },
+  "res://all_items_tres/carkey_bmw.tres": {
+    "name": {
+      "tr": "BMW Anahtarı",
+      "en": "BMW Key Fob"
+    },
+    "description": {
+      "tr": "Üzerinde gururlu bir \"M Competition\" amblemi taşıyan lüks araç anahtarı. Sinyal kolunu hiç kullanmamış bir sahibin dalgalara kurban verdiği belli.",
+      "en": "A luxury key fob sporting a proud \"M Competition\" badge. Clearly dropped by an owner who never used their turn signals."
+    }
+  },
+  "res://all_items_tres/carkey_mercedes.tres": {
+    "name": {
+      "tr": "Mercedes anahtarı",
+      "en": "Mercedes Key Fob"
+    },
+    "description": {
+      "tr": "Alman mühendisliğinin okyanus suyuna meydan okuduğu bir AMG anahtarı. Su geçirmez contaları o kadar sağlam ki üzerindeki yıldıza hâlâ en ufak bir zeval gelmemiş.",
+      "en": "An AMG key fob where German engineering defies ocean saltwater. Its waterproof seals are so pristine that the iconic star remains spotless."
+    }
+  },
+  "res://all_items_tres/carkey_toyota.tres": {
+    "name": {
+      "tr": "Toyata Anahtarı",
+      "en": "Toyota Key Fob"
+    },
+    "description": {
+      "tr": "Efsanevi bir Toyota Corolla anahtarı. Arabanın kendisi muhtemelen hâlâ suyun altında tek marşta çalışır durumdadır ama bu anahtar tek başına ancak antikacıda değer bulur.",
+      "en": "A legendary Toyota Corolla key. The car itself would probably start on the first crank down here, but the key alone is only good for the antique shop."
+    }
+  },
+  "res://all_items_tres/catal.tres": {
+    "name": {
+      "tr": "Bükük Çatal",
+      "en": "Bent Fork"
+    },
+    "description": {
+      "tr": "Matrix filminden fırlamışçasına akıl almaz bir açıyla bükülmüş bir yemek çatalı. Zihin gücüyle mi büküldü yoksa konserve açarken mi harcandı, asla bilemeyeceğiz.",
+      "en": "A dinner fork bent at an unnatural angle straight out of The Matrix. Whether bent with psychic willpower or brute force on a stubborn tin can remains unknown."
+    }
+  },
+  "res://all_items_tres/charlie.tres": {
+    "name": {
+      "tr": "Charlie Kirk Assasin Planı",
+      "en": "Classified Dossier"
+    },
+    "description": {
+      "tr": "Su geçirmez deri bir ajanda. Sayfalarını araladığınızda üst düzey bir diplomatik komplonun krokileri beliriyor. İstihbarat servisleri ve karaborsacılar bu belgelere servet öder!",
+      "en": "A waterproof leather journal detailing diagrams of a high-level diplomatic conspiracy. Secret agencies and black market syndicates would pay a fortune for this!"
+    }
+  },
+  "res://all_items_tres/dexter.tres": {
+    "name": {
+      "tr": "Kanlı Bıçak?",
+      "en": "Hunting Knife?"
+    },
+    "description": {
+      "tr": "Dip akıntılarına bırakılmış gizemli bir av bıçağı. Kabzasında silik bir \"Dexter M.\" kazıması seçiliyor. Derin sularda çözülmemiş dosyaların izini sürenler için tüyler ürpertici bir kanıt.",
+      "en": "A mysterious hunting knife cast into the deep sea currents. The handle bears a faint engraving: \"Dexter M.\" A chilling artifact for cold-case investigators."
+    }
+  },
+  "res://all_items_tres/eatenbook.tres": {
+    "name": {
+      "tr": "Isırılmış Kitap",
+      "en": "Chewed Textbook"
+    },
+    "description": {
+      "tr": "Köşesinde bariz diş izleri olan kalın bir ders kitabı. Bilgiye aç olmak deyimini biraz fazla harfi harfine anlamış bir öğrencinin mirası olmalı.",
+      "en": "A heavy textbook marked with unmistakable bite marks on the corner. The legacy of a student who took \"hunger for knowledge\" a bit too literally."
+    }
+  },
+  "res://all_items_tres/geri_donusum_plastigi.tres": {
+    "name": {
+      "tr": "İşlenmiş Plastik Bobini",
+      "en": "Recycled Plastic Spool"
+    },
+    "description": {
+      "tr": "Okyanustan toplanan plastik atıkların laboratuvarda arındırılıp preslenmesiyle elde edilen kaliteli polimer bobin. Temiz bir deniz ve karlı bir ticaretin simgesi.",
+      "en": "High-grade polymer spool produced by purifying and melting marine plastic waste in the laboratory. A token of clean seas and profitable salvage."
+    }
+  },
+  "res://all_items_tres/kamera.tres": {
+    "name": {
+      "tr": "Kamera",
+      "en": "Vintage Camera"
+    },
+    "description": {
+      "tr": "Antika değerinde mekanik bir \"Fujisan\" vizörlü kamera. Su altındaki basınç sağlam kasasına zarar verememiş; içindeki film makarasında kim bilir hangi kayıp anılar saklı.",
+      "en": "A collectible mechanical \"Fujisan\" rangefinder camera. The crushing ocean pressure couldn't breach its rugged chassis; who knows what forgotten memories dwell inside."
+    }
+  },
+  "res://all_items_tres/key.tres": {
+    "name": {
+      "tr": "Anahtar",
+      "en": "Ornate Brass Key"
+    },
+    "description": {
+      "tr": "Üzerinde karmaşık oymalar bulunan antik pirinç bir anahtar. Kilitlediği gizemli kapı veya sandık, muhtemelen yüzyıllardır okyanusun başka bir köşesinde onu bekliyor.",
+      "en": "An antique brass key etched with intricate filigree. The forgotten chest or door it locks has likely been waiting in another corner of the ocean for centuries."
+    }
+  },
+  "res://all_items_tres/kola.tres": {
+    "name": {
+      "tr": "Bükük kola",
+      "en": "Crushed Red Can"
+    },
+    "description": {
+      "tr": "Denizin dibinde ezilip bükülmüş klasik kırmızı meşrubat kutusu. Şehir hayatının tüketim çılgınlığından geriye kalan, preslenmeye hazır bir hurda.",
+      "en": "A battered classic red soda can resting on the sea bed. A relic of mainland consumerism, primed for lab recycling."
+    }
+  },
+  "res://all_items_tres/kolye.tres": {
+    "name": {
+      "tr": "İnci Kolye",
+      "en": "Pearl Necklace"
+    },
+    "description": {
+      "tr": "Zarif bir ipe dizilmiş pırıl pırıl doğal inciler. Dalgaların arasında kaybolmuş gerçek bir romantizm kalıntısı. Antikacıda hatırı sayılır bir servet bırakacaktır.",
+      "en": "Lustrous genuine pearls strung on a delicate thread. A romantic relic swept away by ocean swells, guaranteed to earn top coin at the antique shop."
+    }
+  },
+  "res://all_items_tres/monster.tres": {
+    "name": {
+      "tr": "Monster Kutusu",
+      "en": "Crushed Energy Can"
+    },
+    "description": {
+      "tr": "Yeşil pençe amblemiyle ezilmiş bir enerji içeceği kutusu. Sahil partisinde tükenen enerjiyi yerine koymaya çalışıp kutusunu denize fırlatan bir gece kuşunun eseri.",
+      "en": "A crumpled energy drink can stamped with green claw marks. Discarded by a late-night partygoer who needed a buzz and forgot about ocean ecology."
+    }
+  },
+  "res://all_items_tres/nahtarlık.tres": {
+    "name": {
+      "tr": "Anahtarlık",
+      "en": "Novelty Keychain"
+    },
+    "description": {
+      "tr": "İnce bir mizah ve derin bir dostluk mesajı taşıyan manidar bir el figürü. Arkadaş ortamlarının samimi şakalarını suyun altına kadar taşımayı başarmış.",
+      "en": "A cheeky novelty hand charm capturing universal inside jokes. It carried friendly banter all the way down to the ocean floor."
+    }
+  },
+  "res://all_items_tres/nahtarlıkplus.tres": {
+    "name": {
+      "tr": "Bronz Anahtarlık",
+      "en": "Bronze Figurine Charm"
+    },
+    "description": {
+      "tr": "Aynı manidar el figürünün ağır bronz dökümden imal edilmiş lüks versiyonu. Sanatçının bu jesti ölümsüzleştirmek için gösterdiği madeni ciddiyet takdire şayan.",
+      "en": "A luxurious heavy-cast bronze edition of the cheeky hand gesture. The artisan's solemn dedication to immortalizing this joke in solid bronze is admirable."
+    }
+  },
+  "res://all_items_tres/nigrce.tres": {
+    "name": {
+      "tr": "Kaslı Adam ",
+      "en": "Sunken Bodybuilder"
+    },
+    "description": {
+      "tr": "Yüzlerce metre derinlikte tek bir oksijen tüpü bile olmadan suyun dibinde öylece uzanan inanılmaz yapılı bir figür. Bu basınca nasıl dayandığı fizik kurallarını aşıyor; gören hayrete düşer.",
+      "en": "An impossibly chiseled statue resting in the ocean depths without diving gear. How its physique endures such hydrostatic pressure defies human biology."
+    }
+  },
+  "res://all_items_tres/pepsi.tres": {
+    "name": {
+      "tr": "Bükük pepsi",
+      "en": "Crushed Blue Can"
+    },
+    "description": {
+      "tr": "Ezeli meşrubat rekabetini okyanusun yüzlerce metre dibine kadar taşımayı başarmış mavi renkli bir gazoz kutusu.",
+      "en": "A blue soda can that successfully carried the eternal cola wars hundreds of meters under the sea."
+    }
+  },
+  "res://all_items_tres/posey.tres": {
+    "name": {
+      "tr": "Poşet",
+      "en": "Plastic Grocery Bag"
+    },
+    "description": {
+      "tr": "Suyun akıntısıyla bir denizanası gibi süzülen sıradan bir market poşeti. Deniz canlılarının kabusu olsa da laboratuvar için bedava polimer kaynağı.",
+      "en": "Drifting gracefully through currents like a synthetic jellyfish. A menace to marine life, but prime raw material for laboratory synthesis."
+    }
+  },
+  "res://all_items_tres/radyoaktif_kokteyl.tres": {
+    "name": {
+      "tr": "Tropikal Radyoaktif Kokteyl",
+      "en": "Tropical Atomic Cocktail"
+    },
+    "description": {
+      "tr": "Gizemli şişedeki kimyasallar ve enerji içeceği özlerinin sentezlenmesiyle elde edilen egzotik karışım. Karanlıkta neon yeşili parıldıyor; içmek cesaret, satmak zeka ister.",
+      "en": "An exotic brew synthesized from mystery chemicals and energy extracts. Glows radioactive neon in the dark; drinking it requires guts, selling it requires brains."
+    }
+  },
+  "res://all_items_tres/restore_tablo.tres": {
+    "name": {
+      "tr": "Restore Edilmiş Tablo",
+      "en": "Restored Oil Painting"
+    },
+    "description": {
+      "tr": "Kırık altın çerçevenin canlı saç boyası pigmentleri ve antika kitap sayfalarıyla titizlikle onarılmış hali. Louvre Müzesi\"ne taş çıkaracak cinsten bir restorasyon şaheseri.",
+      "en": "A damaged gilded frame restored with vibrant hair dye pigments and antique parchment. A salvage masterpiece worthy of the finest private galleries."
+    }
+  },
+  "res://all_items_tres/rte.tres": {
+    "name": {
+      "tr": "Ekonomi Kitabı",
+      "en": "Heterodox Economics Book"
+    },
+    "description": {
+      "tr": "Kapağında kendinden emin bir portrenin yer aldığı meşhur bir ekonomi kitabı. Sayfalarını okumak derin bir faiz-enflasyon aydınlanması vadediyor.",
+      "en": "A famous economics book with a confident portrait on the cover. Reading its pages promises a profound enlightenment on interest rates and inflation."
+    }
+  },
+  "res://all_items_tres/snokel.tres": {
+    "name": {
+      "tr": "Şnolkel",
+      "en": "Diving Snorkel"
+    },
+    "description": {
+      "tr": "Bir an için kendi düşürdüğüm şnorkel sandığım emektar bir dalış ekipmanı. Biraz inceleyince benimkinden çok daha kaliteli olduğunu fark ettim; kesinlikle envantere girer.",
+      "en": "A trusty snorkel I momentarily mistook for my own lost gear. Upon closer inspection, it's far better than mine; definitely going into the backpack."
+    }
+  },
+  "res://all_items_tres/sunglas.tres": {
+    "name": {
+      "tr": "Güneş Gözlüğü",
+      "en": "Designer Sunglasses"
+    },
+    "description": {
+      "tr": "Okyanus zemininde bile havalı duruşundan ödün vermeyen şık bir güneş gözlüğü. İtalyan tasarımı havası verse de yakından bakınca sahil tezgahı menşeili olduğu anlaşılıyor.",
+      "en": "Stylish shades that maintain their cool even on the ocean floor. Radiates Italian runway flair, though close inspection hints at a boardwalk kiosk origin."
+    }
+  },
+  "res://all_items_tres/zoktay.tres": {
+    "name": {
+      "tr": "Zoktayın Saç Renginde Boya",
+      "en": "Vibrant Hair Dye"
+    },
+    "description": {
+      "tr": "Kullanılmış tüp içinde kalan parlak tonlu bir saç boyası. Okyanusun en fiyakalı balıklarını bile kıskandıracak canlılıkta; laboratuvarda pigment olarak paha biçilemez.",
+      "en": "A tube containing leftover brilliant hair dye. Vivid enough to make tropical reef fish jealous, and an invaluable pigment source in the lab."
+    }
+  }
+}

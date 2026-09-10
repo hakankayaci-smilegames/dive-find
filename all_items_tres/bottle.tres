@@ -7,6 +7,6 @@
 script = ExtResource("1_0ydqc")
 item_name = "Pet şişe"
 sprite = ExtResource("2_ihxnc")
-description = "Allahın cezası, suya su atmış. nabıyon seyreltme deneyi mi?"
+description = "Doğal suyun içine ambalajlı su atarak nasıl bir kimyasal seyreltme deneyi hedeflediler acaba? Neyse ki geri dönüşümde değeri var."
 value = 1
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

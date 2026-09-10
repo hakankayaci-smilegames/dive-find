@@ -7,7 +7,7 @@
 script = ExtResource("1_0kivc")
 item_name = "Mercedes anahtarı"
 sprite = ExtResource("2_h0u28")
-description = "Cillop gibi bir AMG anahtarı, buna suda nasıl bişey olmamış?"
+description = "Alman mühendisliğinin okyanus suyuna meydan okuduğu bir AMG anahtarı. Su geçirmez contaları o kadar sağlam ki üzerindeki yıldıza hâlâ en ufak bir zeval gelmemiş."
 rarity = 4
 value = 250
 category = "Valuable"

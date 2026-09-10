@@ -7,7 +7,7 @@
 script = ExtResource("1_qh1ju")
 item_name = "Şapka (?)"
 sprite = ExtResource("2_ekkav")
-description = "Bu tam ..hava nagila bir şapkaya benziyor, adminlerden biri düşürmüş..."
+description = "Sunucu yöneticilerinden birinin yetki karmaşasında denize düşürdüğü gizemli bir şapka. Taktığınızda içinizde sebepsizce birilerini banlama arzusu uyandırıyor."
 rarity = 3
 value = 280
 category = "Rare Found"

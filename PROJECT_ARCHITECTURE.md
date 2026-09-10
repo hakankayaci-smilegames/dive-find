@@ -187,9 +187,14 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - `DEVAM ET`: Kayıtlı oyun varsa aktif, fare üzerinde detaylı save özeti tooltip'i (Gün, Para, Eşyalar, Ekipmanlar, Kayıt Tarihi).
   - `YENİ OYUN`: Sıfırdan temiz bir başlangıç açar.
   - **Toggle Panel Mimarisi:** Ana menüdeki `Koleksiyon`, `Ayarlar` ve `Bilgi` butonları toggle (aç/kapa) mantığıyla çalışır. Açık olan bir pencere varken butona tekrar basıldığında kapanır; başka bir pencere açıldığında önceki pencere otomatik temizlenir. Üst üste birden fazla pencere yığılması engellenmiştir.
+- **Grafiksel Başlık & Sinematik Animasyonlar**:
+  - `Sprites/header.png` (TextureRect): Ekranın üst-ortasında konumlandırılmış yüksek çözünürlüklü grafiksel başlık. Açılışta yumuşak düşüş animasyonu (`_animate_enter`), devamında ise `_update_title_bobbing` ile kesintisiz su altı dalga salınımı (`sin * 4.0px`) yapar.
+  - `Sprites/game_bg.png` (SkyTexture): Tam ekranı kaplayan (`stretch_mode = 6` Cover) sabit ve berrak ana menü okyanus arka planı.
+  - Menü butonları soldan kademeli kayma (`-70px` cubic out) ve ardışık buton fade-in geçişiyle açılır.
+  - Sağ taraftaki Yenilikler paneli (`ChangelogPanel`) sağdan pürüzsüz kayarak yerleşir.
 - **Sürüm Yönetimi & Yenilikler Paneli**:
-  - `@export var game_version: String = "Pre-Alpha 1.6.1 (Afterjam Remaster)"` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
-  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha 1.6.2 ve Pre-Alpha 1.6.1 sürüm notlarını (kaydırılabilir, BBCode renkli formatta) oyuncuya sunar.
+  - `@export var game_version: String` değişkeni hem `VersionLabel` hem Bilgi panelini senkronize eder.
+  - **Yenilikler & Güncellemeler Paneli (`ChangelogPanel` / `ChangelogText`):** Ana menünün sağ tarafında Pre-Alpha sürüm notlarını (kaydırılabilir, BBCode renkli formatta) oyuncuya sunar.
 - **Koleksiyon Sıfırlama Güvenlik Onay Kutusu (`_show_reset_collection_confirmation`):**
   - Ayarlar panelindeki "KOLEKSİYONU SIFIRLA" butonuna tıklandığında doğrudan silmek yerine modal onay penceresi açılır.
   - Karartılmış arka plan (`0.75` alpha), altın kenarlı ahşap denizci paneli (`Color(0.12, 0.08, 0.05, 0.98)`), "VAZGEÇ" ve kırmızı "EVET, SIFIRLA 🗑️" butonları içerir.
@@ -283,7 +288,10 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - Slot tıklandığında altın sarısı çerçeve (`SelectedBorder`, 3px altın kenarlık ve hafif ışıma efekti) ile aktif olarak seçildiği belirginleştirilir.
     - Fare başka bir slota hover yaptığında o slot anlık incelenebilir, fare ayrıldığında ise seçili slotun detaylarına otomatik geri dönülür.
     - Alt kısma `💡 Sol Tık: Eşyayı Seç / Bırak  •  Sağ Tık (Mobilde Basılı Tut): Kilitle 🔒` bilgilendirme ipucu eklendi.
-  - **Açıklama Metni Sığdırma:** `DescLabel` font boyutu 13px ve yüksekliği 75px olarak ayarlandı, oyundaki en uzun eşya açıklamaları dahi taşma yapmadan panele tam oturur.
+  - **Dinamik Açıklama Metni & Otomatik Sığdırma (Responsive Autowrap & Scaling):**
+    - **Envanter (`inventory.tscn` & `inventory.gd`):** `RarityLabel` ve `ValueLabel` yatayda aynı satıra alınarak `DescLabel`'a 109px dikey alan (332px genişlik) açıldı. `autowrap_mode = AUTOWRAP_WORD_SMART` ve 130 karakter üzeri metinlerde otomatik 11px font küçültme koruması eklendi.
+    - **İnceleme Pop-up'ı (`pickup.tscn` & `popupui.gd`):** `CardPanel` 490x280px boyutuna genişletildi, `DescLabel` 270x70px minimum boyuta çekilerek uzun açıklamalar için dinamik font ölçeklemesi uygulandı.
+    - **Dükkanlar (`item_seller.tscn` & `item_seller.gd`):** Çöpçü, Antikacı ve Pazar ekranlarında `DescLabel` dikey alanı 110px'e genişletildi, font boyutu 15px'ten 12px'e normalize edildi ve dinamik küçültme ile taşma riski sıfırlandı.
 
 
 ---
@@ -328,10 +336,17 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 
 ## 13. Yükleme Ekranı & Gerçek Asenkron Yükleme Mimarisi (`loading_screen.gd`)
 
-- **Şeffaf & Atmosferik Okyanus Tasarımı (`loading_screen.tscn`):**
-  - Eski koyu kahverengi hantal kutu kaldırılarak Ana Menü ile tam görsel uyum sağlandı.
-  - 3 katmanlı okyanus paralaksı (`SkyTexture`, `OceanTexture`, `DeepTexture`) ve saydam koyu okyanus filtresi (`BackgroundTint`).
-  - Merkezde neon cyan ışıltılı `Dive & Find` logosu ve parıldayan `✦ DALIŞA HAZIRLANIYOR ✦` rozeti.
+- **Yenilenen Atmosferik Tasarım ([`Scenes/loading_screen.tscn`](file:///home/hakan/dive&find/Scenes/loading_screen.tscn)):**
+  - Eski 3 katmanlı parçalı arkaplan kaldırılarak Ana Menü ile birebir görsel uyumlu `res://Sprites/game_bg.png` (`stretch_mode = 6`) ve sinematik karanlık katmanı (`BackgroundTint`) entegre edildi.
+  - Eski mavi metin kutusu yerine ekranın üst-orta alanında şık `res://Sprites/header.png` logo texture'ı ve yumuşak fade-in animasyonu konumlandırıldı.
+  - Ortada modern, yarı şeffaf koyu cam efektli `TipCard` (İpucu Kartı) ve dinamik autowrap ile tüyolar gösterilir.
+- **İki Dilli (TR / EN) Durum & İstem Metinleri ([`Scripts/loading_screen.gd`](file:///home/hakan/dive&find/Scripts/loading_screen.gd)):**
+  - İlerleme aşama metinleri (`StageLabel`) aktif yerel dile (`tr` / `en`) göre dinamik güncellenir:
+    - `%0 - %30`: `"Scanning ancient relics and treasures..."` / `"Eski kalıntılar ve hazineler taranıyor..."`
+    - `%30 - %65`: `"Preparing audio files and map layers..."` / `"Ses dosyaları ve harita katmanları hazırlanıyor..."`
+    - `%65 - %95`: `"Checking diving gear and equipment..."` / `"Dalış ekipmanları kontrol ediliyor..."`
+    - `%95+`: `"Ready to dive!"` / `"Dalışa hazır!"`
+  - Devam istemi (`ContinuePrompt`): `"▶ TAP SCREEN OR PRESS ANY KEY TO CONTINUE ◀"` / `"▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀"`.
 - **Gerçek Asenkron Sahne Yükleme (`ResourceLoader.load_threaded_request`):**
   - Sahte `Tween` bar yerine Godot'nun yerleşik asenkron yükleyicisi bağlandı. `ResourceLoader.load_threaded_get_status()` ile diskten RAM'e aktarılan gerçek dosya boyutu/yüzdesi okunur.
   - Sahne belleğe tam olarak yüklendiğinde `get_tree().change_scene_to_packed()` ile sıfır donmayla geçiş yapılır.
@@ -339,7 +354,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - [`global_sound_manager.gd`](file:///home/hakan/dive&find/Scripts/global_sound_manager.gd) içinde `preload_all_sfx()` ve `_sfx_cache` eklendi. Tüm ses efektleri loading esnasında RAM'e alınarak oyun içindeki ilk etkileşim takılmaları (audio stutter) önlendi.
 - **Yatay Geniş Loading Bar & Aşama Durumları:**
   - Ekranın alt kenarı boyunca uzanan ince, şık ve neon turkuaz dolgulu ProgressBar (`#00e5ff`).
-  - Dinamik yüzde sayacı (`%0 ➔ %100`) ve aşamalı teknik durum metni (`Eski kalıntılar taranıyor...` ➔ `Ses dosyaları ve harita katmanları hazırlanıyor...` ➔ `Dalışa Hazır!`).
+  - Dinamik yüzde sayacı (`%0 ➔ %100`) ve aşamalı teknik durum metni.
 - **Sinematik Geçişler (Fade-to-Black & Fade-in):**
   - Yükleme tamamlandığında 0.25sn yumuşak kararma (`Fade to Black`) ile pürüzsüz çıkış.
   - Ofis karargahı (`office_menu.gd`) açıldığında `$Background.modulate.a` 0.35 saniyede soluktan nete gelerek (`Fade-in`) sinematik bir giriş hissi sunar.
@@ -755,7 +770,57 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - `lang en` / `dil en`: Çalışma zamanında dili İngilizceye geçirir (`TranslationServer.set_locale("en")`).
   - `lang tr` / `dil tr`: Dili Türkçeye döndürür (`TranslationServer.set_locale("tr")`).
   - Parametresiz çağrıldığında (`lang`) mevcut aktif yerel dil kodunu raporlar.
+  - Canlı Arayüz Yenilemesi (`_refresh_active_uis`): `GlobalInventory.inventory_updated.emit()` sinyali ile açık olan Çanta, Satıcılar (`item_seller`), Laboratuvar (`laboratory_ui`) ve İnceleme pop-up'ları (`popup_ui`) çalışma zamanında kapatmaya gerek kalmadan canlı olarak yeni dile güncellenir.
+- **Modüler Eşya Çeviri Mimarisi ([`Translations/item_translations.json`](file:///home/hakan/dive&find/Translations/item_translations.json) & [`Scripts/item_translator.gd`](file:///home/hakan/dive&find/Scripts/item_translator.gd)):**
+  - **Veri Mantığı Bütünlüğü (Logic Preservation):** `.tres` kaynaklarındaki ve `recipes.json` içerisindeki `item_name` anahtarları Türkçe orijinal halleriyle korunarak zanaat (crafting), envanter sayımı ve kayıt dosyaları ile %100 uyumluluk sürdürülür.
+  - **Dinamik Çeviri Çözümleyicisi (`ItemTranslator`):** `.tres` dosya yolunu (`source_path` / `resource_path`) anahtar alarak eşyaların aktif yerel dile (`tr` / `en`) göre başlık (`name`) ve açıklamalarını (`description` / `desc`) dinamik olarak çözer.
+  - **Entegre UI Noktaları:**
+    - **İnceleme & Toplama Pop-up'ı ([`Scripts/popupui.gd`](file:///home/hakan/dive&find/Scripts/popupui.gd)):** İsim, açıklama, nadirlik etiketi (`Common`, `Rare`, `Legendary` vb.) ve butonlar (`PICK UP [E]`, `LEAVE [ESC]`).
+    - **Envanter ([`Scripts/inventory.gd`](file:///home/hakan/dive&find/Scripts/inventory.gd)):** Başlık, açıklama, kategori rozetleri (`[ TRASH ]`, `[ RESOURCE ]` vb.), değer etiketi (`Value: %s Zurna`) ve atma butonları (`🗑️ Discard` / `🗑️ Drop into sea`).
+    - **Tüccarlar & Satış Menüleri ([`Scripts/item_seller.gd`](file:///home/hakan/dive&find/Scripts/item_seller.gd)):** Çöpçü (`Scavenger`), Antikacı (`Antiquarian`), Kara Borsa (`Black Market`) ve Pazar panellerinde dinamik pencere başlıkları (`_update_shop_header`), eşya isimleri, açıklamaları, kategori ve satış butonları (`SELL`, `SELL ALL`).
+    - **Koleksiyon Kitabı ([`Scripts/collection_slot.gd`](file:///home/hakan/dive&find/Scripts/collection_slot.gd)):** Keşfedilen eşya slotlarının fare hover tooltip'leri.
+    - **Mobil Dalış Kontrolleri ([`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):** Yakındaki eşyanın adı dokunmatik buton üzerinde dinamik olarak İngilizce/Türkçe gösterilir.
+    - **Laboratuvar & Crafting ([`Scripts/laboratory.gd`](file:///home/hakan/dive&find/Scripts/laboratory.gd)):** Reçete listesi butonları, ürün başlığı/açıklaması ve malzeme gereksinimleri aktif dille listelenir.
+    - **Karargah Dalış Butonu ([`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)):** `🤿 START DIVE / OCEAN [ESC]` / `🤿 DIVE CLOSED (NIGHT)` ve gün ilerletme buton metinleri.
+    - **Koleksiyon Kitabı ([`Scripts/collection.gd`](file:///home/hakan/dive&find/Scripts/collection.gd) & [`Scripts/collection_slot.gd`](file:///home/hakan/dive&find/Scripts/collection_slot.gd)):** Sekme butonları (`All`, `Trash`, `Resource`, `Rare`, `Valuable`, `Special`, `Crafted`), pencere başlığı (`Collection Book`), kategori keşif ilerlemesi (`%s: %d / %d Discovered` / `%s: %d / %d Keşfedildi`) ve alt toplam çubuğu (`Total Discovered: %d / %d (%%%d)` / `Toplam Keşif: %d / %d (%%%d)`) ile slot hover tooltip'leri tamamen iki dilli yapıldı; `popup_ui` grubuna eklenerek `refresh_ui()` ile anlık dil değişimine bağlandı.
+    - **Karargah Ofis Menüsü ([`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)):** Ana başlık (`OFFICE & DIVE HEADQUARTERS`), alt başlık, bölüm başlıkları (`TRADERS & ACQUISITIONS`, `FACILITIES & PRODUCTION`), tüccar kartları (`Scrapper`, `Antique Dealer`, `Black Market` isim ve açıklamaları), tesis kartları (`Equipment Shop`, `Laboratory`, `Marketplace` isim, açıklama ve `[ ACTIVE ]` rozeti) ile alt bar butonları (`🎒 INVENTORY [I]`, `📖 COLLECTION [C]`, `⚡ CHARGE`, `SAVE & QUIT`) `refresh_ui()` fonksiyonuyla çalışma zamanında dinamik yenilenir.
+    - **Şarj İstasyonu ([`Scripts/charge_station.gd`](file:///home/hakan/dive&find/Scripts/charge_station.gd)):** Başlık (`⚡ CHARGE STATION`), batarya durum etiketleri (`BATTERY FULL (100%)`, `⚡ NO FLASHLIGHT`), maliyet hesaplama metinleri (`Cost: %d Zurna (+%ds / +%%%d)`) ve butonlar (`⚡ CHARGE (%d Zurna)`, `MAX`) eksiksiz çevrildi ve `popup_ui` grubuna dahil edildi.
+    - **Oyun Bitti Ekranı ([`Scripts/game_over.gd`](file:///home/hakan/dive&find/Scripts/game_over.gd)):** Boğulma başlığı (`YOU DROWNED`), balıkçı kurtarma hikayesi (`The diver ran out of oxygen...`) ve onay butonu (`OK` / `TAMAM`) dinamik yerelleştirildi.
+    - **Duraklatma Menüsü ([`Scripts/pause_menu.gd`](file:///home/hakan/dive&find/Scripts/pause_menu.gd)):** Duraklatma başlığı (`⏸️ PAUSED`), butonlar (`▶ CONTINUE`, `⚙️ SETTINGS`, `🚪 RETURN TO MAIN MENU`) ve dalıştan çıkış modalı (`⚠️ QUIT DIVE?`, `RETURN TO DIVE`, `YES, QUIT 🚪`) EN/TR çift dilli hale getirildi.
+    - **Ayarlar Menüsü ([`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)):** Müzik/SFX sesleri, tam ekran, dokunmatik joystick boyutu, mobil fener nişanlama seçenekleri (`🕹️ Swim Direction (Joystick)`, `👆 Free Touch Aim`, `✨ Smart Hybrid`), koleksiyon sıfırlama onay modalı ve geliştirici kodu butonları/bildirimleri `popup_ui` grubu altında canlı güncellenir.
+    - **Yükleme Ekranı ([`Scripts/loading_screen.gd`](file:///home/hakan/dive&find/Scripts/loading_screen.gd)):** Yenilenmiş `game_bg.png` arkaplanı, `header.png` transparan logosu, durum metinleri (`Scanning ancient relics...`, `Preparing...`, `▶ TOUCH SCREEN OR PRESS ANY KEY TO CONTINUE ◀`) ve döner ipuçları `Data/loading_tips.json` üzerinden Türkçe ve İngilizce sunulur.
+    - **Sürüm Notları & Yardım Kılavuzu ([`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):** 1.6.2 & 1.6.1 tam yama notları ve temel oyun kontrolleri rehberi (PC & Dokunmatik) zengin metin BBCode formatıyla CSV'ye aktarılıp kusursuz çevrildi.
 
+---
 
+## 33. Çift Dilli Yerelleştirme İlkesi (Bilingual Localization First Standard)
+
+- **Geliştirme Kuralı:** Gelecekte oyuna eklenecek her yeni özellik, mekanik, UI ekranı, buton, etiket, toast bildirimi, modal ve eşya **ilk günden** Türkçe ve İngilizce desteğiyle tasarlanmalıdır.
+- **İki Katmanlı Mimari Standartları:**
+  1. **Statik UI ve Kod İçi Metinler:** Godot'un `tr("...")` mekanizması kullanılır. Yeni eklenen metinler [`tools/generate_translations.py`](file:///home/hakan/dive&find/tools/generate_translations.py) içerisindeki `TRANSLATION_MAP` tablosuna işlenir ve script çalıştırılarak [`Translations/translations.csv`](file:///home/hakan/dive&find/Translations/translations.csv) güncellenir.
+  2. **Eşyalar ve Reçeteler:** Yeni `.tres` eşyaları eklenirken orijinal `item_name` Türkçe anahtar olarak korunur (kod ve save uyumluluğu için). Eşyanın TR ve EN isim/açıklaması [`Translations/item_translations.json`](file:///home/hakan/dive&find/Translations/item_translations.json) dosyasına kaydedilir. Arayüzde eşya gösterimi için daima `item.get_display_name()` ve `item.get_display_description()` kullanılır.
+- **Canlı Dil Senkronizasyonu (`refresh_ui`):** Yeni oluşturulan her UI sahnesi (`CanvasLayer` / `Control`) `popup_ui` veya ilgili gruba eklenmeli ve dil değiştiğinde metinlerini anında güncelleyen bir `refresh_ui()` fonksiyonu içermelidir.
+
+---
+
+## 34. Kalıcı Dil Ayarı & İlk Açılış / Güncelleme Dil Seçim Modalı (Option A)
+
+- **Kalıcı Dil Seçeneği (`user://settings.cfg`):**
+  - Hem Bağımsız Ayarlar Menüsü ([`Scenes/settings_menu.tscn`](file:///home/hakan/dive&find/Scenes/settings_menu.tscn) & [`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)) hem de Ana Menü içi Ayarlar Paneli ([`Scenes/main_menu.tscn`](file:///home/hakan/dive&find/Scenes/main_menu.tscn) & [`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)) içerisine `LanguageRow` eklendi.
+  - `Dil / Language` etiketi ve `OptionButton` ile `🇹🇷 Türkçe` (`tr`) ve `🇬🇧 English` (`en`) seçenekleri sunulur.
+  - Dil değiştirildiğinde ayar `[general] language` anahtarına kaydedilir; `TranslationServer.set_locale()` ile motor dili değişir ve `DevConsole.refresh_active_uis()` tetiklenerek açık tüm arayüzler canlı güncellenir.
+- **İlk Kurulum ve Sürüm Güncelleme Karşılama Modalı ([`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):**
+  - **Tetiklenme Mantığı (`_should_show_language_prompt`):**
+    - `user://settings.cfg` dosyası mevcut değilse (ilk kurulum),
+    - VEYA `[general] language` anahtarı kaydedilmemişse,
+    - VEYA dosyada kayıtlı `[general] last_version` oyunun güncel sürümünden (`game_version`, örn. `"Pre-Alpha 1.6.3"`) farklıysa (yeni güncelleme indirilmişse),
+    - Fonksiyon `true` döner.
+  - **Görsel Tasarım & Akış (Option A):**
+    - Ana menü butonları, başlık ve changelog panelleri gizlenir.
+    - Arka planda `game_bg.png` (`SkyTexture`) berrak şekilde görünür kalır.
+    - Ortada derin deniz neon temalı (`#00e5ff` cyan çerçeveli, `#03070e` lacivert panelli) `🌐 DİL SEÇİMİ / LANGUAGE SELECTION` modalı açılır.
+    - `res://Sprites/header.png` logosu ve `🇹🇷 Türkçe` ile `🇬🇧 English` seçim butonları yer alır.
+    - Seçim yapıldığında dil motor seviyesinde uygulanır, `settings.cfg` içine `language` ve `last_version = game_version` işlenir; modal pürüzsüzce fade-out olarak ana menü giriş animasyonunu (`_play_entrance_animation`) başlatır.
+    - Sonraki normal açılışlarda modal atlanır ve doğrudan ana menüye girilir.
 
 

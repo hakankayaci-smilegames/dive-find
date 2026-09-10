@@ -7,7 +7,7 @@
 script = ExtResource("1_script")
 item_name = "Tropikal Radyoaktif Kokteyl"
 sprite = ExtResource("2_sprite")
-description = "Gizemli şişedeki kimyasallarla sentezlenen ve monster enerjisiyle köpürtülen egzotik karışım. Hafifçe yeşil parıldıyor..."
+description = "Gizemli şişedeki kimyasallar ve enerji içeceği özlerinin sentezlenmesiyle elde edilen egzotik karışım. Karanlıkta neon yeşili parıldıyor; içmek cesaret, satmak zeka ister."
 rarity = 1.0
 value = 260
 category = "Crafted"

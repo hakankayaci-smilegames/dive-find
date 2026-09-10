@@ -16,6 +16,7 @@ extends CanvasLayer
 
 var _selected_item: Resource = null
 var _sort_mode: int = 0  # 0: Değere Göre, 1: Kategoriye Göre
+var _has_sorted: bool = false
 
 const CATEGORY_COLORS: Dictionary = {
 	"Trash": Color(0.70, 0.70, 0.70),
@@ -63,13 +64,13 @@ const ITEM_SCENE_MAP: Dictionary = {
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS  # Ofis açıp oyunu duraklattığımızda bu panel çalışmaya devam etsin
+	add_to_group("popup_ui")
 	close_button.pressed.connect(queue_free)
 	if is_instance_valid(sort_button):
 		sort_button.pressed.connect(_on_sort_pressed)
 	if is_instance_valid(drop_button):
 		drop_button.pressed.connect(_on_drop_pressed)
-	_clear_details()
-	_populate_inventory()
+	refresh_ui()
 	
 	# GlobalInventory'den envanter güncellendiğinde ekranı yenile
 	if GlobalInventory.has_signal("inventory_updated"):
@@ -85,14 +86,15 @@ func _unhandled_input(event: InputEvent) -> void:
 func _clear_details() -> void:
 	_selected_item = null
 	big_image.texture = null
-	name_label.text = "Bir Eşya Seçin"
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	name_label.text = "Select an Item" if is_en else "Bir Eşya Seçin"
 	rarity_label.text = ""
 	value_label.text = ""
-	desc_label.text = "Detayları görmek ve bırakmak için bir eşyaya sol tıkla."
+	desc_label.text = "Click an item to see details and drop." if is_en else "Detayları görmek ve bırakmak için bir eşyaya sol tıkla."
 	if is_instance_valid(drop_button):
 		drop_button.disabled = true
-		drop_button.text = "🗑️ Bırak"
-		drop_button.tooltip_text = "Önce bir eşya seçmelisin"
+		drop_button.text = "🗑️ Drop" if is_en else "🗑️ Bırak"
+		drop_button.tooltip_text = "You must select an item first" if is_en else "Önce bir eşya seçmelisin"
 	_update_selection_visuals()
 
 func _update_selection_visuals() -> void:
@@ -112,13 +114,22 @@ func _populate_inventory() -> void:
 
 	# Kapasite ve toplam değer göstergesini güncelle
 	if is_instance_valid(capacity_label):
-		var lock_text := (" • 🔒 %d Kilitli" % locked_count) if locked_count > 0 else ""
-		capacity_label.text = "Envanter (%d/%d)%s  •  Toplam: %d Zurna" % [
-			GlobalInventory.collected_items.size(),
-			GlobalInventory.get_capacity(),
-			lock_text,
-			total_value
-		]
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
+		var lock_text := ((" • 🔒 %d Locked" if is_en else " • 🔒 %d Kilitli") % locked_count) if locked_count > 0 else ""
+		if is_en:
+			capacity_label.text = "Inventory (%d/%d)%s  •  Total: %d Zurna" % [
+				GlobalInventory.collected_items.size(),
+				GlobalInventory.get_capacity(),
+				lock_text,
+				total_value
+			]
+		else:
+			capacity_label.text = "Envanter (%d/%d)%s  •  Toplam: %d Zurna" % [
+				GlobalInventory.collected_items.size(),
+				GlobalInventory.get_capacity(),
+				lock_text,
+				total_value
+			]
 
 	# Önceki slotları temizle
 	for child in grid_container.get_children():
@@ -172,25 +183,43 @@ func _show_item_details(data: Resource) -> void:
 		
 	big_image.texture = data.get("sprite")
 	var is_locked: bool = bool(data.get("is_locked"))
-	var lock_tag: String = " 🔒 [KİLİTLİ]" if is_locked else ""
-	name_label.text = str(data.get("item_name")) + lock_tag
-	desc_label.text = str(data.get("description"))
+	var item_obj: ItemData = data as ItemData
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	var lock_tag: String = (" 🔒 [LOCKED]" if is_en else " 🔒 [KİLİTLİ]") if is_locked else ""
+	var item_disp_name: String = ItemTranslator.get_item_name(item_obj) if item_obj else str(data.get("item_name"))
+	name_label.text = item_disp_name + lock_tag
+	var desc_text: String = ItemTranslator.get_item_description(item_obj) if item_obj else str(data.get("description"))
+	desc_label.text = desc_text
+	if desc_text.length() > 130:
+		desc_label.add_theme_font_size_override("font_size", 11)
+	else:
+		desc_label.add_theme_font_size_override("font_size", 12)
 	
 	if is_locked:
-		value_label.text = "Değer: %s Zurna (Korumalı)" % str(data.get("value"))
+		value_label.text = ("Value: %s Zurna (Protected)" if is_en else "Değer: %s Zurna (Korumalı)") % str(data.get("value"))
 	else:
-		value_label.text = "Değer: %s Zurna" % str(data.get("value"))
+		value_label.text = ("Value: %s Zurna" if is_en else "Değer: %s Zurna") % str(data.get("value"))
 	
 	var category_key: String = str(data.get("category"))
 	var category_text := ""
-	match category_key:
-		"Trash": category_text = "[ ÇÖP ]"
-		"Resource": category_text = "[ HAM MADDE ]"
-		"Rare Found": category_text = "[ NADİR BULUNTU ]"
-		"Special": category_text = "[ ÖZEL ]"
-		"Valuable": category_text = "[ DEĞERLİ ]"
-		"Crafted": category_text = "[ ÜRETİLMİŞ ]"
-		_: category_text = "[ " + category_key.to_upper() + " ]"
+	if is_en:
+		match category_key:
+			"Trash": category_text = "[ TRASH ]"
+			"Resource": category_text = "[ RESOURCE ]"
+			"Rare Found": category_text = "[ RARE FIND ]"
+			"Special": category_text = "[ SPECIAL ]"
+			"Valuable": category_text = "[ VALUABLE ]"
+			"Crafted": category_text = "[ CRAFTED ]"
+			_: category_text = "[ " + category_key.to_upper() + " ]"
+	else:
+		match category_key:
+			"Trash": category_text = "[ ÇÖP ]"
+			"Resource": category_text = "[ HAM MADDE ]"
+			"Rare Found": category_text = "[ NADİR BULUNTU ]"
+			"Special": category_text = "[ ÖZEL ]"
+			"Valuable": category_text = "[ DEĞERLİ ]"
+			"Crafted": category_text = "[ ÜRETİLMİŞ ]"
+			_: category_text = "[ " + category_key.to_upper() + " ]"
 		
 	rarity_label.text = category_text
 	var cat_color: Color = CATEGORY_COLORS.get(category_key, Color(0.95, 0.9, 0.8))
@@ -198,13 +227,22 @@ func _show_item_details(data: Resource) -> void:
 
 	if is_instance_valid(drop_button):
 		var in_office: bool = get_tree().get_first_node_in_group("office_menu") != null
-		drop_button.text = "🗑️ Çantadan At" if in_office else "🗑️ Denize Bırak"
-		if is_locked:
-			drop_button.disabled = true
-			drop_button.tooltip_text = "Kilitli eşyalar atılamaz! 🔒"
+		if is_en:
+			drop_button.text = "🗑️ Discard" if in_office else "🗑️ Drop to Sea"
+			if is_locked:
+				drop_button.disabled = true
+				drop_button.tooltip_text = "Locked items cannot be dropped! 🔒"
+			else:
+				drop_button.disabled = false
+				drop_button.tooltip_text = "Discard item" if in_office else "Drop item into sea"
 		else:
-			drop_button.disabled = false
-			drop_button.tooltip_text = "Eşyayı çantadan sil" if in_office else "Eşyayı denize bırak"
+			drop_button.text = "🗑️ Çantadan At" if in_office else "🗑️ Denize Bırak"
+			if is_locked:
+				drop_button.disabled = true
+				drop_button.tooltip_text = "Kilitli eşyalar atılamaz! 🔒"
+			else:
+				drop_button.disabled = false
+				drop_button.tooltip_text = "Eşyayı çantadan sil" if in_office else "Eşyayı denize bırak"
 
 func _on_drop_pressed() -> void:
 	if not _selected_item:
@@ -232,7 +270,9 @@ func _on_drop_pressed() -> void:
 			GlobalSoundManager.play_sfx("pickup")
 			var hud = get_tree().get_first_node_in_group("hud")
 			if hud and hud.has_method("show_warning_toast"):
-				hud.show_warning_toast("🌊 %s denize bırakıldı." % str(item_to_drop.item_name))
+				var is_en: bool = ItemTranslator.get_current_locale() == "en"
+				var toast_msg: String = ("🌊 %s dropped into sea." if is_en else "🌊 %s denize bırakıldı.") % ItemTranslator.get_item_name(item_to_drop)
+				hud.show_warning_toast(toast_msg)
 		else:
 			GlobalSoundManager.play_sfx("click")
 
@@ -272,14 +312,40 @@ func _spawn_dropped_item_in_world(item_data: ItemData, drop_pos: Vector2) -> voi
 		spawned.global_position = drop_pos + Vector2(randf_range(-25.0, 25.0), 15.0)
 
 func _on_sort_pressed() -> void:
+	_has_sorted = true
 	if _sort_mode == 0:
 		GlobalInventory.sort_inventory_by_value()
-		if is_instance_valid(sort_button):
-			sort_button.text = "💰 Fiyat"
 		_sort_mode = 1
 	else:
 		GlobalInventory.sort_inventory_by_category()
-		if is_instance_valid(sort_button):
-			sort_button.text = "🏷️ Tür"
 		_sort_mode = 0
+	_update_sort_button_text()
 	GlobalSoundManager.play_sfx("click")
+
+
+func _update_sort_button_text() -> void:
+	if not is_instance_valid(sort_button):
+		return
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	if not _has_sorted:
+		sort_button.text = "🔄 Sort" if is_en else "🔄 Sırala"
+		sort_button.tooltip_text = "Sort items by price or type" if is_en else "Eşyaları fiyata veya türe göre sırala"
+	elif _sort_mode == 1:
+		sort_button.text = "💰 Price" if is_en else "💰 Fiyat"
+		sort_button.tooltip_text = "Sorted by price (Click for type)" if is_en else "Fiyata göre sıralandı (Türe göre sıralamak için tıkla)"
+	else:
+		sort_button.text = "🏷️ Type" if is_en else "🏷️ Tür"
+		sort_button.tooltip_text = "Sorted by type (Click for price)" if is_en else "Türe göre sıralandı (Fiyata göre sıralamak için tıkla)"
+
+
+func refresh_ui() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	var hint_lbl: Label = get_node_or_null("MainPanel/HintLabel")
+	if hint_lbl:
+		hint_lbl.text = "💡 Left Click: Select / Drop Item  •  Right Click (Mobile: Hold): Lock 🔒" if is_en else "💡 Sol Tık: Eşyayı Seç / Bırak  •  Sağ Tık (Mobilde Basılı Tut): Kilitle 🔒"
+	_update_sort_button_text()
+	_populate_inventory()
+	if _selected_item and GlobalInventory.collected_items.has(_selected_item):
+		_show_item_details(_selected_item)
+	else:
+		_clear_details()

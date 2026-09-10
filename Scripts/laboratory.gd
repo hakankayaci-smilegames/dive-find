@@ -20,6 +20,7 @@ var _selected_recipe: Dictionary = {}
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group("laboratory_ui")
 	close_button.pressed.connect(queue_free)
 	craft_button.pressed.connect(_on_craft_pressed)
 	_setup_button_juice(close_button)
@@ -134,10 +135,15 @@ func _create_recipe_button(recipe: Dictionary) -> Button:
 	icon_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var tres_path: String = str(recipe.get("output_tres_path", ""))
+	var display_name: String = str(recipe.get("name", "Tarif"))
 	if ResourceLoader.exists(tres_path):
 		var res = load(tres_path)
-		if res and res.get("sprite"):
-			icon_rect.texture = res.get("sprite")
+		if res:
+			if res.get("sprite"):
+				icon_rect.texture = res.get("sprite")
+			var item_obj: ItemData = res as ItemData
+			if item_obj:
+				display_name = ItemTranslator.get_item_name(item_obj)
 	hbox.add_child(icon_rect)
 
 	# Metinler VBox
@@ -147,7 +153,7 @@ func _create_recipe_button(recipe: Dictionary) -> Button:
 	hbox.add_child(vbox)
 
 	var name_lbl := Label.new()
-	name_lbl.text = str(recipe.get("name", "Tarif"))
+	name_lbl.text = display_name
 	name_lbl.add_theme_font_size_override("font_size", 14)
 	name_lbl.add_theme_color_override("font_color", Color(1.0, 0.9, 0.7, 1.0))
 	vbox.add_child(name_lbl)
@@ -158,10 +164,13 @@ func _create_recipe_button(recipe: Dictionary) -> Button:
 	var status_text: String = ""
 	for ing in ingredients:
 		var iname: String = str(ing.get("item_name", ""))
+		var dummy := ItemData.new()
+		dummy.item_name = iname
+		var display_iname: String = ItemTranslator.get_item_name(dummy)
 		var req_count: int = int(ing.get("count", 1))
 		var cur_count: int = _count_unlocked_items(iname)
 		var mark: String = "✅" if cur_count >= req_count else "❌"
-		status_text += "%s %d/%d %s " % [iname, cur_count, req_count, mark]
+		status_text += "%s %d/%d %s " % [display_iname, cur_count, req_count, mark]
 	status_lbl.text = status_text
 	status_lbl.add_theme_font_size_override("font_size", 11)
 	status_lbl.add_theme_color_override("font_color", Color(0.7, 0.85, 0.7, 1.0) if can_craft else Color(0.8, 0.5, 0.5, 1.0))
@@ -178,8 +187,7 @@ func _create_recipe_button(recipe: Dictionary) -> Button:
 func _select_recipe(recipe: Dictionary) -> void:
 	_selected_recipe = recipe
 
-	item_name_label.text = str(recipe.get("name", "Bilinmeyen Ürün"))
-	item_desc_label.text = str(recipe.get("description", "Açıklama bulunmuyor."))
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 
 	# Çıktı Eşyası İkon ve Değer
 	var tres_path: String = str(recipe.get("output_tres_path", ""))
@@ -187,11 +195,20 @@ func _select_recipe(recipe: Dictionary) -> void:
 	if ResourceLoader.exists(tres_path):
 		var res = load(tres_path)
 		if res:
+			var item_obj: ItemData = res as ItemData
+			item_name_label.text = ItemTranslator.get_item_name(item_obj) if item_obj else str(recipe.get("name", "Bilinmeyen Ürün"))
+			item_desc_label.text = ItemTranslator.get_item_description(item_obj) if item_obj else str(recipe.get("description", "Açıklama bulunmuyor."))
 			item_icon.texture = res.get("sprite")
 			var val = res.get("value")
 			item_value = int(val) if val != null else 0
+		else:
+			item_name_label.text = str(recipe.get("name", "Bilinmeyen Ürün"))
+			item_desc_label.text = str(recipe.get("description", "Açıklama bulunmuyor."))
+	else:
+		item_name_label.text = str(recipe.get("name", "Bilinmeyen Ürün"))
+		item_desc_label.text = str(recipe.get("description", "Açıklama bulunmuyor."))
 
-	item_value_label.text = "💰 Tahmini Satış Değeri: %d Zurna" % item_value
+	item_value_label.text = ("💰 Estimated Value: %d Zurna" if is_en else "💰 Tahmini Satış Değeri: %d Zurna") % item_value
 
 	# Malzemeler Listesi Doldurma
 	for child in ingredients_container.get_children():
@@ -207,8 +224,12 @@ func _select_recipe(recipe: Dictionary) -> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 10)
 
+		var dummy := ItemData.new()
+		dummy.item_name = iname
+		var display_iname: String = ItemTranslator.get_item_name(dummy)
+
 		var ing_name := Label.new()
-		ing_name.text = "• " + iname
+		ing_name.text = "• " + display_iname
 		ing_name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		ing_name.add_theme_font_size_override("font_size", 14)
 		ing_name.add_theme_color_override("font_color", Color(0.95, 0.9, 0.8, 1.0))
@@ -228,14 +249,14 @@ func _select_recipe(recipe: Dictionary) -> void:
 	# Masraf Kontrolü
 	var req_money: int = int(recipe.get("required_money", 0))
 	if req_money > 0:
-		craft_cost_label.text = "Laboratuvar Masrafı: %d Zurna" % req_money
+		craft_cost_label.text = ("Lab Fee: %d Zurna" if is_en else "Laboratuvar Masrafı: %d Zurna") % req_money
 		if GlobalEconomy.money < req_money:
 			can_craft = false
 			craft_cost_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
 		else:
 			craft_cost_label.add_theme_color_override("font_color", Color(0.95, 0.8, 0.3, 1.0))
 	else:
-		craft_cost_label.text = "Laboratuvar Masrafı: Ücretsiz"
+		craft_cost_label.text = "Lab Fee: Free" if is_en else "Laboratuvar Masrafı: Ücretsiz"
 		craft_cost_label.add_theme_color_override("font_color", Color(0.6, 0.9, 0.6, 1.0))
 
 	# Çanta Kapasite Kontrolü (Net slot değişimi: üretilen 1 eşya - harcanacak malzemeler)
@@ -248,11 +269,11 @@ func _select_recipe(recipe: Dictionary) -> void:
 
 	craft_button.disabled = not can_craft or not has_space
 	if not can_craft:
-		craft_button.text = "YETERSİZ MALZEME"
+		craft_button.text = "NOT ENOUGH MATERIALS" if is_en else "YETERSİZ MALZEME"
 	elif not has_space:
-		craft_button.text = "ÇANTA DOLU 🎒"
+		craft_button.text = "INVENTORY FULL 🎒" if is_en else "ÇANTA DOLU 🎒"
 	else:
-		craft_button.text = "SENTEZLE / ÜRET ✨"
+		craft_button.text = "SYNTHESIZE / CRAFT ✨" if is_en else "SENTEZLE / ÜRET ✨"
 
 
 func _on_craft_pressed() -> void:
@@ -311,7 +332,7 @@ func _on_craft_pressed() -> void:
 
 	# 4. Efektler & SFX
 	GlobalSoundManager.play_sfx("upgrade")
-	_spawn_floating_craft_feedback(product.item_name)
+	_spawn_floating_craft_feedback(ItemTranslator.get_item_name(product))
 
 	# 5. Ekranı yenile
 	_populate_recipe_list()
@@ -319,8 +340,9 @@ func _on_craft_pressed() -> void:
 
 
 func _spawn_floating_craft_feedback(p_name: String) -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	var float_label := Label.new()
-	float_label.text = "✨ +1 %s Üretildi!" % p_name
+	float_label.text = ("✨ +1 %s Crafted!" if is_en else "✨ +1 %s Üretildi!") % p_name
 	float_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.4, 1.0))
 	float_label.add_theme_color_override("font_shadow_color", Color(0.0, 0.0, 0.0, 0.9))
 	float_label.add_theme_constant_override("shadow_outline_size", 3)
@@ -369,5 +391,11 @@ func _on_inventory_updated() -> void:
 
 
 func _on_money_changed(_amount: int) -> void:
+	if not _selected_recipe.is_empty():
+		_select_recipe(_selected_recipe)
+
+
+func refresh_ui() -> void:
+	_populate_recipe_list()
 	if not _selected_recipe.is_empty():
 		_select_recipe(_selected_recipe)

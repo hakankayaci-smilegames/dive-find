@@ -13,9 +13,10 @@ config_version=5
 config/name="Dive&Find"
 run/main_scene="uid://ct2wcuidga1m2"
 config/features=PackedStringArray("4.7", "GL Compatibility")
-boot_splash/stretch_mode=0
-boot_splash/image="res://Sprites/icon.svg"
-config/icon="res://Sprites/icon.svg"
+boot_splash/bg_color=Color(4.6205523e-06, 0.8283359, 0.7843804, 1)
+boot_splash/stretch_mode=4
+boot_splash/image="uid://d4lwteg0varie"
+config/icon="uid://c4gn2tofilssp"
 
 [autoload]
 
@@ -24,6 +25,7 @@ GlobalEconomy="*uid://ce5nrs0re56j3"
 GlobalSoundManager="*uid://bh56jss3gi8tp"
 GlobalTime="*uid://3ocp1jsxbexj"
 DevConsole="*uid://c0ns0l3dev001"
+ItemTranslator="*res://Scripts/item_translator.gd"
 
 [display]
 
@@ -38,6 +40,10 @@ movie_writer/movie_file="/home/hakan/Masaüstü/test.ogv"
 
 player=""
 
+[internationalization]
+
+locale/translations=PackedStringArray("res://Translations/translations.en.translation", "res://Translations/translations.tr.translation")
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -48,7 +54,3 @@ rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
-
-[internationalization]
-
-locale/translations=PackedStringArray("res://Translations/translations.en.translation", "res://Translations/translations.tr.translation")

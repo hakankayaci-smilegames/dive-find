@@ -7,7 +7,7 @@
 script = ExtResource("1_6w8o1")
 item_name = "Anahtar"
 sprite = ExtResource("2_bea0j")
-description = "Anahtar hocam...Nereyi açıyor acaba şekillü şüküllü duruyor. Allah bilir."
+description = "Üzerinde karmaşık oymalar bulunan antik pirinç bir anahtar. Kilitlediği gizemli kapı veya sandık, muhtemelen yüzyıllardır okyanusun başka bir köşesinde onu bekliyor."
 rarity = 3
 value = 95
 category = "Rare Found"

@@ -24,17 +24,42 @@ func _ready() -> void:
 func _populate_summary() -> void:
 	var time_mgr: Node = _get_time_mgr()
 	var data: Dictionary = time_mgr.get_summary_data() if time_mgr else {}
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 
-	day_title.text = "GÜN %d TAMAMLANDI" % int(data.get("day", 1))
+	day_title.text = ("DAY %d COMPLETED" if is_en else "GÜN %d TAMAMLANDI") % int(data.get("day", 1))
 	earnings_label.text = "+%d Zurna" % int(data.get("earnings", 0))
-	dives_label.text = "%d Dalış" % int(data.get("dives", 0))
-	items_sold_label.text = "%d Adet" % int(data.get("items_sold", 0))
+	dives_label.text = ("%d Dives" if is_en else "%d Dalış") % int(data.get("dives", 0))
+	items_sold_label.text = ("%d Items" if is_en else "%d Adet") % int(data.get("items_sold", 0))
 	max_depth_label.text = "%d m" % int(data.get("max_depth", 0))
 	closing_time_label.text = str(data.get("closing_time", "19:00"))
 
 	var bag_count: int = GlobalInventory.collected_items.size()
 	var bag_capacity: int = GlobalInventory.get_capacity()
-	bag_status_label.text = "%d / %d Eşya" % [bag_count, bag_capacity]
+	bag_status_label.text = ("%d / %d Items" if is_en else "%d / %d Eşya") % [bag_count, bag_capacity]
+	continue_button.text = "START NEW DAY ☀️" if is_en else "YENİ GÜNE BAŞLA ☀️"
+
+	var subtitle: Label = get_node_or_null("Center/MainPanel/VBox/Subtitle")
+	if subtitle:
+		subtitle.text = "Daily Operations & Balance Sheet" if is_en else "Günün Operasyon & Bilanço Raporu"
+
+	var title_earnings: Label = get_node_or_null("Center/MainPanel/VBox/Grid/CardEarnings/VBox/Title")
+	if title_earnings:
+		title_earnings.text = "💰 Daily Earnings" if is_en else "💰 Günün Kazancı"
+	var title_dives: Label = get_node_or_null("Center/MainPanel/VBox/Grid/CardDives/VBox/Title")
+	if title_dives:
+		title_dives.text = "🤿 Dives Done" if is_en else "🤿 Yapılan Dalış"
+	var title_items: Label = get_node_or_null("Center/MainPanel/VBox/Grid/CardItems/VBox/Title")
+	if title_items:
+		title_items.text = "📦 Items Sold" if is_en else "📦 Satılan Eşya"
+	var title_depth: Label = get_node_or_null("Center/MainPanel/VBox/Grid/CardDepth/VBox/Title")
+	if title_depth:
+		title_depth.text = "🌊 Max Depth" if is_en else "🌊 En Derin Nokta"
+	var title_bag: Label = get_node_or_null("Center/MainPanel/VBox/Grid/CardBag/VBox/Title")
+	if title_bag:
+		title_bag.text = "🎒 Bag Inventory" if is_en else "🎒 Çantadaki Eşyalar"
+	var title_time: Label = get_node_or_null("Center/MainPanel/VBox/Grid/CardClosingTime/VBox/Title")
+	if title_time:
+		title_time.text = "⏰ Closing Time" if is_en else "⏰ Gün Kapanış Saati"
 
 
 func _on_continue_pressed() -> void:

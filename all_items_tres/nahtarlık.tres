@@ -7,7 +7,7 @@
 script = ExtResource("1_lvmik")
 item_name = "Anahtarlık"
 sprite = ExtResource("2_vhtnh")
-description = "Vaay AHAAH, biri arkadaşının muhteşem hediyesini kabul etmemiş, tam agalara layık.."
+description = "İnce bir mizah ve derin bir dostluk mesajı taşıyan manidar bir el figürü. Arkadaş ortamlarının samimi şakalarını suyun altına kadar taşımayı başarmış."
 rarity = 0.3
 category = "Rare Found"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

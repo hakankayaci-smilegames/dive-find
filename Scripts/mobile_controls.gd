@@ -186,23 +186,27 @@ func _update_interact_button_state() -> void:
 		interact_button.modulate.a = 1.0
 		interact_button.disabled = false
 		# Eşya adı varsa buton üzerinde göster
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
 		if closest_item.item_data and "item_name" in closest_item.item_data:
-			interact_button.text = "🖐️ " + str(closest_item.item_data.item_name)
+			var item_obj: ItemData = closest_item.item_data as ItemData
+			var iname: String = ItemTranslator.get_item_name(item_obj) if item_obj else str(closest_item.item_data.item_name)
+			interact_button.text = "🖐️ " + iname
 		else:
-			interact_button.text = tr("🖐️ İNCELE")
+			interact_button.text = "🖐️ EXAMINE" if is_en else "🖐️ İNCELE"
 
 		if is_instance_valid(quick_pickup_button):
 			quick_pickup_button.modulate.a = 1.0
 			if GlobalInventory.is_full():
 				quick_pickup_button.disabled = true
-				quick_pickup_button.text = tr("❌ DOLU")
+				quick_pickup_button.text = "❌ FULL" if is_en else "❌ DOLU"
 			else:
 				quick_pickup_button.disabled = false
-				quick_pickup_button.text = tr("⚡ DİREKT AL")
+				quick_pickup_button.text = "⚡ QUICK PICKUP" if is_en else "⚡ DİREKT AL"
 	else:
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
 		interact_button.modulate.a = 0.4
 		interact_button.disabled = true
-		interact_button.text = tr("🖐️ İNCELE")
+		interact_button.text = "🖐️ EXAMINE" if is_en else "🖐️ İNCELE"
 		if is_instance_valid(quick_pickup_button):
 			quick_pickup_button.modulate.a = 0.4
 			quick_pickup_button.disabled = true

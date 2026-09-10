@@ -1,31 +1,30 @@
 [gd_scene load_steps=8 format=3 uid="uid://c517f8g9h0loading"]
 
-[ext_resource type="Script" path="res://Scripts/loading_screen.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://b32d7g2ddahnw" path="res://Sprites/sky.png" id="2_sky"]
-[ext_resource type="Texture2D" uid="uid://b27bdcio2wc8k" path="res://Sprites/lvl0.png" id="3_ocean"]
-[ext_resource type="Texture2D" uid="uid://pebmn50nwehb" path="res://Sprites/lvl1.png" id="4_ocean_deep"]
+[ext_resource type="Script" uid="uid://cccf70wf2m20d" path="res://Scripts/loading_screen.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://douoykca1mobj" path="res://Sprites/game_bg.png" id="2_bg"]
+[ext_resource type="Texture2D" uid="uid://ctijvd7v1plr7" path="res://Sprites/header.png" id="3_header"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_title_bg"]
-content_margin_left = 20.0
-content_margin_top = 12.0
-content_margin_right = 20.0
-content_margin_bottom = 12.0
-bg_color = Color(0.03, 0.08, 0.16, 0.88)
-border_width_left = 3
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tip_card"]
+content_margin_left = 24.0
+content_margin_top = 16.0
+content_margin_right = 24.0
+content_margin_bottom = 16.0
+bg_color = Color(0.03, 0.07, 0.13, 0.88)
+border_width_left = 2
 border_width_top = 2
 border_width_right = 2
-border_width_bottom = 3
-border_color = Color(0, 0.85, 0.95, 0.85)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
-shadow_color = Color(0, 0, 0, 0.45)
-shadow_size = 10
+border_width_bottom = 2
+border_color = Color(0.18, 0.65, 0.88, 0.55)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.5)
+shadow_size = 12
 shadow_offset = Vector2(0, 4)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_progress_bg"]
-bg_color = Color(0.02, 0.06, 0.12, 0.85)
+bg_color = Color(0.02, 0.05, 0.1, 0.9)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
@@ -42,7 +41,7 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
-shadow_color = Color(0, 0.85, 1, 0.35)
+shadow_color = Color(0, 0.85, 1, 0.45)
 shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_continue_btn"]
@@ -51,15 +50,15 @@ content_margin_top = 14.0
 content_margin_right = 28.0
 content_margin_bottom = 14.0
 bg_color = Color(0.04, 0.09, 0.18, 0.94)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 border_color = Color(1, 0.85, 0.25, 1)
-corner_radius_top_left = 14
-corner_radius_top_right = 14
-corner_radius_bottom_right = 14
-corner_radius_bottom_left = 14
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 shadow_color = Color(1, 0.8, 0.15, 0.4)
 shadow_size = 16
 
@@ -72,40 +71,14 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="SkyTexture" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_sky")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="OceanTexture" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -290.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = ExtResource("3_ocean")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="DeepTexture" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -120.0
-grow_horizontal = 2
-grow_vertical = 0
-texture = ExtResource("4_ocean_deep")
+texture = ExtResource("2_bg")
 expand_mode = 1
 stretch_mode = 6
 
@@ -117,55 +90,48 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0.01, 0.04, 0.08, 0.45)
+color = Color(0.01, 0.03, 0.07, 0.55)
 
-[node name="TitleBox" type="Panel" parent="."]
+[node name="HeaderLogo" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -320.0
+offset_top = 36.0
+offset_right = 320.0
+offset_bottom = 186.0
+grow_horizontal = 2
+texture = ExtResource("3_header")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TipCard" type="PanelContainer" parent="."]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -140.0
-offset_right = 230.0
-offset_bottom = -28.0
+offset_left = -380.0
+offset_top = -45.0
+offset_right = 380.0
+offset_bottom = 65.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_title_bg")
+theme_override_styles/panel = SubResource("StyleBoxFlat_tip_card")
 
-[node name="TitleLabel" type="Label" parent="TitleBox"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 68.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
+[node name="TipLabel" type="Label" parent="TipCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.88, 0.65, 0.95)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_x = 3
-theme_override_constants/shadow_offset_y = 3
-theme_override_font_sizes/font_size = 54
-text = "Dive & Find"
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 15
+text = "💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin."
 horizontal_alignment = 1
 vertical_alignment = 1
-
-[node name="StatusBadge" type="Label" parent="TitleBox"]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -34.0
-offset_bottom = -8.0
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
-theme_override_colors/font_shadow_color = Color(1, 0.45, 0.05, 0.85)
-theme_override_constants/shadow_outline_size = 6
-theme_override_font_sizes/font_size = 14
-text = "✦ DALIŞA HAZIRLANIYOR ✦"
-horizontal_alignment = 1
-vertical_alignment = 1
+autowrap_mode = 3
 
 [node name="BottomContainer" type="Control" parent="."]
 layout_mode = 1
@@ -174,40 +140,24 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 80.0
-offset_top = -135.0
+offset_top = -105.0
 offset_right = -80.0
 offset_bottom = -25.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="TipLabel" type="Label" parent="BottomContainer"]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_bottom = 26.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.95, 0.85, 0.5, 0.95)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-theme_override_font_sizes/font_size = 15
-text = "💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin."
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="StatusRow" type="HBoxContainer" parent="BottomContainer"]
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 36.0
-offset_bottom = 58.0
+offset_bottom = 24.0
 grow_horizontal = 2
 
 [node name="StageLabel" type="Label" parent="BottomContainer/StatusRow"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_colors/font_color = Color(0.7, 0.9, 1, 0.9)
-theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+theme_override_colors/font_color = Color(0.75, 0.92, 1, 0.95)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.7)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 14
@@ -231,8 +181,8 @@ anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -18.0
-offset_bottom = -4.0
+offset_top = -20.0
+offset_bottom = -6.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/background = SubResource("StyleBoxFlat_progress_bg")
@@ -242,27 +192,28 @@ show_percentage = false
 
 [node name="ContinuePrompt" type="PanelContainer" parent="."]
 visible = false
+layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -340.0
-offset_top = 35.0
+offset_top = 80.0
 offset_right = 340.0
-offset_bottom = 98.0
+offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_continue_btn")
 
-[node name="Label" type="Label" parent="ContinuePrompt"]
+[node name="PromptLabel" type="Label" parent="ContinuePrompt"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.95, 0.4, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
 theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 18
 text = "▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀"
 horizontal_alignment = 1
 vertical_alignment = 1

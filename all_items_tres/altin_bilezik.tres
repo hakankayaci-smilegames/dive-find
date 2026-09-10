@@ -7,7 +7,7 @@
 script = ExtResource("1_q8o17")
 item_name = "Altın Bilezik"
 sprite = ExtResource("2_ghlwd")
-description = "Kim denize bu güzelcecik altın bileklik ile girip onu düşürme riskine girerki?.....Neyse,bizim oldu"
+description = "Pırıl pırıl parıldayan 24 ayar bir altın bilezik. Kim denize böyle bir mücevherle girip onu dipte unutma riskini alır ki? Neyse, denizcilik kanunlarına göre artık bizim."
 rarity = 2
 value = 350
 category = "Valuable"

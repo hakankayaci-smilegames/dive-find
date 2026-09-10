@@ -7,7 +7,7 @@
 script = ExtResource("1_dyjun")
 item_name = "Smooth Criminal Plak"
 sprite = ExtResource("2_ebmlq")
-description = "HEY ADAMIM İŞTE BU. GERÇEK MÜZİK....HEEEEHEEEE..ENEVİCİWOKE"
+description = "İşte gerçek müzik! Tuzlu suların bile ritmini bozamadığı efsanevi bir vinil plak. Plak kapağından hâlâ yankılanan o ikonik \"Annie, are you OK?\" tınısını duyar gibi oluyorum."
 rarity = 5
 value = 8000
 category = "Special"

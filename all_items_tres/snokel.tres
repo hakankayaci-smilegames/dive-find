@@ -7,7 +7,7 @@
 script = ExtResource("1_2gb4y")
 item_name = "Şnolkel"
 sprite = ExtResource("2_b02ts")
-description = "Lan bu benim kaybettiğim şnolkel mi acaba?, bunu ne zaman düşürdüm ben lan.(değil)"
+description = "Bir an için kendi düşürdüğüm şnorkel sandığım emektar bir dalış ekipmanı. Biraz inceleyince benimkinden çok daha kaliteli olduğunu fark ettim; kesinlikle envantere girer."
 rarity = 1
 value = 15
 category = "Rare Found"

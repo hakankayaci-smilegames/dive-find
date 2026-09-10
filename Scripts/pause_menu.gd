@@ -16,6 +16,14 @@ func _ready() -> void:
 	layer = 125
 	get_tree().paused = true
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	var title_lbl: Label = get_node_or_null("CenterContainer/MainPanel/VBox/TitleLabel")
+	if title_lbl:
+		title_lbl.text = "⏸️ PAUSED" if is_en else "⏸️ DURAKLATILDI"
+	resume_button.text = "▶ CONTINUE" if is_en else "▶ DEVAM ET"
+	settings_button.text = "⚙️ SETTINGS" if is_en else "⚙️ AYARLAR"
+	quit_button.text = "🚪 RETURN TO MAIN MENU" if is_en else "🚪 ANA MENÜYE DÖN"
+
 	resume_button.pressed.connect(_on_resume_pressed)
 	settings_button.pressed.connect(_on_settings_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
@@ -110,19 +118,24 @@ func _show_quit_confirmation() -> void:
 	panel.add_theme_stylebox_override("panel", panel_style)
 	center.add_child(panel)
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
 
 	var title := Label.new()
-	title.text = "⚠️ DALIŞTAN ÇIKILSIN MI?"
+	title.text = "⚠️ QUIT DIVE?" if is_en else "⚠️ DALIŞTAN ÇIKILSIN MI?"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color(1.0, 0.8, 0.3, 1.0))
 	title.add_theme_font_size_override("font_size", 20)
 	vbox.add_child(title)
 
 	var desc := Label.new()
-	desc.text = "Bu dalışta topladığın ganimetler kaydedilmeyecektir!\nSon ofis kayıt durumuna geri dönülecektir.\n\nAna menüye dönmek istediğinden emin misin?"
+	if is_en:
+		desc.text = "Loot collected during this dive will not be saved!\nYou will be returned to the last office save state.\n\nAre you sure you want to return to the main menu?"
+	else:
+		desc.text = "Bu dalışta topladığın ganimetler kaydedilmeyecektir!\nSon ofis kayıt durumuna geri dönülecektir.\n\nAna menüye dönmek istediğinden emin misin?"
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1.0))
@@ -138,7 +151,7 @@ func _show_quit_confirmation() -> void:
 	vbox.add_child(hbox)
 
 	var cancel_btn := Button.new()
-	cancel_btn.text = "DALIŞA DÖN"
+	cancel_btn.text = "RETURN TO DIVE" if is_en else "DALIŞA DÖN"
 	cancel_btn.custom_minimum_size = Vector2(160, 42)
 	cancel_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var cancel_style := StyleBoxFlat.new()
@@ -155,7 +168,7 @@ func _show_quit_confirmation() -> void:
 	hbox.add_child(cancel_btn)
 
 	var confirm_btn := Button.new()
-	confirm_btn.text = "EVET, ÇIK 🚪"
+	confirm_btn.text = "YES, QUIT 🚪" if is_en else "EVET, ÇIK 🚪"
 	confirm_btn.custom_minimum_size = Vector2(160, 42)
 	confirm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var confirm_style := StyleBoxFlat.new()

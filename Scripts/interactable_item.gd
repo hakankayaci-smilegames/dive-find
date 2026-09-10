@@ -7,6 +7,7 @@ class_name InteractableItem
 
 var _is_mouse_hovering: bool = false
 var _hover_badge: Node2D = null
+var _badge_label: Label = null
 var _hover_tween: Tween = null
 var _base_badge_y: float = 45.0
 
@@ -68,7 +69,9 @@ func _build_hover_badge() -> void:
 	_hover_badge.add_child(panel_container)
 
 	var label := Label.new()
-	label.text = "[E] İncele  •  [Sağ Tık] Direkt Al"
+	_badge_label = label
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	label.text = "[E] Examine  •  [Right Click] Quick Pickup" if is_en else "[E] İncele  •  [Sağ Tık] Direkt Al"
 	label.add_theme_font_size_override("font_size", 15)
 	label.add_theme_color_override("font_color", Color(0.95, 0.88, 0.65, 1.0))
 	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
@@ -109,6 +112,10 @@ func _on_mouse_exited() -> void:
 func _show_hover_badge() -> void:
 	if not is_instance_valid(_hover_badge):
 		return
+
+	if is_instance_valid(_badge_label):
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
+		_badge_label.text = "[E] Examine  •  [Right Click] Quick Pickup" if is_en else "[E] İncele  •  [Sağ Tık] Direkt Al"
 
 	_hover_badge.visible = true
 	if _hover_tween and _hover_tween.is_valid():

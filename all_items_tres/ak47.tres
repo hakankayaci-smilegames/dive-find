@@ -7,7 +7,7 @@
 script = ExtResource("1_0205l")
 item_name = "Keleşnikof"
 sprite = ExtResource("2_rx4ri")
-description = "Adam ak47 atmış denize, dayı ne içtin ne yaşadın bunedir ya, bunun ne işi var burda..."
+description = "Okyanus tabanında paslanmaya terk edilmiş efsanevi bir piyade tüfeği. Bir insan denizin yüzlerce metre derinine bunu neden atar ki? Muhtemelen arkasında çözülememiş bir polisiye vaka saklı."
 rarity = 5
 value = 1001
 category = "Valuable"

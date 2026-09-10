@@ -98,11 +98,7 @@ func _ready() -> void:
 	GlobalInventory.equipment_updated.connect(_on_equipment_updated)
 	if player and player.has_signal("battery_changed") and not player.battery_changed.is_connected(_on_player_battery_changed):
 		player.battery_changed.connect(_on_player_battery_changed)
-	_refresh_wallet()
-	_refresh_day()
-	_refresh_battery_badge()
-	_update_dive_button_state()
-	_update_merchant_badges()
+	refresh_ui()
 
 	# Buton Juice (Mikro-punch)
 	var all_juice_buttons: Array[Button] = [copcu_button, antikaci_button, kara_borsa_button, equstore_button, lab_button, shop_button, envanter_button, koleksiyon_button, charge_button, dive_button, advance_day_button, save_exit_button]
@@ -151,6 +147,91 @@ func _ready() -> void:
 		toast_label.modulate.a = 0.0
 
 
+func refresh_ui() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
+	var title_lbl: Label = get_node_or_null("Background/MainMargin/VBox/TopBar/TitleBox/TitleLabel")
+	if title_lbl:
+		title_lbl.text = "OFFICE & DIVE HEADQUARTERS" if is_en else "OFİS & DALIŞ KARARGAHI"
+
+	var subtitle_lbl: Label = get_node_or_null("Background/MainMargin/VBox/TopBar/TitleBox/SubtitleLabel")
+	if subtitle_lbl:
+		subtitle_lbl.text = "Facilities, Traders & Operations Hub" if is_en else "Tesisler, Tüccarlar ve Operasyon Yönetim Merkezi"
+
+	if is_instance_valid(save_exit_button):
+		save_exit_button.text = "SAVE & QUIT" if is_en else "KAYDET & ÇIK"
+
+	if is_instance_valid(settings_button):
+		settings_button.tooltip_text = "Settings" if is_en else "Ayarlar"
+
+	var sec1: Label = get_node_or_null("Background/MainMargin/VBox/SectionTitle1")
+	if sec1:
+		sec1.text = "TRADERS & ACQUISITIONS" if is_en else "TÜCCARLAR VE ALIM MERKEZLERİ"
+
+	var sec2: Label = get_node_or_null("Background/MainMargin/VBox/SectionTitle2")
+	if sec2:
+		sec2.text = "FACILITIES & PRODUCTION" if is_en else "TESİSLER VE ÜRETİM ALANLARI"
+
+	if is_instance_valid(copcu_button):
+		var t: Label = copcu_button.get_node_or_null("VBox/Title")
+		var d: Label = copcu_button.get_node_or_null("VBox/Desc")
+		if t: t.text = "SCRAPPER" if is_en else "ÇÖPCÜ"
+		if d: d.text = "Only buys trash and scrap items" if is_en else "Sadece çöp ve hurda eşyaları alır"
+
+	if is_instance_valid(antikaci_button):
+		var t: Label = antikaci_button.get_node_or_null("VBox/Title")
+		var d: Label = antikaci_button.get_node_or_null("VBox/Desc")
+		if t: t.text = "ANTIQUE DEALER" if is_en else "ANTİKACI"
+		if d: d.text = "Buys valuable finds except trash" if is_en else "Çöp hariç değerli buluntuları alır"
+
+	if is_instance_valid(kara_borsa_button):
+		var t: Label = kara_borsa_button.get_node_or_null("VBox/Title")
+		var d: Label = kara_borsa_button.get_node_or_null("VBox/Desc")
+		if t: t.text = "BLACK MARKET" if is_en else "KARA BORSA"
+		if d: d.text = "Only buys special & contraband loot" if is_en else "Sadece özel ve gizli ganimetleri alır"
+
+	if is_instance_valid(equstore_button):
+		var t: Label = equstore_button.get_node_or_null("VBox/Title")
+		var d: Label = equstore_button.get_node_or_null("VBox/Desc")
+		var s: Label = equstore_button.get_node_or_null("VBox/Status")
+		if t: t.text = "EQUIPMENT SHOP" if is_en else "EKİPMAN MAĞAZASI"
+		if d: d.text = "Upgrade Tank, Fins, Mask & Bag" if is_en else "Tüp, Palet, Gözlük ve Çanta Yükselt"
+		if s: s.text = "[ ACTIVE ]" if is_en else "[ AKTİF ]"
+
+	if is_instance_valid(lab_button):
+		var t: Label = lab_button.get_node_or_null("VBox/Title")
+		var d: Label = lab_button.get_node_or_null("VBox/Desc")
+		var s: Label = lab_button.get_node_or_null("VBox/Status")
+		if t: t.text = "LABORATORY" if is_en else "LABORATUVAR"
+		if d: d.text = "Advanced Crafting & Synthesis" if is_en else "Hammaddeler ile İleri Craft & Sentez"
+		if s: s.text = "[ ACTIVE ]" if is_en else "[ AKTİF ]"
+
+	if is_instance_valid(shop_button):
+		var t: Label = shop_button.get_node_or_null("VBox/Title")
+		var d: Label = shop_button.get_node_or_null("VBox/Desc")
+		var s: Label = shop_button.get_node_or_null("VBox/Status")
+		if t: t.text = "MARKETPLACE" if is_en else "SATIŞ PAZARI"
+		if d: d.text = "Sell Crafted & Advanced Items" if is_en else "Üretilen Gelişmiş Eşyaların Satışı"
+		if s: s.text = "[ ACTIVE ]" if is_en else "[ AKTİF ]"
+
+	if is_instance_valid(envanter_button):
+		envanter_button.text = "🎒 INVENTORY [I]" if is_en else "🎒 ÇANTA [I]"
+	if is_instance_valid(koleksiyon_button):
+		koleksiyon_button.text = "📖 COLLECTION [C]" if is_en else "📖 KOLEKSİYON [C]"
+	if is_instance_valid(charge_button):
+		charge_button.text = "⚡ CHARGE" if is_en else "⚡ ŞARJ ET"
+
+	_refresh_wallet()
+	_refresh_day()
+	_refresh_battery_badge()
+	_update_dive_button_state()
+	_update_merchant_badges()
+
+	for sub in [_active_popup, _active_inventory, _active_collection, _active_settings]:
+		if is_instance_valid(sub) and sub.has_method("refresh_ui"):
+			sub.call("refresh_ui")
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
@@ -180,10 +261,13 @@ func _refresh_day() -> void:
 	if not day_label:
 		return
 	var time_mgr: Node = _get_time_mgr()
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if time_mgr:
-		day_label.text = tr("Gün: %d  |  ⏰ %s") % [int(time_mgr.get("current_day")), time_mgr.get_time_string()]
+		var day_str: String = "Day: %d  |  ⏰ %s" if is_en else "Gün: %d  |  ⏰ %s"
+		day_label.text = day_str % [int(time_mgr.get("current_day")), time_mgr.get_time_string()]
 	else:
-		day_label.text = tr("Gün: %d") % _current_day
+		var day_str: String = "Day: %d" if is_en else "Gün: %d"
+		day_label.text = day_str % _current_day
 
 
 func _on_time_changed(_h: int, _m: int) -> void:
@@ -209,15 +293,17 @@ func _update_dive_button_state() -> void:
 	if time_mgr:
 		is_allowed = time_mgr.is_dive_allowed()
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 	dive_button.disabled = not is_allowed
 	if not is_allowed:
-		dive_button.text = "🤿 DALIŞ KAPALI (HAVA KARARDI)"
+		dive_button.text = "🤿 DIVE CLOSED (NIGHT)" if is_en else "🤿 DALIŞ KAPALI (HAVA KARARDI)"
 		if is_instance_valid(advance_day_button):
-			advance_day_button.text = "GÜNÜ BİTİR & İLERLET ☀️"
+			advance_day_button.text = "END DAY & PROCEED ☀️" if is_en else "GÜNÜ BİTİR & İLERLET ☀️"
 	else:
-		dive_button.text = "🤿 DALIŞA BAŞLA / OKYANUS [ESC]"
+		dive_button.text = "🤿 START DIVE / OCEAN [ESC]" if is_en else "🤿 DALIŞA BAŞLA / OKYANUS [ESC]"
 		if is_instance_valid(advance_day_button):
-			advance_day_button.text = "GÜNÜ İLERLET ☀️"
+			advance_day_button.text = "PROCEED DAY ☀️" if is_en else "GÜNÜ İLERLET ☀️"
 
 
 func _on_advance_day_pressed() -> void:
@@ -272,19 +358,24 @@ func _show_early_end_confirmation(time_str: String) -> void:
 	panel.add_theme_stylebox_override("panel", panel_style)
 	center.add_child(panel)
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
 
 	var title := Label.new()
-	title.text = "⚠️ MESAYİ HENÜZ BİTMEDİ!"
+	title.text = "⚠️ SHIFT HAS NOT ENDED YET!" if is_en else "⚠️ MESAYİ HENÜZ BİTMEDİ!"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color(1.0, 0.8, 0.3, 1.0))
 	title.add_theme_font_size_override("font_size", 20)
 	vbox.add_child(title)
 
 	var desc := Label.new()
-	desc.text = "Hava kararmadı, dalış yapacak vaktin var! (Saat: %s)\nŞimdi günü bitirirsen mesai kapanacak ve yeni güne geçilecek.\n\nGünü erken sonlandırmak istediğinden emin misin?" % time_str
+	if is_en:
+		desc.text = "It is not dark yet, you still have time to dive! (Time: %s)\nEnding the day now will close your shift and proceed to the next day.\n\nAre you sure you want to end the day early?" % time_str
+	else:
+		desc.text = "Hava kararmadı, dalış yapacak vaktin var! (Saat: %s)\nŞimdi günü bitirirsen mesai kapanacak ve yeni güne geçilecek.\n\nGünü erken sonlandırmak istediğinden emin misin?" % time_str
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1.0))
@@ -300,7 +391,7 @@ func _show_early_end_confirmation(time_str: String) -> void:
 	vbox.add_child(hbox)
 
 	var cancel_btn := Button.new()
-	cancel_btn.text = "DALIŞA DEVAM ET"
+	cancel_btn.text = "CONTINUE DIVING" if is_en else "DALIŞA DEVAM ET"
 	cancel_btn.custom_minimum_size = Vector2(170, 42)
 	cancel_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var cancel_style := StyleBoxFlat.new()
@@ -316,7 +407,7 @@ func _show_early_end_confirmation(time_str: String) -> void:
 	hbox.add_child(cancel_btn)
 
 	var confirm_btn := Button.new()
-	confirm_btn.text = "EVET, GÜNÜ BİTİR ☀️"
+	confirm_btn.text = "YES, END DAY ☀️" if is_en else "EVET, GÜNÜ BİTİR ☀️"
 	confirm_btn.custom_minimum_size = Vector2(170, 42)
 	confirm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var confirm_style := StyleBoxFlat.new()
@@ -339,7 +430,8 @@ func _on_new_day_started() -> void:
 	_update_dive_button_state()
 	var time_mgr: Node = _get_time_mgr()
 	var cur_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
-	_show_toast("☀️ Yeni gün başladı! (Gün %d)" % cur_day)
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	_show_toast(("☀️ New day started! (Day %d)" if is_en else "☀️ Yeni gün başladı! (Gün %d)") % cur_day)
 
 
 func _on_money_changed(amount: int) -> void:
@@ -452,6 +544,7 @@ func _on_dive_pressed() -> void:
 			player.set("current_oxygen", 100.0)
 			player.set("current_health", 100.0)
 	get_tree().paused = false
+	get_tree().call_group("hud", "refresh_ui")
 	queue_free()
 
 
@@ -666,10 +759,31 @@ func _on_shop_pressed() -> void:
 		_show_toast("📦 Satış Pazarı sahnesi bulunamadı!")
 
 
+const OFFICE_TOAST_TRANSLATIONS_EN: Dictionary = {
+	"⚠️ Fenerin yok! Önce Ekipman Mağazasından satın almalısın.": "⚠️ No flashlight! You must buy one from the Equipment Shop first.",
+	"⚠️ Hava karardı (19:00+). Yeni dalış için günü ilerletmelisiniz!": "⚠️ It is dark (19:00+). Advance the day for the next dive!",
+	"⚡ Fener bataryası şarj edildi!": "⚡ Flashlight battery charged!",
+	"🧪 Laboratuvar sahnesi bulunamadı!": "🧪 Laboratory scene not found!",
+	"📦 Satış Pazarı sahnesi bulunamadı!": "📦 Market scene not found!",
+}
+
+
 func _show_toast(msg: String) -> void:
 	if not toast_label:
 		return
-	toast_label.text = tr(msg)
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	if is_en:
+		if OFFICE_TOAST_TRANSLATIONS_EN.has(msg):
+			msg = OFFICE_TOAST_TRANSLATIONS_EN[msg]
+		elif msg.begins_with("⚠️ Dalış yapabilmek için fenerini şarj etmelisin!"):
+			msg = msg.replace("⚠️ Dalış yapabilmek için fenerini şarj etmelisin!", "⚠️ You must charge your flashlight to dive!").replace("şarj", "charge")
+		elif msg.begins_with("☀️ Yeni gün başladı! (Gün "):
+			msg = msg.replace("☀️ Yeni gün başladı! (Gün ", "☀️ New day started! (Day ")
+		else:
+			msg = tr(msg)
+	else:
+		msg = tr(msg)
+	toast_label.text = msg
 	var target_node: CanvasItem = toast_banner if is_instance_valid(toast_banner) else toast_label
 
 	if _toast_tween and _toast_tween.is_valid():
@@ -730,23 +844,25 @@ func _update_merchant_badges() -> void:
 			antika_count += 1
 			antika_val += val
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 	# 1. ÇÖPÇÜ ROZETİ
 	if trash_count > 0:
-		_set_badge(copcu_button, "🟢 %d Hurda (+%d Z)" % [trash_count, trash_val], true, Color(0.25, 0.85, 0.45, 1.0))
+		_set_badge(copcu_button, ("🟢 %d Scrap (+%d Z)" if is_en else "🟢 %d Hurda (+%d Z)") % [trash_count, trash_val], true, Color(0.25, 0.85, 0.45, 1.0))
 	else:
-		_set_badge(copcu_button, "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+		_set_badge(copcu_button, "⚪ No Items" if is_en else "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
 
 	# 2. ANTİKACI ROZETİ
 	if antika_count > 0:
-		_set_badge(antikaci_button, "🟢 %d Antika (+%d Z)" % [antika_count, antika_val], true, Color(0.95, 0.85, 0.35, 1.0))
+		_set_badge(antikaci_button, ("🟢 %d Antique (+%d Z)" if is_en else "🟢 %d Antika (+%d Z)") % [antika_count, antika_val], true, Color(0.95, 0.85, 0.35, 1.0))
 	else:
-		_set_badge(antikaci_button, "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+		_set_badge(antikaci_button, "⚪ No Items" if is_en else "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
 
 	# 3. KARA BORSA ROZETİ
 	if special_count > 0:
-		_set_badge(kara_borsa_button, "🔴 %d Özel (+%d Z)" % [special_count, special_val], true, Color(0.95, 0.35, 0.45, 1.0))
+		_set_badge(kara_borsa_button, ("🔴 %d Special (+%d Z)" if is_en else "🔴 %d Özel (+%d Z)") % [special_count, special_val], true, Color(0.95, 0.35, 0.45, 1.0))
 	else:
-		_set_badge(kara_borsa_button, "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+		_set_badge(kara_borsa_button, "⚪ No Items" if is_en else "⚪ Eşya Yok", false, Color(0.5, 0.5, 0.5, 0.5))
 
 	# 4. EKİPMAN ATÖLYESİ ROZETİ (Geliştirme Kontrolü)
 	var player = get_tree().get_first_node_in_group("player")
@@ -755,7 +871,8 @@ func _update_merchant_badges() -> void:
 		{"key": "tube_level", "base": 35, "mult": 1.50, "max": 25},
 		{"key": "fins_level", "base": 25, "mult": 1.65, "max": 20},
 		{"key": "goggles_level", "base": 100, "mult": 2.10, "max": 9},
-		{"key": "backpack_level", "base": 20, "mult": 1.50, "max": 20}
+		{"key": "backpack_level", "base": 20, "mult": 1.50, "max": 20},
+		{"key": "flashlight_level", "base": 50, "mult": 1.35, "max": 15}
 	]
 	for u in upgrades_info:
 		var lvl = int(player.get(u["key"])) if player else 0
@@ -767,20 +884,20 @@ func _update_merchant_badges() -> void:
 			break
 
 	if can_upgrade:
-		_set_badge(equstore_button, "✨ Yükseltme Hazır!", true, Color(0.35, 0.85, 1.0, 1.0))
+		_set_badge(equstore_button, "✨ Upgrade Ready!" if is_en else "✨ Yükseltme Hazır!", true, Color(0.35, 0.85, 1.0, 1.0))
 	else:
 		_set_badge(equstore_button, "", false, Color.TRANSPARENT)
 
 	# 5. SATIŞ PAZARI ROZETİ (Üretilmiş Eşyalar)
 	if crafted_count > 0:
-		_set_badge(shop_button, "🟢 %d Ürün (+%d Z)" % [crafted_count, crafted_val], true, Color(1.0, 0.65, 0.2, 1.0))
+		_set_badge(shop_button, ("🟢 %d Products (+%d Z)" if is_en else "🟢 %d Ürün (+%d Z)") % [crafted_count, crafted_val], true, Color(1.0, 0.65, 0.2, 1.0))
 	else:
-		_set_badge(shop_button, "⚪ Ürün Yok", false, Color(0.5, 0.5, 0.5, 0.5))
+		_set_badge(shop_button, "⚪ No Products" if is_en else "⚪ Ürün Yok", false, Color(0.5, 0.5, 0.5, 0.5))
 
 	# 6. LABORATUVAR ROZETİ (Sentezlenebilir Tarif Kontrolü)
 	var can_craft_any: bool = _check_can_craft_any_recipe()
 	if can_craft_any:
-		_set_badge(lab_button, "✨ Sentez Hazır!", true, Color(1.0, 0.75, 0.25, 1.0))
+		_set_badge(lab_button, "✨ Synthesis Ready!" if is_en else "✨ Sentez Hazır!", true, Color(1.0, 0.75, 0.25, 1.0))
 	else:
 		_set_badge(lab_button, "", false, Color.TRANSPARENT)
 

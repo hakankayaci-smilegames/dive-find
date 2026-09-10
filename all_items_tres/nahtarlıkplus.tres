@@ -7,7 +7,7 @@
 script = ExtResource("1_i7y17")
 item_name = "Bronz Anahtarlık"
 sprite = ExtResource("2_3thqi")
-description = "ADAM BRONZDAN YAPMIŞ. vaybe, bunun için bukadar para...bronz nahtarlık.ilginç"
+description = "Aynı manidar el figürünün ağır bronz dökümden imal edilmiş lüks versiyonu. Sanatçının bu jesti ölümsüzleştirmek için gösterdiği madeni ciddiyet takdire şayan."
 rarity = 6
 value = 9500
 category = "Special"

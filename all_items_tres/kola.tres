@@ -7,6 +7,6 @@
 script = ExtResource("1_jk7vx")
 item_name = "Bükük kola"
 sprite = ExtResource("2_nxrjq")
-description = "İçmiş atmış lavuk, gözüne girsin."
+description = "Denizin dibinde ezilip bükülmüş klasik kırmızı meşrubat kutusu. Şehir hayatının tüketim çılgınlığından geriye kalan, preslenmeye hazır bir hurda."
 value = 4
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

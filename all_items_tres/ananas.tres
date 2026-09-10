@@ -7,7 +7,7 @@
 script = ExtResource("1_cvf07")
 item_name = "Ananas?"
 sprite = ExtResource("2_lh03x")
-description = "Ananas?......ananas..bunu niye attınız ki?"
+description = "Denizin dibinde tek parça kalmayı başarmış taze bir ananas. SüngerBob\"un emlak krizinde terk ettiği bir gayrimenkul mü, kestirmek güç."
 rarity = 1
 value = 20
 category = "Resource"

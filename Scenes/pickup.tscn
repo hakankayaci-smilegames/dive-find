@@ -151,17 +151,17 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.45)
 
 [node name="CardPanel" type="PanelContainer" parent="Backdrop" unique_id=800326920]
-custom_minimum_size = Vector2(460, 270)
+custom_minimum_size = Vector2(490, 280)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -135.0
-offset_right = 230.0
-offset_bottom = 135.0
+offset_left = -245.0
+offset_top = -140.0
+offset_right = 245.0
+offset_bottom = 140.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_card")
@@ -279,7 +279,7 @@ text = "Değer: 50 Zurna"
 layout_mode = 2
 
 [node name="DescLabel" type="Label" parent="Backdrop/CardPanel/MarginContainer/VBoxContainer/ContentHBox/DetailsVBox" unique_id=73423380]
-custom_minimum_size = Vector2(240, 0)
+custom_minimum_size = Vector2(270, 70)
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/font_color = Color(0.9, 0.85, 0.8, 0.85)

@@ -86,6 +86,7 @@ func _ready() -> void:
 
 	GlobalInventory.inventory_updated.connect(_on_inventory_or_equipment_updated)
 	_on_inventory_or_equipment_updated()
+	refresh_ui()
 	call_deferred("_open_office_at_start")
 
 
@@ -159,6 +160,8 @@ func _process(delta: float) -> void:
 
 			var should_update_text: bool = (_o2_hud_timer >= 0.08) or sprint_changed
 
+			var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 			if is_god or depth_m < 2.0:
 				# Yüzeydeyken HUD açık kalır ve güvende olduğunu gösterir
 				if _current_hud_mode != "SURFACE":
@@ -170,9 +173,9 @@ func _process(delta: float) -> void:
 					if _o2_hud_style:
 						_o2_hud_style.border_color = Color(0.2, 0.75, 0.75, 0.85)
 						_o2_hud_style.bg_color = Color(0.03, 0.08, 0.12, 0.94)
-					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%%s" % [int(round(ox)), sprint_tag]
+					o2_return_label.text = ("⚓ AT SURFACE (Safe)  │  🫧 O2: %d%%%s" if is_en else "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%%s") % [int(round(ox)), sprint_tag]
 				elif should_update_text:
-					o2_return_label.text = "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%%s" % [int(round(ox)), sprint_tag]
+					o2_return_label.text = ("⚓ AT SURFACE (Safe)  │  🫧 O2: %d%%%s" if is_en else "⚓ YÜZEYDESİN (Güvende)  │  🫧 O2: %d%%%s") % [int(round(ox)), sprint_tag]
 			else:
 				var time_to_surf: float = float(info.get("time_to_surface", 0.0))
 				var o2_secs: float = float(info.get("oxygen_seconds_left", 0.0))
@@ -192,7 +195,7 @@ func _process(delta: float) -> void:
 						show_warning_toast("🚨 ACİL DURUM: Oksijen yüzeye yetmeyebilir! HEMEN YÜZEYE ÇIK!", 3.0)
 						GlobalSoundManager.play_sfx("error")
 					if should_update_text:
-						o2_return_label.text = "🚨 ACİL DÖNÜŞ! Yüzey: %.1fs > O2: %.1fs%s" % [time_to_surf, o2_secs, sprint_tag]
+						o2_return_label.text = ("🚨 EMERGENCY RETURN! Surface: %.1fs > O2: %.1fs%s" if is_en else "🚨 ACİL DÖNÜŞ! Yüzey: %.1fs > O2: %.1fs%s") % [time_to_surf, o2_secs, sprint_tag]
 				elif is_warn:
 					if _current_hud_mode != "WARN":
 						_current_hud_mode = "WARN"
@@ -204,7 +207,7 @@ func _process(delta: float) -> void:
 						_o2_caution_alerted = true
 						show_warning_toast("⚠️ DÖNÜŞ SINIRI: Yüzeye %.1fs kaldı, oksijen azalıyor!" % time_to_surf, 2.2)
 					if should_update_text:
-						o2_return_label.text = "⚠️ DİKKAT! Yüzey: %.1fs  │  O2: %.1fs%s" % [time_to_surf, o2_secs, sprint_tag]
+						o2_return_label.text = ("⚠️ CAUTION! Surface: %.1fs  │  O2: %.1fs%s" if is_en else "⚠️ DİKKAT! Yüzey: %.1fs  │  O2: %.1fs%s") % [time_to_surf, o2_secs, sprint_tag]
 				else:
 					if _current_hud_mode != "SAFE":
 						_current_hud_mode = "SAFE"
@@ -215,7 +218,7 @@ func _process(delta: float) -> void:
 							_o2_hud_style.border_color = Color(0.18, 0.65, 0.9, 0.9)
 							_o2_hud_style.bg_color = Color(0.04, 0.08, 0.14, 0.95)
 					if should_update_text:
-						o2_return_label.text = "⏱️ YÜZEY: %.1fs  │  🫧 O2: ~%ds%s" % [time_to_surf, int(round(o2_secs)), sprint_tag]
+						o2_return_label.text = ("⏱️ SURFACE: %.1fs  │  🫧 O2: ~%ds%s" if is_en else "⏱️ YÜZEY: %.1fs  │  🫧 O2: ~%ds%s") % [time_to_surf, int(round(o2_secs)), sprint_tag]
 
 			if should_update_text:
 				_o2_hud_timer = 0.0
@@ -231,9 +234,21 @@ func _on_day_changed(day: int) -> void:
 	_update_day_display(day)
 
 
-func _update_time_display(hour: int, minute: int) -> void:
-	if not time_label:
+func _update_time_display(hour: int = -1, minute: int = -1) -> void:
+	if not is_instance_valid(time_label):
+		time_label = get_node_or_null("TimePanel/Margin/HBox/TimeLabel")
+	if not is_instance_valid(time_label):
 		return
+
+	if hour < 0 or minute < 0:
+		var time_mgr: Node = _get_time_mgr()
+		if time_mgr:
+			hour = int(time_mgr.get("current_hour"))
+			minute = int(time_mgr.get("current_minute"))
+		else:
+			hour = 10
+			minute = 0
+
 	time_label.text = "⏰ %02d:%02d" % [hour, minute]
 	if hour >= 19:
 		time_label.add_theme_color_override("font_color", Color(1.0, 0.35, 0.35, 1.0))
@@ -243,10 +258,52 @@ func _update_time_display(hour: int, minute: int) -> void:
 		time_label.add_theme_color_override("font_color", Color(0.95, 0.85, 0.45, 1.0))
 
 
-func _update_day_display(day: int) -> void:
-	if not day_label:
+func _update_day_display(day: int = -1) -> void:
+	if not is_instance_valid(day_label):
+		day_label = get_node_or_null("TimePanel/Margin/HBox/DayLabel")
+	if not is_instance_valid(day_label):
 		return
-	day_label.text = tr("📅 Gün %d") % day
+
+	if day <= 0:
+		var time_mgr: Node = _get_time_mgr()
+		if time_mgr:
+			day = int(time_mgr.get("current_day"))
+		else:
+			var save_data: Dictionary = GlobalInventory.get_save_data()
+			day = int(save_data.get("current_day", 1))
+
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	day_label.text = ("📅 Day %d" if is_en else "📅 Gün %d") % max(1, day)
+
+
+func refresh_ui() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
+	_update_day_display()
+	_update_time_display()
+
+	if has_node("zurna"):
+		$zurna.text = tr("💰 %d Zurna") % _displayed_money
+
+	if office_button:
+		office_button.text = "🚤 Board Boat [E]" if is_en else "🚤 Tekneye Çık [E]"
+
+	_update_bag_button()
+	_update_office_button_availability()
+	_refresh_equipment_panel()
+
+	var health_lbl: Label = get_node_or_null("StatusPanel/HealthLabel")
+	if health_lbl:
+		health_lbl.text = "❤️ HEALTH:" if is_en else "❤️ CAN:"
+
+	var o2_lbl: Label = get_node_or_null("StatusPanel/OxygenLabel")
+	if o2_lbl:
+		o2_lbl.text = "🫧 OXYGEN:" if is_en else "🫧 OKSİJEN:"
+
+	var bat_lbl: Label = get_node_or_null("StatusPanel/BatteryLabel")
+	if bat_lbl:
+		bat_lbl.text = "⚡ BATTERY:" if is_en else "⚡ BATARYA:"
+
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -346,7 +403,9 @@ func _update_bag_button() -> void:
 		return
 	var count: int = GlobalInventory.collected_items.size()
 	var cap: int = GlobalInventory.get_capacity()
-	invenb.text = "🎒 Çanta [I] (%d/%d)" % [count, cap]
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	var bag_title: String = "🎒 Bag [I] (%d/%d)" if is_en else "🎒 Çanta [I] (%d/%d)"
+	invenb.text = bag_title % [count, cap]
 	if count >= cap and cap > 0:
 		invenb.add_theme_color_override("font_color", Color(1.0, 0.25, 0.25, 1.0))
 	else:
@@ -537,7 +596,8 @@ func _on_collection_updated(item: ItemData) -> void:
 	if not collection_toast_label or not item:
 		return
 
-	collection_toast_label.text = "[KESIF] Yeni Kesif: %s" % item.item_name
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	collection_toast_label.text = ("[DISCOVERY] New Discovery: %s" if is_en else "[KESIF] Yeni Kesif: %s") % ItemTranslator.get_item_name(item)
 	collection_toast_label.modulate = Color(1.0, 0.95, 0.4, 1.0) # Keşif için sıcak sarı/altın
 
 	if _toast_tween and _toast_tween.is_valid():
@@ -550,10 +610,32 @@ func _on_collection_updated(item: ItemData) -> void:
 	_toast_tween.tween_property(collection_toast_label, "modulate:a", 0.0, 1.0)
 
 
+const WARNING_TOAST_TRANSLATIONS_EN: Dictionary = {
+	"[!] Çok Uzaktasın! (Daha yakına yüz)": "[!] Too Far! (Swim closer)",
+	"[!] Çantan Dolu! (Daha fazla eşya alamazsın)": "[!] Backpack Full! (Cannot take more items)",
+	"🔦 Fenerin yok! Ofis mağazasından satın alabilirsin.": "🔦 No Flashlight! You can buy one from the office shop.",
+	"⚡ Fener bataryası tükendi! Yüzeyde şarj et.": "⚡ Flashlight battery depleted! Recharge at surface.",
+	"⚡ Fener bataryası tükendi!": "⚡ Flashlight battery depleted!",
+	"🚨 ACİL DURUM: Oksijen yüzeye yetmeyebilir! HEMEN YÜZEYE ÇIK!": "🚨 EMERGENCY: Oxygen may not reach surface! SURFACE IMMEDIATELY!",
+}
+
+
 func show_warning_toast(msg: String, duration: float = 1.8) -> void:
 	var target_label: Label = warning_toast_label if is_instance_valid(warning_toast_label) else collection_toast_label
 	if not is_instance_valid(target_label):
 		return
+
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	if is_en:
+		if WARNING_TOAST_TRANSLATIONS_EN.has(msg):
+			msg = WARNING_TOAST_TRANSLATIONS_EN[msg]
+		elif msg.begins_with("⚠️ DÖNÜŞ SINIRI:"):
+			msg = msg.replace("⚠️ DÖNÜŞ SINIRI: Yüzeye ", "⚠️ RETURN LIMIT: ").replace(" kaldı, oksijen azalıyor!", " left, oxygen running low!")
+		elif msg.begins_with("🌊 ") and msg.ends_with(" denize bırakıldı."):
+			var iname: String = msg.trim_prefix("🌊 ").trim_suffix(" denize bırakıldı.")
+			msg = "🌊 %s dropped into sea." % iname
+		else:
+			msg = tr(msg)
 
 	target_label.text = msg
 	target_label.modulate = Color(1.0, 0.35, 0.35, 1.0) # Uyarı için parlak kırmızı/turuncu

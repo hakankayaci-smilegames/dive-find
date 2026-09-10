@@ -7,7 +7,7 @@
 script = ExtResource("1_yntc4")
 item_name = "Taş Heykel"
 sprite = ExtResource("2_cegq4")
-description = "Bune la....balbal? uuuuuuuuweeeeeoooooooooaaaaa"
+description = "Eski bozkır kültüründen kalma otantik bir balbal heykeli. Yüzyıllardır suyun altında ifadesizce karşıya bakıyor; gözlerindeki donuk bakışta derin bir bilgelik seziliyor."
 rarity = 5
 value = 5000
 category = "Special"

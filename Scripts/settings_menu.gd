@@ -11,6 +11,9 @@ const DEV_SECRET_CODE: String = "mercedesforever"
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SfxSlider
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
+@onready var language_row: HBoxContainer = get_node_or_null("%LanguageRow")
+@onready var language_label: Label = get_node_or_null("%LanguageLabel")
+@onready var language_option: OptionButton = get_node_or_null("%LanguageOption")
 @onready var joystick_row: HBoxContainer = %JoystickRow
 @onready var joystick_slider: HSlider = %JoystickSlider
 @onready var joystick_val_label: Label = %JoystickValueLabel
@@ -26,6 +29,7 @@ var _active_confirm_dialog: CanvasLayer = null
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 129
+	add_to_group("popup_ui")
 
 	close_button.pressed.connect(_on_close_pressed)
 
@@ -36,6 +40,9 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
+
+	if is_instance_valid(language_option):
+		language_option.item_selected.connect(_on_language_selected)
 
 	if is_instance_valid(dev_code_button):
 		dev_code_button.pressed.connect(_on_dev_code_submitted)
@@ -58,6 +65,57 @@ func _ready() -> void:
 	_setup_button(close_button)
 	_setup_button(reset_collection_button)
 	_setup_button(dev_code_button)
+
+	refresh_ui()
+
+
+func refresh_ui() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
+	var title_lbl: Label = get_node_or_null("SettingsPanel/TitleLabel")
+	if title_lbl:
+		title_lbl.text = "SETTINGS" if is_en else "AYARLAR"
+
+	var music_lbl: Label = get_node_or_null("SettingsPanel/Content/MusicRow/MusicLabel")
+	if music_lbl:
+		music_lbl.text = "Music Volume" if is_en else "Müzik Sesi"
+
+	var sfx_lbl: Label = get_node_or_null("SettingsPanel/Content/SfxRow/SfxLabel")
+	if sfx_lbl:
+		sfx_lbl.text = "Sound Effects" if is_en else "Ses Efektleri"
+
+	var fs_lbl: Label = get_node_or_null("SettingsPanel/Content/FullscreenRow/FullscreenLabel")
+	if fs_lbl:
+		fs_lbl.text = "Fullscreen" if is_en else "Tam Ekran"
+
+	var lang_lbl: Label = get_node_or_null("SettingsPanel/Content/LanguageRow/LanguageLabel")
+	if lang_lbl:
+		lang_lbl.text = "Language" if is_en else "Dil"
+
+	if is_instance_valid(language_option):
+		language_option.select(1 if is_en else 0)
+
+	var joy_lbl: Label = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickLabel")
+	if joy_lbl:
+		joy_lbl.text = "Touch Joystick Size" if is_en else "Joystick Boyutu"
+
+	var aim_lbl: Label = get_node_or_null("SettingsPanel/Content/FlashlightAimRow/FlashlightAimLabel")
+	if aim_lbl:
+		aim_lbl.text = "Mobile Flashlight Aim" if is_en else "Mobil Fener Yönü"
+
+	var coll_lbl: Label = get_node_or_null("SettingsPanel/Content/CollectionRow/CollectionLabel")
+	if coll_lbl:
+		coll_lbl.text = "Collection" if is_en else "Koleksiyon"
+
+	if reset_collection_button:
+		reset_collection_button.text = "RESET COLLECTION" if is_en else "KOLEKSİYONU SIFIRLA"
+
+	if is_instance_valid(flashlight_aim_option) and flashlight_aim_option.item_count >= 3:
+		flashlight_aim_option.set_item_text(0, "🕹️ Swim Direction (Joystick)" if is_en else "🕹️ Yüzüş Yönü (Joystick)")
+		flashlight_aim_option.set_item_text(1, "👆 Free Touch Aim" if is_en else "👆 Dokunmatik (Serbest Aim)")
+		flashlight_aim_option.set_item_text(2, "✨ Smart Hybrid (Joystick + Touch)" if is_en else "✨ Akıllı Hibrit (Joystick + Dokunma)")
+
+	_refresh_dev_code_ui()
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -99,12 +157,14 @@ func _load_settings() -> void:
 	var fullscreen := true
 	var joystick_scale := 1.0
 	var flashlight_aim := 2
+	var language := "tr"
 	if cfg.load(SETTINGS_FILE) == OK:
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
 		joystick_scale = cfg.get_value("controls", "joystick_scale", joystick_scale)
 		flashlight_aim = int(cfg.get_value("controls", "mobile_flashlight_aim", flashlight_aim))
+		language = cfg.get_value("general", "language", language)
 
 	_set_bus_volume(MUSIC_BUS, music)
 	_set_bus_volume(SFX_BUS, sfx)
@@ -120,6 +180,9 @@ func _load_settings() -> void:
 		joystick_val_label.text = "%%%d" % [int(round(joystick_scale * 100.0))]
 	if is_instance_valid(flashlight_aim_option):
 		flashlight_aim_option.select(clampi(flashlight_aim, 0, 2))
+	if is_instance_valid(language_option):
+		var is_en: bool = TranslationServer.get_locale().begins_with("en") or language == "en"
+		language_option.select(1 if is_en else 0)
 
 	_refresh_dev_code_ui()
 
@@ -127,6 +190,8 @@ func _load_settings() -> void:
 func _save_settings() -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(SETTINGS_FILE)
+	var current_lang := "en" if TranslationServer.get_locale().begins_with("en") else "tr"
+	cfg.set_value("general", "language", current_lang)
 	cfg.set_value("audio", "music", music_slider.value)
 	cfg.set_value("audio", "sfx", sfx_slider.value)
 	cfg.set_value("video", "fullscreen", fullscreen_check.button_pressed)
@@ -135,6 +200,17 @@ func _save_settings() -> void:
 	if is_instance_valid(flashlight_aim_option):
 		cfg.set_value("controls", "mobile_flashlight_aim", flashlight_aim_option.selected)
 	cfg.save(SETTINGS_FILE)
+
+
+func _on_language_selected(index: int) -> void:
+	GlobalSoundManager.play_sfx("click")
+	var new_locale := "en" if index == 1 else "tr"
+	TranslationServer.set_locale(new_locale)
+	_save_settings()
+	refresh_ui()
+	var dev_console = get_node_or_null("/root/DevConsole")
+	if dev_console and dev_console.has_method("refresh_active_uis"):
+		dev_console.refresh_active_uis()
 
 
 func _on_music_changed(value: float) -> void:
@@ -180,15 +256,16 @@ func _refresh_dev_code_ui() -> void:
 		return
 	var dev_console = get_node_or_null("/root/DevConsole")
 	var is_unlocked: bool = dev_console.is_dev_console_unlocked() if dev_console and dev_console.has_method("is_dev_console_unlocked") else false
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if is_unlocked:
 		dev_code_input.text = ""
-		dev_code_input.placeholder_text = "AKTİF ✅"
-		dev_code_button.text = "KAPAT"
+		dev_code_input.placeholder_text = "ACTIVE ✅" if is_en else "AKTİF ✅"
+		dev_code_button.text = "DISABLE" if is_en else "KAPAT"
 		dev_code_button.add_theme_color_override("font_color", Color(0.3, 0.95, 0.4, 1.0))
 	else:
 		dev_code_input.text = ""
-		dev_code_input.placeholder_text = "Gizli kod..."
-		dev_code_button.text = "AKTİF ET"
+		dev_code_input.placeholder_text = "Secret code..." if is_en else "Gizli kod..."
+		dev_code_button.text = "ACTIVATE" if is_en else "AKTİF ET"
 		dev_code_button.remove_theme_color_override("font_color")
 
 
@@ -216,7 +293,8 @@ func _on_dev_code_submitted() -> void:
 		_refresh_dev_code_ui()
 	else:
 		GlobalSoundManager.play_sfx("error")
-		dev_code_button.text = "HATALI! ❌"
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
+		dev_code_button.text = "INVALID! ❌" if is_en else "HATALI! ❌"
 		dev_code_button.add_theme_color_override("font_color", Color(0.95, 0.3, 0.3, 1.0))
 		var tw := create_tween()
 		tw.tween_interval(1.2)
@@ -267,19 +345,24 @@ func _show_reset_collection_confirmation() -> void:
 	panel.add_theme_stylebox_override("panel", panel_style)
 	center.add_child(panel)
 
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+
 	var vbox := VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 14)
 	panel.add_child(vbox)
 
 	var title := Label.new()
-	title.text = "⚠️ KOLEKSİYONU SIFIRLA"
+	title.text = "⚠️ RESET COLLECTION" if is_en else "⚠️ KOLEKSİYONU SIFIRLA"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_color_override("font_color", Color(1.0, 0.8, 0.3, 1.0))
 	title.add_theme_font_size_override("font_size", 20)
 	vbox.add_child(title)
 
 	var desc := Label.new()
-	desc.text = "Tüm keşfettiğin eşya kayıtları silinecek!\nBu işlem geri alınamaz.\n\nEmin misin?"
+	if is_en:
+		desc.text = "All discovered item records will be erased!\nThis cannot be undone.\n\nAre you sure?"
+	else:
+		desc.text = "Tüm keşfettiğin eşya kayıtları silinecek!\nBu işlem geri alınamaz.\n\nEmin misin?"
 	desc.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	desc.add_theme_color_override("font_color", Color(0.9, 0.9, 0.9, 1.0))
@@ -295,7 +378,7 @@ func _show_reset_collection_confirmation() -> void:
 	vbox.add_child(hbox)
 
 	var cancel_btn := Button.new()
-	cancel_btn.text = "VAZGEÇ"
+	cancel_btn.text = "CANCEL" if is_en else "VAZGEÇ"
 	cancel_btn.custom_minimum_size = Vector2(150, 40)
 	cancel_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var cancel_style := StyleBoxFlat.new()
@@ -312,7 +395,7 @@ func _show_reset_collection_confirmation() -> void:
 	hbox.add_child(cancel_btn)
 
 	var confirm_btn := Button.new()
-	confirm_btn.text = "EVET, SIFIRLA 🗑️"
+	confirm_btn.text = "YES, RESET 🗑️" if is_en else "EVET, SIFIRLA 🗑️"
 	confirm_btn.custom_minimum_size = Vector2(150, 40)
 	confirm_btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var confirm_style := StyleBoxFlat.new()
@@ -334,14 +417,14 @@ func _show_reset_collection_confirmation() -> void:
 
 func _execute_reset_collection() -> void:
 	GlobalInventory.reset_collection()
-	var original_text := reset_collection_button.text
-	reset_collection_button.text = "SIFIRLANDI!"
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	reset_collection_button.text = "RESET COMPLETE!" if is_en else "SIFIRLANDI!"
 	reset_collection_button.disabled = true
 	var tween := create_tween()
 	tween.tween_interval(1.5)
 	tween.tween_callback(func() -> void:
 		if is_instance_valid(reset_collection_button):
-			reset_collection_button.text = original_text
+			reset_collection_button.text = "RESET COLLECTION" if is_en else "KOLEKSİYONU SIFIRLA"
 			reset_collection_button.disabled = false
 	)
 

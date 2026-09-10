@@ -61,6 +61,7 @@ func get_item_data() -> Resource:
 
 func _on_mouse_entered() -> void:
 	if _item_data:
+		_update_lock_display()
 		slot_hovered.emit(_item_data)
 
 
@@ -126,11 +127,18 @@ func _update_lock_display() -> void:
 	if lock_badge:
 		lock_badge.visible = is_locked
 
-	var item_name: String = str(_item_data.get("item_name"))
+	var item_name: String = ItemTranslator.get_item_name(_item_data as ItemData) if _item_data is ItemData else str(_item_data.get("item_name"))
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if is_locked:
-		tooltip_text = "%s [🔒 KİLİTLİ]\n(Sağ tık / Basılı tut: Kilidi aç)" % item_name
+		if is_en:
+			tooltip_text = "%s [🔒 LOCKED]\n(Right click / Hold: Unlock)" % item_name
+		else:
+			tooltip_text = "%s [🔒 KİLİTLİ]\n(Sağ tık / Basılı tut: Kilidi aç)" % item_name
 	else:
-		tooltip_text = "%s\n(Sağ tık / Basılı tut: Kilitle)" % item_name
+		if is_en:
+			tooltip_text = "%s\n(Right click / Hold: Lock)" % item_name
+		else:
+			tooltip_text = "%s\n(Sağ tık / Basılı tut: Kilitle)" % item_name
 
 
 func _on_pressed() -> void:

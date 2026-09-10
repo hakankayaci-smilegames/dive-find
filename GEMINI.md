@@ -44,3 +44,11 @@
 ## 8. Optimizasyon & Mantık Bütünlüğü (Logic Preservation)
 - **Çalışma Mantığını Asla Bozma:** Optimizasyon ve performans iyileştirmelerinde (donma, lag spike, fps düşüşü çözümlerinde) esas hedef donmayı çözerken sistemin var olan çalışma mantığını, oyun kurallarını, veri akışını ve hesaplamalarını asla bozmamaktır.
 - **Doğruluk ve Durum Koruması:** Eşya sayıları, bakiye değişimleri, istatistik kayıtları, sinyal tetiklemeleri ve mekanik hesaplamalar optimizasyon sonrasında da birebir aynı doğruluğu ve davranışı korumalıdır.
+
+## 9. Çift Dilli Yerelleştirme İlkesi (Bilingual Localization First)
+- **İlk Günden TR/EN Desteği:** Oyuna eklenen her yeni özellik, kullanıcı arayüzü (UI), buton, etiket, toast bildirimi, diyalog, modal ve ipucu ilk andan itibaren Türkçe ve İngilizce dil desteğiyle yazılmalıdır.
+- **İki Katmanlı Mimariye Uyum:**
+  1. **Statik UI & GDScript Metinleri (`Translations/translations.csv`):** Tüm `tr("...")` metinleri ve sahne metinleri `tools/generate_translations.py` içerisindeki `TRANSLATION_MAP`'e eklenmeli ve script çalıştırılarak CSV güncellenmelidir.
+  2. **Eşyalar (`Translations/item_translations.json` & `ItemTranslator`):** Eklenen her yeni eşyanın Türkçe ve İngilizce isim/açıklaması `item_translations.json`'a işlenmelidir. Kod ve kayıt anahtarları (orijinal `item_name`) asla değiştirilmez; UI gösteriminde `item.get_display_name()` ve `item.get_display_description()` kullanılır.
+- **Dinamik Dil Geçişi (Runtime Locale Sync):** Dil değiştiğinde (`TranslationServer.set_locale()`) açık olan tüm UI'lar (`popup_ui`, `office_menu`, `hud`, `mobile_controls`) `refresh_ui()` mekanizmasıyla anında yeniden çizilmelidir.
+

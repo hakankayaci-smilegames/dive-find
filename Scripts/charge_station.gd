@@ -22,6 +22,7 @@ var _target_pct: int = 100
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group("popup_ui")
 	player = get_tree().get_first_node_in_group("player")
 
 	close_button.pressed.connect(_on_close_pressed)
@@ -39,6 +40,10 @@ func _ready() -> void:
 	_setup_button_juice(max_button)
 	_setup_button_juice(close_button)
 
+	refresh_ui()
+
+
+func refresh_ui() -> void:
 	_refresh_ui()
 
 
@@ -55,20 +60,25 @@ func _on_backdrop_gui_input(event: InputEvent) -> void:
 
 
 func _refresh_ui() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
+	var station_title: Label = get_node_or_null("MainPanel/Margin/VBox/TopRow/Title")
+	if station_title:
+		station_title.text = "⚡ CHARGE STATION" if is_en else "⚡ ŞARJ İSTASYONU"
+
 	if not player:
 		player = get_tree().get_first_node_in_group("player")
 
 	var flash_lvl: int = int(player.get("flashlight_level")) if player else 0
 	if flash_lvl <= 0:
-		battery_title_label.text = "Fener Yok"
-		wallet_label.text = "Bakiye: %d Z" % GlobalEconomy.money
+		battery_title_label.text = "No Flashlight" if is_en else "Fener Yok"
+		wallet_label.text = ("Balance: %d Z" if is_en else "Bakiye: %d Z") % GlobalEconomy.money
 		battery_progress.value = 0.0
 		progress_text.text = "%0"
 		charge_slider.editable = false
 		max_button.disabled = true
 		charge_button.disabled = true
-		charge_button.text = "FENER BULUNAMADI"
-		cost_label.text = "Önce Ekipman Mağazasından fener satın alın."
+		charge_button.text = "NO FLASHLIGHT FOUND" if is_en else "FENER BULUNAMADI"
+		cost_label.text = "Purchase a flashlight from the Equipment Shop first." if is_en else "Önce Ekipman Mağazasından fener satın alın."
 		cost_label.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4, 1.0))
 		return
 
@@ -82,8 +92,8 @@ func _refresh_ui() -> void:
 	else:
 		_cur_pct = 100
 
-	battery_title_label.text = tr("Dalış Feneri (Lv. %d)") % flash_lvl
-	wallet_label.text = tr("Bakiye: %d Zurna") % GlobalEconomy.money
+	battery_title_label.text = ("Dive Light (Lv. %d)" if is_en else "Dalış Feneri (Lv. %d)") % flash_lvl
+	wallet_label.text = ("Balance: %d Zurna" if is_en else "Bakiye: %d Zurna") % GlobalEconomy.money
 
 	if _cur_pct >= 100:
 		battery_progress.value = 100.0
@@ -93,10 +103,10 @@ func _refresh_ui() -> void:
 		charge_slider.max_value = 100
 		charge_slider.value = 100
 		max_button.disabled = true
-		cost_label.text = "Batarya tamamen dolu!"
+		cost_label.text = "Battery is fully charged!" if is_en else "Batarya tamamen dolu!"
 		cost_label.add_theme_color_override("font_color", Color(0.35, 0.85, 0.45, 1.0))
 		charge_button.disabled = true
-		charge_button.text = "BATARYA DOLU (%100)"
+		charge_button.text = "BATTERY FULL (100%)" if is_en else "BATARYA DOLU (%100)"
 		return
 
 	charge_slider.editable = true
@@ -125,7 +135,8 @@ func _on_max_pressed() -> void:
 
 func _on_money_changed(_new_money: int) -> void:
 	if is_inside_tree():
-		wallet_label.text = tr("Bakiye: %d Zurna") % GlobalEconomy.money
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
+		wallet_label.text = ("Balance: %d Zurna" if is_en else "Bakiye: %d Zurna") % GlobalEconomy.money
 		_update_cost_and_actions()
 
 
@@ -133,15 +144,12 @@ func _calculate_cost(diff_pct: int) -> int:
 	if diff_pct <= 0:
 		return 0
 	var charged_seconds: float = (float(diff_pct) / 100.0) * _max_battery
-	# Dinamik Fiyatlandırma: 1 saniyelik şarj = 0.30 Zurna
-	# Lvl 1 (75s): Full dolum = ~23 Zurna
-	# Lvl 5 (110s): Full dolum = ~33 Zurna
-	# Lvl 15 (200s): Full dolum = 60 Zurna
 	var cost: int = int(ceil(charged_seconds * 0.30))
 	return max(cost, 1)
 
 
 func _update_cost_and_actions() -> void:
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	var diff_pct: int = _target_pct - _cur_pct
 	var cost: int = _calculate_cost(diff_pct)
 
@@ -151,22 +159,22 @@ func _update_cost_and_actions() -> void:
 
 	if diff_pct > 0:
 		progress_text.text = "%%%d → %%%d (%ds / %ds)" % [_cur_pct, _target_pct, target_units, int(_max_battery)]
-		cost_label.text = "Ücret: %d Zurna (+%ds / +%%%d)" % [cost, charged_seconds, diff_pct]
+		cost_label.text = ("Cost: %d Zurna (+%ds / +%%%d)" if is_en else "Ücret: %d Zurna (+%ds / +%%%d)") % [cost, charged_seconds, diff_pct]
 		cost_label.add_theme_color_override("font_color", Color(0.95, 0.85, 0.45, 1.0))
 	else:
 		progress_text.text = "%ds / %ds (%%%d)" % [int(_cur_battery), int(_max_battery), _cur_pct]
-		cost_label.text = "Şarj miktarı seçilmedi (0 Zurna)"
+		cost_label.text = "No charge amount selected (0 Zurna)" if is_en else "Şarj miktarı seçilmedi (0 Zurna)"
 		cost_label.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65, 1.0))
 
 	if diff_pct <= 0:
 		charge_button.disabled = true
-		charge_button.text = "ŞARJ MİKTARI SEÇİN"
+		charge_button.text = "SELECT CHARGE AMOUNT" if is_en else "ŞARJ MİKTARI SEÇİN"
 	elif GlobalEconomy.money < cost:
 		charge_button.disabled = true
-		charge_button.text = "YETERSİZ BAKİYE (%d Zurna)" % cost
+		charge_button.text = ("INSUFFICIENT FUNDS (%d Zurna)" if is_en else "YETERSİZ BAKİYE (%d Zurna)") % cost
 	else:
 		charge_button.disabled = false
-		charge_button.text = tr("⚡ ŞARJ ET (%d Zurna)") % cost
+		charge_button.text = ("⚡ CHARGE (%d Zurna)" if is_en else "⚡ ŞARJ ET (%d Zurna)") % cost
 
 
 func _on_charge_pressed() -> void:

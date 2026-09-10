@@ -7,7 +7,7 @@
 script = ExtResource("1_script")
 item_name = "Ananas Suyu"
 sprite = ExtResource("2_sprite")
-description = "Laboratuvarda 2 adet Ananas'ın distile edilip şişelenmesiyle elde edilen ferahlatıcı tropikal içecek. Pazarda yüksek fiyata alıcı bulur."
+description = "Toplanan ananasların laboratuvarda distile edilip şişelenmesiyle elde edilen ferahlatıcı tropikal içecek. Gurmeler ve zengin koleksiyoncular için tam bir lezzet şöleni."
 rarity = 1.0
 value = 75
 category = "Crafted"

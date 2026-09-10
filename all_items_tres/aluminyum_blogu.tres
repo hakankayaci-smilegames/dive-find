@@ -7,7 +7,7 @@
 script = ExtResource("1_script")
 item_name = "Preslenmiş Alüminyum Bloğu"
 sprite = ExtResource("2_sprite")
-description = "Ezilmiş meşrubat kutuları ve bükük çatalların yüksek basınçlı pres makinesinde eritilip kalıplanmasıyla elde edilen metal blok."
+description = "Ezilmiş meşrubat kutuları ve bükük çatalların laboratuvarda yüksek basınç altında preslenmesiyle üretilmiş endüstriyel metal blok. İhracat pazarında oldukça iyi prim yapar."
 rarity = 1.0
 value = 65
 category = "Crafted"

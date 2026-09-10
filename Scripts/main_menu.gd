@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "PreAlpha 1.6.2 (Afterjam Remaster)"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "PreAlpha 1.6.3"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -24,22 +24,25 @@ const SFX_BUS := "SFX"
 @onready var continue_button: Button = $Panel/VBoxContainer/ContinueButton
 @onready var new_game_button: Button = $Panel/VBoxContainer/NewGameButton
 
-@onready var title_box: Panel = $Panel/TitleBox
+@onready var sky_texture: TextureRect = get_node_or_null("SkyTexture")
+@onready var header_texture: TextureRect = get_node_or_null("TextureRect")
+@onready var title_box: Control = get_node_or_null("Panel/TitleBox")
 @onready var remastered_label: Label = get_node_or_null("Panel/TitleBox/RemasteredLabel")
-@onready var subtitle_label: Label = $Panel/SubtitleLabel
+@onready var subtitle_label: Label = get_node_or_null("Panel/SubtitleLabel")
 @onready var menu_buttons: VBoxContainer = $Panel/VBoxContainer
 @onready var changelog_panel: Panel = $Panel/ChangelogPanel
 @onready var exit_button: Button = $Panel/Button
-@onready var sunan_label: Label = $Panel/Label2
+@onready var sunan_label: Label = get_node_or_null("Panel/Label2")
 @onready var version_label: Label = $Panel/VersionLabel
 
-@onready var sky_texture: TextureRect = $SkyTexture
-@onready var ocean_texture: TextureRect = $OceanTexture
-@onready var deep_texture: TextureRect = $DeepTexture
+
 
 @onready var music_slider: HSlider = $SettingsPanel/Content/MusicRow/MusicSlider
 @onready var sfx_slider: HSlider = $SettingsPanel/Content/SfxRow/SfxSlider
 @onready var fullscreen_check: CheckButton = $SettingsPanel/Content/FullscreenRow/FullscreenCheck
+@onready var language_row: HBoxContainer = get_node_or_null("SettingsPanel/Content/LanguageRow")
+@onready var language_label: Label = get_node_or_null("SettingsPanel/Content/LanguageRow/LanguageLabel")
+@onready var language_option: OptionButton = get_node_or_null("SettingsPanel/Content/LanguageRow/LanguageOption")
 @onready var joystick_row: HBoxContainer = get_node_or_null("SettingsPanel/Content/JoystickRow")
 @onready var joystick_slider: HSlider = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickSlider")
 @onready var joystick_val_label: Label = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickValueLabel")
@@ -53,10 +56,9 @@ const DEV_SECRET_CODE: String = "mercedesforever" # Kendi belirleyeceğin gizli 
 
 var _panel_tweens: Dictionary = {}
 var _base_positions: Dictionary = {}
-var _target_parallax: Vector2 = Vector2.ZERO
-var _current_parallax: Vector2 = Vector2.ZERO
 var _active_collection: Node = null
 var _active_confirm_dialog: CanvasLayer = null
+var _active_lang_modal: Control = null
 
 
 func _ready() -> void:
@@ -85,6 +87,9 @@ func _ready() -> void:
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
 
+	if is_instance_valid(language_option):
+		language_option.item_selected.connect(_on_language_selected)
+
 	if is_instance_valid(dev_code_button):
 		dev_code_button.pressed.connect(_on_dev_code_submitted)
 	if is_instance_valid(dev_code_input):
@@ -104,12 +109,21 @@ func _ready() -> void:
 			flashlight_aim_option.item_selected.connect(_on_flashlight_aim_selected)
 
 	_setup_button_hover_sfx()
-	_play_entrance_animation()
+
+	if _should_show_language_prompt():
+		if is_instance_valid($Panel):
+			$Panel.visible = false
+		if is_instance_valid(header_texture):
+			header_texture.visible = false
+		_show_first_launch_language_modal()
+	else:
+		refresh_ui()
+		_play_entrance_animation()
+
 	call_deferred("_preload_collection_cache")
 
 
-func _process(delta: float) -> void:
-	_update_parallax(delta)
+func _process(_delta: float) -> void:
 	_update_title_bobbing()
 
 
@@ -158,7 +172,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 • [color=#00e5ff]Uzun Basış (0.35s):[/color] Çantada eşyayı kilitler / açar 🔒
 
 [center][font_size=13][color=#5e8ca8]Yapımcılar: Queen Of Femboyss & Hakan Bey[/color][/font_size]
-[font_size=15][color=#00e5ff][i]⚓ Smile Games sunar ( " + game_version + " )[/i][/color][/font_size][/center]"""
+[font_size=15][color=#00e5ff][i]⚓ Smile Games sunar """
 
 
 func _get_info_bbcode_en() -> String:
@@ -190,7 +204,7 @@ Plunge into the mysterious depths of the ocean! Gather ancient relics, valuable 
 • [color=#00e5ff]Long Press (0.35s):[/color] Lock / unlock item in backpack 🔒
 
 [center][font_size=13][color=#5e8ca8]Developers: Queen Of Femboyss & Hakan Bey[/color][/font_size]
-[font_size=15][color=#00e5ff][i]⚓ Smile Games Presents ( " + game_version + " )[/i][/color][/font_size][/center]"""
+[font_size=15][color=#00e5ff][i]⚓ Smile Games Presents """
 
 
 func _ensure_audio_buses() -> void:
@@ -208,7 +222,7 @@ func _capture_positions() -> void:
 	var nodes := [
 		info_panel, settings_panel, title_box, menu_buttons,
 		subtitle_label, exit_button, sunan_label, version_label,
-		sky_texture, ocean_texture, deep_texture
+		sky_texture, header_texture, changelog_panel
 	]
 	for node in nodes:
 		if is_instance_valid(node):
@@ -216,25 +230,34 @@ func _capture_positions() -> void:
 
 
 func _play_entrance_animation() -> void:
-	if _base_positions.has(title_box):
+	if is_instance_valid(header_texture) and _base_positions.has(header_texture):
+		_animate_enter(header_texture, _base_positions[header_texture] + Vector2(0.0, -35.0), 0.55)
+	elif is_instance_valid(title_box) and _base_positions.has(title_box):
 		_animate_enter(title_box, _base_positions[title_box] + Vector2(-60.0, 0.0), 0.45)
+
 	if is_instance_valid(subtitle_label):
 		_fade_in(subtitle_label, 0.3)
-	if _base_positions.has(menu_buttons):
-		_animate_enter(menu_buttons, _base_positions[menu_buttons] + Vector2(-80.0, 0.0), 0.5)
-	if is_instance_valid(changelog_panel):
+
+	if is_instance_valid(menu_buttons) and _base_positions.has(menu_buttons):
+		_animate_enter(menu_buttons, _base_positions[menu_buttons] + Vector2(-70.0, 0.0), 0.5)
+
+	if is_instance_valid(menu_buttons):
+		var buttons: Array[Node] = menu_buttons.get_children()
+		for i in buttons.size():
+			if buttons[i] is Control:
+				_fade_in(buttons[i] as Control, 0.07 * i)
+
+	if is_instance_valid(changelog_panel) and _base_positions.has(changelog_panel):
+		_animate_enter(changelog_panel, _base_positions[changelog_panel] + Vector2(60.0, 0.0), 0.5)
+	elif is_instance_valid(changelog_panel):
 		_fade_in(changelog_panel, 0.35)
 
-	var buttons: Array[Node] = menu_buttons.get_children()
-	for i in buttons.size():
-		_fade_in(buttons[i] as Control, 0.06 * i)
-
 	if is_instance_valid(exit_button):
-		_fade_in(exit_button, 0.5)
+		_fade_in(exit_button, 0.45)
 	if is_instance_valid(sunan_label):
 		_fade_in(sunan_label, 0.6)
 	if is_instance_valid(version_label):
-		_fade_in(version_label, 0.6)
+		_fade_in(version_label, 0.5)
 
 
 func _animate_enter(control: Control, from: Vector2, duration: float) -> void:
@@ -257,41 +280,27 @@ func _fade_in(control: Control, delay: float) -> void:
 
 
 func _setup_button_hover_sfx() -> void:
-	var buttons: Array[Node] = menu_buttons.get_children()
-	for child in buttons:
-		if child is Button:
-			var btn := child as Button
-			btn.mouse_entered.connect(func() -> void:
-				if not btn.disabled:
-					GlobalSoundManager.play_sfx("click")
-			)
-
-
-func _update_parallax(delta: float) -> void:
-	var vp := get_viewport()
-	if not vp:
-		return
-	var vp_size := vp.get_visible_rect().size
-	if vp_size.x <= 0.0 or vp_size.y <= 0.0:
-		return
-
-	var mouse_pos := vp.get_mouse_position()
-	var center := vp_size * 0.5
-	_target_parallax = (mouse_pos - center) / center
-	_target_parallax.x = clampf(_target_parallax.x, -1.0, 1.0)
-	_target_parallax.y = clampf(_target_parallax.y, -1.0, 1.0)
-
-	_current_parallax = _current_parallax.lerp(_target_parallax, delta * 3.5)
-
-	if is_instance_valid(sky_texture) and _base_positions.has(sky_texture):
-		sky_texture.position = _base_positions[sky_texture] - _current_parallax * 4.0
-	if is_instance_valid(ocean_texture) and _base_positions.has(ocean_texture):
-		ocean_texture.position = _base_positions[ocean_texture] - _current_parallax * 12.0
-	if is_instance_valid(deep_texture) and _base_positions.has(deep_texture):
-		deep_texture.position = _base_positions[deep_texture] - _current_parallax * 22.0
+	if is_instance_valid(menu_buttons):
+		var buttons: Array[Node] = menu_buttons.get_children()
+		for child in buttons:
+			if child is Button:
+				var btn := child as Button
+				btn.mouse_entered.connect(func() -> void:
+					if not btn.disabled:
+						GlobalSoundManager.play_sfx("click")
+				)
+	if is_instance_valid(exit_button):
+		exit_button.mouse_entered.connect(func() -> void:
+			if not exit_button.disabled:
+				GlobalSoundManager.play_sfx("click")
+		)
 
 
 func _update_title_bobbing() -> void:
+	if is_instance_valid(header_texture) and _base_positions.has(header_texture):
+		var float_y := sin(Time.get_ticks_msec() * 0.002) * 4.0
+		header_texture.position.y = _base_positions[header_texture].y + float_y
+
 	if is_instance_valid(title_box) and _base_positions.has(title_box):
 		var float_y := sin(Time.get_ticks_msec() * 0.002) * 3.5
 		title_box.position.y = _base_positions[title_box].y + float_y
@@ -367,16 +376,17 @@ func _hide_panel(panel: Panel) -> void:
 
 func _refresh_save_buttons() -> void:
 	var has_save: bool = GlobalInventory.has_save()
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	continue_button.disabled = not has_save
 	if has_save:
 		var save_data: Dictionary = GlobalInventory.get_save_data()
 		var day := int(save_data.get("current_day", 1))
 		var money := int(save_data.get("money", 0))
-		continue_button.text = tr("DEVAM ET  (Gün %d • %d Zurna)") % [day, money]
+		continue_button.text = ("CONTINUE  (Day %d • %d Zurna)" if is_en else "DEVAM ET  (Gün %d • %d Zurna)") % [day, money]
 		continue_button.tooltip_text = GlobalInventory.get_save_summary()
 	else:
-		continue_button.text = tr("DEVAM ET")
-		continue_button.tooltip_text = tr("Kayıtlı oyun bulunamadı.")
+		continue_button.text = "CONTINUE" if is_en else "DEVAM ET"
+		continue_button.tooltip_text = "No saved game found." if is_en else "Kayıtlı oyun bulunamadı."
 
 
 func _on_new_game_pressed() -> void:
@@ -547,6 +557,9 @@ func _toggle_collection() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if is_instance_valid(_active_lang_modal):
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_ESCAPE:
 			if is_instance_valid(_active_confirm_dialog):
@@ -709,12 +722,18 @@ func _load_settings() -> void:
 	var fullscreen := true
 	var joystick_scale := 1.0
 	var flashlight_aim := 2
+	var language := "tr"
 	if cfg.load(SETTINGS_FILE) == OK:
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
 		joystick_scale = cfg.get_value("controls", "joystick_scale", joystick_scale)
 		flashlight_aim = int(cfg.get_value("controls", "mobile_flashlight_aim", flashlight_aim))
+		language = cfg.get_value("general", "language", language)
+
+	if language == "en" or language == "tr":
+		TranslationServer.set_locale(language)
+
 	_set_bus_volume(MUSIC_BUS, music)
 	_set_bus_volume(SFX_BUS, sfx)
 	if DisplayServer.get_name() != "headless":
@@ -728,6 +747,9 @@ func _load_settings() -> void:
 		joystick_val_label.text = "%%%d" % [int(round(joystick_scale * 100.0))]
 	if is_instance_valid(flashlight_aim_option):
 		flashlight_aim_option.select(clampi(flashlight_aim, 0, 2))
+	if is_instance_valid(language_option):
+		var is_en: bool = TranslationServer.get_locale().begins_with("en") or language == "en"
+		language_option.select(1 if is_en else 0)
 	_refresh_dev_code_ui()
 
 
@@ -736,15 +758,16 @@ func _refresh_dev_code_ui() -> void:
 		return
 	var dev_console = get_node_or_null("/root/DevConsole")
 	var is_unlocked: bool = dev_console.is_dev_console_unlocked() if dev_console and dev_console.has_method("is_dev_console_unlocked") else false
+	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if is_unlocked:
 		dev_code_input.text = ""
-		dev_code_input.placeholder_text = "AKTİF ✅"
-		dev_code_button.text = "KAPAT"
+		dev_code_input.placeholder_text = "ACTIVE ✅" if is_en else "AKTİF ✅"
+		dev_code_button.text = "DISABLE" if is_en else "KAPAT"
 		dev_code_button.add_theme_color_override("font_color", Color(0.3, 0.95, 0.4, 1.0))
 	else:
 		dev_code_input.text = ""
-		dev_code_input.placeholder_text = "Gizli kod..."
-		dev_code_button.text = "AKTİF ET"
+		dev_code_input.placeholder_text = "Secret code..." if is_en else "Gizli kod..."
+		dev_code_button.text = "ACTIVATE" if is_en else "AKTİF ET"
 		dev_code_button.remove_theme_color_override("font_color")
 
 
@@ -774,7 +797,8 @@ func _on_dev_code_submitted() -> void:
 		_refresh_dev_code_ui()
 	else:
 		GlobalSoundManager.play_sfx("error")
-		dev_code_button.text = "HATALI! ❌"
+		var is_en: bool = ItemTranslator.get_current_locale() == "en"
+		dev_code_button.text = "INVALID! ❌" if is_en else "HATALI! ❌"
 		dev_code_button.add_theme_color_override("font_color", Color(0.95, 0.3, 0.3, 1.0))
 		var tw := create_tween()
 		tw.tween_interval(1.2)
@@ -786,6 +810,10 @@ func _on_dev_code_submitted() -> void:
 
 func _save_settings() -> void:
 	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_FILE)
+	var current_lang := "en" if TranslationServer.get_locale().begins_with("en") else "tr"
+	cfg.set_value("general", "language", current_lang)
+	cfg.set_value("general", "last_version", game_version)
 	cfg.set_value("audio", "music", music_slider.value)
 	cfg.set_value("audio", "sfx", sfx_slider.value)
 	cfg.set_value("video", "fullscreen", fullscreen_check.button_pressed)
@@ -794,6 +822,293 @@ func _save_settings() -> void:
 	if is_instance_valid(flashlight_aim_option):
 		cfg.set_value("controls", "mobile_flashlight_aim", flashlight_aim_option.selected)
 	cfg.save(SETTINGS_FILE)
+
+
+func _on_language_selected(index: int) -> void:
+	GlobalSoundManager.play_sfx("click")
+	var new_locale := "en" if index == 1 else "tr"
+	TranslationServer.set_locale(new_locale)
+	_save_settings()
+	refresh_ui()
+	var dev_console = get_node_or_null("/root/DevConsole")
+	if dev_console and dev_console.has_method("refresh_active_uis"):
+		dev_console.refresh_active_uis()
+
+
+func refresh_ui() -> void:
+	_apply_game_version()
+	_refresh_save_buttons()
+	_refresh_menu_labels()
+
+
+func _refresh_menu_labels() -> void:
+	var is_en := TranslationServer.get_locale().begins_with("en")
+
+	if is_instance_valid(new_game_button):
+		new_game_button.text = tr("YENİ OYUN")
+	if is_instance_valid(collection_button):
+		collection_button.text = tr("KOLEKSİYON")
+	if is_instance_valid(settings_button):
+		settings_button.text = tr("AYARLAR")
+	if is_instance_valid(info_button):
+		info_button.text = tr("BİLGİ & YARDIM")
+	if is_instance_valid(exit_button):
+		exit_button.text = tr("OYUNDAN ÇIK")
+	if is_instance_valid(sunan_label):
+		sunan_label.text = tr("⚓ Smile Games Sunar")
+
+	var changelog_title: Label = get_node_or_null("Panel/ChangelogPanel/ChangelogTitle")
+	if is_instance_valid(changelog_title):
+		changelog_title.text = tr("📋 YENİLİKLER & GÜNCELLEMELER")
+
+	# Settings Panel
+	var settings_title: Label = get_node_or_null("SettingsPanel/TitleLabel")
+	if is_instance_valid(settings_title):
+		settings_title.text = tr("AYARLAR")
+
+	var music_label: Label = get_node_or_null("SettingsPanel/Content/MusicRow/MusicLabel")
+	if is_instance_valid(music_label):
+		music_label.text = tr("Müzik")
+
+	var sfx_label: Label = get_node_or_null("SettingsPanel/Content/SfxRow/SfxLabel")
+	if is_instance_valid(sfx_label):
+		sfx_label.text = tr("Ses Efektleri")
+
+	var fs_label: Label = get_node_or_null("SettingsPanel/Content/FullscreenRow/FullscreenLabel")
+	if is_instance_valid(fs_label):
+		fs_label.text = tr("Tam Ekran")
+
+	if is_instance_valid(language_label):
+		language_label.text = tr("Dil")
+
+	if is_instance_valid(language_option):
+		language_option.select(1 if is_en else 0)
+
+	var joy_label: Label = get_node_or_null("SettingsPanel/Content/JoystickRow/JoystickLabel")
+	if is_instance_valid(joy_label):
+		joy_label.text = tr("Joystick Boyutu")
+
+	var aim_label: Label = get_node_or_null("SettingsPanel/Content/FlashlightAimRow/FlashlightAimLabel")
+	if is_instance_valid(aim_label):
+		aim_label.text = tr("Mobil Fener Yönü")
+
+	if is_instance_valid(flashlight_aim_option) and flashlight_aim_option.item_count >= 3:
+		flashlight_aim_option.set_item_text(0, tr("🕹️ Yüzüş Yönü (Joystick)"))
+		flashlight_aim_option.set_item_text(1, tr("👆 Dokunmatik (Serbest Aim)"))
+		flashlight_aim_option.set_item_text(2, tr("✨ Akıllı Hibrit (Joystick + Dokunma)"))
+
+	var coll_label: Label = get_node_or_null("SettingsPanel/Content/CollectionRow/CollectionLabel")
+	if is_instance_valid(coll_label):
+		coll_label.text = tr("Koleksiyon")
+
+	if is_instance_valid(reset_collection_button):
+		reset_collection_button.text = tr("KOLEKSİYONU SIFIRLA")
+
+	var dev_code_label: Label = get_node_or_null("SettingsPanel/Content/DevCodeRow/DevCodeLabel")
+	if is_instance_valid(dev_code_label):
+		dev_code_label.text = tr("DevCode")
+
+	_refresh_dev_code_ui()
+
+	var info_title: Label = get_node_or_null("InfoPanel/TitleLabel")
+	if is_instance_valid(info_title):
+		info_title.text = tr("BİLGİ & YARDIM")
+
+
+func _should_show_language_prompt() -> bool:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_FILE) != OK:
+		return true
+	if not cfg.has_section_key("general", "language"):
+		return true
+	var last_version: String = str(cfg.get_value("general", "last_version", ""))
+	if last_version != game_version:
+		return true
+	return false
+
+
+func _show_first_launch_language_modal() -> void:
+	if is_instance_valid(_active_lang_modal):
+		_active_lang_modal.queue_free()
+		_active_lang_modal = null
+
+	var modal_root := Control.new()
+	modal_root.name = "LanguageSelectionModal"
+	modal_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	modal_root.mouse_filter = Control.MOUSE_FILTER_STOP
+	_active_lang_modal = modal_root
+	add_child(modal_root)
+
+	var overlay := ColorRect.new()
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.color = Color(0.01, 0.03, 0.06, 0.65)
+	modal_root.add_child(overlay)
+
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	modal_root.add_child(center)
+
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(560, 400)
+	panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.03, 0.07, 0.14, 0.97)
+	panel_style.border_color = Color(0.0, 0.85, 0.95, 0.9)
+	panel_style.set_border_width_all(3)
+	panel_style.set_corner_radius_all(16)
+	panel_style.shadow_color = Color(0.0, 0.0, 0.0, 0.7)
+	panel_style.shadow_size = 24
+	panel_style.content_margin_left = 32
+	panel_style.content_margin_right = 32
+	panel_style.content_margin_top = 28
+	panel_style.content_margin_bottom = 28
+	panel.add_theme_stylebox_override("panel", panel_style)
+	center.add_child(panel)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 16)
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	panel.add_child(vbox)
+
+	var logo_rect := TextureRect.new()
+	logo_rect.texture = preload("res://Sprites/header.png")
+	logo_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo_rect.custom_minimum_size = Vector2(340, 75)
+	logo_rect.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	vbox.add_child(logo_rect)
+
+	var title := Label.new()
+	title.text = "🌐 DİL SEÇİMİ / LANGUAGE SELECTION"
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_color", Color(0.0, 0.9, 1.0, 1.0))
+	title.add_theme_font_size_override("font_size", 22)
+	vbox.add_child(title)
+
+	var subtitle := Label.new()
+	subtitle.text = "Lütfen oyunu oynamak istediğiniz dili seçin\nPlease select your preferred language"
+	subtitle.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	subtitle.add_theme_color_override("font_color", Color(0.85, 0.92, 1.0, 0.85))
+	subtitle.add_theme_font_size_override("font_size", 14)
+	vbox.add_child(subtitle)
+
+	var sep := HSeparator.new()
+	var sep_style := StyleBoxLine.new()
+	sep_style.color = Color(0.18, 0.55, 0.78, 0.5)
+	sep_style.thickness = 2
+	sep.add_theme_stylebox_override("separator", sep_style)
+	vbox.add_child(sep)
+
+	var btn_hbox := HBoxContainer.new()
+	btn_hbox.add_theme_constant_override("separation", 20)
+	btn_hbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.add_child(btn_hbox)
+
+	var tr_btn := _create_lang_button("🇹🇷 Türkçe", "tr")
+	btn_hbox.add_child(tr_btn)
+
+	var en_btn := _create_lang_button("🇬🇧 English", "en")
+	btn_hbox.add_child(en_btn)
+
+	var note := Label.new()
+	note.text = "* Bu ayarı daha sonra Ayarlar menüsünden değiştirebilirsiniz.\n* You can change this setting anytime in the Settings menu."
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	note.add_theme_color_override("font_color", Color(0.5, 0.7, 0.85, 0.65))
+	note.add_theme_font_size_override("font_size", 12)
+	vbox.add_child(note)
+
+	modal_root.modulate.a = 0.0
+	panel.scale = Vector2(0.92, 0.92)
+	panel.pivot_offset = panel.custom_minimum_size / 2.0
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(modal_root, "modulate:a", 1.0, 0.3).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_property(panel, "scale", Vector2.ONE, 0.3).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+
+
+func _create_lang_button(label_text: String, lang_code: String) -> Button:
+	var btn := Button.new()
+	btn.text = label_text
+	btn.custom_minimum_size = Vector2(210, 56)
+	btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	btn.add_theme_font_size_override("font_size", 19)
+
+	var normal_style := StyleBoxFlat.new()
+	normal_style.bg_color = Color(0.06, 0.18, 0.3, 0.9)
+	normal_style.border_color = Color(0.0, 0.85, 0.95, 0.9)
+	normal_style.set_border_width_all(2)
+	normal_style.set_corner_radius_all(10)
+	normal_style.shadow_color = Color(0.0, 0.65, 0.85, 0.25)
+	normal_style.shadow_size = 8
+
+	var hover_style := StyleBoxFlat.new()
+	hover_style.bg_color = Color(0.08, 0.22, 0.38, 0.95)
+	hover_style.border_color = Color(0.0, 0.95, 1.0, 1.0)
+	hover_style.set_border_width_all(3)
+	hover_style.set_corner_radius_all(10)
+	hover_style.shadow_color = Color(0.0, 0.85, 1.0, 0.4)
+	hover_style.shadow_size = 12
+
+	var pressed_style := StyleBoxFlat.new()
+	pressed_style.bg_color = Color(0.02, 0.08, 0.16, 0.95)
+	pressed_style.border_color = Color(0.0, 0.9, 1.0, 1.0)
+	pressed_style.set_border_width_all(2)
+	pressed_style.set_corner_radius_all(10)
+
+	btn.add_theme_stylebox_override("normal", normal_style)
+	btn.add_theme_stylebox_override("hover", hover_style)
+	btn.add_theme_stylebox_override("pressed", pressed_style)
+	btn.add_theme_color_override("font_color", Color(0.95, 0.98, 1.0, 1.0))
+	btn.add_theme_color_override("font_hover_color", Color(0.1, 0.95, 1.0, 1.0))
+	btn.add_theme_color_override("font_pressed_color", Color(0.1, 0.95, 1.0, 1.0))
+
+	btn.pivot_offset = btn.custom_minimum_size / 2.0
+	btn.mouse_entered.connect(func() -> void:
+		GlobalSoundManager.play_sfx("click")
+		var b_tw := create_tween()
+		b_tw.tween_property(btn, "scale", Vector2(1.05, 1.05), 0.08)
+	)
+	btn.mouse_exited.connect(func() -> void:
+		var b_tw := create_tween()
+		b_tw.tween_property(btn, "scale", Vector2.ONE, 0.08)
+	)
+	btn.pressed.connect(func() -> void:
+		_on_initial_language_selected(lang_code)
+	)
+	return btn
+
+
+func _on_initial_language_selected(lang_code: String) -> void:
+	GlobalSoundManager.play_sfx("click")
+	TranslationServer.set_locale(lang_code)
+
+	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS_FILE)
+	cfg.set_value("general", "language", lang_code)
+	cfg.set_value("general", "last_version", game_version)
+	cfg.save(SETTINGS_FILE)
+
+	if is_instance_valid(_active_lang_modal):
+		var tw := create_tween()
+		tw.set_parallel(true)
+		tw.tween_property(_active_lang_modal, "modulate:a", 0.0, 0.25).set_trans(Tween.TRANS_CUBIC)
+		tw.chain().tween_callback(func() -> void:
+			if is_instance_valid(_active_lang_modal):
+				_active_lang_modal.queue_free()
+				_active_lang_modal = null
+			_proceed_to_main_menu_after_lang()
+		)
+	else:
+		_proceed_to_main_menu_after_lang()
+
+
+func _proceed_to_main_menu_after_lang() -> void:
+	if is_instance_valid($Panel):
+		$Panel.visible = true
+	if is_instance_valid(header_texture):
+		header_texture.visible = true
+	refresh_ui()
+	_play_entrance_animation()
 
 
 func _on_flashlight_aim_selected(_index: int) -> void:

@@ -7,7 +7,7 @@
 script = ExtResource("1_18bot")
 item_name = "BMW Anahtarı"
 sprite = ExtResource("2_yuk5i")
-description = "Bir BMW Compettion serisi anahar, eminin Toyotadan daha pahaladır! "
+description = "Üzerinde gururlu bir \"M Competition\" amblemi taşıyan lüks araç anahtarı. Sinyal kolunu hiç kullanmamış bir sahibin dalgalara kurban verdiği belli."
 rarity = 3
 value = 45
 category = "Rare Found"

@@ -7,6 +7,6 @@
 script = ExtResource("1_vxng7")
 item_name = "Monster Kutusu"
 sprite = ExtResource("2_ipi7i")
-description = "En azından kola değil....yinede kalp krizi garanti abi içmeyin ya."
+description = "Yeşil pençe amblemiyle ezilmiş bir enerji içeceği kutusu. Sahil partisinde tükenen enerjiyi yerine koymaya çalışıp kutusunu denize fırlatan bir gece kuşunun eseri."
 value = 8
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

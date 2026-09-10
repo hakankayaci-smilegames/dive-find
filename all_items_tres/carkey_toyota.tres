@@ -7,7 +7,7 @@
 script = ExtResource("1_svbmv")
 item_name = "Toyata Anahtarı"
 sprite = ExtResource("2_nnhig")
-description = "Sıradan bir Toyota Corollanın Anahtarı, araba olsa neyse de, anahtarın anca plastiğini kemirirler..."
+description = "Efsanevi bir Toyota Corolla anahtarı. Arabanın kendisi muhtemelen hâlâ suyun altında tek marşta çalışır durumdadır ama bu anahtar tek başına ancak antikacıda değer bulur."
 rarity = 2
 value = 25
 category = "Rare Found"

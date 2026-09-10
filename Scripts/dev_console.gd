@@ -559,6 +559,10 @@ func _cmd_lang(args: Array) -> void:
 		_log_success("Game language set to ENGLISH (en). (UI refreshed)")
 
 
+func refresh_active_uis() -> void:
+	_refresh_active_uis()
+
+
 func _refresh_active_uis() -> void:
 	var cur_scene := get_tree().current_scene
 	if is_instance_valid(cur_scene):
@@ -566,15 +570,24 @@ func _refresh_active_uis() -> void:
 			cur_scene.call("_refresh_save_buttons")
 		if cur_scene.has_method("_apply_game_version"):
 			cur_scene.call("_apply_game_version")
+		if cur_scene.has_method("refresh_ui"):
+			cur_scene.call("refresh_ui")
 
 	var office = get_tree().get_first_node_in_group("office_menu")
 	if is_instance_valid(office):
-		if office.has_method("_refresh_day"):
-			office.call("_refresh_day")
-		if office.has_method("_refresh_wallet"):
-			office.call("_refresh_wallet")
-		if office.has_method("_refresh_battery_badge"):
-			office.call("_refresh_battery_badge")
+		if office.has_method("refresh_ui"):
+			office.call("refresh_ui")
+		else:
+			if office.has_method("_refresh_day"):
+				office.call("_refresh_day")
+			if office.has_method("_refresh_wallet"):
+				office.call("_refresh_wallet")
+			if office.has_method("_refresh_battery_badge"):
+				office.call("_refresh_battery_badge")
+			if office.has_method("_update_dive_button_state"):
+				office.call("_update_dive_button_state")
+			if office.has_method("_update_merchant_badges"):
+				office.call("_update_merchant_badges")
 
 	var mobile_ctrls = get_tree().get_first_node_in_group("mobile_controls")
 	if is_instance_valid(mobile_ctrls):
@@ -582,6 +595,27 @@ func _refresh_active_uis() -> void:
 			mobile_ctrls.call("_update_sprint_button_visuals")
 		if mobile_ctrls.has_method("_update_flashlight_button_visuals"):
 			mobile_ctrls.call("_update_flashlight_button_visuals")
+		if mobile_ctrls.has_method("_update_interact_button_state"):
+			mobile_ctrls.call("_update_interact_button_state")
+
+	# Açık UI menüleri ve popupları yeni dile senkronize et
+	if is_instance_valid(GlobalInventory):
+		GlobalInventory.inventory_updated.emit()
+
+	var hud = get_tree().get_first_node_in_group("hud")
+	if is_instance_valid(hud):
+		if hud.has_method("refresh_ui"):
+			hud.call("refresh_ui")
+		else:
+			if hud.has_method("_update_bag_button"):
+				hud.call("_update_bag_button")
+			if hud.has_method("_refresh_equipment_panel"):
+				hud.call("_refresh_equipment_panel")
+
+	get_tree().call_group("popup_ui", "refresh_ui")
+	get_tree().call_group("item_seller", "refresh_ui")
+	get_tree().call_group("laboratory_ui", "refresh_ui")
+	get_tree().call_group("equstore", "refresh_ui")
 
 
 func _get_time_mgr() -> Node:
