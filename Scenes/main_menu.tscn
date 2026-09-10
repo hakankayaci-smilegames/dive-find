@@ -378,7 +378,18 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
+• [color=#00e5ff]Eşya Açıklamaları & Hikaye Düzeltmeleri:[/color] Tüm deniz altı eşyalarının açıklamaları, yazım hataları ve hikaye metinleri baştan sona gözden geçirilip düzeltildi; her eşyaya derinlik katan tematik açıklamalar işlendi.
+• [color=#00e5ff]Fiyatlandırma & Nadirlik (Rarity) Rework'ü:[/color] Tüm eşyaların nadirlik sınıfları ve satış fiyatları derinlik seviyelerine, craft zincirine ve oyun ekonomisine uygun şekilde yeniden yapılandırılarak dengeli ve ödüllendirici hale getirildi.
+• [color=#00e5ff]Ana Menü & Yükleme Ekranı UI Rework'ü:[/color] Ana menü ve yükleme (loading) ekranı modern ve estetik bir arayüz tasarımına kavuşturuldu; akıcı geçiş animasyonları, modernize tipografi ve yeni görsel düzen entegre edildi.
+• [color=#00e5ff]Yeni Oyun Simgesi & Splash Screen:[/color] Yepyeni yüksek çözünürlüklü oyun simgesi ve açılışta karşılayan özel animasyonlu Splash Screen sahnesi eklendi.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]Ofis Şarj İstasyonu & Ücretli Batarya:[/color] Yüzeyde ve ofise girişteki ücretsiz otomatik şarj kaldırıldı. Ofis alt barına Şarj İstasyonu (HSlider ve MAX dolum) ile canlı batarya rozeti eklendi.
@@ -448,7 +459,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 13
-text = "v0.0.2 (Devbuild)"
+text = "PreAlpha 1.6.3"
 horizontal_alignment = 2
 vertical_alignment = 1
 

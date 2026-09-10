@@ -2,12 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxmcawlnc67c7"
-valid=false
+uid="uid://cd15rkbv4202l"
+path="res://.godot/imported/Map.png-b4bbd162cc0dcbc041cb190b78d388b9.ctex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
-source_file="res://Sprites/ResizedImage_2026-09-10_12-38-04_4937.png"
+source_file="res://Sprites/Map.png"
+dest_files=["res://.godot/imported/Map.png-b4bbd162cc0dcbc041cb190b78d388b9.ctex"]
 
 [params]
 

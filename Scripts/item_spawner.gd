@@ -37,11 +37,11 @@ const LAYER_CATEGORY_TABLE: Dictionary = {
 var _check_timer: Timer
 var _map_manager_node: Node2D = null
 
-# category (String) -> Array[{"scene": PackedScene, "rarity": float}]
+# category (String) -> Array[{"scene": PackedScene, "weight": float, "rarity": float}]
 # item_pool bir kez taranıp burada önbelleğe alınır.
 var _category_cache: Dictionary = {}
 
-# layer_index (int) -> {"entries": Array[{"scene","rarity"}], "total_weight": float}
+# layer_index (int) -> {"entries": Array[{"scene","weight","rarity"}], "total_weight": float}
 # LAYER_CATEGORY_TABLE sabit olduğu için, ilgili kategorilerin birleşimi de
 # runtime boyunca değişmez -> her chunk'ta yeniden birleştirmek yerine bir kez hesaplanır.
 var _layer_pool_cache: Dictionary = {}
@@ -127,16 +127,17 @@ func _build_category_cache() -> void:
 
 		var category: String = data.get("category")
 		var rarity: float = float(data.get("rarity"))
+		var weight: float = float(data.get("spawn_weight")) if data.get("spawn_weight") != null else rarity
 
 		if not _category_cache.has(category):
 			_category_cache[category] = []
-		_category_cache[category].append({"scene": scene, "rarity": rarity})
+		_category_cache[category].append({"scene": scene, "rarity": rarity, "weight": weight})
 
 		temp_node.free()  # Node hiç sahne ağacına eklenmedi, doğrudan serbest bırakmak güvenli
 
 
 ## Her layer_index için LAYER_CATEGORY_TABLE'daki kategorileri _category_cache'ten
-## çekip TEK bir birleşik ağırlıklı havuzda toplar (weight = item'ın kendi rarity'si).
+## çekip TEK bir birleşik ağırlıklı havuzda toplar (weight = item'ın kendi spawn_weight'i).
 func _build_layer_pool_cache() -> void:
 	_layer_pool_cache.clear()
 
@@ -148,7 +149,7 @@ func _build_layer_pool_cache() -> void:
 		for category in categories:
 			for entry in _category_cache.get(category, []):
 				entries.append(entry)
-				total_weight += entry["rarity"]
+				total_weight += entry.get("weight", entry.get("rarity", 1.0))
 
 		_layer_pool_cache[layer_index] = {"entries": entries, "total_weight": total_weight}
 
@@ -156,7 +157,7 @@ func _build_layer_pool_cache() -> void:
 	var special_entries: Array = _category_cache.get("Special", [])
 	var special_weight: float = 0.0
 	for entry in special_entries:
-		special_weight += float(entry.get("rarity", 1.0))
+		special_weight += float(entry.get("weight", entry.get("rarity", 1.0)))
 	_layer_pool_cache["special"] = {"entries": special_entries, "total_weight": special_weight}
 
 
@@ -288,19 +289,19 @@ func _spawn_special_item(chunk: Node2D, chunk_w: float, min_y: float, max_y: flo
 
 
 ## ------------------------------------------------------------------
-## AĞIRLIKLI SEÇİM (kategori havuzu içinden, weight = rarity)
+## AĞIRLIKLI SEÇİM (kategori havuzu içinden, weight = spawn_weight)
 ## ------------------------------------------------------------------
 func _pick_weighted_entry(pool: Dictionary) -> Dictionary:
 	var entries: Array = pool["entries"]
 	var total_weight: float = pool["total_weight"]
 
 	if total_weight <= 0.0:
-		return entries.pick_random()  # Tüm rarity'ler 0 ise eşit şansla seç
+		return entries.pick_random()  # Tüm ağırlıklar 0 ise eşit şansla seç
 
 	var roll: float = randf_range(0.0, total_weight)
 	var cumulative: float = 0.0
 	for entry in entries:
-		cumulative += entry["rarity"]
+		cumulative += entry.get("weight", entry.get("rarity", 1.0))
 		if roll <= cumulative:
 			return entry
 

@@ -1,12 +1,13 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://7s0j1sgcr2on"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_0ydqc"]
-[ext_resource type="Texture2D" uid="uid://bff6ulm7wqukj" path="res://items_diver/Sprites new/su_sisesi.png" id="2_ihxnc"]
+[ext_resource type="Texture2D" uid="uid://bff6ulm7wqukj" path="res://item_sprites/Sprites new/su_sisesi.png" id="2_ihxnc"]
 
 [resource]
 script = ExtResource("1_0ydqc")
 item_name = "Pet şişe"
 sprite = ExtResource("2_ihxnc")
 description = "Doğal suyun içine ambalajlı su atarak nasıl bir kimyasal seyreltme deneyi hedeflediler acaba? Neyse ki geri dönüşümde değeri var."
-value = 1
+spawn_weight = 10.0
+value = 3
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

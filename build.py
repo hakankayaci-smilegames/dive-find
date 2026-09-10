@@ -132,7 +132,7 @@ def main():
 
     # 3. Sürüm No Girişi
     ver_match = re.search(r'(\d+\.\d+(?:\.\d+)?)', cfg_info["version_name"])
-    default_ver = ver_match.group(1) if ver_match else "1.6.2"
+    default_ver = ver_match.group(1) if ver_match else "1.6.3"
     ver_input = input(f"{C_BOLD}Sürüm Numarası{C_RESET} [{default_ver}]: ").strip()
     version_no = ver_input if ver_input else default_ver
 

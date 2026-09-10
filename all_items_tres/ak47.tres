@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://c2c7df7i6fjla"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_0205l"]
-[ext_resource type="Texture2D" uid="uid://dbg485c2x2438" path="res://items_diver/Sprites new/bukukolmayan_ak47.png" id="2_rx4ri"]
+[ext_resource type="Texture2D" uid="uid://dbg485c2x2438" path="res://item_sprites/Sprites new/bukukolmayan_ak47.png" id="2_rx4ri"]
 
 [resource]
 script = ExtResource("1_0205l")
 item_name = "Keleşnikof"
 sprite = ExtResource("2_rx4ri")
 description = "Okyanus tabanında paslanmaya terk edilmiş efsanevi bir piyade tüfeği. Bir insan denizin yüzlerce metre derinine bunu neden atar ki? Muhtemelen arkasında çözülememiş bir polisiye vaka saklı."
-rarity = 5
+rarity = 5.0
 value = 1001
 category = "Valuable"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

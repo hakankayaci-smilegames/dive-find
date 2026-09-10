@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://4oryso1kh4w8"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_i7y17"]
-[ext_resource type="Texture2D" uid="uid://c3swg3lghd1s8" path="res://items_diver/Sprites new/nahtarlık.png" id="2_3thqi"]
+[ext_resource type="Texture2D" uid="uid://c3swg3lghd1s8" path="res://item_sprites/Sprites new/nahtarlık.png" id="2_3thqi"]
 
 [resource]
 script = ExtResource("1_i7y17")
 item_name = "Bronz Anahtarlık"
 sprite = ExtResource("2_3thqi")
 description = "Aynı manidar el figürünün ağır bronz dökümden imal edilmiş lüks versiyonu. Sanatçının bu jesti ölümsüzleştirmek için gösterdiği madeni ciddiyet takdire şayan."
-rarity = 6
-value = 9500
+rarity = 6.0
+spawn_weight = 1.2
+value = 7000
 category = "Special"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

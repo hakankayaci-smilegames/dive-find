@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://doqwmqvt0q14w"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_2gb4y"]
-[ext_resource type="Texture2D" uid="uid://dqd25df8n7eyg" path="res://items_diver/Sprites new/dalis_gozlugu.png" id="2_b02ts"]
+[ext_resource type="Texture2D" uid="uid://dqd25df8n7eyg" path="res://item_sprites/Sprites new/dalis_gozlugu.png" id="2_b02ts"]
 
 [resource]
 script = ExtResource("1_2gb4y")
 item_name = "Şnolkel"
 sprite = ExtResource("2_b02ts")
 description = "Bir an için kendi düşürdüğüm şnorkel sandığım emektar bir dalış ekipmanı. Biraz inceleyince benimkinden çok daha kaliteli olduğunu fark ettim; kesinlikle envantere girer."
-rarity = 1
-value = 15
+rarity = 1.0
+spawn_weight = 4.5
+value = 45
 category = "Rare Found"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

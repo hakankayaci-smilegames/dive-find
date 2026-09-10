@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://bvxti4wuhu1ly"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_pj6gf"]
-[ext_resource type="Texture2D" uid="uid://injg2mod43jv" path="res://items_diver/Sprites new/gunes_gozlugu.png" id="2_n4oun"]
+[ext_resource type="Texture2D" uid="uid://injg2mod43jv" path="res://item_sprites/Sprites new/gunes_gozlugu.png" id="2_n4oun"]
 
 [resource]
 script = ExtResource("1_pj6gf")
 item_name = "Güneş Gözlüğü"
 sprite = ExtResource("2_n4oun")
 description = "Okyanus zemininde bile havalı duruşundan ödün vermeyen şık bir güneş gözlüğü. İtalyan tasarımı havası verse de yakından bakınca sahil tezgahı menşeili olduğu anlaşılıyor."
-rarity = 1
-value = 115
+rarity = 2.0
+spawn_weight = 3.5
+value = 65
 category = "Rare Found"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

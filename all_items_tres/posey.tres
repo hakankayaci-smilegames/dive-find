@@ -1,12 +1,13 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://br7kcxcy2kbdt"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_1qwk2"]
-[ext_resource type="Texture2D" uid="uid://cumshla8y56o1" path="res://items_diver/Sprites new/poset.png" id="2_hwdeg"]
+[ext_resource type="Texture2D" uid="uid://cumshla8y56o1" path="res://item_sprites/Sprites new/poset.png" id="2_hwdeg"]
 
 [resource]
 script = ExtResource("1_1qwk2")
 item_name = "Poşet"
 sprite = ExtResource("2_hwdeg")
 description = "Suyun akıntısıyla bir denizanası gibi süzülen sıradan bir market poşeti. Deniz canlılarının kabusu olsa da laboratuvar için bedava polimer kaynağı."
-value = 3
+spawn_weight = 8.0
+value = 5
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b80g8uirru1os"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_7pmcg"]
-[ext_resource type="Texture2D" uid="uid://crbvx28inxged" path="res://items_diver/Sprites new/kamera.png" id="2_ov4lh"]
+[ext_resource type="Texture2D" uid="uid://crbvx28inxged" path="res://item_sprites/Sprites new/kamera.png" id="2_ov4lh"]
 
 [resource]
 script = ExtResource("1_7pmcg")
 item_name = "Kamera"
 sprite = ExtResource("2_ov4lh")
 description = "Antika değerinde mekanik bir \"Fujisan\" vizörlü kamera. Su altındaki basınç sağlam kasasına zarar verememiş; içindeki film makarasında kim bilir hangi kayıp anılar saklı."
-rarity = 3
+rarity = 4.0
+spawn_weight = 2.0
 value = 450
 category = "Valuable"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

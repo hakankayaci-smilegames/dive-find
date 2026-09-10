@@ -1,0 +1,372 @@
+[gd_scene format=3 uid="uid://ceeld623du87d"]
+
+[ext_resource type="Script" path="res://Scripts/city_map.gd" id="1_map_script"]
+[ext_resource type="Texture2D" uid="uid://cd15rkbv4202l" path="res://Sprites/Map.png" id="2_map_tex"]
+[ext_resource type="PackedScene" uid="uid://map_pin_component001" path="res://Scenes/map_pin.tscn" id="3_pin_scene"]
+[ext_resource type="PackedScene" uid="uid://c0pcushop001" path="res://Scenes/copcu.tscn" id="4_copcu"]
+[ext_resource type="PackedScene" uid="uid://pazar_scene001" path="res://Scenes/pazar.tscn" id="5_pazar"]
+[ext_resource type="PackedScene" uid="uid://bdqp5h4m3ejvw" path="res://Scenes/equstore.tscn" id="6_equstore"]
+[ext_resource type="PackedScene" uid="uid://ct77y8qdyllvr" path="res://Scenes/antikaci.tscn" id="7_antikaci"]
+[ext_resource type="PackedScene" uid="uid://laboratory_scene001" path="res://Scenes/laboratory.tscn" id="8_lab"]
+[ext_resource type="PackedScene" uid="uid://drtt8k8d2axic" path="res://Scenes/kara_borsa.tscn" id="9_kara_borsa"]
+[ext_resource type="PackedScene" uid="uid://chargestation_scene001" path="res://Scenes/charge_station.tscn" id="10_charge"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.06, 0.045, 0.03, 0.94)
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.8)
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_badge"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.09, 0.06, 0.9)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.75, 0.45, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+content_margin_left = 14.0
+content_margin_top = 4.0
+content_margin_right = 14.0
+content_margin_bottom = 4.0
+bg_color = Color(0.18, 0.13, 0.08, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.75, 0.45, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.07, 0.04, 0.96)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.75, 0.25, 0.95)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.8)
+shadow_size = 12
+
+[node name="CityMap" type="CanvasLayer"]
+layer = 80
+script = ExtResource("1_map_script")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.03, 0.04, 0.06, 1)
+
+[node name="MapContainer" type="AspectRatioContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+ratio = 1.95379
+stretch_mode = 0
+
+[node name="MapContent" type="Control" parent="MapContainer"]
+custom_minimum_size = Vector2(1184, 606)
+layout_mode = 2
+
+[node name="MapTexture" type="TextureRect" parent="MapContainer/MapContent"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_map_tex")
+expand_mode = 1
+
+[node name="PinsHolder" type="Control" parent="MapContainer/MapContent"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Pin_Dock" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 819.0
+offset_top = 440.0
+offset_right = 867.0
+offset_bottom = 494.0
+pin_id = "dock"
+pin_title_tr = "Liman İskelesi & Dalış"
+pin_title_en = "Harbor Pier & Dive"
+pin_desc_tr = "Suya dalış yap veya rıhtım iskelesinden açıl."
+pin_desc_en = "Dive into the ocean from the wooden pier."
+pin_badge_color = Color(0.2, 0.75, 1, 1)
+pin_icon_emoji = "🤿"
+target_action = "shack_dive"
+
+[node name="Pin_Scrapper" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 740.0
+offset_top = 380.0
+offset_right = 788.0
+offset_bottom = 434.0
+pin_id = "scrapper"
+pin_title_tr = "Çöpcü"
+pin_title_en = "Scrapper"
+pin_desc_tr = "Sadece çöp ve hurda eşyaları satın alır."
+pin_desc_en = "Only buys trash and scrap items."
+pin_badge_color = Color(0.7, 0.65, 0.6, 1)
+pin_icon_emoji = "🗑️"
+target_scene = ExtResource("4_copcu")
+
+[node name="Pin_Market" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 357.0
+offset_top = 268.0
+offset_right = 405.0
+offset_bottom = 322.0
+pin_id = "market"
+pin_title_tr = "Pazar Yeri"
+pin_title_en = "Marketplace"
+pin_desc_tr = "Genel ticaret ve alım satım tezgahları."
+pin_desc_en = "General trade and barter stalls."
+pin_badge_color = Color(1, 0.85, 0.25, 1)
+pin_icon_emoji = "💰"
+target_scene = ExtResource("5_pazar")
+
+[node name="Pin_EquStore" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 285.0
+offset_top = 250.0
+offset_right = 333.0
+offset_bottom = 304.0
+pin_id = "equstore"
+pin_title_tr = "Ekipman Mağazası"
+pin_title_en = "Equipment Shop"
+pin_desc_tr = "Tüp, palet, maske ve çantanı yükselt."
+pin_desc_en = "Upgrade tank, fins, goggles and bag."
+pin_badge_color = Color(0.3, 0.85, 0.95, 1)
+pin_icon_emoji = "⚙️"
+target_scene = ExtResource("6_equstore")
+
+[node name="Pin_Antique" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 370.0
+offset_top = 140.0
+offset_right = 418.0
+offset_bottom = 194.0
+pin_id = "antique"
+pin_title_tr = "Antikacı"
+pin_title_en = "Antique Dealer"
+pin_desc_tr = "Tarihi ve değerli eşyaları iyi fiyata alır."
+pin_desc_en = "Buys relics and valuables for good coin."
+pin_badge_color = Color(0.85, 0.55, 1, 1)
+pin_icon_emoji = "🏺"
+target_scene = ExtResource("7_antikaci")
+
+[node name="Pin_Lab" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 590.0
+offset_top = 145.0
+offset_right = 638.0
+offset_bottom = 199.0
+pin_id = "lab"
+pin_title_tr = "Laboratuvar"
+pin_title_en = "Laboratory"
+pin_desc_tr = "Plastik ve metal atıkları geri dönüştür."
+pin_desc_en = "Recycle plastic and metal into ingots."
+pin_badge_color = Color(0.25, 0.95, 0.55, 1)
+pin_icon_emoji = "🧪"
+target_scene = ExtResource("8_lab")
+
+[node name="Pin_BlackMarket" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 610.0
+offset_top = 260.0
+offset_right = 658.0
+offset_bottom = 314.0
+pin_id = "blackmarket"
+pin_title_tr = "Kara Borsa"
+pin_title_en = "Black Market"
+pin_desc_tr = "Özel ve gizli ganimetleri yüksek fiyata alır."
+pin_desc_en = "Buys contraband & special loot for high pay."
+pin_badge_color = Color(1, 0.25, 0.4, 1)
+pin_icon_emoji = "🕶️"
+target_scene = ExtResource("9_kara_borsa")
+
+[node name="Pin_Charge" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+layout_mode = 0
+offset_left = 875.0
+offset_top = 395.0
+offset_right = 923.0
+offset_bottom = 449.0
+pin_id = "charge"
+pin_title_tr = "Şarj İstasyonu"
+pin_title_en = "Charge Station"
+pin_desc_tr = "Dalış fenerinin bataryasını doldur."
+pin_desc_en = "Recharge your diving flashlight battery."
+pin_badge_color = Color(1, 0.6, 0.1, 1)
+pin_icon_emoji = "⚡"
+target_action = "charge_station"
+
+[node name="TopBar" type="PanelContainer" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 48.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
+
+[node name="HBox" type="HBoxContainer" parent="TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LocationBadge" type="Label" parent="TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.75, 0.25, 1)
+theme_override_font_sizes/font_size = 14
+text = "📍 LİMAN KASABASI"
+vertical_alignment = 1
+
+[node name="VSeparator1" type="VSeparator" parent="TopBar/HBox"]
+layout_mode = 2
+
+[node name="ZurnaBadge" type="PanelContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="ZurnaLabel" type="Label" parent="TopBar/HBox/ZurnaBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 13
+text = "💰 0 Zurna"
+
+[node name="DayBadge" type="PanelContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="DayLabel" type="Label" parent="TopBar/HBox/DayBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.85, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "📅 GÜN 1"
+
+[node name="TimeBadge" type="PanelContainer" parent="TopBar/HBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
+
+[node name="TimeLabel" type="Label" parent="TopBar/HBox/TimeBadge"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 13
+text = "⏰ 08:00"
+
+[node name="Spacer" type="Control" parent="TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AdvanceDayButton" type="Button" parent="TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.75, 0.25, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "⏭️ DİNLEN / İLERLET"
+
+[node name="InventoryButton" type="Button" parent="TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "🎒 ÇANTA [I]"
+
+[node name="CollectionButton" type="Button" parent="TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "📖 KOLEKSİYON [C]"
+
+[node name="SettingsButton" type="Button" parent="TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "⚙️"
+
+[node name="CloseButton" type="Button" parent="TopBar/HBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_font_sizes/font_size = 12
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "🚪 HARİTADAN ÇIK"
+
+[node name="SubMenuContainer" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ToastCenter" type="CenterContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="ToastBanner" type="PanelContainer" parent="ToastCenter"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
+
+[node name="ToastLabel" type="Label" parent="ToastCenter/ToastBanner"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.9, 0.6, 1)
+theme_override_font_sizes/font_size = 13
+text = "Bildirim mesajı..."

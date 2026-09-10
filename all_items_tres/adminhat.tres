@@ -1,14 +1,14 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://b3v0e5ntf5f7y"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_qh1ju"]
-[ext_resource type="Texture2D" uid="uid://biskr5xwh3c6a" path="res://items_diver/Sprites new/yahudi_sapkasi.png" id="2_ekkav"]
+[ext_resource type="Texture2D" uid="uid://biskr5xwh3c6a" path="res://item_sprites/Sprites new/yahudi_sapkasi.png" id="2_ekkav"]
 
 [resource]
 script = ExtResource("1_qh1ju")
 item_name = "Şapka (?)"
 sprite = ExtResource("2_ekkav")
 description = "Sunucu yöneticilerinden birinin yetki karmaşasında denize düşürdüğü gizemli bir şapka. Taktığınızda içinizde sebepsizce birilerini banlama arzusu uyandırıyor."
-rarity = 3
+rarity = 3.0
 value = 280
 category = "Rare Found"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

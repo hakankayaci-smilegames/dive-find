@@ -384,11 +384,11 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - `item_seller.gd` motorunu `shop_filter = "CraftedOnly"` ile kullanan ihracat dükkanı.
   - Üretilen eşyaların toplu satışı, kilit koruması ve kayan altın kazanç efektleri hazır olarak çalışır.
 - **Aktif Tarifler ve Ürünler (Dengelenmiş Ekonomi):**
-  - `İşlenmiş Plastik Bobini` (20 Z) ➔ 3x Pet şişe + 2x Poşet + 2 Zurna (Maliyet: 11 Z, Kar: +9 Z) ([`all_items_tres/geri_donusum_plastigi.tres`](file:///home/hakan/dive&find/all_items_tres/geri_donusum_plastigi.tres))
-  - `Ananas Suyu` (75 Z) ➔ 2x Ananas? + 5 Zurna (Maliyet: 45 Z, Kar: +30 Z) ([`all_items_tres/ananas_suyu.tres`](file:///home/hakan/dive&find/all_items_tres/ananas_suyu.tres))
-  - `Preslenmiş Alüminyum Bloğu` (65 Z) ➔ 2x Bükük kola + 2x Bükük pepsi + 1x Monster Kutusu + 1x Bükük Çatal + 10 Zurna (Maliyet: 38 Z, Kar: +27 Z) ([`all_items_tres/aluminyum_blogu.tres`](file:///home/hakan/dive&find/all_items_tres/aluminyum_blogu.tres))
-  - `Tropikal Radyoaktif Kokteyl` (260 Z) ➔ 1x Gizemli Şişe + 2x Ananas? + 1x Monster Kutusu + 15 Zurna (Maliyet: 163 Z, Kar: +97 Z) ([`all_items_tres/radyoaktif_kokteyl.tres`](file:///home/hakan/dive&find/all_items_tres/radyoaktif_kokteyl.tres))
-  - `Restore Edilmiş Tablo` (3950 Z) ➔ 1x Kırık Altın Çerçeve + 1x Zoktayın Saç Renginde Boya + 1x Isırılmış Kitap + 150 Zurna (Maliyet: 2841 Z, Kar: +1109 Z) ([`all_items_tres/restore_tablo.tres`](file:///home/hakan/dive&find/all_items_tres/restore_tablo.tres))
+  - `İşlenmiş Plastik Bobini` (38 Z) ➔ 3x Pet şişe + 2x Poşet + 3 Zurna (Maliyet: 22 Z, Kar: +16 Z) ([`all_items_tres/geri_donusum_plastigi.tres`](file:///home/hakan/dive&find/all_items_tres/geri_donusum_plastigi.tres))
+  - `Ananas Suyu` (85 Z) ➔ 2x Ananas? + 5 Zurna (Maliyet: 45 Z, Kar: +40 Z) ([`all_items_tres/ananas_suyu.tres`](file:///home/hakan/dive&find/all_items_tres/ananas_suyu.tres))
+  - `Preslenmiş Alüminyum Bloğu` (95 Z) ➔ 2x Bükük kola + 2x Bükük pepsi + 1x Monster Kutusu + 1x Bükük Çatal + 12 Zurna (Maliyet: 52 Z, Kar: +43 Z) ([`all_items_tres/aluminyum_blogu.tres`](file:///home/hakan/dive&find/all_items_tres/aluminyum_blogu.tres))
+  - `Tropikal Radyoaktif Kokteyl` (295 Z) ➔ 1x Gizemli Şişe + 2x Ananas? + 1x Monster Kutusu + 15 Zurna (Maliyet: 165 Z, Kar: +130 Z) ([`all_items_tres/radyoaktif_kokteyl.tres`](file:///home/hakan/dive&find/all_items_tres/radyoaktif_kokteyl.tres))
+  - `Restore Edilmiş Tablo` (3950 Z) ➔ 1x Kırık Altın Çerçeve + 1x Zoktayın Saç Renginde Boya + 1x Isırılmış Kitap + 150 Zurna (Maliyet: 2844 Z, Kar: +1106 Z) ([`all_items_tres/restore_tablo.tres`](file:///home/hakan/dive&find/all_items_tres/restore_tablo.tres))
 - **Koleksiyon Defteri Entegrasyonu:**
   - `collection.gd` ve `collection_slot.gd` içine `Crafted` (amber/turuncu zanaat rengi) eklendi.
   - Koleksiyon arayüzüne `🔨 Üretilen` sekmesi ([`Scenes/collection.tscn`](file:///home/hakan/dive&find/Scenes/collection.tscn)) entegre edildi.
@@ -733,7 +733,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - Proje kökünde çalışan interaktif Python CLI derleme aracı (`python build.py`).
   - Terminalden çalıştırıldığında sırayla kullanıcıdan girdi alır:
     1. **Model Serisi:** (Varsayılan: `PreAlpha`)
-    2. **Sürüm No:** (Varsayılan: `1.6.2`)
+    2. **Sürüm No:** (Varsayılan: `1.6.3`)
     3. **Android `version/code`:** Mevcut kodu (`export_presets.cfg`) okuyup otomatik `+1` önerir (örn. `6 → 7`). Enter ile doğrudan onaylanır veya özel değer girilebilir.
     4. **Android Paket Adı:** Mevcut paket adını (`package/unique_name`) gösterip değiştirme imkanı tanır.
     5. **Hedef Platform:** `[1] Windows Desktop`, `[2] Linux`, `[3] Android`, `[4] Tümü` (Varsayılan).
@@ -789,7 +789,7 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - **Duraklatma Menüsü ([`Scripts/pause_menu.gd`](file:///home/hakan/dive&find/Scripts/pause_menu.gd)):** Duraklatma başlığı (`⏸️ PAUSED`), butonlar (`▶ CONTINUE`, `⚙️ SETTINGS`, `🚪 RETURN TO MAIN MENU`) ve dalıştan çıkış modalı (`⚠️ QUIT DIVE?`, `RETURN TO DIVE`, `YES, QUIT 🚪`) EN/TR çift dilli hale getirildi.
     - **Ayarlar Menüsü ([`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)):** Müzik/SFX sesleri, tam ekran, dokunmatik joystick boyutu, mobil fener nişanlama seçenekleri (`🕹️ Swim Direction (Joystick)`, `👆 Free Touch Aim`, `✨ Smart Hybrid`), koleksiyon sıfırlama onay modalı ve geliştirici kodu butonları/bildirimleri `popup_ui` grubu altında canlı güncellenir.
     - **Yükleme Ekranı ([`Scripts/loading_screen.gd`](file:///home/hakan/dive&find/Scripts/loading_screen.gd)):** Yenilenmiş `game_bg.png` arkaplanı, `header.png` transparan logosu, durum metinleri (`Scanning ancient relics...`, `Preparing...`, `▶ TOUCH SCREEN OR PRESS ANY KEY TO CONTINUE ◀`) ve döner ipuçları `Data/loading_tips.json` üzerinden Türkçe ve İngilizce sunulur.
-    - **Sürüm Notları & Yardım Kılavuzu ([`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):** 1.6.2 & 1.6.1 tam yama notları ve temel oyun kontrolleri rehberi (PC & Dokunmatik) zengin metin BBCode formatıyla CSV'ye aktarılıp kusursuz çevrildi.
+    - **Sürüm Notları & Yardım Kılavuzu ([`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):** 1.6.3 (%100 İngilizce desteği, eşya açıklamaları & hikaye düzeltmeleri, fiyatlandırma & nadirlik rework'ü, ana menü & yükleme ekranı UI yenilemesi, yeni oyun simgesi & splash screen), 1.6.2 & 1.6.1 yama notları ve temel oyun kontrolleri rehberi (PC & Dokunmatik) zengin metin BBCode formatıyla CSV'ye aktarılıp kusursuz çevrildi. Dinamik dil değişiminde canlı güncellenir.
 
 ---
 
@@ -822,5 +822,99 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - `res://Sprites/header.png` logosu ve `🇹🇷 Türkçe` ile `🇬🇧 English` seçim butonları yer alır.
     - Seçim yapıldığında dil motor seviyesinde uygulanır, `settings.cfg` içine `language` ve `last_version = game_version` işlenir; modal pürüzsüzce fade-out olarak ana menü giriş animasyonunu (`_play_entrance_animation`) başlatır.
     - Sonraki normal açılışlarda modal atlanır ve doğrudan ana menüye girilir.
+
+---
+
+## 35. Kapsamlı Ekonomi ve Eşya Fiyat Dengelemesi (Rebalancing)
+
+- **Giderilen Hatalar & Mantıksal Düzeltmeler:**
+  - `Anahtarlık` (`nahtarlık.tres`): 0 Zurna olan değeri **50 Z** seviyesine çekildi.
+  - `Şnolkel` (`snokel.tres`): 15 Zurnadan **45 Z** seviyesine çıkarıldı (çöp eşyalarla arasındaki hiyerarşi sağlandı).
+  - `Güneş Gözlüğü` (`sunglas.tres`): 115 Zurnadan **65 Z** seviyesine çekildi (Rare Found kademesine oturtuldu).
+  - `İnci Kolye` (`kolye.tres`): 100 Zurnadan **220 Z** seviyesine çıkarıldı (Gözlükten ucuz kalma çarpıklığı giderildi).
+  - `Araba Anahtarları Kademesi`: Toyota **40 Z**, BMW **85 Z**, Mercedes **180 Z** olarak kademelendirildi (Mercedes ile BMW arasındaki 5.5 katlık uçurum kapatıldı).
+- **Erken Oyun Çöp Tabanı & Bağlantılı Zanaat (Crafting) Dengelemesi:**
+  - Sığ sulardaki çöp fiyatları normalize edildi: Pet şişe 3 Z, Poşet 5 Z, Çatal/Kola/Pepsi 6 Z, Monster 10 Z, Isırılmış Kitap 12 Z.
+  - İlk dalışta 5 slotluk çanta dolusu çöp toplayan oyuncunun geliri ~12 Z'den ~26-30 Z'ye yükselerek fener şarjı ve başlangıç ekipman yükseltmeleri akıcı hale getirildi.
+  - Atölye zanaat ürünleri (`Data/recipes.json` ve `all_items_tres/*.tres`) artan hammadde maliyetlerine göre yeniden dengelendi:
+    - `İşlenmiş Plastik Bobini`: 38 Z (Maliyet: 22 Z, Kar: +16 Z)
+    - `Preslenmiş Alüminyum Bloğu`: 95 Z (Maliyet: 52 Z, Kar: +43 Z)
+    - `Ananas Suyu`: 85 Z (Maliyet: 45 Z, Kar: +40 Z)
+    - `Tropikal Radyoaktif Kokteyl`: 295 Z (Maliyet: 165 Z, Kar: +130 Z)
+- **Special (Abis Eşyaları) Jackpot Törpüleme:**
+  - Tek seferde oyun içi ekonomiyi çökerten 9.500 Z'lik tavan ödüller dengelendi:
+    - Kanlı Bıçak? 3.200 Z, Altın Kuş 4.000 Z, Taş Heykel 4.000 Z, Charlie Kirk Planı 5.500 Z, MJ Plak 6.000 Z, Bronz Anahtarlık 7.000 Z, Kaslı Adam 7.500 Z.
+
+---
+
+## 36. Ayrık Kalite Kademesi (Rarity) ve Spawn Ağırlığı (Spawn Weight) Mimarisi
+
+- **Sistemlerin Ayrıştırılması (Decoupling):**
+  - Önceki yapıda `ItemSpawner` nesnesi `rarity` değerini ağırlıklı spawn ihtimali (yüksek = sık çıkar) olarak kullanırken, `PopupUI` aynı değeri RPG kalite kademesi (0: Yaygın, 6: İlahi) olarak yorumluyordu. Bu çarpıklık giderildi:
+    - **`rarity: float` (0.0 - 6.0):** Yalnızca UI görsel göstergesi, renk aurası ve envanter değer sıralama önceliğini (`PopupUI`, `GlobalInventory`) belirler.
+      - 0: Yaygın (Common) | 1: Sıradışı (Uncommon) | 2: Nadir (Rare) | 3: Epik (Epic) | 4: Efsanevi (Legendary) | 5: Mistik (Mythic) | 6: İlahi (Divine)
+    - **`spawn_weight: float`:** Sadece harita chunk'larında (`ItemSpawner`) katman/kategori havuzu içerisinden o eşyanın çıkma bağıl ağırlığını belirler. Yüksek ağırlık = daha sık spawn. Zanaat (Crafted) eşyaları için `0.0`'dır (dünyada doğal olarak spawn olmazlar).
+- **Kod Altyapısı Düzeltmeleri:**
+  - [`Scripts/ItemData.gd`](file:///home/hakan/dive&find/Scripts/ItemData.gd): `@export var spawn_weight: float = 1.0` alanı eklendi.
+  - [`Scripts/item_spawner.gd`](file:///home/hakan/dive&find/Scripts/item_spawner.gd): `_category_cache`, `_layer_pool_cache` ve `_pick_weighted_entry()` metotları `spawn_weight` üzerinden ağırlıklı seçim yapacak şekilde güncellendi (geriye dönük uyumluluk için `rarity` fallback korundu).
+- **36 Eşyanın Güncel Dengeleme Tablosu:**
+  - **Trash (Yaygın / Rarity 0):** Pet şişe (W: 10.0), Poşet (W: 8.0), Bükük Kola (W: 6.0), Bükük Pepsi (W: 6.0), Bükük Çatal (W: 5.0), Monster (W: 3.5), Isırılmış Kitap (W: 2.0).
+  - **Resource:** Ananas (Rarity 1 - Sıradışı, W: 5.0).
+  - **Rare Found:** Zoktay Saç Boyası (R: 1, W: 6.0), Toyota Anahtarı (R: 1, W: 5.0), Şnolkel (R: 1, W: 4.5), Güneş Gözlüğü (R: 2, W: 3.5), Anahtarlık (R: 2, W: 3.0), BMW Anahtarı (R: 2, W: 2.5), Ekonomi Kitabı (R: 2, W: 2.5), Anahtar (R: 3, W: 2.0), Şapka (R: 3, W: 1.0).
+  - **Valuable:** Gizemli Şişe (R: 2, W: 6.0), Mercedes Anahtarı (R: 3, W: 4.0), İnci Kolye (R: 3, W: 3.5), Altın Bilezik (R: 4, W: 2.5), Kamera (R: 4, W: 2.0), AK-47 (R: 5, W: 1.0), Kırık Çerçeve (R: 5, W: 0.6).
+  - **Special:** Kanlı Bıçak? (R: 5, W: 4.0), Altın Kuş Heykeli (R: 5, W: 3.5), Taş Heykel (R: 5, W: 3.5), Charlie Kirk Planı (R: 6, W: 2.0), Smooth Criminal Plak (R: 6, W: 1.8), Bronz Anahtarlık (R: 6, W: 1.2), Kaslı Adam (R: 6, W: 0.8).
+  - **Crafted (W: 0.0):** İşlenmiş Plastik Bobini (R: 1), Ananas Suyu (R: 1), Alüminyum Bloğu (R: 2), Radyoaktif Kokteyl (R: 3), Restore Tablo (R: 5).
+
+---
+
+## 37. Açık Şehir Haritası Temeli & Modüler Pin (Waypoint) Mimarisi
+
+- **Mimarinin Amacı & Faz 1 Temel Atma:**
+  - Eski monolitik ve metin tabanlı `office_menu.gd` yapısını parçalayarak görsel, yaşayan bir liman kasabası döngüsüne geçişin ilk adımı atıldı.
+  - Var olan oyun akışı ve eski ofis sistemi bozulmadan (`office_menu.tscn` %100 çalışır durumda tutularak), yeni şehir haritası izole bir geliştirme ve test modülü olarak inşa edildi.
+- **Modüler Pin / Waypoint Bileşeni ([`Scenes/map_pin.tscn`](file:///home/hakan/dive&find/Scenes/map_pin.tscn) & [`Scripts/map_pin.gd`](file:///home/hakan/dive&find/Scripts/map_pin.gd)):**
+  - İleride haritaya yeni binalar ve NPC'ler eklenmesini kolaylaştıran, sürükle-bırak şablonlu bileşen:
+    - `@export var pin_id: String` (örn. `"scrapper"`, `"market"`, `"lab"`)
+    - `@export var pin_title_tr / pin_title_en: String` (Çift dilli başlık)
+    - `@export var pin_desc_tr / pin_desc_en: String` (Çift dilli açıklama)
+    - `@export var pin_badge_color: Color` (Tematik neon halka rengi)
+    - `@export var pin_icon_emoji: String` & `@export var pin_icon_texture: Texture2D`
+    - `@export var target_scene: PackedScene` (Doğrudan açılacak sahne)
+    - `@export var target_action: String` (Özel aksiyon, örn. `"shack_dive"`)
+  - **Dinamik Etkileşim (Micro-Juice):**
+    - Idle durumunda yumuşak nefes alma (idle pulse).
+    - Fare üzerine gelince yukarı sıçrama (`position.y - 6px`), `scale: 1.15`, tık sesi ve pürüzsüz açılan bilgi kartı (`TooltipCard`).
+    - Tıklamada basılma hissi (punch scale 0.92x -> 1.15x) ve `pin_clicked` sinyali.
+- **Şehir Haritası Sahnesi ([`Scenes/city_map.tscn`](file:///home/hakan/dive&find/Scenes/city_map.tscn) & [`Scripts/city_map.gd`](file:///home/hakan/dive&find/Scripts/city_map.gd)):**
+  - **Oran Korumalı Çözünürlük Bağımsızlığı (Aspect Ratio Container):** Arka plandaki [`Sprites/Map.png`](file:///home/hakan/dive&find/Sprites/Map.png) (1184x606) görseli `ratio = 1.95379` olan `AspectRatioContainer` içerisine yerleştirildi. Böylece 16:9, tablet veya geniş ekranlarda harita büyüyüp küçülse dahi binaların üzerindeki pinler asla kaymaz.
+  - **Üst HUD Bar:**
+    - `📍 LİMAN KASABASI / PORT TOWN`
+    - `💰 %d Zurna` (Canlı `GlobalEconomy` animasyonlu tween bakiye)
+    - `📅 GÜN %d` & `⏰ %s` (`GlobalTime` tam senkronizasyon)
+    - `⏭️ DİNLEN / İLERLET` (Erken uyuma modalı ve gün özeti entegrasyonu)
+    - `🎒 ÇANTA [I]` & `📖 KOLEKSİYON [C]` (Kısayol ve buton açılışları)
+    - `⚙️ Ayarlar` & `🚪 HARİTADAN ÇIK`
+  - **Mekan Pinleri Dağılımı:**
+    - 🤿 **Liman İskelesi & Dalış** (x: 819, y: 440) -> Doğrudan denize dalış veya kulübe.
+    - 🗑️ **Çöpcü** (x: 740, y: 380) -> `copcu.tscn`.
+    - 💰 **Pazar Yeri** (x: 357, y: 268) -> `pazar.tscn`.
+    - ⚙️ **Ekipman Mağazası** (x: 285, y: 250) -> `equstore.tscn`.
+    - 🏺 **Antikacı** (x: 370, y: 140) -> `antikaci.tscn`.
+    - 🧪 **Laboratuvar** (x: 590, y: 145) -> `laboratory.tscn`.
+    - 🕶️ **Kara Borsa** (x: 610, y: 260) -> `kara_borsa.tscn`.
+    - ⚡ **Şarj İstasyonu** (x: 875, y: 395) -> `charge_station.tscn`.
+- **Deniz ile Senkron Dinamik Işıklandırma (Dynamic Hourly / Half-Hourly Lighting):**
+  - Okyanus yüzeyindeki atmosferle senkronize olarak, 15 ayrı anahtar renkten (`TIME_PALETTE`) oluşan akıcı bir zaman eğrisi kuruldu:
+    - `10:00`: Berrak beyaz gündüz güneşi (`1.0, 1.0, 1.0`).
+    - `11:30 - 13:00`: Hafif ısınan öğle ışığı.
+    - `14:30 - 16:00`: Altın saat / zengin kehribar gün batımı başlangıcı.
+    - `17:00 - 18:00`: Sıcak kızıl gün batımı ve mor-lacivert alacakaranlık.
+    - `19:00 - 21:00`: Koyu akşamdan ay ışığı aydınlatmalı gece mavisine geçiş.
+  - Saat değişimleri ve gün ilerletmeleri 0.8 saniyelik yumuşak `Tween` ile canlı olarak akar.
+- **Geliştirici Konsolu Test Geçişi (`city` / `sehir` / `map`):**
+  - Geliştirici konsoluna eklenen komutlarla (`city`, `sehir` veya `map`) oyunun herhangi bir anında yeni şehir haritası canlı olarak açılıp test edilebilir.
+
+
+
 
 

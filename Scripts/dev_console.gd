@@ -46,6 +46,9 @@ func _ready() -> void:
 	register_command("surface", _cmd_surface, "Oyuncuyu anında su yüzeyine ışınlar.")
 	register_command("tp", _cmd_tp, "Oyuncuyu istenen derinliğe ışınlar. (Kullanım: tp <metre>)")
 	register_command("office", _cmd_office, "Nerede olursan ol Ofis & Dalış Karargahını açar.")
+	register_command("city", _cmd_city_map, "Şehir Haritasını açar (City Map).")
+	register_command("sehir", _cmd_city_map, "city komutunun kısayolu.")
+	register_command("map", _cmd_city_map, "city komutunun kısayolu.")
 	register_command("die", _cmd_die, "Oyuncunun canını sıfırlar ve Game Over ekranını tetikler.")
 	register_command("time", _cmd_time, "Saati ayarlar. (Kullanım: time <saat> [dakika] - Örn: time 18 45)")
 	register_command("add_time", _cmd_add_time, "Saati ileri sarar. (Kullanım: add_time <dakika> - Örn: add_time 30)")
@@ -416,6 +419,16 @@ func _cmd_office() -> void:
 	set_console_visible(false)
 	get_tree().current_scene.add_child(office_scene.instantiate())
 	_log_success("Ofis menüsü açıldı!")
+
+
+func _cmd_city_map() -> void:
+	var city_scene = load("res://Scenes/city_map.tscn")
+	if not city_scene:
+		_log_error("city_map.tscn sahnesi bulunamadı!")
+		return
+	set_console_visible(false)
+	get_tree().current_scene.add_child(city_scene.instantiate())
+	_log_success("Şehir Haritası açıldı!")
 
 
 func _cmd_die() -> void:

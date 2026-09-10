@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://4gn4qmhe7l70"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_18bot"]
-[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://items_diver/Sprites new/araba_anahtari.png" id="2_yuk5i"]
+[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://item_sprites/Sprites new/araba_anahtari.png" id="2_yuk5i"]
 
 [resource]
 script = ExtResource("1_18bot")
 item_name = "BMW Anahtarı"
 sprite = ExtResource("2_yuk5i")
 description = "Üzerinde gururlu bir \"M Competition\" amblemi taşıyan lüks araç anahtarı. Sinyal kolunu hiç kullanmamış bir sahibin dalgalara kurban verdiği belli."
-rarity = 3
-value = 45
+rarity = 2.0
+spawn_weight = 2.5
+value = 85
 category = "Rare Found"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

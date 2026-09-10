@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cucpdqp7vwfsq"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_0p2bu"]
-[ext_resource type="Texture2D" uid="uid://2vjg8x7j0t0h" path="res://items_diver/Sprites new/altin_sandvik.png" id="2_uhavk"]
+[ext_resource type="Texture2D" uid="uid://2vjg8x7j0t0h" path="res://item_sprites/Sprites new/altin_sandvik.png" id="2_uhavk"]
 
 [resource]
 script = ExtResource("1_0p2bu")
 item_name = "Altın Kuş Heykeli"
 sprite = ExtResource("2_uhavk")
 description = "Kusursuz işçiliği ve altın tüyleriyle dikkat çeken görkemli bir kuş heykeli. Duruşundaki o asil hava ve fiyakalı silüet, karaborsada servet değerinde."
-rarity = 5
-value = 5000
+rarity = 5.0
+spawn_weight = 3.5
+value = 4000
 category = "Special"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

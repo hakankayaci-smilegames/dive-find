@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://capevhjsl0wss"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_svbmv"]
-[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://items_diver/Sprites new/araba_anahtari.png" id="2_nnhig"]
+[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://item_sprites/Sprites new/araba_anahtari.png" id="2_nnhig"]
 
 [resource]
 script = ExtResource("1_svbmv")
 item_name = "Toyata Anahtarı"
 sprite = ExtResource("2_nnhig")
 description = "Efsanevi bir Toyota Corolla anahtarı. Arabanın kendisi muhtemelen hâlâ suyun altında tek marşta çalışır durumdadır ama bu anahtar tek başına ancak antikacıda değer bulur."
-rarity = 2
-value = 25
+rarity = 1.0
+spawn_weight = 5.0
+value = 40
 category = "Rare Found"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

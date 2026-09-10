@@ -17,7 +17,7 @@
 	"name": "İşlenmiş Plastik Bobini",
 	"description": "Pet şişeler ve poşetlerin laboratuvarda eritilip sıkıştırılmasıyla elde edilen geri dönüştürülmüş hammadde.",
 	"output_tres_path": "res://all_items_tres/geri_donusum_plastigi.tres",
-	"required_money": 2,
+	"required_money": 3,
 	"ingredients": [
 	  {
 		"item_name": "Pet şişe",
@@ -34,7 +34,7 @@
 	"name": "Preslenmiş Alüminyum Bloğu",
 	"description": "Ezilmiş kutular ve bükük çatalların yüksek basınçla eritilip kalıplanmasıyla elde edilen metal blok.",
 	"output_tres_path": "res://all_items_tres/aluminyum_blogu.tres",
-	"required_money": 10,
+	"required_money": 12,
 	"ingredients": [
 	  {
 		"item_name": "Bükük kola",

@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://c61onqjyov0k1"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_cvf07"]
-[ext_resource type="Texture2D" uid="uid://cerk5pkb6i120" path="res://items_diver/Sprites new/ananas.png" id="2_lh03x"]
+[ext_resource type="Texture2D" uid="uid://cerk5pkb6i120" path="res://item_sprites/Sprites new/ananas.png" id="2_lh03x"]
 
 [resource]
 script = ExtResource("1_cvf07")
 item_name = "Ananas?"
 sprite = ExtResource("2_lh03x")
 description = "Denizin dibinde tek parça kalmayı başarmış taze bir ananas. SüngerBob\"un emlak krizinde terk ettiği bir gayrimenkul mü, kestirmek güç."
-rarity = 1
+rarity = 1.0
+spawn_weight = 5.0
 value = 20
 category = "Resource"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

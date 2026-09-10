@@ -31,6 +31,7 @@ const SFX_BUS := "SFX"
 @onready var subtitle_label: Label = get_node_or_null("Panel/SubtitleLabel")
 @onready var menu_buttons: VBoxContainer = $Panel/VBoxContainer
 @onready var changelog_panel: Panel = $Panel/ChangelogPanel
+@onready var changelog_text: RichTextLabel = get_node_or_null("Panel/ChangelogPanel/ChangelogText")
 @onready var exit_button: Button = $Panel/Button
 @onready var sunan_label: Label = get_node_or_null("Panel/Label2")
 @onready var version_label: Label = $Panel/VersionLabel
@@ -131,6 +132,7 @@ func _apply_game_version() -> void:
 	if is_instance_valid(version_label):
 		version_label.text = game_version
 	_update_info_text()
+	_update_changelog_text()
 
 
 func _update_info_text() -> void:
@@ -205,6 +207,104 @@ Plunge into the mysterious depths of the ocean! Gather ancient relics, valuable 
 
 [center][font_size=13][color=#5e8ca8]Developers: Queen Of Femboyss & Hakan Bey[/color][/font_size]
 [font_size=15][color=#00e5ff][i]⚓ Smile Games Presents """
+
+
+func _update_changelog_text() -> void:
+	if not is_instance_valid(changelog_text):
+		return
+	var is_en := TranslationServer.get_locale().begins_with("en")
+	if is_en:
+		changelog_text.text = _get_changelog_bbcode_en()
+	else:
+		changelog_text.text = _get_changelog_bbcode_tr()
+
+
+func _get_changelog_bbcode_tr() -> String:
+	return """[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
+• [color=#00e5ff]Eşya Açıklamaları & Hikaye Düzeltmeleri:[/color] Tüm deniz altı eşyalarının açıklamaları, yazım hataları ve hikaye metinleri baştan sona gözden geçirilip düzeltildi; her eşyaya derinlik katan tematik açıklamalar işlendi.
+• [color=#00e5ff]Fiyatlandırma & Nadirlik (Rarity) Rework'ü:[/color] Tüm eşyaların nadirlik sınıfları ve satış fiyatları derinlik seviyelerine, craft zincirine ve oyun ekonomisine uygun şekilde yeniden yapılandırılarak dengeli ve ödüllendirici hale getirildi.
+• [color=#00e5ff]Ana Menü & Yükleme Ekranı UI Rework'ü:[/color] Ana menü ve yükleme (loading) ekranı modern ve estetik bir arayüz tasarımına kavuşturuldu; akıcı geçiş animasyonları, modernize tipografi ve yeni görsel düzen entegre edildi.
+• [color=#00e5ff]Yeni Oyun Simgesi & Splash Screen:[/color] Yepyeni yüksek çözünürlüklü oyun simgesi ve açılışta karşılayan özel animasyonlu Splash Screen sahnesi eklendi.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Ofis Şarj İstasyonu & Ücretli Batarya:[/color] Yüzeyde ve ofise girişteki ücretsiz otomatik şarj kaldırıldı. Ofis alt barına Şarj İstasyonu (HSlider ve MAX dolum) ile canlı batarya rozeti eklendi.
+• [color=#00e5ff]Dinamik Batarya Fiyatlandırması:[/color] Fener şarj maliyeti sabit fiyattan saniye/kapasite bazlı adil modele geçirildi (0.30 Zurna/sn; Lv.1 ~23Z, Lv.15 ~60Z).
+• [color=#00e5ff]Derinlik & Gece Kararması Buff'ı:[/color] Okyanus kararma eğrisi güçlendirildi (260m referans derinlik, daha dik abis geçişi, zifiri karanlık dip suları).
+• [color=#00e5ff]Yeni Oyun Güvenlik Modalı:[/color] Kayıtlı oyun varken yanlışlıkla "Yeni Oyun" denildiğinde ilerlemenin ve ekipmanların silinmesini önleyen onay penceresi eklendi.
+• [color=#00e5ff]Mobil Dalış Duraklatma (Pause) Tuşu:[/color] Mobil dokunmatik arayüzün sağ üst köşesine kompakt duraklatma butonu ([ ⏸️ ]) eklendi.
+• [color=#00e5ff]Laboratuvar Craft Kar Dengelemesi:[/color] Üretilen eşyaların satış gelirleri ve kar marjları piyasa dengesini koruyacak şekilde yeniden dengelendi.
+• [color=#00e5ff]Geliştirici Konsolu Karartma Komutu:[/color] Konsola dinamik test için `darkness` (ve `karartma`) komutu ile hazır önayarlar (abis, day, reset) eklendi.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Toast Bildirim Ekran Esneme (Stretch) Fix'i:[/color] Uzun bildirim mesajlarında ofis menüsü ve ekran kenarlarının dışa taşması ToastLabel bağımsız yüzen panele taşınarak tamamen çözüldü.
+• [color=#81c784]Anlık Ekipman Rozet Senkronizasyonu:[/color] Mağazadan fener veya ekipman satın alındığı anda alt bardaki durum rozetinin mağaza kapanmadan anında güncellenmesi sağlandı.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.1 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Direkt Alma Özelliği (PC Entegrasyonu):[/color] Eşyaları menü açmadan tek tuşla anında çantaya alma kabiliyeti PC'ye de getirildi (Sağ Klik).
+• [color=#00e5ff]Mobil Fener Nişanlama & Hassasiyet Ayarları:[/color] Ayarlar menüsüne 3 modlu mobil fener hedefleme seçeneği eklendi (Joystick Yüzüş Yönü, Serbest Dokunmatik Aim, Akıllı Hibrit).
+• [color=#00e5ff]Koleksiyon Sıfırlama Güvenlik Onayı:[/color] Koleksiyon defterini sıfırlama butonuna yanlışlıkla basılmaları önleyen denizci temalı iki aşamalı onay penceresi entegre edildi.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Toplu Satış & Hızlı Yükseltme Optimizasyonu:[/color] "Hepsini Sat" yapıldığında tek karede yüzlerce slot sahnesi üretilip silinmesi engellendi; hızlı geliştirmedeki gereksiz çifte tetiklemeler ve tween çakışmaları sıfırlandı.
+• [color=#81c784]Yeni Eşya Keşif Takılması (Lag Spike) Giderildi:[/color] Yeni eşyalar ilk kez keşfedildiğinde yaşanan disk yazma takılması WorkerThreadPool arka plan I/O mimarisiyle tamamen akıcı hale getirildi.
+• [color=#81c784]Fener Işık & Fizik (FPS) Optimizasyonu:[/color] Fener doku üretimi ve dinamik ışık motoru optimize edilerek fener ilk açıldığında oluşan fps düşüşü ve takılmalar tamamen giderildi.
+• [color=#81c784]Fener HUD (Ekipman Dock) Senkronizasyonu:[/color] Okyanustaki sağ alt ekipman dock'unda fener seviyesinin (Lv.X) güncellenmeme ve görünmeme sorunu çözüldü.
+• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi."""
+
+
+func _get_changelog_bbcode_en() -> String:
+	return """[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 PATCH NOTES[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
+• [color=#00e5ff]100% English Language Support:[/color] Full bilingual localization (TR / EN) implemented across all UI screens, menus, dialogs, items, notifications, and guides. Seamless instant language switching via Settings.
+• [color=#00e5ff]Item Descriptions & Lore Overhaul:[/color] All underwater items, artifacts, and lore texts have been revised, typos fixed, and enriched with flavorful maritime descriptions.
+• [color=#00e5ff]Economy & Rarity Rework:[/color] Complete overhaul of item rarity tiers and base sell values tuned across depth zones and crafting recipes for a rewarding economy.
+• [color=#00e5ff]Main Menu & Loading Screen UI Rework:[/color] Completely redesigned sleek and modern layouts for the Main Menu and Loading Screens with smooth responsive animations, modernized typography, and polished visuals.
+• [color=#00e5ff]New Game Icon & Animated Splash Screen:[/color] Brand new high-resolution game icon and a dedicated animated Splash Screen intro sequence.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.2 PATCH NOTES[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
+• [color=#00e5ff]Office Charging Station & Paid Battery:[/color] Free automatic charging upon surfacing and office entry removed. Added Charging Station (HSlider and MAX fill) and live battery badge to office bottom bar.
+• [color=#00e5ff]Dynamic Battery Pricing:[/color] Flashlight charging cost changed from flat rate to fair second/capacity-based model (0.30 Zurna/sec; Lv.1 ~23Z, Lv.15 ~60Z).
+• [color=#00e5ff]Depth & Night Darkness Buff:[/color] Ocean darkening curve intensified (260m reference depth, steeper abyss gradient, pitch-black deep waters).
+• [color=#00e5ff]New Game Confirmation Modal:[/color] Added confirmation prompt when starting a "New Game" with existing save data to prevent accidental loss of progress and equipment.
+• [color=#00e5ff]Mobile Dive Pause Button:[/color] Added compact pause button ([ ⏸️ ]) to upper-right corner of mobile touch interface.
+• [color=#00e5ff]Laboratory Craft Profit Rebalancing:[/color] Adjusted item sell values and profit margins to maintain economic balance.
+• [color=#00e5ff]Dev Console Darkness Command:[/color] Added `darkness` (and `karartma`) command to console with quick presets (abyss, day, reset) for dynamic testing.
+
+[color=#ff7043][b]⚡ PERFORMANCE & BUG FIXES:[/b][/color]
+• [color=#81c784]Toast Notification Stretch Fix:[/color] Long notification messages causing office menu stretching fixed by migrating ToastLabel to an independent floating panel.
+• [color=#81c784]Instant Equipment Badge Sync:[/color] Buying flashlights or equipment updates bottom bar status badges immediately without closing shop.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.1 PATCH NOTES[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
+• [color=#00e5ff]Direct Pickup (PC Integration):[/color] Added right-click shortcut to immediately store items into backpack without opening pop-up.
+• [color=#00e5ff]Mobile Flashlight Aim & Sensitivity Settings:[/color] Added 3-mode mobile flashlight aiming options to settings (Swim Direction, Free Touch Aim, Smart Hybrid).
+• [color=#00e5ff]Collection Reset Confirmation:[/color] Integrated nautical-themed two-step confirmation window to prevent accidental collection log resets.
+
+[color=#ff7043][b]⚡ PERFORMANCE & BUG FIXES:[/b][/color]
+• [color=#81c784]Bulk Sell & Fast Upgrade Optimization:[/color] Prevented instantiating and freeing hundreds of slot scenes during "Sell All"; eliminated double triggers and tween conflicts in fast upgrades.
+• [color=#81c784]New Item Discovery Lag Spike Resolved:[/color] Disk write stutter upon discovering new items resolved using WorkerThreadPool background I/O architecture.
+• [color=#81c784]Flashlight Lighting & Physics Optimization:[/color] Flashlight texture generation and dynamic light engine optimized, eliminating initial FPS drops and stutters.
+• [color=#81c784]Flashlight HUD Sync:[/color] Resolved issue where flashlight level (Lv.X) did not update or appear in ocean equipment dock.
+• [color=#81c784]Mobile Button Theme Fixed:[/color] Resolved mobile flashlight and sprint buttons reverting to default gray styling using cached styles."""
 
 
 func _ensure_audio_buses() -> void:
@@ -860,6 +960,7 @@ func _refresh_menu_labels() -> void:
 	var changelog_title: Label = get_node_or_null("Panel/ChangelogPanel/ChangelogTitle")
 	if is_instance_valid(changelog_title):
 		changelog_title.text = tr("📋 YENİLİKLER & GÜNCELLEMELER")
+	_update_changelog_text()
 
 	# Settings Panel
 	var settings_title: Label = get_node_or_null("SettingsPanel/TitleLabel")

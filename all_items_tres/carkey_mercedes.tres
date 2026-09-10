@@ -1,14 +1,15 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cjryfvhfnl50n"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_0kivc"]
-[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://items_diver/Sprites new/araba_anahtari.png" id="2_h0u28"]
+[ext_resource type="Texture2D" uid="uid://jfxudflgdmgl" path="res://item_sprites/Sprites new/araba_anahtari.png" id="2_h0u28"]
 
 [resource]
 script = ExtResource("1_0kivc")
 item_name = "Mercedes anahtarı"
 sprite = ExtResource("2_h0u28")
 description = "Alman mühendisliğinin okyanus suyuna meydan okuduğu bir AMG anahtarı. Su geçirmez contaları o kadar sağlam ki üzerindeki yıldıza hâlâ en ufak bir zeval gelmemiş."
-rarity = 4
-value = 250
+rarity = 3.0
+spawn_weight = 4.0
+value = 180
 category = "Valuable"
 metadata/_custom_type_script = "uid://cycs7xpstgjii"

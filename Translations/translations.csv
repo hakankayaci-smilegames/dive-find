@@ -36,8 +36,11 @@
 "Bakiye: 0 Zurna","Balance: 0 Zurna","Bakiye: 0 Zurna"
 "Batarya","Battery","Batarya"
 "Başarıyla Üretildi!","Successfully Crafted!","Başarıyla Üretildi!"
+"Bildirim mesajı...","Notification message...","Bildirim mesajı..."
 "Bilgi","Info","Bilgi"
 "Biyokimya Laboratuvarı","Biochemistry Lab","Biyokimya Laboratuvarı"
+"Bölge Başlığı","Location Title","Bölge Başlığı"
+"Bölge hakkında kısa bilgi...","Short info about location...","Bölge hakkında kısa bilgi..."
 "BİLGİ","INFO","BİLGİ"
 "BİLGİ & YARDIM","INFO & HELP","BİLGİ & YARDIM"
 "BİYOKİMYA LABORATUVARI","BIOCHEMISTRY LAB","BİYOKİMYA LABORATUVARI"
@@ -54,6 +57,7 @@
 "Dalış Feneri: [F] tuşu ile açılıp kapanır","Dive Light: Toggle with [F] key","Dalış Feneri: [F] tuşu ile açılıp kapanır"
 "Dalış Gözlüğü","Diving Mask","Dalış Gözlüğü"
 "Dalış Gözlüğü: Görüş açısını ve zoom'u genişletir","Diving Mask: Expands field of view and zoom","Dalış Gözlüğü: Görüş açısını ve zoom'u genişletir"
+"Dalış fenerinin bataryasını doldur.","Recharge your diving flashlight battery.","Dalış fenerinin bataryasını doldur."
 "Dalış Özeti","Dive Summary","Dalış Özeti"
 "Dalışa Geç","Dive In","Dalışa Geç"
 "Derinliklerin Gizemli Hazinelerini Keşfet","Discover the Mysterious Treasures of the Deep","Derinliklerin Gizemli Hazinelerini Keşfet"
@@ -86,6 +90,7 @@
 "GERİ","BACK","GERİ"
 "Geliştir","Upgrade","Geliştir"
 "Geliştirici Kodu","Developer Code","Geliştirici Kodu"
+"Genel ticaret ve alım satım tezgahları.","General trade and barter stalls.","Genel ticaret ve alım satım tezgahları."
 "Gereken Malzemeler","Required Materials","Gereken Malzemeler"
 "Geri","Back","Geri"
 "Gizli kod...","Secret code...","Gizli kod..."
@@ -101,6 +106,7 @@
 "HATALI! ❌","INVALID! ❌","HATALI! ❌"
 "HEPSİNİ SAT","SELL ALL","HEPSİNİ SAT"
 "Hammaddeler ile İleri Craft & Sentez","Advanced Crafting & Synthesis with Raw Materials","Hammaddeler ile İleri Craft & Sentez"
+"Haritadan Çık","Exit Map","Haritadan Çık"
 "Hazırlanıyor...","Preparing...","Hazırlanıyor..."
 "Hepsi","All","Hepsi"
 "Hepsini Sat","Sell All","Hepsini Sat"
@@ -132,6 +138,8 @@
 "Laboratuvar","Laboratory","Laboratuvar"
 "Laboratuvar Masrafı: 0 Zurna","Lab Cost: 0 Zurna","Laboratuvar Masrafı: 0 Zurna"
 "Language","Language","Language"
+"Liman Kasabası","Port Town","Liman Kasabası"
+"Liman İskelesi & Dalış","Harbor Pier & Dive","Liman İskelesi & Dalış"
 "Lv. %d","Lv. %d","Lv. %d"
 "Lv.0","Lv.0","Lv.0"
 "Lv.1","Lv.1","Lv.1"
@@ -174,6 +182,8 @@ Devam etmek için TAMAM'a bas, ofise geri gönderileceksin."
 "Palet: Yüzme hızını artırır","Fins: Increases swim speed","Palet: Yüzme hızını artırır"
 "Palet: Yüzüş hızını ve ivmesini artırır","Fins: Increases swimming speed and acceleration","Palet: Yüzüş hızını ve ivmesini artırır"
 "Pazar","Market","Pazar"
+"Plastik ve metal atıkları geri dönüştür.","Recycle plastic and metal into ingots.","Plastik ve metal atıkları geri dönüştür."
+"PreAlpha 1.6.3","PreAlpha 1.6.3","PreAlpha 1.6.3"
 "SAT","SELL","SAT"
 "SATIŞ PAZARI","MARKETPLACE","SATIŞ PAZARI"
 "SENTEZLE / ÜRET ✨","SYNTHESIZE / CRAFT ✨","SENTEZLE / ÜRET ✨"
@@ -189,6 +199,7 @@ Devam etmek için TAMAM'a bas, ofise geri gönderileceksin."
 "Seviye: %d","Level: %d","Seviye: %d"
 "Seviye: 0","Level: 0","Seviye: 0"
 "Smile Games Sunar","Smile Games Presents","Smile Games Sunar"
+"Suya dalış yap veya rıhtım iskelesinden açıl.","Dive into the ocean from the wooden pier.","Suya dalış yap veya rıhtım iskelesinden açıl."
 "Sırala","Sort","Sırala"
 "Sırt Çantası","Backpack","Sırt Çantası"
 "Sırt Çantası: Envanter kapasitesini artırır","Backpack: Increases inventory capacity","Sırt Çantası: Envanter kapasitesini artırır"
@@ -197,6 +208,7 @@ Devam etmek için TAMAM'a bas, ofise geri gönderileceksin."
 "Tahmini Satış Değeri: 0 Zurna","Estimated Sale Value: 0 Zurna","Tahmini Satış Değeri: 0 Zurna"
 "Tam Ekran","Fullscreen","Tam Ekran"
 "Tam Ekran Modu","Fullscreen Mode","Tam Ekran Modu"
+"Tarihi ve değerli eşyaları iyi fiyata alır.","Buys relics and valuables for good coin.","Tarihi ve değerli eşyaları iyi fiyata alır."
 "Tekneye Dön [E]","Return to Boat [E]","Tekneye Dön [E]"
 "Tesisler, Tüccarlar ve Operasyon Yönetim Merkezi","Facilities, Traders & Operations Hub","Tesisler, Tüccarlar ve Operasyon Yönetim Merkezi"
 "Toplam Bakiye","Total Balance","Toplam Bakiye"
@@ -214,6 +226,7 @@ Bu işlem geri alınamaz!
 Koleksiyonu sıfırlamak istediğinden emin misin?"
 "Tümü","All","Tümü"
 "Tüp, Palet, Gözlük ve Çanta Yükselt","Upgrade Tank, Fins, Mask & Bag","Tüp, Palet, Gözlük ve Çanta Yükselt"
+"Tüp, palet, maske ve çantanı yükselt.","Upgrade tank, fins, goggles and bag.","Tüp, palet, maske ve çantanı yükselt."
 "Tür","Type","Tür"
 "UPGRADE","UPGRADE","UPGRADE"
 "UYGULA","APPLY","UYGULA"
@@ -229,7 +242,18 @@ Koleksiyonu sıfırlamak istediğinden emin misin?"
 "[ AKTİF ]","[ ACTIVE ]","[ AKTİF ]"
 "[ DEĞERLİ ]","[ VALUABLE ]","[ DEĞERLİ ]"
 "[ Kapatmak için: é veya ESC ]","[ To Close: ~ or ESC ]","[ Kapatmak için: é veya ESC ]"
-"[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+"[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
+• [color=#00e5ff]Eşya Açıklamaları & Hikaye Düzeltmeleri:[/color] Tüm deniz altı eşyalarının açıklamaları, yazım hataları ve hikaye metinleri baştan sona gözden geçirilip düzeltildi; her eşyaya derinlik katan tematik açıklamalar işlendi.
+• [color=#00e5ff]Fiyatlandırma & Nadirlik (Rarity) Rework'ü:[/color] Tüm eşyaların nadirlik sınıfları ve satış fiyatları derinlik seviyelerine, craft zincirine ve oyun ekonomisine uygun şekilde yeniden yapılandırılarak dengeli ve ödüllendirici hale getirildi.
+• [color=#00e5ff]Ana Menü & Yükleme Ekranı UI Rework'ü:[/color] Ana menü ve yükleme (loading) ekranı modern ve estetik bir arayüz tasarımına kavuşturuldu; akıcı geçiş animasyonları, modernize tipografi ve yeni görsel düzen entegre edildi.
+• [color=#00e5ff]Yeni Oyun Simgesi & Splash Screen:[/color] Yepyeni yüksek çözünürlüklü oyun simgesi ve açılışta karşılayan özel animasyonlu Splash Screen sahnesi eklendi.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]Ofis Şarj İstasyonu & Ücretli Batarya:[/color] Yüzeyde ve ofise girişteki ücretsiz otomatik şarj kaldırıldı. Ofis alt barına Şarj İstasyonu (HSlider ve MAX dolum) ile canlı batarya rozeti eklendi.
@@ -258,7 +282,18 @@ Koleksiyonu sıfırlamak istediğinden emin misin?"
 • [color=#81c784]Yeni Eşya Keşif Takılması (Lag Spike) Giderildi:[/color] Yeni eşyalar ilk kez keşfedildiğinde yaşanan disk yazma takılması WorkerThreadPool arka plan I/O mimarisiyle tamamen akıcı hale getirildi.
 • [color=#81c784]Fener Işık & Fizik (FPS) Optimizasyonu:[/color] Fener doku üretimi ve dinamik ışık motoru optimize edilerek fener ilk açıldığında oluşan fps düşüşü ve takılmalar tamamen giderildi.
 • [color=#81c784]Fener HUD (Ekipman Dock) Senkronizasyonu:[/color] Okyanustaki sağ alt ekipman dock'unda fener seviyesinin (Lv.X) güncellenmeme ve görünmeme sorunu çözüldü.
-• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.2 PATCH NOTES[/b][/font_size][/color][/center]
+• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 PATCH NOTES[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
+• [color=#00e5ff]100% English Language Support:[/color] Full bilingual localization (TR / EN) implemented across all UI screens, menus, dialogs, items, notifications, and guides. Seamless instant language switching via Settings.
+• [color=#00e5ff]Item Descriptions & Lore Overhaul:[/color] All underwater items, artifacts, and lore texts have been revised, typos fixed, and enriched with flavorful maritime descriptions.
+• [color=#00e5ff]Economy & Rarity Rework:[/color] Complete overhaul of item rarity tiers and base sell values tuned across depth zones and crafting recipes for a rewarding economy.
+• [color=#00e5ff]Main Menu & Loading Screen UI Rework:[/color] Completely redesigned sleek and modern layouts for the Main Menu and Loading Screens with smooth responsive animations, modernized typography, and polished visuals.
+• [color=#00e5ff]New Game Icon & Animated Splash Screen:[/color] Brand new high-resolution game icon and a dedicated animated Splash Screen intro sequence.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.2 PATCH NOTES[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
 • [color=#00e5ff]Office Charging Station & Paid Battery:[/color] Free automatic charging upon surfacing and office entry removed. Added Charging Station (HSlider and MAX fill) and live battery badge to office bottom bar.
@@ -287,7 +322,18 @@ Koleksiyonu sıfırlamak istediğinden emin misin?"
 • [color=#81c784]New Item Discovery Lag Spike Resolved:[/color] Disk write stutter upon discovering new items resolved using WorkerThreadPool background I/O architecture.
 • [color=#81c784]Flashlight Lighting & Physics Optimization:[/color] Flashlight texture generation and dynamic light engine optimized, eliminating initial FPS drops and stutters.
 • [color=#81c784]Flashlight HUD Sync:[/color] Resolved issue where flashlight level (Lv.X) did not update or appear in ocean equipment dock.
-• [color=#81c784]Mobile Button Theme Fixed:[/color] Resolved mobile flashlight and sprint buttons reverting to default gray styling using cached styles.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+• [color=#81c784]Mobile Button Theme Fixed:[/color] Resolved mobile flashlight and sprint buttons reverting to default gray styling using cached styles.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
+• [color=#00e5ff]Eşya Açıklamaları & Hikaye Düzeltmeleri:[/color] Tüm deniz altı eşyalarının açıklamaları, yazım hataları ve hikaye metinleri baştan sona gözden geçirilip düzeltildi; her eşyaya derinlik katan tematik açıklamalar işlendi.
+• [color=#00e5ff]Fiyatlandırma & Nadirlik (Rarity) Rework'ü:[/color] Tüm eşyaların nadirlik sınıfları ve satış fiyatları derinlik seviyelerine, craft zincirine ve oyun ekonomisine uygun şekilde yeniden yapılandırılarak dengeli ve ödüllendirici hale getirildi.
+• [color=#00e5ff]Ana Menü & Yükleme Ekranı UI Rework'ü:[/color] Ana menü ve yükleme (loading) ekranı modern ve estetik bir arayüz tasarımına kavuşturuldu; akıcı geçiş animasyonları, modernize tipografi ve yeni görsel düzen entegre edildi.
+• [color=#00e5ff]Yeni Oyun Simgesi & Splash Screen:[/color] Yepyeni yüksek çözünürlüklü oyun simgesi ve açılışta karşılayan özel animasyonlu Splash Screen sahnesi eklendi.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.2 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]Ofis Şarj İstasyonu & Ücretli Batarya:[/color] Yüzeyde ve ofise girişteki ücretsiz otomatik şarj kaldırıldı. Ofis alt barına Şarj İstasyonu (HSlider ve MAX dolum) ile canlı batarya rozeti eklendi.
@@ -419,12 +465,15 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "Çöpçü","Scavenger","Çöpçü"
 "Çıkış","Exit","Çıkış"
 "Özel","Special","Özel"
+"Özel ve gizli ganimetleri yüksek fiyata alır.","Buys contraband & special loot for high pay.","Özel ve gizli ganimetleri yüksek fiyata alır."
 "ÜRET","CRAFT","ÜRET"
 "Ücret: 20 Zurna (+%50)","Price: 20 Zurna (+50%)","Ücret: 20 Zurna (+%50)"
 "Üret","Craft","Üret"
 "Üretilen Gelişmiş Eşyaların Satışı","Sale of Advanced Crafted Items","Üretilen Gelişmiş Eşyaların Satışı"
 "Üretim","Crafted","Üretim"
 "Şarj Ediliyor...","Charging...","Şarj Ediliyor..."
+"⏭️ DİNLEN / İLERLET","⏭️ REST / ADVANCE","⏭️ DİNLEN / İLERLET"
+"⏰ 08:00","⏰ 08:00","⏰ 08:00"
 "⏰ 10:00","⏰ 10:00","⏰ 10:00"
 "⏰ Gün Kapanış Saati","⏰ Day Closing Time","⏰ Gün Kapanış Saati"
 "⏱️ YÜZEY: --s  │  🫧 KALAN O2: --s","⏱️ SURFACE: --s  │  🫧 O2 LEFT: --s","⏱️ YÜZEY: --s  │  🫧 KALAN O2: --s"
@@ -432,6 +481,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "⏸️ DURAKLATILDI","⏸️ PAUSED","⏸️ DURAKLATILDI"
 "▶ DEVAM ET","▶ CONTINUE","▶ DEVAM ET"
 "▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀","▶ TOUCH SCREEN OR PRESS ANY KEY TO CONTINUE ◀","▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀"
+"▶ GİR [TIKLA]","▶ ENTER [CLICK]","▶ GİR [TIKLA]"
 "◆ DIVE & FIND — GELİŞTİRİCİ & HİLE KONSOLU","◆ DIVE & FIND — DEV & CHEAT CONSOLE","◆ DIVE & FIND — GELİŞTİRİCİ & HİLE KONSOLU"
 "⚓ %dm  |  ↑ Yüzey: %dm","⚓ %dm  |  ↑ Surface: %dm","⚓ %dm  |  ↑ Yüzey: %dm"
 "⚓ DERİNLİK: 0m","⚓ DEPTH: 0m","⚓ DERİNLİK: 0m"
@@ -493,10 +543,12 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "💰 Günün Kazancı","💰 Day's Earnings","💰 Günün Kazancı"
 "💰 Tahmini Satış Değeri: 0 Zurna","💰 Estimated Sale Value: 0 Zurna","💰 Tahmini Satış Değeri: 0 Zurna"
 "📅 GÜN %d","📅 DAY %d","📅 GÜN %d"
+"📅 GÜN 1","📅 DAY 1","📅 GÜN 1"
 "📅 Gün %d","📅 Day %d","📅 Gün %d"
 "📅 Gün 1","📅 Day 1","📅 Gün 1"
 "📋 TARİF FİHRİSTİ","📋 RECIPE INDEX","📋 TARİF FİHRİSTİ"
 "📋 YENİLİKLER & GÜNCELLEMELER","📋 CHANGELOG & UPDATES","📋 YENİLİKLER & GÜNCELLEMELER"
+"📍 LİMAN KASABASI","📍 PORT TOWN","📍 LİMAN KASABASI"
 "📖 KOLEKSİYON [C]","📖 COLLECTION [C]","📖 KOLEKSİYON [C]"
 "📦 Satılan Eşya","📦 Items Sold","📦 Satılan Eşya"
 "🔄 Sırala","🔄 Sort","🔄 Sırala"
@@ -524,6 +576,7 @@ Eşyayı kilitle (Korunur)"
 "🗑️ Çöp","🗑️ Trash","🗑️ Çöp"
 "🚤 Tekneye Çık [E]","🚤 Board Boat [E]","🚤 Tekneye Çık [E]"
 "🚪 ANA MENÜYE DÖN","🚪 RETURN TO MAIN MENU","🚪 ANA MENÜYE DÖN"
+"🚪 HARİTADAN ÇIK","🚪 EXIT MAP","🚪 HARİTADAN ÇIK"
 "🤿 DALIŞA BAŞLA / OKYANUS","🤿 START DIVE / OCEAN","🤿 DALIŞA BAŞLA / OKYANUS"
 "🤿 Yapılan Dalış","🤿 Dives Completed","🤿 Yapılan Dalış"
 "🥽+","🥽+","🥽+"

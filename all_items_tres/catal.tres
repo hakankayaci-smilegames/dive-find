@@ -1,12 +1,13 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cixd8mqe63jy7"]
 
 [ext_resource type="Script" uid="uid://cycs7xpstgjii" path="res://Scripts/ItemData.gd" id="1_qajil"]
-[ext_resource type="Texture2D" uid="uid://cn1w7kihxcfn" path="res://items_diver/Sprites new/catal.png" id="2_pespg"]
+[ext_resource type="Texture2D" uid="uid://cn1w7kihxcfn" path="res://item_sprites/Sprites new/catal.png" id="2_pespg"]
 
 [resource]
 script = ExtResource("1_qajil")
 item_name = "Bükük Çatal"
 sprite = ExtResource("2_pespg")
 description = "Matrix filminden fırlamışçasına akıl almaz bir açıyla bükülmüş bir yemek çatalı. Zihin gücüyle mi büküldü yoksa konserve açarken mi harcandı, asla bilemeyeceğiz."
-value = 4
+spawn_weight = 5.0
+value = 6
 metadata/_custom_type_script = "uid://cycs7xpstgjii"
