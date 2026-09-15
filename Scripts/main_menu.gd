@@ -8,7 +8,7 @@ const SFX_BUS := "SFX"
 @export var collection_scene: PackedScene  # res://Scenes/collection.tscn
 
 @export_group("Sürüm")
-@export var game_version: String = "PreAlpha 1.6.3"  # Inspector'dan veya buradan kolayca düzenlenebilir
+@export var game_version: String = "PreAlpha 1.7.0 (City Integration)"  # Inspector'dan veya buradan kolayca düzenlenebilir
 
 @onready var info_panel: Panel = $InfoPanel
 @onready var info_button: Button = $Panel/VBoxContainer/Button4
@@ -220,7 +220,20 @@ func _update_changelog_text() -> void:
 
 
 func _get_changelog_bbcode_tr() -> String:
-	return """[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+	return """[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.7.0 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Şehir Haritası Tam Entegrasyonu:[/color] Oyun döngüsü artık doğrudan Liman Kasabası Şehir Haritası'ndan başlar. Tüm tesisler, mağazalar ve operasyonlar harita pinleri üzerinden yönetilir.
+• [color=#00e5ff]İskele Barakası & Dalış Hazırlık Hub'ı:[/color] Şehir ile okyanus arasına denizci temalı Dalış Hazırlık İskelesi eklendi. Dalış öncesi ekipman durumu (çanta, oksijen tüpü, maske, palet, fener ve canlı batarya) tek ekranda incelenebilir, fener şarj edilebilir ve tek tuşla dalışa geçilebilir.
+• [color=#00e5ff]Sinematik Yükleme Ekranı Geçişleri:[/color] Şehir Haritası, İskele Barakası, Okyanus Dalışı ve Ana Menü arasındaki tüm geçişler akıcı yükleme ekranı animasyonu eşliğinde pürüzsüzleştirildi.
+• [color=#00e5ff]Doğrudan Ana Menüye Çıkış & Otomatik Kayıt:[/color] Şehir Haritası'ndaki çıkış butonu ile tüm ilerleme otomatik kaydedilerek doğrudan ana menüye dönülebilmesi sağlandı.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Mobil Kontroller & Menü Çakışma Düzeltmesi:[/color] Şehir ve baraka menülerindeyken mobil dokunmatik kontrollerin ekranda kontrolsüzce belirme hatası giderildi; kontroller yalnızca okyanusta aktifleşir.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
@@ -264,7 +277,20 @@ func _get_changelog_bbcode_tr() -> String:
 
 
 func _get_changelog_bbcode_en() -> String:
-	return """[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 PATCH NOTES[/b][/font_size][/color][/center]
+	return """[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.7.0 PATCH NOTES[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
+• [color=#00e5ff]Full City Map Integration:[/color] Game loop now directly launches into the Port Town City Map. All facilities, merchant stalls, and operations are managed via map pins.
+• [color=#00e5ff]Dock Shack & Dive Preparation Pier Hub:[/color] Added a nautical Dock Shack hub between town and ocean. Check all equipment stats (backpack, O2 tank, mask, fins, flashlight and live battery), recharge flashlight, and dive into the deep.
+• [color=#00e5ff]Cinematic Loading Screen Transitions:[/color] Seamless loading screen transitions smoothly bridge City Map, Dock Shack, Ocean Diving, and the Main Menu.
+• [color=#00e5ff]Direct Exit to Main Menu & Auto-Save:[/color] Exit Map button on the City Map automatically saves progress and returns directly to the Main Menu.
+
+[color=#ff7043][b]⚡ PERFORMANCE & BUG FIXES:[/b][/color]
+• [color=#81c784]Mobile Controls & Hub UI Conflict Fixed:[/color] Resolved the bug where mobile touch controls spawned when closing menus; controls now strictly activate only while diving in the ocean.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#00e5ff][font_size=16][b]⚓ PRE-ALPHA 1.6.3 PATCH NOTES[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
 • [color=#00e5ff]100% English Language Support:[/color] Full bilingual localization (TR / EN) implemented across all UI screens, menus, dialogs, items, notifications, and guides. Seamless instant language switching via Settings.

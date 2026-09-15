@@ -73,6 +73,9 @@ func _ready() -> void:
 	if player and player.has_method("reset_flashlight_for_office"):
 		player.reset_flashlight_for_office()
 
+	add_to_group("hub_menu")
+	add_to_group("popup_ui")
+
 	# Hafif solma (fade-in) ile ofise pürüzsüz giriş
 	if has_node("Background"):
 		$Background.modulate.a = 0.0
@@ -549,6 +552,8 @@ func _on_dive_pressed() -> void:
 
 
 func _exit_tree() -> void:
+	remove_from_group("hub_menu")
+	remove_from_group("popup_ui")
 	_close_all_submenus()
 	get_tree().paused = false
 	if GlobalEconomy.money_changed.is_connected(_on_money_changed):

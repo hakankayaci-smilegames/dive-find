@@ -49,6 +49,9 @@ func _ready() -> void:
 	register_command("city", _cmd_city_map, "Şehir Haritasını açar (City Map).")
 	register_command("sehir", _cmd_city_map, "city komutunun kısayolu.")
 	register_command("map", _cmd_city_map, "city komutunun kısayolu.")
+	register_command("shack", _cmd_dock_shack, "Liman Barakası & Dalış İskelesini açar.")
+	register_command("baraka", _cmd_dock_shack, "shack komutunun kısayolu.")
+	register_command("iskele", _cmd_dock_shack, "shack komutunun kısayolu.")
 	register_command("die", _cmd_die, "Oyuncunun canını sıfırlar ve Game Over ekranını tetikler.")
 	register_command("time", _cmd_time, "Saati ayarlar. (Kullanım: time <saat> [dakika] - Örn: time 18 45)")
 	register_command("add_time", _cmd_add_time, "Saati ileri sarar. (Kullanım: add_time <dakika> - Örn: add_time 30)")
@@ -429,6 +432,16 @@ func _cmd_city_map() -> void:
 	set_console_visible(false)
 	get_tree().current_scene.add_child(city_scene.instantiate())
 	_log_success("Şehir Haritası açıldı!")
+
+
+func _cmd_dock_shack() -> void:
+	var shack_scene = load("res://Scenes/dock_shack.tscn")
+	if not shack_scene:
+		_log_error("dock_shack.tscn sahnesi bulunamadı!")
+		return
+	set_console_visible(false)
+	get_tree().current_scene.add_child(shack_scene.instantiate())
+	_log_success("Liman Barakası açıldı!")
 
 
 func _cmd_die() -> void:

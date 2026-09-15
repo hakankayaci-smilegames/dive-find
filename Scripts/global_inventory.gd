@@ -19,6 +19,16 @@ var _all_items_cache: Array[ItemData] = []
 var _items_cached: bool = false
 var _collection_save_mutex: Mutex = Mutex.new()
 
+# Kalıcı Ekipman Durumu (Bellek & Save Senkronizasyonu)
+var equipment_data: Dictionary = {
+	"tube_level": 1,
+	"fins_level": 0,
+	"goggles_level": 0,
+	"backpack_level": 0,
+	"flashlight_level": 0,
+	"current_battery": -1.0
+}
+
 # Player sahnede bulunamazsa (ör. menü/test ortamı) kullanılacak güvenli varsayılan.
 # Normal oyun akışında her zaman player_controller.gd'deki gerçek formül kullanılır.
 const DEFAULT_CAPACITY: int = 5
@@ -27,6 +37,33 @@ const DEFAULT_CAPACITY: int = 5
 func _ready() -> void:
 	_load_collection()
 	get_all_items()
+	_load_equipment_data()
+
+
+func _load_equipment_data() -> void:
+	var data := get_save_data()
+	if not data.is_empty() and data.has("equipment"):
+		var eq: Dictionary = data["equipment"]
+		for k in eq.keys():
+			equipment_data[k] = eq[k]
+
+
+func get_equipment_stat(key: String, default_val: int = 0) -> int:
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.get(key) != null:
+		var val = int(player.get(key))
+		equipment_data[key] = val
+		return val
+	return int(equipment_data.get(key, default_val))
+
+
+func set_equipment_stat(key: String, new_val: int) -> void:
+	equipment_data[key] = new_val
+	var player = get_tree().get_first_node_in_group("player")
+	if player and player.get(key) != null:
+		player.set(key, new_val)
+	equipment_updated.emit(key, new_val)
+	inventory_updated.emit()
 
 
 func get_all_items(force_reload: bool = false) -> Array[ItemData]:
@@ -73,7 +110,8 @@ func get_capacity() -> int:
 	var player = get_tree().get_first_node_in_group("player")
 	if player and player.has_method("get_backpack_capacity"):
 		return player.get_backpack_capacity()
-	return DEFAULT_CAPACITY
+	var bag_lvl: int = int(equipment_data.get("backpack_level", 0))
+	return DEFAULT_CAPACITY + bag_lvl * 5
 
 
 func is_full() -> bool:
@@ -325,6 +363,7 @@ func save_game(day: int, money: int, equipment: Dictionary) -> bool:
 
 
 func apply_save_to_game() -> bool:
+	_load_equipment_data()
 	var data := get_save_data()
 	if data.is_empty():
 		return false
@@ -386,15 +425,18 @@ func sort_inventory_by_category() -> void:
 func apply_save_to_player(player: Node) -> void:
 	if not is_instance_valid(player):
 		return
+	_load_equipment_data()
 	var data := get_save_data()
 	if data.is_empty():
-		player.set("tube_level", 1)
-		player.set("fins_level", 0)
-		player.set("goggles_level", 0)
-		player.set("backpack_level", 0)
-		player.set("flashlight_level", 0)
+		player.set("tube_level", int(equipment_data.get("tube_level", 1)))
+		player.set("fins_level", int(equipment_data.get("fins_level", 0)))
+		player.set("goggles_level", int(equipment_data.get("goggles_level", 0)))
+		player.set("backpack_level", int(equipment_data.get("backpack_level", 0)))
+		player.set("flashlight_level", int(equipment_data.get("flashlight_level", 0)))
 		return
 	var eq: Dictionary = data.get("equipment", {})
+	for k in eq.keys():
+		equipment_data[k] = eq[k]
 	player.set("tube_level", int(eq.get("tube_level", 1)))
 	player.set("fins_level", int(eq.get("fins_level", 0)))
 	player.set("goggles_level", int(eq.get("goggles_level", 0)))

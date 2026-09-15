@@ -914,6 +914,51 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Geliştirici Konsolu Test Geçişi (`city` / `sehir` / `map`):**
   - Geliştirici konsoluna eklenen komutlarla (`city`, `sehir` veya `map`) oyunun herhangi bir anında yeni şehir haritası canlı olarak açılıp test edilebilir.
 
+---
+
+## 38. İskele Barakası & v1.7.0 Tam Şehir Entegrasyonu (Dock Shack & Full City Integration)
+
+- **Merkezi Şehir Oyun Döngüsü (v1.7.0 Hub Architecture):**
+  - Oyun başlangıcı veya kayıt yükleme ("DEVAM ET") artık doğrudan **Liman Kasabası Şehir Haritası**'na (`Scenes/city_map.tscn`) bağlanır.
+  - Eski statik ofis menüsü yerine tüm pazar, ekipman, laboratuvar ve tüccar etkileşimleri şehir haritasındaki interaktif pinler üzerinden yürütülür.
+  - Şehir Haritası'ndaki `🚪 HARİTADAN ÇIK` butonu; oyuncunun ilerlemesini (`GlobalEconomy.money`, `current_day`, ekipman seviyeleri) otomatik kaydedip yükleme ekranı ile doğrudan Ana Menü'ye (`Scenes/main_menu.tscn`) döner.
+
+- **İskele Barakası & Dalış Hazırlık Hub'ı ([`Scenes/dock_shack.tscn`](file:///home/hakan/dive&find/Scenes/dock_shack.tscn) & [`Scripts/dock_shack.gd`](file:///home/hakan/dive&find/Scripts/dock_shack.gd)):**
+  - Şehir Haritası'ndaki Liman İskelesi pini ile okyanus dalışı arasına denizci atmosferli **İskele Barakası** hub'ı entegre edildi.
+  - **Canlı Ekipman Kartları (Saf HUD & Status):**
+    - `Sırt Çantası`: Seviye ve güncel slot kapasitesi (`5 + bag_lvl * 5` slot, tıklanınca doğrudan çanta envanterini açar).
+    - `Oksijen Tüpü`: Seviye ve O2 çarpanı (`1.0 + (tank_lvl - 1) * 1.25x` O2 verimliliği).
+    - `Dalış Maskesi`: Seviye ve kamera zoom çarpanı (`1.0 + mask_lvl * 0.15x` zoom).
+    - `Palet`: Seviye ve yüzüş hız artışı (`+fins_lvl * 55 px/s`).
+    - `Dalış Feneri & Canlı Batarya`: Fener seviyesi, canlı batarya ilerleme çubuğu ve yüzde göstergesi (`%100`). Fener yoksa sönük kalır.
+    - *Tek Doğruluk Kaynağı:* Tüm ekipman seviyeleri ve batarya `GlobalInventory.equipment_data` üzerinde tutulur; `get_equipment_stat()` ve `set_equipment_stat()` metotları ile hem oyuncu düğümü (`player`) hem de bağımsız sahne testlerinde (F6) `equstore` ve `dock_shack` arasında %100 senkron çalışır. Kartlar interaktif mikro-animasyona (`Tween` hover/click juice) ve bilgilendirici toast'lara sahiptir.
+    - *Not:* Ekipman kartları saf gösterge olup üzerlerinden geliştirme yapılmaz; tüm ekipman alımları ve yükseltmeleri şehirdeki `⚙️ Ekipman Mağazası` üzerinden yürütülür.
+  - **Aksiyon ve Alt Menü Yönetimi:**
+    - `🤿 DALIŞA BAŞLA`: Dalgıcı doğrudan okyanus yüzeyine ışınlayarak dalışı başlatır ve oyunu unpause eder.
+    - `🎒 ÇANTA`: Canlı eşya sayısını gösterir (`(X/Y)`), `layer = 95` ile envanteri açar.
+    - `📖 KOLEKSİYON`: `layer = 95` ile koleksiyon defterini açar.
+    - `🗺️ ŞEHRE ÇIK`: Şehir Haritası'na geri döner.
+    - `⚙️ Ayarlar`: Ses, dil ve joystick seçeneklerini açar.
+    - *Şarj Mimarisi:* Fener şarjı şehirdeki `⚡ Şarj İstasyonu` pinine bırakılmıştır; barakada çiftleme yapılmaz. Batarya düştüğünde baraka ipucu oyuncuyu şehre yönlendirir.
+  - **Gece Dalış Koruması:** Saat 19:00 olduğunda dalış butonu `⚠️ DALIŞ KAPALI (GECE)` moduna geçer ve oyuncuyu günü ilerletmesi için şehre yönlendirir.
+  - **Klavye & Kontrolcü Kısayolları:** `Space` / `Enter` (Dalış), `ESC` / `M` (Şehre Dön), `I` (Çanta), `C` (Koleksiyon).
+
+- **Sinematik Yükleme Ekranı Geçişleri (`_play_transition`):**
+  - Ortamlar arasındaki tüm geçişler ([`Scenes/loading_screen.tscn`](file:///home/hakan/dive&find/Scenes/loading_screen.tscn)) CanvasLayer 150 üzerinde `auto_change_scene = false` modu ile pürüzsüz siyah perde overlay'i üzerinden yürütülür:
+    - Şehir Haritası ↔ İskele Barakası (1.0s)
+    - Şehir Haritası ↔ Ana Menü (1.0s)
+    - İskele Barakası ↔ Okyanus Dalışı (1.2s)
+    - Okyanus Yüzeyi [Tekne] ↔ İskele Barakası (1.2s)
+  - Sahne ağacı tamamen silinip baştan yüklenmediği için dalgıç fiziği, autoload verileri ve ses mikseri sıfır takılmayla korunur.
+
+- **Mobil Dokunmatik Kontrol Çakışması Giderildi ([`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):**
+  - Şehir Haritası ve İskele Barakası menülerinden çıkıldığında mobil joystick ve butonların ekranda istenmeyen şekilde belirmesi önlendi.
+  - `mobile_controls.gd`, `hub_menu` ve `city_map` gruplarını dinamik denetler; dalgıç yalnızca fiilen okyanus suyunda yüzerken kontroller görünür hale gelir.
+
+- **Geliştirici Konsolu Entegrasyonu ([`Scripts/dev_console.gd`](file:///home/hakan/dive&find/Scripts/dev_console.gd)):**
+  - Konsola `shack`, `baraka` ve `iskele` komutları eklendi. Test esnasında haritayı açmadan doğrudan iskele barakasına geçiş yapılabilir.
+
+
 
 
 

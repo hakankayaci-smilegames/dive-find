@@ -36,6 +36,7 @@
 "Bakiye: 0 Zurna","Balance: 0 Zurna","Bakiye: 0 Zurna"
 "Batarya","Battery","Batarya"
 "Başarıyla Üretildi!","Successfully Crafted!","Başarıyla Üretildi!"
+"Bildirim mesajı","Notification message","Bildirim mesajı"
 "Bildirim mesajı...","Notification message...","Bildirim mesajı..."
 "Bilgi","Info","Bilgi"
 "Biyokimya Laboratuvarı","Biochemistry Lab","Biyokimya Laboratuvarı"
@@ -54,9 +55,14 @@
 "Dalış Feneri","Dive Light","Dalış Feneri"
 "Dalış Feneri (Lv. %d)","Dive Light (Lv. %d)","Dalış Feneri (Lv. %d)"
 "Dalış Feneri (Lv. 1)","Dive Light (Lv. 1)","Dalış Feneri (Lv. 1)"
+"Dalış Feneri Lv.1","Diving Flashlight Lv.1","Dalış Feneri Lv.1"
 "Dalış Feneri: [F] tuşu ile açılıp kapanır","Dive Light: Toggle with [F] key","Dalış Feneri: [F] tuşu ile açılıp kapanır"
 "Dalış Gözlüğü","Diving Mask","Dalış Gözlüğü"
 "Dalış Gözlüğü: Görüş açısını ve zoom'u genişletir","Diving Mask: Expands field of view and zoom","Dalış Gözlüğü: Görüş açısını ve zoom'u genişletir"
+"Dalış Maskesi Lv.1
+Zoom: x1.1","Diving Mask Lv.1
+Zoom: x1.1","Dalış Maskesi Lv.1
+Zoom: x1.1"
 "Dalış fenerinin bataryasını doldur.","Recharge your diving flashlight battery.","Dalış fenerinin bataryasını doldur."
 "Dalış Özeti","Dive Summary","Dalış Özeti"
 "Dalışa Geç","Dive In","Dalışa Geç"
@@ -78,6 +84,7 @@
 "Efekt Sesi (SFX)","SFX Volume","Efekt Sesi (SFX)"
 "Ekipman","Equipment","Ekipman"
 "Ekipman Mağazası","Equipment Shop","Ekipman Mağazası"
+"Ekipmanlarını kontrol et, fenerini şarj et ve derinliklere dalış yap.","Check your equipment, recharge your flashlight, and dive into the deep.","Ekipmanlarını kontrol et, fenerini şarj et ve derinliklere dalış yap."
 "Envanter (0/5)","Inventory (0/5)","Envanter (0/5)"
 "Eski kalıntılar ve hazineler taranıyor...","Scanning ancient relics and treasures...","Eski kalıntılar ve hazineler taranıyor..."
 "Eşya Adı","Item Name","Eşya Adı"
@@ -170,6 +177,10 @@ Bu işlem geri alınamaz! Yeni bir oyuna başlamak istediğinden emin misin?"
 "OKSİJENİN BİTTİ","OUT OF OXYGEN","OKSİJENİN BİTTİ"
 "OYUNDAN ÇIK","QUIT GAME","OYUNDAN ÇIK"
 "Oksijen Tüpü","Oxygen Tank","Oksijen Tüpü"
+"Oksijen Tüpü Lv.1
+~60s Kapasite","O2 Tank Lv.1
+~60s Capacity","Oksijen Tüpü Lv.1
+~60s Kapasite"
 "Oksijen Tüpü: Oksijen tüketimini azaltır","Oxygen Tank: Reduces oxygen consumption","Oksijen Tüpü: Oksijen tüketimini azaltır"
 "Oksijen Tüpü: Su altında kalma süresini artırır","Oxygen Tank: Increases underwater dive time","Oksijen Tüpü: Su altında kalma süresini artırır"
 "Oksijen tüpün bitti ve yüzeye ulaşamadın, yandan geçen bir balıkçı seni buldu ve kurtardı ancak uyandığında çantan yoktu.
@@ -179,11 +190,15 @@ Devam etmek için TAMAM'a bas, ofise geri gönderileceksin."
 "O₂","O₂","O₂"
 "PAZAR","MARKET","PAZAR"
 "Palet","Fins","Palet"
+"Palet Lv.1
+Hız: +%0","Fins Lv.1
+Speed: +0%","Palet Lv.1
+Hız: +%0"
 "Palet: Yüzme hızını artırır","Fins: Increases swim speed","Palet: Yüzme hızını artırır"
 "Palet: Yüzüş hızını ve ivmesini artırır","Fins: Increases swimming speed and acceleration","Palet: Yüzüş hızını ve ivmesini artırır"
 "Pazar","Market","Pazar"
 "Plastik ve metal atıkları geri dönüştür.","Recycle plastic and metal into ingots.","Plastik ve metal atıkları geri dönüştür."
-"PreAlpha 1.6.3","PreAlpha 1.6.3","PreAlpha 1.6.3"
+"PreAlpha 1.7.0","PreAlpha 1.7.0","PreAlpha 1.7.0"
 "SAT","SELL","SAT"
 "SATIŞ PAZARI","MARKETPLACE","SATIŞ PAZARI"
 "SENTEZLE / ÜRET ✨","SYNTHESIZE / CRAFT ✨","SENTEZLE / ÜRET ✨"
@@ -202,6 +217,10 @@ Devam etmek için TAMAM'a bas, ofise geri gönderileceksin."
 "Suya dalış yap veya rıhtım iskelesinden açıl.","Dive into the ocean from the wooden pier.","Suya dalış yap veya rıhtım iskelesinden açıl."
 "Sırala","Sort","Sırala"
 "Sırt Çantası","Backpack","Sırt Çantası"
+"Sırt Çantası Lv.1
+8 Slot","Backpack Lv.1
+8 Slots","Sırt Çantası Lv.1
+8 Slot"
 "Sırt Çantası: Envanter kapasitesini artırır","Backpack: Increases inventory capacity","Sırt Çantası: Envanter kapasitesini artırır"
 "TAMAM","OK","TAMAM"
 "TESİSLER VE ÜRETİM ALANLARI","FACILITIES & PRODUCTION","TESİSLER VE ÜRETİM ALANLARI"
@@ -242,7 +261,20 @@ Koleksiyonu sıfırlamak istediğinden emin misin?"
 "[ AKTİF ]","[ ACTIVE ]","[ AKTİF ]"
 "[ DEĞERLİ ]","[ VALUABLE ]","[ DEĞERLİ ]"
 "[ Kapatmak için: é veya ESC ]","[ To Close: ~ or ESC ]","[ Kapatmak için: é veya ESC ]"
-"[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+"[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.7.0 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Şehir Haritası Tam Entegrasyonu:[/color] Oyun döngüsü artık doğrudan Liman Kasabası Şehir Haritası'ndan başlar. Tüm tesisler, mağazalar ve operasyonlar harita pinleri üzerinden yönetilir.
+• [color=#00e5ff]İskele Barakası & Dalış Hazırlık Hub'ı:[/color] Şehir ile okyanus arasına denizci temalı Dalış Hazırlık İskelesi eklendi. Dalış öncesi ekipman durumu (çanta, oksijen tüpü, maske, palet, fener ve canlı batarya) tek ekranda incelenebilir, fener şarj edilebilir ve tek tuşla dalışa geçilebilir.
+• [color=#00e5ff]Sinematik Yükleme Ekranı Geçişleri:[/color] Şehir Haritası, İskele Barakası, Okyanus Dalışı ve Ana Menü arasındaki tüm geçişler akıcı yükleme ekranı animasyonu eşliğinde pürüzsüzleştirildi.
+• [color=#00e5ff]Doğrudan Ana Menüye Çıkış & Otomatik Kayıt:[/color] Şehir Haritası'ndaki çıkış butonu ile tüm ilerleme otomatik kaydedilerek doğrudan ana menüye dönülebilmesi sağlandı.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Mobil Kontroller & Menü Çakışma Düzeltmesi:[/color] Şehir ve baraka menülerindeyken mobil dokunmatik kontrollerin ekranda kontrolsüzce belirme hatası giderildi; kontroller yalnızca okyanusta aktifleşir.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
@@ -282,7 +314,20 @@ Koleksiyonu sıfırlamak istediğinden emin misin?"
 • [color=#81c784]Yeni Eşya Keşif Takılması (Lag Spike) Giderildi:[/color] Yeni eşyalar ilk kez keşfedildiğinde yaşanan disk yazma takılması WorkerThreadPool arka plan I/O mimarisiyle tamamen akıcı hale getirildi.
 • [color=#81c784]Fener Işık & Fizik (FPS) Optimizasyonu:[/color] Fener doku üretimi ve dinamik ışık motoru optimize edilerek fener ilk açıldığında oluşan fps düşüşü ve takılmalar tamamen giderildi.
 • [color=#81c784]Fener HUD (Ekipman Dock) Senkronizasyonu:[/color] Okyanustaki sağ alt ekipman dock'unda fener seviyesinin (Lv.X) güncellenmeme ve görünmeme sorunu çözüldü.
-• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 PATCH NOTES[/b][/font_size][/color][/center]
+• [color=#81c784]Mobil Buton Teması Düzeltildi:[/color] Mobil fener ve depar butonlarının varsayılan gri temaya düşme ve temassız/stilsiz görünme hatası önbellek stiliyle düzeltildi.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.7.0 PATCH NOTES[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
+• [color=#00e5ff]Full City Map Integration:[/color] Game loop now directly launches into the Port Town City Map. All facilities, merchant stalls, and operations are managed via map pins.
+• [color=#00e5ff]Dock Shack & Dive Preparation Pier Hub:[/color] Added a nautical Dock Shack hub between town and ocean. Check all equipment stats (backpack, O2 tank, mask, fins, flashlight and live battery), recharge flashlight, and dive into the deep.
+• [color=#00e5ff]Cinematic Loading Screen Transitions:[/color] Seamless loading screen transitions smoothly bridge City Map, Dock Shack, Ocean Diving, and the Main Menu.
+• [color=#00e5ff]Direct Exit to Main Menu & Auto-Save:[/color] Exit Map button on the City Map automatically saves progress and returns directly to the Main Menu.
+
+[color=#ff7043][b]⚡ PERFORMANCE & BUG FIXES:[/b][/color]
+• [color=#81c784]Mobile Controls & Hub UI Conflict Fixed:[/color] Resolved the bug where mobile touch controls spawned when closing menus; controls now strictly activate only while diving in the ocean.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 PATCH NOTES[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 UPDATES & NEW FEATURES:[/b][/color]
 • [color=#00e5ff]100% English Language Support:[/color] Full bilingual localization (TR / EN) implemented across all UI screens, menus, dialogs, items, notifications, and guides. Seamless instant language switching via Settings.
@@ -322,7 +367,20 @@ Koleksiyonu sıfırlamak istediğinden emin misin?"
 • [color=#81c784]New Item Discovery Lag Spike Resolved:[/color] Disk write stutter upon discovering new items resolved using WorkerThreadPool background I/O architecture.
 • [color=#81c784]Flashlight Lighting & Physics Optimization:[/color] Flashlight texture generation and dynamic light engine optimized, eliminating initial FPS drops and stutters.
 • [color=#81c784]Flashlight HUD Sync:[/color] Resolved issue where flashlight level (Lv.X) did not update or appear in ocean equipment dock.
-• [color=#81c784]Mobile Button Theme Fixed:[/color] Resolved mobile flashlight and sprint buttons reverting to default gray styling using cached styles.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+• [color=#81c784]Mobile Button Theme Fixed:[/color] Resolved mobile flashlight and sprint buttons reverting to default gray styling using cached styles.","[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.7.0 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Şehir Haritası Tam Entegrasyonu:[/color] Oyun döngüsü artık doğrudan Liman Kasabası Şehir Haritası'ndan başlar. Tüm tesisler, mağazalar ve operasyonlar harita pinleri üzerinden yönetilir.
+• [color=#00e5ff]İskele Barakası & Dalış Hazırlık Hub'ı:[/color] Şehir ile okyanus arasına denizci temalı Dalış Hazırlık İskelesi eklendi. Dalış öncesi ekipman durumu (çanta, oksijen tüpü, maske, palet, fener ve canlı batarya) tek ekranda incelenebilir, fener şarj edilebilir ve tek tuşla dalışa geçilebilir.
+• [color=#00e5ff]Sinematik Yükleme Ekranı Geçişleri:[/color] Şehir Haritası, İskele Barakası, Okyanus Dalışı ve Ana Menü arasındaki tüm geçişler akıcı yükleme ekranı animasyonu eşliğinde pürüzsüzleştirildi.
+• [color=#00e5ff]Doğrudan Ana Menüye Çıkış & Otomatik Kayıt:[/color] Şehir Haritası'ndaki çıkış butonu ile tüm ilerleme otomatik kaydedilerek doğrudan ana menüye dönülebilmesi sağlandı.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Mobil Kontroller & Menü Çakışma Düzeltmesi:[/color] Şehir ve baraka menülerindeyken mobil dokunmatik kontrollerin ekranda kontrolsüzce belirme hatası giderildi; kontroller yalnızca okyanusta aktifleşir.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
@@ -485,19 +543,24 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "◆ DIVE & FIND — GELİŞTİRİCİ & HİLE KONSOLU","◆ DIVE & FIND — DEV & CHEAT CONSOLE","◆ DIVE & FIND — GELİŞTİRİCİ & HİLE KONSOLU"
 "⚓ %dm  |  ↑ Yüzey: %dm","⚓ %dm  |  ↑ Surface: %dm","⚓ %dm  |  ↑ Yüzey: %dm"
 "⚓ DERİNLİK: 0m","⚓ DEPTH: 0m","⚓ DERİNLİK: 0m"
+"⚓ LİMAN BARAKASI & İSKELE","⚓ DOCK SHACK & PIER","⚓ LİMAN BARAKASI & İSKELE"
 "⚓ Smile Games Sunar","⚓ Smile Games Presents","⚓ Smile Games Sunar"
 "⚓ YÜZEYDESİN (0m)","⚓ AT SURFACE (0m)","⚓ YÜZEYDESİN (0m)"
 "⚙️","⚙️","⚙️"
 "⚙️ AYARLAR","⚙️ SETTINGS","⚙️ AYARLAR"
 "⚠️ Bataryan zaten tamamen dolu!","⚠️ Battery is already fully charged!","⚠️ Bataryan zaten tamamen dolu!"
+"⚠️ DALIŞ KAPALI (GECE)","⚠️ DIVE CLOSED (NIGHT)","⚠️ DALIŞ KAPALI (GECE)"
 "⚠️ DİKKAT: Oksijen yüzeye yetmeyebilir!","⚠️ WARNING: Oxygen may not be enough to surface!","⚠️ DİKKAT: Oksijen yüzeye yetmeyebilir!"
+"⚠️ Fener bataryası azaldı! Kasabadaki Şarj İstasyonunda doldurabilirsin.","⚠️ Flashlight battery is low! You can recharge it at the town's Charge Station.","⚠️ Fener bataryası azaldı! Kasabadaki Şarj İstasyonunda doldurabilirsin."
 "⚠️ Fenerin yok! Önce Ekipman Mağazasından satın almalısın.","⚠️ You don't have a flashlight! Buy one from the Equipment Shop first.","⚠️ Fenerin yok! Önce Ekipman Mağazasından satın almalısın."
+"⚠️ Hava karardı (19:00+). Dalış yapabilmek için şehre dönüp günü ilerletmelisin!","⚠️ Night has fallen (19:00+). Return to town and advance the day to dive!","⚠️ Hava karardı (19:00+). Dalış yapabilmek için şehre dönüp günü ilerletmelisin!"
 "⚠️ KOLEKSİYONU SIFIRLA","⚠️ RESET COLLECTION","⚠️ KOLEKSİYONU SIFIRLA"
 "⚠️ MEVCUT KAYIT SİLİNECEK","⚠️ EXISTING SAVE WILL BE ERASED","⚠️ MEVCUT KAYIT SİLİNECEK"
 "⚡ AÇIK","⚡ SPRINT ON","⚡ AÇIK"
 "⚡ BATARYA:","⚡ BATTERY:","⚡ BATARYA:"
 "⚡ DEPAR","⚡ SPRINT","⚡ DEPAR"
 "⚡ DİREKT AL","⚡ QUICK TAKE","⚡ DİREKT AL"
+"⚡ FENERİ ŞARJ ET","⚡ CHARGE FLASHLIGHT","⚡ FENERİ ŞARJ ET"
 "⚡ Fener Yok","⚡ No Flashlight","⚡ Fener Yok"
 "⚡ TAM DOLU","⚡ FULLY CHARGED","⚡ TAM DOLU"
 "⚡ ŞARJ ET","⚡ CHARGE","⚡ ŞARJ ET"
@@ -515,6 +578,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "🇬🇧 English","🇬🇧 English","🇬🇧 English"
 "🇹🇷 Türkçe","🇹🇷 Türkçe","🇹🇷 Türkçe"
 "🌊 En Derin Nokta","🌊 Deepest Point","🌊 En Derin Nokta"
+"🎒 ÇANTA","🎒 BAG","🎒 ÇANTA"
 "🎒 ÇANTA [I]","🎒 BAG [I]","🎒 ÇANTA [I]"
 "🎒 Çanta [I]","🎒 Bag [I]","🎒 Çanta [I]"
 "🎒 Çantadaki Eşyalar","🎒 Bag Inventory","🎒 Çantadaki Eşyalar"
@@ -527,6 +591,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "💎 Değerli","💎 Valuable","💎 Değerli"
 "💡 Bulanık Derinlikler: Dalış gözlüğünü geliştirerek diplerdeki görüş mesafeni artırabilirsin.","💡 Murky Depths: Upgrade your diving mask to improve your visibility in the deep.","💡 Bulanık Derinlikler: Dalış gözlüğünü geliştirerek diplerdeki görüş mesafeni artırabilirsin."
 "💡 Derinlik & Basınç: Derinlere indikçe oksijenin çok daha hızlı tükenir, Atölye'den tüpünü geliştirmeyi unutma!","💡 Depth & Pressure: Oxygen depletes much faster at greater depths; don't forget to upgrade your tank in the Workshop!","💡 Derinlik & Basınç: Derinlere indikçe oksijenin çok daha hızlı tükenir, Atölye'den tüpünü geliştirmeyi unutma!"
+"💡 Ekipmanlarını kontrol et ve derinliklere dal! Şarj ve geliştirmeler kasabadadır.","💡 Check your gear and dive into the depths! Recharges and upgrades are available in town.","💡 Ekipmanlarını kontrol et ve derinliklere dal! Şarj ve geliştirmeler kasabadadır."
 "💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin.","💡 Item Locking: Right-click valuable items in your bag to lock 🔒 and protect them.","💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin."
 "💡 Güvenli Satış: 'Hepsini Sat' butonu kilitli eşyalarını asla satmaz.","💡 Safe Selling: The 'Sell All' button will never sell your locked items.","💡 Güvenli Satış: 'Hepsini Sat' butonu kilitli eşyalarını asla satmaz."
 "💡 Hızlı Yüzüş: Palet seviyeni artırarak su altında daha çevik hareket edebilir ve akıntılara karşı koyabilirsin.","💡 Fast Swimming: Upgrade your fins to move more agilely underwater and resist ocean currents.","💡 Hızlı Yüzüş: Palet seviyeni artırarak su altında daha çevik hareket edebilir ve akıntılara karşı koyabilirsin."
@@ -537,6 +602,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin.","💡 [E] Shortcut: When you reach the surface, press [E] to quickly board your boat.","💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin."
 "💡 Çanta Düzeni: Çanta ekranındaki 'Sırala' butonu ile eşyalarını fiyata veya türe göre dizebilirsin.","💡 Bag Organization: Use the 'Sort' button in your bag to organize items by price or category.","💡 Çanta Düzeni: Çanta ekranındaki 'Sırala' butonu ile eşyalarını fiyata veya türe göre dizebilirsin."
 "💡 İpucu: Eşyayı kilitlemek / açmak için Sağ Tıkla veya Basılı Tut 🔒 (Hepsini Sat kilitli eşyaları satmaz)","💡 Tip: Right Click or Hold to lock/unlock an item 🔒 ('Sell All' will never sell locked items)","💡 İpucu: Eşyayı kilitlemek / açmak için Sağ Tıkla veya Basılı Tut 🔒 (Hepsini Sat kilitli eşyaları satmaz)"
+"💡 İskeleden suya daldığında hava kararana (19:00) kadar serbestçe dalabilirsin.","💡 You can freely explore the depths until nightfall (19:00).","💡 İskeleden suya daldığında hava kararana (19:00) kadar serbestçe dalabilirsin."
 "💰 %d Zurna","💰 %d Zurna","💰 %d Zurna"
 "💰 0 Zurna","💰 0 Zurna","💰 0 Zurna"
 "💰 Fiyat","💰 Price","💰 Fiyat"
@@ -549,6 +615,7 @@ Derin okyanusların gizemli sularına dalış yap! Dipte saklı kalan antik eser
 "📋 TARİF FİHRİSTİ","📋 RECIPE INDEX","📋 TARİF FİHRİSTİ"
 "📋 YENİLİKLER & GÜNCELLEMELER","📋 CHANGELOG & UPDATES","📋 YENİLİKLER & GÜNCELLEMELER"
 "📍 LİMAN KASABASI","📍 PORT TOWN","📍 LİMAN KASABASI"
+"📖 KOLEKSİYON","📖 COLLECTION","📖 KOLEKSİYON"
 "📖 KOLEKSİYON [C]","📖 COLLECTION [C]","📖 KOLEKSİYON [C]"
 "📦 Satılan Eşya","📦 Items Sold","📦 Satılan Eşya"
 "🔄 Sırala","🔄 Sort","🔄 Sırala"
@@ -574,9 +641,12 @@ Eşyayı kilitle (Korunur)"
 "🗑️","🗑️","🗑️"
 "🗑️ Bırak","🗑️ Drop","🗑️ Bırak"
 "🗑️ Çöp","🗑️ Trash","🗑️ Çöp"
+"🗺️ ŞEHRE ÇIK","🗺️ VISIT CITY","🗺️ ŞEHRE ÇIK"
 "🚤 Tekneye Çık [E]","🚤 Board Boat [E]","🚤 Tekneye Çık [E]"
 "🚪 ANA MENÜYE DÖN","🚪 RETURN TO MAIN MENU","🚪 ANA MENÜYE DÖN"
 "🚪 HARİTADAN ÇIK","🚪 EXIT MAP","🚪 HARİTADAN ÇIK"
+"🤿 DALIŞ HAZIRLIK İSKELESİ","🤿 DIVE PREPARATION PIER","🤿 DALIŞ HAZIRLIK İSKELESİ"
+"🤿 DALIŞA BAŞLA","🤿 START DIVE","🤿 DALIŞA BAŞLA"
 "🤿 DALIŞA BAŞLA / OKYANUS","🤿 START DIVE / OCEAN","🤿 DALIŞA BAŞLA / OKYANUS"
 "🤿 Yapılan Dalış","🤿 Dives Completed","🤿 Yapılan Dalış"
 "🥽+","🥽+","🥽+"

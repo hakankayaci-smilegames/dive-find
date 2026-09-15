@@ -228,7 +228,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_menu_script")
 collection_scene = ExtResource("5_collection_scene")
-game_version = "Pre-Alpha 1.6.3"
+game_version = "Pre-Alpha 1.7"
 
 [node name="SkyTexture" type="TextureRect" parent="." unique_id=1862362704]
 layout_mode = 1
@@ -378,7 +378,20 @@ grow_vertical = 2
 theme_override_colors/default_color = Color(0.85, 0.92, 1, 1)
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
-text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+text = "[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.7.0 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
+
+[color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
+• [color=#00e5ff]Şehir Haritası Tam Entegrasyonu:[/color] Oyun döngüsü artık doğrudan Liman Kasabası Şehir Haritası'ndan başlar. Tüm tesisler, mağazalar ve operasyonlar harita pinleri üzerinden yönetilir.
+• [color=#00e5ff]İskele Barakası & Dalış Hazırlık Hub'ı:[/color] Şehir ile okyanus arasına denizci temalı Dalış Hazırlık İskelesi eklendi. Dalış öncesi ekipman durumu (çanta, oksijen tüpü, maske, palet, fener ve canlı batarya) tek ekranda incelenebilir, fener şarj edilebilir ve tek tuşla dalışa geçilebilir.
+• [color=#00e5ff]Sinematik Yükleme Ekranı Geçişleri:[/color] Şehir Haritası, İskele Barakası, Okyanus Dalışı ve Ana Menü arasındaki tüm geçişler akıcı yükleme ekranı animasyonu eşliğinde pürüzsüzleştirildi.
+• [color=#00e5ff]Doğrudan Ana Menüye Çıkış & Otomatik Kayıt:[/color] Şehir Haritası'ndaki çıkış butonu ile tüm ilerleme otomatik kaydedilerek doğrudan ana menüye dönülebilmesi sağlandı.
+
+[color=#ff7043][b]⚡ PERFORMANS & HATA DÜZELTMELERİ:[/b][/color]
+• [color=#81c784]Mobil Kontroller & Menü Çakışma Düzeltmesi:[/color] Şehir ve baraka menülerindeyken mobil dokunmatik kontrollerin ekranda kontrolsüzce belirme hatası giderildi; kontroller yalnızca okyanusta aktifleşir.
+
+[center][color=#546e7a]──────────────────────────────────────[/color][/center]
+
+[center][color=#ffd54f][font_size=16][b]⚓ PRE-ALPHA 1.6.3 SÜRÜM NOTLARI[/b][/font_size][/color][/center]
 
 [color=#ffd54f][b]🚀 GÜNCELLEMELER & YENİLİKLER:[/b][/color]
 • [color=#00e5ff]%100 İngilizce Dil Desteği:[/color] Oyunun tüm arayüzleri, menüleri, diyalogları, eşyaları, bildirimleri ve rehberleri için eksiksiz Türkçe / İngilizce çift dilli yerelleştirme (Bilingual Localization) tamamlandı. Ayarlar menüsünden anında geçiş yapılabilir.
@@ -459,7 +472,7 @@ theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 13
-text = "PreAlpha 1.6.3"
+text = "PreAlpha 1.7.0"
 horizontal_alignment = 2
 vertical_alignment = 1
 

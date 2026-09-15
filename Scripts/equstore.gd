@@ -57,18 +57,18 @@ func _build_slots() -> void:
 
 
 func _get_player_stat(stat_key: String) -> int:
-	if not _player or stat_key == "":
+	if stat_key == "":
 		return 0
-	var value = _player.get(stat_key)
-	if value == null:
-		return 0
-	return int(value)
+	if GlobalInventory.has_method("get_equipment_stat"):
+		return GlobalInventory.get_equipment_stat(stat_key, 1 if stat_key == "tube_level" else 0)
+	if _player:
+		var value = _player.get(stat_key)
+		if value != null:
+			return int(value)
+	return 1 if stat_key == "tube_level" else 0
 
 
 func _on_upgrade_requested(slot: EquipmentSlot) -> void:
-	if not _player:
-		return
-
 	var current_level: int = _get_player_stat(slot.data.stat_key)
 
 	if slot.data.max_level >= 0 and current_level >= slot.data.max_level:
@@ -80,20 +80,21 @@ func _on_upgrade_requested(slot: EquipmentSlot) -> void:
 		return  # Para yetersiz
 
 	var new_level: int = current_level + 1
-	_player.set(slot.data.stat_key, new_level)
-	slot.current_level = new_level
 
 	if not GlobalEconomy.spend_money(cost):
-		_player.set(slot.data.stat_key, current_level)
-		slot.current_level = current_level
 		return
 
+	if GlobalInventory.has_method("set_equipment_stat"):
+		GlobalInventory.set_equipment_stat(slot.data.stat_key, new_level)
+	elif _player:
+		_player.set(slot.data.stat_key, new_level)
+		GlobalInventory.equipment_updated.emit(slot.data.stat_key, new_level)
+		GlobalInventory.inventory_updated.emit()
+
+	slot.current_level = new_level
 	GlobalSoundManager.play_sfx("upgrade")
 	slot.refresh(new_level)
 	slot.play_upgrade_feedback()
-
-	GlobalInventory.equipment_updated.emit(slot.data.stat_key, new_level)
-	GlobalInventory.inventory_updated.emit()
 
 
 func _on_money_changed(_new_amount: int) -> void:

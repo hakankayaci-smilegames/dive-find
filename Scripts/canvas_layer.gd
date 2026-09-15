@@ -6,7 +6,9 @@ extends CanvasLayer
 @export var player_node: Node2D 
 @export var depth_label: Label 
 @export var target_scene: PackedScene
-@export var loading_scene: PackedScene # Ofise geçişten önce gösterilecek loading screen (overlay)
+var dock_shack_scene: PackedScene = null
+var city_map_scene: PackedScene = null
+@export var loading_scene: PackedScene # Ofise/Barakaya geçişten önce gösterilecek loading screen (overlay)
 
 @export_group("Ekipman Paneli")
 @export var bag_level_label: Label
@@ -96,7 +98,12 @@ func _on_inventory_or_equipment_updated() -> void:
 
 
 func _open_office_at_start() -> void:
-	_open_office()
+	var scene: PackedScene = city_map_scene if city_map_scene else load("res://Scenes/city_map.tscn")
+	if scene:
+		var city_inst = scene.instantiate()
+		get_tree().current_scene.add_child(city_inst)
+	else:
+		_open_office()
 
 
 func _process(delta: float) -> void:
@@ -522,11 +529,14 @@ func _open_office_after_loading() -> void:
 
 
 func _open_office() -> void:
-	if target_scene == null:
-		return
 	GlobalSoundManager.play_sfx("door_open")
-	var office_instance = target_scene.instantiate()
-	get_tree().current_scene.add_child(office_instance)
+	var shack_res: PackedScene = dock_shack_scene if dock_shack_scene else load("res://Scenes/dock_shack.tscn")
+	if shack_res:
+		var shack_instance = shack_res.instantiate()
+		get_tree().current_scene.add_child(shack_instance)
+	elif target_scene:
+		var office_instance = target_scene.instantiate()
+		get_tree().current_scene.add_child(office_instance)
 		
 func _on_money_changed(amount: Variant) -> void:
 	var target_amount: int = int(amount)

@@ -1,0 +1,557 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://Scripts/dock_shack.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://Sprites/game_bg.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://Sprites/canta.png" id="3_canta"]
+[ext_resource type="Texture2D" path="res://Sprites/oksijen_tupu.png" id="4_tup"]
+[ext_resource type="Texture2D" path="res://Sprites/dalis_gozluk.png" id="5_gozluk"]
+[ext_resource type="Texture2D" path="res://Sprites/palet.png" id="6_palet"]
+[ext_resource type="Texture2D" path="res://Sprites/flaslight.png" id="7_fener"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_card"]
+content_margin_left = 12.0
+content_margin_top = 10.0
+content_margin_right = 12.0
+content_margin_bottom = 10.0
+bg_color = Color(0.08, 0.14, 0.2, 0.88)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.5, 0.65, 0.8)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_header_badge"]
+content_margin_left = 16.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(0.06, 0.12, 0.18, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1, 0.85, 0.95, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_normal"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.9, 0.72, 0.3, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.15, 0.1, 0.05, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 3
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_hover"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(1, 0.82, 0.4, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.2, 0.15, 0.05, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_gold_pressed"]
+content_margin_left = 20.0
+content_margin_top = 10.0
+content_margin_right = 20.0
+content_margin_bottom = 10.0
+bg_color = Color(0.75, 0.58, 0.22, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1, 0.05, 0.02, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_action_normal"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.1, 0.18, 0.26, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.25, 0.55, 0.7, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_action_hover"]
+content_margin_left = 16.0
+content_margin_top = 8.0
+content_margin_right = 16.0
+content_margin_bottom = 8.0
+bg_color = Color(0.14, 0.25, 0.36, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.1, 0.9, 1, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_normal"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+bg_color = Color(0.08, 0.55, 0.65, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.3, 0.95, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0.1, 0.8, 1, 0.3)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_hover"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+bg_color = Color(0.12, 0.7, 0.82, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0.2, 0.9, 1, 0.5)
+shadow_size = 18
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_dive_pressed"]
+content_margin_left = 28.0
+content_margin_top = 14.0
+content_margin_right = 28.0
+content_margin_bottom = 14.0
+bg_color = Color(0.05, 0.4, 0.48, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.2, 0.7, 0.8, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
+content_margin_bottom = 8.0
+bg_color = Color(0.08, 0.04, 0.02, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.75, 0.25, 0.9)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="DockShack" type="CanvasLayer" unique_id=773829101]
+layer = 75
+script = ExtResource("1_script")
+
+[node name="Background" type="TextureRect" parent="." unique_id=773829102]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+modulate = Color(0.2, 0.32, 0.48, 1)
+
+[node name="ColorOverlay" type="ColorRect" parent="." unique_id=773829103]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.03, 0.06, 0.1, 0.78)
+
+[node name="MainMargin" type="MarginContainer" parent="." unique_id=773829104]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="MainVBox" type="VBoxContainer" parent="MainMargin" unique_id=773829105]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="HBoxContainer" parent="MainMargin/MainVBox" unique_id=773829106]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="LocationBadge" type="Label" parent="MainMargin/MainVBox/TopBar" unique_id=773829107]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 17
+theme_override_styles/normal = SubResource("StyleBoxFlat_header_badge")
+text = "⚓ LİMAN BARAKASI & İSKELE"
+vertical_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="MainMargin/MainVBox/TopBar" unique_id=773829108]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 0.9)
+theme_override_font_sizes/font_size = 15
+text = "⏰ 10:00"
+vertical_alignment = 1
+
+[node name="DayLabel" type="Label" parent="MainMargin/MainVBox/TopBar" unique_id=773829109]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 15
+text = "📅 GÜN 1"
+vertical_alignment = 1
+
+[node name="Spacer" type="Control" parent="MainMargin/MainVBox/TopBar" unique_id=773829110]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ZurnaLabel" type="Label" parent="MainMargin/MainVBox/TopBar" unique_id=773829111]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.88, 0.25, 1)
+theme_override_font_sizes/font_size = 18
+text = "💰 0 Zurna"
+vertical_alignment = 1
+
+[node name="SettingsButton" type="Button" parent="MainMargin/MainVBox/TopBar" unique_id=773829112]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 16
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_action_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_action_hover")
+text = "⚙️"
+
+[node name="CityButton" type="Button" parent="MainMargin/MainVBox/TopBar" unique_id=773829113]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.12, 0.08, 0.02, 1)
+theme_override_font_sizes/font_size = 15
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_gold_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_gold_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_gold_pressed")
+text = "🗺️ ŞEHRE ÇIK"
+
+[node name="CenterArea" type="VBoxContainer" parent="MainMargin/MainVBox" unique_id=773829114]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 1
+theme_override_constants/separation = 18
+
+[node name="HeaderBox" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea" unique_id=773829115]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="TitleLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/HeaderBox" unique_id=773829116]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.92, 1, 1)
+theme_override_font_sizes/font_size = 24
+text = "🤿 DALIŞ HAZIRLIK İSKELESİ"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/HeaderBox" unique_id=773829117]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.85, 0.95, 0.85)
+theme_override_font_sizes/font_size = 14
+text = "Ekipmanlarını kontrol et, fenerini şarj et ve derinliklere dalış yap."
+horizontal_alignment = 1
+
+[node name="EquipmentGrid" type="HBoxContainer" parent="MainMargin/MainVBox/CenterArea" unique_id=773829118]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 14
+
+[node name="BagCard" type="PanelContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid" unique_id=773829119]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 95)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/BagCard" unique_id=773829120]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/BagCard/VBox" unique_id=773829121]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("3_canta")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BagInfoLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/BagCard/VBox" unique_id=773829122]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Sırt Çantası Lv.1\n8 Slot"
+horizontal_alignment = 1
+
+[node name="TankCard" type="PanelContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid" unique_id=773829123]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 95)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/TankCard" unique_id=773829124]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/TankCard/VBox" unique_id=773829125]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("4_tup")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TankInfoLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/TankCard/VBox" unique_id=773829126]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Oksijen Tüpü Lv.1\n~60s Kapasite"
+horizontal_alignment = 1
+
+[node name="MaskCard" type="PanelContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid" unique_id=773829127]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 95)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/MaskCard" unique_id=773829128]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/MaskCard/VBox" unique_id=773829129]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("5_gozluk")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MaskInfoLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/MaskCard/VBox" unique_id=773829130]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Dalış Maskesi Lv.1\nZoom: x1.1"
+horizontal_alignment = 1
+
+[node name="FinsCard" type="PanelContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid" unique_id=773829131]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 95)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/FinsCard" unique_id=773829132]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/FinsCard/VBox" unique_id=773829133]
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("6_palet")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="FinsInfoLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/FinsCard/VBox" unique_id=773829134]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Palet Lv.1\nHız: +%0"
+horizontal_alignment = 1
+
+[node name="LightCard" type="PanelContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid" unique_id=773829135]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(190, 95)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_card")
+
+[node name="VBox" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/LightCard" unique_id=773829136]
+layout_mode = 2
+alignment = 1
+
+[node name="Icon" type="TextureRect" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/LightCard/VBox" unique_id=773829137]
+custom_minimum_size = Vector2(36, 32)
+layout_mode = 2
+size_flags_horizontal = 4
+texture = ExtResource("7_fener")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="LightInfoLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/LightCard/VBox" unique_id=773829138]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 13
+text = "Dalış Feneri Lv.1"
+horizontal_alignment = 1
+
+[node name="BatteryRow" type="HBoxContainer" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/LightCard/VBox" unique_id=773829139]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="BatteryProgressBar" type="ProgressBar" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/LightCard/VBox/BatteryRow" unique_id=773829140]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+value = 100.0
+show_percentage = false
+
+[node name="BatteryPercentLabel" type="Label" parent="MainMargin/MainVBox/CenterArea/EquipmentGrid/LightCard/VBox/BatteryRow" unique_id=773829141]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.1, 0.9, 1, 1)
+theme_override_font_sizes/font_size = 11
+text = "%100"
+
+[node name="DiveCTAContainer" type="VBoxContainer" parent="MainMargin/MainVBox/CenterArea" unique_id=773829142]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 14
+
+[node name="DiveButton" type="Button" parent="MainMargin/MainVBox/CenterArea/DiveCTAContainer" unique_id=773829143]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(340, 58)
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 22
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_dive_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_dive_hover")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_dive_pressed")
+text = "🤿 DALIŞA BAŞLA"
+
+[node name="ActionButtonsRow" type="HBoxContainer" parent="MainMargin/MainVBox/CenterArea/DiveCTAContainer" unique_id=773829144]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 16
+
+[node name="InventoryButton" type="Button" parent="MainMargin/MainVBox/CenterArea/DiveCTAContainer/ActionButtonsRow" unique_id=773829146]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_action_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_action_hover")
+text = "🎒 ÇANTA"
+
+[node name="CollectionButton" type="Button" parent="MainMargin/MainVBox/CenterArea/DiveCTAContainer/ActionButtonsRow" unique_id=773829147]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 14
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn_action_normal")
+theme_override_styles/hover = SubResource("StyleBoxFlat_btn_action_hover")
+text = "📖 KOLEKSİYON"
+
+[node name="BottomBar" type="HBoxContainer" parent="MainMargin/MainVBox" unique_id=773829148]
+layout_mode = 2
+alignment = 1
+
+[node name="TipLabel" type="Label" parent="MainMargin/MainVBox/BottomBar" unique_id=773829149]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.55, 0.75, 0.9, 0.8)
+theme_override_font_sizes/font_size = 13
+text = "💡 İskeleden suya daldığında hava kararana (19:00) kadar serbestçe dalabilirsin."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ToastPanel" type="PanelContainer" parent="." unique_id=773829150]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -280.0
+offset_top = -65.0
+offset_right = 280.0
+offset_bottom = -25.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
+
+[node name="ToastLabel" type="Label" parent="ToastPanel" unique_id=773829151]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.92, 0.4, 1)
+theme_override_font_sizes/font_size = 14
+text = "Bildirim mesajı"
+horizontal_alignment = 1
+vertical_alignment = 1

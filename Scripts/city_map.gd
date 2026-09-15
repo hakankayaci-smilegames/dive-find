@@ -12,6 +12,8 @@ extends CanvasLayer
 @export var lab_scene: PackedScene = preload("res://Scenes/laboratory.tscn")
 @export var pazar_scene: PackedScene = preload("res://Scenes/pazar.tscn")
 @export var charge_station_scene: PackedScene = preload("res://Scenes/charge_station.tscn")
+var dock_shack_scene: PackedScene = null
+@export var loading_scene: PackedScene = preload("res://Scenes/loading_screen.tscn")
 
 # HUD & Referanslar
 @onready var map_texture: TextureRect = $MapContainer/MapContent/MapTexture
@@ -54,6 +56,7 @@ var _money_tween: Tween = null
 var _toast_tween: Tween = null
 var _light_tween: Tween = null
 var _current_day: int = 1
+var _is_transitioning: bool = false
 
 
 func _ready() -> void:
@@ -63,6 +66,7 @@ func _ready() -> void:
 
 	add_to_group("city_map")
 	add_to_group("popup_ui")
+	add_to_group("hub_menu")
 
 	# Bakiye ve Zaman
 	_displayed_money = GlobalEconomy.money
@@ -112,7 +116,9 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
-	get_tree().paused = false
+	remove_from_group("hub_menu")
+	if not _is_transitioning:
+		get_tree().paused = false
 
 
 func _connect_pins() -> void:
@@ -145,29 +151,23 @@ func _on_pin_clicked(pin: MapPin) -> void:
 
 
 func _handle_dock_action() -> void:
-	var time_mgr: Node = _get_time_mgr()
-	var is_allowed: bool = time_mgr.is_dive_allowed() if time_mgr else true
-	var is_en: bool = ItemTranslator.get_current_locale() == "en"
-
-	if not is_allowed:
-		GlobalSoundManager.play_sfx("error")
-		_show_toast("DIVE CLOSED (NIGHT)! Advance the day to dive." if is_en else "DALIŞ KAPALI (GECE)! Dalış için günü ilerlet.")
+	if _is_transitioning:
 		return
+	_is_transitioning = true
+	GlobalSoundManager.play_sfx("door_close")
 
-	# Haritadan doğrudan suya dalış
-	GlobalSoundManager.play_sfx("water_splash")
-	var player = get_tree().get_first_node_in_group("player")
-	if player:
-		var surface_y: float = InfiniteMapManager.water_surface_y
-		player.set("global_position", Vector2(16.0, surface_y + 60.0))
-		player.set("velocity", Vector2(0, 450.0))
-
-	queue_free()
+	# Ortam geçişi: Şehir Haritası -> Liman Barakası (Loading Screen ile)
+	_play_transition(func() -> void:
+		var scene: PackedScene = dock_shack_scene if dock_shack_scene else load("res://Scenes/dock_shack.tscn")
+		if scene:
+			var shack = scene.instantiate()
+			get_tree().current_scene.add_child(shack)
+		queue_free()
+	, 1.0)
 
 
 func _open_charge_station() -> void:
-	var player = get_tree().get_first_node_in_group("player")
-	var flash_lvl: int = int(player.get("flashlight_level")) if player else 0
+	var flash_lvl: int = GlobalInventory.get_equipment_stat("flashlight_level", 0) if GlobalInventory.has_method("get_equipment_stat") else 0
 	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if flash_lvl <= 0:
 		GlobalSoundManager.play_sfx("error")
@@ -227,12 +227,35 @@ func _open_settings() -> void:
 
 
 func _on_close_pressed() -> void:
-	GlobalSoundManager.play_sfx("door_close")
 	if is_instance_valid(_active_sub_menu):
 		_active_sub_menu.queue_free()
 		_active_sub_menu = null
 		return
-	queue_free()
+
+	if _is_transitioning:
+		return
+	_is_transitioning = true
+	GlobalSoundManager.play_sfx("door_close")
+
+	# 1. Otomatik Kaydet
+	var time_mgr: Node = _get_time_mgr()
+	var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
+	var player = get_tree().get_first_node_in_group("player")
+	var equipment_dict := {
+		"backpack_level": GlobalInventory.get_equipment_stat("backpack_level", 0),
+		"tube_level": GlobalInventory.get_equipment_stat("tube_level", 1),
+		"goggles_level": GlobalInventory.get_equipment_stat("goggles_level", 0),
+		"fins_level": GlobalInventory.get_equipment_stat("fins_level", 0),
+		"flashlight_level": GlobalInventory.get_equipment_stat("flashlight_level", 0),
+		"current_battery": float(player.get("current_battery")) if (player and player.get("current_battery") != null) else float(GlobalInventory.equipment_data.get("current_battery", -1.0))
+	}
+	GlobalInventory.save_game(save_day, GlobalEconomy.money, equipment_dict)
+
+	# 2. Ortam Geçişi: Şehir Haritası -> Ana Menü (Loading Screen ile)
+	_play_transition(func() -> void:
+		get_tree().paused = false
+		get_tree().change_scene_to_file("res://Scenes/main_menu.tscn")
+	, 1.0)
 
 
 func _on_advance_day_pressed() -> void:
@@ -530,4 +553,23 @@ func _setup_button_juice(btn: Button) -> void:
 	btn.button_up.connect(func() -> void:
 		var tw := create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tw.tween_property(btn, "scale", Vector2(1.04, 1.04), 0.08)
+	)
+
+
+func _play_transition(on_complete: Callable, display_time: float = 1.0) -> void:
+	if not loading_scene:
+		on_complete.call()
+		return
+
+	var loading_inst = loading_scene.instantiate()
+	loading_inst.auto_change_scene = false
+	loading_inst.min_display_time = display_time
+	var layer_node := CanvasLayer.new()
+	layer_node.layer = 150
+	layer_node.add_child(loading_inst)
+	get_tree().current_scene.add_child(layer_node)
+
+	loading_inst.finished.connect(func():
+		layer_node.queue_free()
+		on_complete.call()
 	)

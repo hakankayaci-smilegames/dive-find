@@ -43,7 +43,7 @@ func _ready() -> void:
 		return
 
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	visible = true
+	visible = false
 	_load_controls_settings()
 
 	interact_button.pressed.connect(_on_interact_pressed)
@@ -138,8 +138,13 @@ func _find_player() -> void:
 
 
 func _process(_delta: float) -> void:
-	# Oyun duraklatılmışsa (Ofis Menüsü, Mağazalar vs.) veya popup açıksa kontrolleri gizle
-	if get_tree().paused or get_tree().get_nodes_in_group("popup_ui").size() > 0:
+	# Oyun duraklatılmışsa, şehir haritası/karargah/baraka veya popup açıksa kontrolleri gizle
+	var is_in_hub: bool = get_tree().paused \
+		or get_tree().get_nodes_in_group("popup_ui").size() > 0 \
+		or get_tree().get_nodes_in_group("hub_menu").size() > 0 \
+		or get_tree().get_nodes_in_group("city_map").size() > 0
+
+	if is_in_hub:
 		if visible:
 			visible = false
 			_reset_joystick()
