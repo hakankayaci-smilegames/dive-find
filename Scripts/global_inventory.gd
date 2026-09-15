@@ -16,6 +16,7 @@ const ITEM_TRES_DIR := "res://all_items_tres"
 # tarayıp yükler (bu, donmaya sebep olan asıl iş); sonraki her çağrı anında döner.
 # loading_screen.gd oyun başında bunu tetikleyerek donmayı yükleme ekranının arkasına saklar.
 var _all_items_cache: Array[ItemData] = []
+var _item_name_to_path: Dictionary = {}
 var _items_cached: bool = false
 var _collection_save_mutex: Mutex = Mutex.new()
 
@@ -71,6 +72,7 @@ func get_all_items(force_reload: bool = false) -> Array[ItemData]:
 		return _all_items_cache
 
 	_all_items_cache.clear()
+	_item_name_to_path.clear()
 	var dir := DirAccess.open(ITEM_TRES_DIR)
 	if not dir:
 		push_warning("GlobalInventory: '%s' klasörü bulunamadı!" % ITEM_TRES_DIR)
@@ -102,6 +104,8 @@ func get_all_items(force_reload: bool = false) -> Array[ItemData]:
 		var res = load(path)
 		if res is ItemData:
 			_all_items_cache.append(res)
+			if res.item_name != "":
+				_item_name_to_path[res.item_name] = res.resource_path
 
 	_items_cached = true
 	return _all_items_cache
@@ -129,6 +133,8 @@ func get_item_path(item: ItemData) -> String:
 		return item.source_path
 	if item.resource_path != "":
 		return item.resource_path
+	if _item_name_to_path.has(item.item_name):
+		return _item_name_to_path[item.item_name]
 	for cached_item in get_all_items():
 		if cached_item and cached_item.item_name == item.item_name and cached_item.resource_path != "":
 			return cached_item.resource_path
@@ -179,11 +185,16 @@ func is_item_discovered(item: Resource) -> bool:
 	var item_name_val = item.get("item_name")
 	if item_name_val != null and str(item_name_val) != "":
 		var target_name: String = str(item_name_val)
-		for cached_item in get_all_items():
-			if cached_item and cached_item.item_name == target_name:
-				if cached_item.resource_path != "" and discovered_items.has(cached_item.resource_path):
-					return true
-				break
+		if _item_name_to_path.has(target_name):
+			var mapped_path: String = _item_name_to_path[target_name]
+			if mapped_path != "" and discovered_items.has(mapped_path):
+				return true
+		else:
+			for cached_item in get_all_items():
+				if cached_item and cached_item.item_name == target_name:
+					if cached_item.resource_path != "" and discovered_items.has(cached_item.resource_path):
+						return true
+					break
 	return false
 
 

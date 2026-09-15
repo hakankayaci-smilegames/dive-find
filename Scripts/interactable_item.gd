@@ -24,9 +24,6 @@ func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
-	# Eşya üzerine kompakt hover rozetini oluştur
-	_build_hover_badge()
-
 
 func _build_hover_badge() -> void:
 	# Yüksekliği Sprite boyutuna göre dinamik hesapla
@@ -87,7 +84,7 @@ func _build_hover_badge() -> void:
 
 	# Rozet tıklandığında da tıklamaları algıla
 	panel_container.gui_input.connect(func(event: InputEvent) -> void:
-		if get_tree().get_nodes_in_group("popup_ui").size() > 0:
+		if get_tree().get_first_node_in_group("popup_ui") != null:
 			return
 		if event is InputEventMouseButton and event.pressed:
 			if event.button_index == MOUSE_BUTTON_LEFT:
@@ -110,6 +107,8 @@ func _on_mouse_exited() -> void:
 
 
 func _show_hover_badge() -> void:
+	if _hover_badge == null:
+		_build_hover_badge()
 	if not is_instance_valid(_hover_badge):
 		return
 
@@ -147,7 +146,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode == KEY_E:
 			# Ekranda zaten açık bir PopupUI varsa bunu tüketme
-			if get_tree().get_nodes_in_group("popup_ui").size() > 0:
+			if get_tree().get_first_node_in_group("popup_ui") != null:
 				return
 
 			# 1. Öncelik: Fare bu objenin üzerinde mi?
@@ -156,40 +155,39 @@ func _unhandled_input(event: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 				return
 
-			# 2. Öncelik: Fare hiçbir eşyada değilken dalgıca en yakın eşya bu mu?
-			if _is_closest_item_to_player():
-				_check_interaction()
+			# 2. Öncelik: Fare hiçbir eşyada değilken en yakın veya hover olan hedefi tek geçişte bul
+			var target: InteractableItem = _find_best_interaction_target()
+			if target:
+				target._check_interaction()
 				get_viewport().set_input_as_handled()
 
 
-func _is_closest_item_to_player() -> bool:
+func _find_best_interaction_target() -> InteractableItem:
 	var player = get_tree().get_first_node_in_group("player") as Node2D
 	if not player:
-		return false
+		return null
 
-	var my_dist: float = global_position.distance_to(player.global_position)
-	if my_dist > interaction_distance:
-		return false
-
-	# Eğer başka bir eşyanın üstünde fare duruyorsa o eşyaya öncelik verilir
 	var all_items := get_tree().get_nodes_in_group("interactable_items")
-	for node in all_items:
-		if node is InteractableItem and node != self and node._is_mouse_hovering:
-			return false
+	var closest: InteractableItem = null
+	var min_dist: float = INF
 
-	# Menzildeki en yakın eşya olup olmadığımızı kontrol et
 	for node in all_items:
-		if node is InteractableItem and is_instance_valid(node) and node != self:
-			var other_dist: float = node.global_position.distance_to(player.global_position)
-			if other_dist < my_dist:
-				return false
+		if node is InteractableItem and is_instance_valid(node):
+			var dist: float = node.global_position.distance_to(player.global_position)
+			if dist <= node.interaction_distance:
+				# Fare menzildeki bir eşyanın üzerindeyse o eşyaya mutlak öncelik ver
+				if node._is_mouse_hovering:
+					return node
+				if dist < min_dist:
+					min_dist = dist
+					closest = node
 
-	return true
+	return closest
 
 
 # Area2D'nin kendi input algılayıcısı (Fare tıklamalarını yakalar)
 func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if get_tree().get_nodes_in_group("popup_ui").size() > 0:
+	if get_tree().get_first_node_in_group("popup_ui") != null:
 		return
 
 	if event is InputEventMouseButton and event.pressed:

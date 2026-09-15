@@ -87,6 +87,8 @@ func _ready() -> void:
 		GlobalInventory.collection_updated.connect(_on_collection_updated)
 
 	GlobalInventory.inventory_updated.connect(_on_inventory_or_equipment_updated)
+	if GlobalInventory.has_signal("equipment_updated"):
+		GlobalInventory.equipment_updated.connect(func(_k: String, _v: int) -> void: _on_inventory_or_equipment_updated())
 	_on_inventory_or_equipment_updated()
 	refresh_ui()
 	call_deferred("_open_office_at_start")
@@ -109,8 +111,6 @@ func _open_office_at_start() -> void:
 func _process(delta: float) -> void:
 	if not is_instance_valid(player_node):
 		player_node = get_tree().get_first_node_in_group("player") as Node2D
-
-	_refresh_equipment_panel()
 
 	if is_instance_valid(player_node) and depth_label:
 		var surface_y = InfiniteMapManager.water_surface_y

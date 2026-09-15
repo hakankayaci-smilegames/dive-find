@@ -25,6 +25,7 @@ const DEFAULT_BG_COLOR := Color(0.2, 0.2, 0.2, 0.9)
 
 
 func _ready() -> void:
+	set_process(false)
 	if not mouse_entered.is_connected(_on_mouse_entered):
 		mouse_entered.connect(_on_mouse_entered)
 	if not mouse_exited.is_connected(_on_mouse_exited):
@@ -82,7 +83,10 @@ func _process(delta: float) -> void:
 		_press_timer += delta
 		if _press_timer >= LONG_PRESS_DURATION:
 			_long_pressed_triggered = true
+			set_process(false)
 			toggle_lock()
+	else:
+		set_process(false)
 
 
 func _gui_input(event: InputEvent) -> void:
@@ -95,15 +99,19 @@ func _gui_input(event: InputEvent) -> void:
 				_is_pressing = true
 				_long_pressed_triggered = false
 				_press_timer = 0.0
+				set_process(true)
 			else:
 				_is_pressing = false
+				set_process(false)
 	elif event is InputEventScreenTouch:
 		if event.pressed:
 			_is_pressing = true
 			_long_pressed_triggered = false
 			_press_timer = 0.0
+			set_process(true)
 		else:
 			_is_pressing = false
+			set_process(false)
 
 
 func toggle_lock() -> void:

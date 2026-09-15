@@ -34,6 +34,8 @@ var current_deadzone: float = 8.0
 
 var move_vector: Vector2 = Vector2.ZERO
 var _player: Node2D = null
+var _interact_scan_timer: float = 0.0
+const INTERACT_SCAN_INTERVAL: float = 0.1 # 10 Hz (saniyede 10 kontrol, 60 yerine)
 
 
 func _ready() -> void:
@@ -137,12 +139,12 @@ func _find_player() -> void:
 		_update_flashlight_button_visuals()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	# Oyun duraklatılmışsa, şehir haritası/karargah/baraka veya popup açıksa kontrolleri gizle
 	var is_in_hub: bool = get_tree().paused \
-		or get_tree().get_nodes_in_group("popup_ui").size() > 0 \
-		or get_tree().get_nodes_in_group("hub_menu").size() > 0 \
-		or get_tree().get_nodes_in_group("city_map").size() > 0
+		or get_tree().get_first_node_in_group("popup_ui") != null \
+		or get_tree().get_first_node_in_group("hub_menu") != null \
+		or get_tree().get_first_node_in_group("city_map") != null
 
 	if is_in_hub:
 		if visible:
@@ -173,8 +175,11 @@ func _process(_delta: float) -> void:
 				_player.mobile_sprint_active = false
 			_update_sprint_button_visuals()
 
-	# Menzildeki en yakın eşyayı tara ve İncele butonunu güncelle
-	_update_interact_button_state()
+	# Menzildeki en yakın eşyayı tara ve İncele butonunu güncelle (10 Hz throttling ile optimize edildi)
+	_interact_scan_timer += delta
+	if _interact_scan_timer >= INTERACT_SCAN_INTERVAL:
+		_interact_scan_timer = 0.0
+		_update_interact_button_state()
 
 
 func _update_interact_button_state() -> void:

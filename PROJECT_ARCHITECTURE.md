@@ -958,6 +958,35 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Geliştirici Konsolu Entegrasyonu ([`Scripts/dev_console.gd`](file:///home/hakan/dive&find/Scripts/dev_console.gd)):**
   - Konsola `shack`, `baraka` ve `iskele` komutları eklendi. Test esnasında haritayı açmadan doğrudan iskele barakasına geçiş yapılabilir.
 
+---
+
+## 39. Kapsamlı CPU, Bellek & Sıfır-Gecikme (Zero-Stutter) Optimizasyon Mimarisi
+
+- **`InteractableItem` Lazy HoverBadge & Tek Geçişli [E] Etkileşimi ([`Scripts/interactable_item.gd`](file:///home/hakan/dive&find/Scripts/interactable_item.gd)):**
+  - **Lazy UI Yükleme:** Dünya genelinde aktif chunk'larda bulunan ~1000 eşyanın `_ready()` anında 4000+ UI düğümü (`Node2D`, `PanelContainer`, `StyleBoxFlat`, `Label`) oluşturması engellendi. Rozetler yalnızca fare fiilen eşyanın üzerine girdiğinde (`_on_mouse_entered`) oluşturulur; sahnede boşta duran 1000 eşya için UI bellek ve sahne ağacı yükü sıfırlandı.
+  - **Tek Geçişli (Single-Pass) Etkileşim:** `[E]` tuşuna basıldığında 1000 eşyanın her birinin ikişer kez `get_nodes_in_group` çağırarak $O(N^2)$ lag spike üretmesi çözüldü. İlk tetiklenen eşya `_find_best_interaction_target()` ile $O(N)$ tek geçişte menzildeki hover/en yakın eşyayı bulup etkileşimi başlatır ve `set_input_as_handled()` ile diğer 999 eşyanın döngüsünü anında keser.
+  - **Sıfır Dizi GC:** `get_nodes_in_group("popup_ui").size() > 0` yerine `get_first_node_in_group("popup_ui") != null` kullanılarak gereksiz dinamik dizi tahsisleri giderildi.
+
+- **Mobil Etkileşim Butonu 10 Hz Throttling ([`Scripts/mobile_controls.gd`](file:///home/hakan/dive&find/Scripts/mobile_controls.gd)):**
+  - Mobil cihazlarda her render karesinde (60 FPS) 1000 eşyaya `distance_to` hesaplayan döngü, `_interact_scan_timer` ile 10 Hz (100 ms) aralığına bağlandı.
+  - Dalgıcın eşyaya yaklaşımındaki buton tepkiselliği ve akıcılığı kusursuz korunurken mobil CPU mesafe hesaplama maliyeti %85 azaltıldı.
+  - Hub kontrollerinde (`popup_ui`, `hub_menu`, `city_map`) `get_first_node_in_group` yapısına geçilerek her frame dizi üretimi engellendi.
+
+- **HUD Etiket Düzeni Kirletilmesinin (Dirty Flag) Önlenmesi ([`Scripts/canvas_layer.gd`](file:///home/hakan/dive&find/Scripts/canvas_layer.gd)):**
+  - `_process` içinden her frame çalışan `_refresh_equipment_panel()` çağrısı kaldırıldı.
+  - Ekipman etiketleri (`Lv.X`), `GlobalInventory.equipment_updated` ve `inventory_updated` sinyallerine tam reaktif bağlanarak saniyede 300 string birleştirmesi ve Font Cache dirty flag maliyeti sıfırlandı.
+
+- **Fener 60 Hz Fizik Döngüsü Dizi Temizliği ([`Scripts/player_controller.gd`](file:///home/hakan/dive&find/Scripts/player_controller.gd)):**
+  - `_handle_battery_and_flashlight` içinde her fizik karesinde çalışan `get_nodes_in_group().size() > 0` kontrolleri, ilk düğümü bulan `get_first_node_in_group(...) != null` ile değiştirilerek saniyede 120 dizi tahsisi sıfırlandı.
+
+- **Slot Başına `_process` Uyku Modu ([`Scripts/inventory_slot.gd`](file:///home/hakan/dive&find/Scripts/inventory_slot.gd)):**
+  - Çantadaki tüm slotların (105 slota kadar) boşta beklerken her kare `_process` çalıştırması engellendi (`set_process(false)`).
+  - Yalnızca dokunma/tıklama başladığında (`_gui_input`) `set_process(true)` açılır, uzun basma tetiklendiğinde veya parmak çekildiğinde işlemci tekrar uyutulur.
+
+- **Koleksiyon ve Eşya Yolu $O(1)$ Sözlük Önbelleği ([`Scripts/global_inventory.gd`](file:///home/hakan/dive&find/Scripts/global_inventory.gd)):**
+  - `get_item_path` ve `is_item_discovered` fonksiyonlarının her çağrıda tüm `.tres` listesini doğrusal taraması yerine `_item_name_to_path` sözlüğü üzerinden anlık $O(1)$ sorgu sağlandı.
+
+
 
 
 

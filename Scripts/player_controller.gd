@@ -724,7 +724,11 @@ func _generate_cone_texture(angle_deg: float, size: int = 256) -> Texture2D:
 func _handle_battery_and_flashlight(delta: float) -> void:
 	# Fener yönü: Mobilde mobil hedef açısı, PC'de mouse cursor konumu
 	if is_instance_valid(_flashlight_light) and _flashlight_light.visible:
-		var is_ui_blocking: bool = get_tree().paused or get_tree().get_nodes_in_group("popup_ui").size() > 0 or get_tree().get_nodes_in_group("office_menu").size() > 0
+		var is_ui_blocking: bool = get_tree().paused \
+			or get_tree().get_first_node_in_group("popup_ui") != null \
+			or get_tree().get_first_node_in_group("office_menu") != null \
+			or get_tree().get_first_node_in_group("hub_menu") != null \
+			or get_tree().get_first_node_in_group("city_map") != null
 		if not is_ui_blocking:
 			var target_angle: float
 			if OS.has_feature("mobile") and has_mobile_aim:
