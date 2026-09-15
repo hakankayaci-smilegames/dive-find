@@ -132,9 +132,8 @@ func _connect_pins() -> void:
 
 
 func _on_pin_clicked(pin: MapPin) -> void:
-	if is_instance_valid(_active_sub_menu):
-		_active_sub_menu.queue_free()
-		_active_sub_menu = null
+	if _is_transitioning:
+		return
 
 	# Özel aksiyon kontrolü
 	if pin.target_action == "shack_dive":
@@ -145,7 +144,12 @@ func _on_pin_clicked(pin: MapPin) -> void:
 		return
 
 	if pin.target_scene:
-		_open_sub_scene(pin.target_scene)
+		_play_micro_transition(func() -> void:
+			if is_instance_valid(_active_sub_menu):
+				_active_sub_menu.queue_free()
+				_active_sub_menu = null
+			_open_sub_scene(pin.target_scene)
+		)
 	else:
 		_show_toast(pin.get_display_title() + " - Yakında!")
 
@@ -167,6 +171,8 @@ func _handle_dock_action() -> void:
 
 
 func _open_charge_station() -> void:
+	if _is_transitioning:
+		return
 	var flash_lvl: int = GlobalInventory.get_equipment_stat("flashlight_level", 0) if GlobalInventory.has_method("get_equipment_stat") else 0
 	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if flash_lvl <= 0:
@@ -175,7 +181,12 @@ func _open_charge_station() -> void:
 		return
 
 	if charge_station_scene:
-		_open_sub_scene(charge_station_scene)
+		_play_micro_transition(func() -> void:
+			if is_instance_valid(_active_sub_menu):
+				_active_sub_menu.queue_free()
+				_active_sub_menu = null
+			_open_sub_scene(charge_station_scene)
+		)
 
 
 func _open_sub_scene(scene: PackedScene) -> void:
@@ -237,19 +248,20 @@ func _on_close_pressed() -> void:
 	_is_transitioning = true
 	GlobalSoundManager.play_sfx("door_close")
 
-	# 1. Otomatik Kaydet
-	var time_mgr: Node = _get_time_mgr()
-	var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
-	var player = get_tree().get_first_node_in_group("player")
-	var equipment_dict := {
-		"backpack_level": GlobalInventory.get_equipment_stat("backpack_level", 0),
-		"tube_level": GlobalInventory.get_equipment_stat("tube_level", 1),
-		"goggles_level": GlobalInventory.get_equipment_stat("goggles_level", 0),
-		"fins_level": GlobalInventory.get_equipment_stat("fins_level", 0),
-		"flashlight_level": GlobalInventory.get_equipment_stat("flashlight_level", 0),
-		"current_battery": float(player.get("current_battery")) if (player and player.get("current_battery") != null) else float(GlobalInventory.equipment_data.get("current_battery", -1.0))
-	}
-	GlobalInventory.save_game(save_day, GlobalEconomy.money, equipment_dict)
+	# 1. Otomatik Kaydet (Açıksa)
+	if GlobalInventory.is_autosave_enabled():
+		var time_mgr: Node = _get_time_mgr()
+		var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
+		var player = get_tree().get_first_node_in_group("player")
+		var equipment_dict := {
+			"backpack_level": GlobalInventory.get_equipment_stat("backpack_level", 0),
+			"tube_level": GlobalInventory.get_equipment_stat("tube_level", 1),
+			"goggles_level": GlobalInventory.get_equipment_stat("goggles_level", 0),
+			"fins_level": GlobalInventory.get_equipment_stat("fins_level", 0),
+			"flashlight_level": GlobalInventory.get_equipment_stat("flashlight_level", 0),
+			"current_battery": float(player.get("current_battery")) if (player and player.get("current_battery") != null) else float(GlobalInventory.equipment_data.get("current_battery", -1.0))
+		}
+		GlobalInventory.save_game(save_day, GlobalEconomy.money, equipment_dict)
 
 	# 2. Ortam Geçişi: Şehir Haritası -> Ana Menü (Loading Screen ile)
 	_play_transition(func() -> void:
@@ -553,6 +565,37 @@ func _setup_button_juice(btn: Button) -> void:
 	btn.button_up.connect(func() -> void:
 		var tw := create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		tw.tween_property(btn, "scale", Vector2(1.04, 1.04), 0.08)
+	)
+
+
+func _play_micro_transition(action: Callable) -> void:
+	if _is_transitioning:
+		return
+	_is_transitioning = true
+
+	var overlay_layer := CanvasLayer.new()
+	overlay_layer.layer = 135
+	overlay_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	var curtain := ColorRect.new()
+	curtain.color = Color(0.01, 0.04, 0.08, 1.0)
+	curtain.set_anchors_preset(Control.PRESET_FULL_RECT)
+	curtain.mouse_filter = Control.MOUSE_FILTER_STOP
+	curtain.modulate.a = 0.0
+	overlay_layer.add_child(curtain)
+	add_child(overlay_layer)
+
+	var tw := create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tw.tween_property(curtain, "modulate:a", 1.0, 0.14)
+	tw.tween_callback(func() -> void:
+		action.call()
+	)
+	tw.tween_interval(0.04)
+	tw.tween_property(curtain, "modulate:a", 0.0, 0.16).set_ease(Tween.EASE_IN)
+	tw.tween_callback(func() -> void:
+		overlay_layer.queue_free()
+		_is_transitioning = false
 	)
 
 

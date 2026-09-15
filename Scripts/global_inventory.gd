@@ -8,6 +8,15 @@ signal equipment_updated(stat_key: String, new_level: int)
 # çanta dolup taşsa/eşya satılsa bile burada kalıcı kalır (kayıt dosyasına yazılır).
 var discovered_items: Dictionary = {}
 signal collection_updated(item: ItemData)  # HUD toast mesajı için hangi eşya keşfedildiğini de taşır
+signal game_saved()
+
+var autosave_on_transition: bool = true
+const SETTINGS_FILE := "user://settings.cfg"
+
+var _save_toast_layer: CanvasLayer = null
+var _save_toast_panel: PanelContainer = null
+var _save_toast_label: Label = null
+var _save_toast_tween: Tween = null
 
 const COLLECTION_SAVE_PATH := "user://collection_save.json"
 const ITEM_TRES_DIR := "res://all_items_tres"
@@ -39,6 +48,8 @@ func _ready() -> void:
 	_load_collection()
 	get_all_items()
 	_load_equipment_data()
+	_load_autosave_setting()
+	_setup_save_toast_ui.call_deferred()
 
 
 func _load_equipment_data() -> void:
@@ -370,7 +381,124 @@ func save_game(day: int, money: int, equipment: Dictionary) -> bool:
 
 	file.store_string(JSON.stringify(save_dict, "\t"))
 	file.close()
+	game_saved.emit()
+	_show_save_toast()
 	return true
+
+
+func _load_autosave_setting() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(SETTINGS_FILE) == OK:
+		autosave_on_transition = bool(cfg.get_value("general", "autosave_enabled", cfg.get_value("general", "autosave_on_transition", true)))
+
+
+func is_autosave_enabled() -> bool:
+	return autosave_on_transition
+
+
+func set_autosave_enabled(enabled: bool) -> void:
+	autosave_on_transition = enabled
+
+
+func auto_save_game() -> bool:
+	if not autosave_on_transition:
+		return false
+
+	var time_mgr: Node = _get_time_mgr()
+	var save_day: int = int(time_mgr.get("current_day")) if time_mgr else 1
+	if save_day <= 0:
+		var prev_data := get_save_data()
+		save_day = int(prev_data.get("current_day", 1))
+
+	var eco: Node = get_node_or_null("/root/GlobalEconomy")
+	var money: int = int(eco.get("money")) if eco else 0
+
+	var player: Node = null
+	var tree := get_tree()
+	if tree:
+		player = tree.get_first_node_in_group("player")
+
+	var equipment_dict: Dictionary = {
+		"backpack_level": get_equipment_stat("backpack_level", 0),
+		"tube_level": get_equipment_stat("tube_level", 1),
+		"goggles_level": get_equipment_stat("goggles_level", 0),
+		"fins_level": get_equipment_stat("fins_level", 0),
+		"flashlight_level": get_equipment_stat("flashlight_level", 0),
+		"current_battery": float(player.get("current_battery")) if (player and player.get("current_battery") != null) else float(equipment_data.get("current_battery", -1.0))
+	}
+	return save_game(save_day, money, equipment_dict)
+
+
+func _setup_save_toast_ui() -> void:
+	if _save_toast_layer != null:
+		return
+
+	_save_toast_layer = CanvasLayer.new()
+	_save_toast_layer.layer = 160
+	_save_toast_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+
+	_save_toast_panel = PanelContainer.new()
+	_save_toast_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_save_toast_panel.anchors_preset = Control.PRESET_TOP_WIDE
+	_save_toast_panel.anchor_left = 0.5
+	_save_toast_panel.anchor_right = 0.5
+	_save_toast_panel.anchor_top = 0.0
+	_save_toast_panel.anchor_bottom = 0.0
+	_save_toast_panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_save_toast_panel.offset_top = 24.0
+	_save_toast_panel.offset_bottom = 60.0
+	_save_toast_panel.offset_left = -160.0
+	_save_toast_panel.offset_right = 160.0
+
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.04, 0.12, 0.2, 0.92)
+	style.border_color = Color(0.0, 0.85, 0.95, 0.85)
+	style.set_border_width_all(2)
+	style.set_corner_radius_all(8)
+	style.content_margin_left = 16.0
+	style.content_margin_right = 16.0
+	style.content_margin_top = 6.0
+	style.content_margin_bottom = 6.0
+	style.shadow_color = Color(0.0, 0.8, 1.0, 0.25)
+	style.shadow_size = 8
+	_save_toast_panel.add_theme_stylebox_override("panel", style)
+
+	_save_toast_label = Label.new()
+	_save_toast_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_save_toast_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_save_toast_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_save_toast_label.add_theme_color_override("font_color", Color(0.9, 0.98, 1.0, 1.0))
+	_save_toast_label.add_theme_font_size_override("font_size", 16)
+
+	_save_toast_panel.add_child(_save_toast_label)
+	_save_toast_panel.modulate.a = 0.0
+	_save_toast_panel.visible = false
+	_save_toast_layer.add_child(_save_toast_panel)
+	add_child(_save_toast_layer)
+
+
+func _show_save_toast() -> void:
+	if _save_toast_layer == null:
+		_setup_save_toast_ui()
+	if not is_instance_valid(_save_toast_panel) or not is_instance_valid(_save_toast_label):
+		return
+
+	var is_en: bool = TranslationServer.get_locale().begins_with("en")
+	_save_toast_label.text = "💾 Game Saved" if is_en else "💾 Oyun Kaydedildi"
+	_save_toast_panel.visible = true
+
+	if _save_toast_tween and _save_toast_tween.is_valid():
+		_save_toast_tween.kill()
+
+	_save_toast_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_save_toast_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_save_toast_tween.tween_property(_save_toast_panel, "modulate:a", 1.0, 0.2)
+	_save_toast_tween.tween_interval(2.0)
+	_save_toast_tween.tween_property(_save_toast_panel, "modulate:a", 0.0, 0.4)
+	_save_toast_tween.tween_callback(func() -> void:
+		if is_instance_valid(_save_toast_panel):
+			_save_toast_panel.visible = false
+	)
 
 
 func apply_save_to_game() -> bool:

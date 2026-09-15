@@ -48,7 +48,6 @@ func _ready() -> void:
 	# Görsel yapılandırma
 	_apply_styling()
 	refresh_ui()
-	_start_idle_pulse()
 
 
 func _apply_styling() -> void:
@@ -98,10 +97,11 @@ func get_display_description() -> String:
 
 
 func _start_idle_pulse() -> void:
-	# Pinlerin harita üstünde hafifçe nefes alması (idle floating / pulse)
-	_pulse_tween = create_tween().set_loops().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	_pulse_tween.tween_property(pin_badge, "scale", Vector2(1.04, 1.04), 1.2)
-	_pulse_tween.tween_property(pin_badge, "scale", Vector2(1.0, 1.0), 1.2)
+	# Seçenek A: Titremeyi ve piksel kaymasını önlemek için pinler kaya gibi sabit tutulur
+	if _pulse_tween and _pulse_tween.is_valid():
+		_pulse_tween.kill()
+	if is_instance_valid(pin_badge):
+		pin_badge.scale = Vector2.ONE
 
 
 func _on_mouse_entered() -> void:

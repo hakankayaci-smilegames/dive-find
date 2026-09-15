@@ -6,7 +6,7 @@ extends CanvasLayer
 @onready var close_button: Button = $MainPanel/CloseButton
 @onready var slots_container: HBoxContainer = $MainPanel/SlotsContainer
 @onready var title_label: Label = $MainPanel/TitleLabel
-@onready var subtitle_label: Label = get_node_or_null("MainPanel/SubtitleLabel")
+
 
 var _player: Node = null
 
@@ -33,8 +33,6 @@ func refresh_ui() -> void:
 	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if is_instance_valid(title_label):
 		title_label.text = "Equipment Shop" if is_en else "Ekipman Mağazası"
-	if is_instance_valid(subtitle_label):
-		subtitle_label.text = "As level increases, diving capability improves" if is_en else "Seviye arttıkça dalış gücün artar"
 	for slot in slots_container.get_children():
 		if slot is EquipmentSlot:
 			slot.refresh(slot.current_level)

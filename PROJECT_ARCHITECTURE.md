@@ -986,6 +986,56 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **Koleksiyon ve Eşya Yolu $O(1)$ Sözlük Önbelleği ([`Scripts/global_inventory.gd`](file:///home/hakan/dive&find/Scripts/global_inventory.gd)):**
   - `get_item_path` ve `is_item_discovered` fonksiyonlarının her çağrıda tüm `.tres` listesini doğrusal taraması yerine `_item_name_to_path` sözlüğü üzerinden anlık $O(1)$ sorgu sağlandı.
 
+---
+
+## 40. Dinamik Su Altı Modulate Atmosfer Perdesi (Underwater Submersion Overlay)
+
+- **HUD Altı Bağımsız Katman ([`Scenes/main.tscn`](file:///home/hakan/dive&find/Scenes/main.tscn) & [`Scripts/canvas_layer.gd`](file:///home/hakan/dive&find/Scripts/canvas_layer.gd)):**
+  - `CanvasLayer`'ın en alt katmanına (HUD panellerinin ve metinlerinin arkasına) tam ekran `UnderwaterOverlay: ColorRect` eklendi (`mouse_filter = MOUSE_FILTER_IGNORE`).
+  - Okyanus rengi: `Color(0.03, 0.28, 0.52, 1.0)` (Derin deniz mavisi).
+  - Tıklamaları ve arayüz etkileşimlerini asla engellemez.
+- **Modüler Aç/Kapa Anahtarı (`enable_underwater_overlay: bool = false`):**
+  - İleride istenildiğinde kod silinmeden tek bir anahtarla aktif edilebilmesi için `@export var enable_underwater_overlay: bool = false` değişkeni eklendi.
+  - Varsayılan olarak kapalıdır; kapalıyken `visible = false` ve `modulate.a = 0.0` tutularak sıfır işlemci ve grafik maliyetiyle bekletilir.
+
+---
+
+## 41. Şehir Haritası Waypoint Sabitleme & Piksel Titreme Giderimi (Map Pin Stabilization)
+
+- **Alt-Piksel Ölçek Titremesinin Kaldırılması ([`Scripts/map_pin.gd`](file:///home/hakan/dive&find/Scripts/map_pin.gd)):**
+  - Pinlerin boşta dururken (idle) sürekli `1.0` ile `1.04` arasında scale tween döngüsü çalıştırması (`_start_idle_pulse`) kaldırıldı.
+  - Godot 2D piksel rasterizer'ının yuvarlak StyleBox çerçevesini ve emoji font gliflerini tamsayı piksel ızgarasına oturtmaya çalışmasından kaynaklanan 1 piksellik mikro-titreme ve yer değiştirme hissi tamamen sıfırlandı.
+  - Pinler haritada kaya gibi sabit, jilet gibi net ve hareketsiz durur.
+  - Fareyle üzerine gelindiğindeki (`hover`) yukarı sıçrama (`position:y - 6px`), büyüme (`scale = 1.15x`), tooltip kartı ve tıklamadaki elastik basılma hissi %100 korunmuştur.
+
+---
+
+## 42. İki Kademeli Geçiş Sistemi, Ayarlanabilir Otomatik Kayıt ve Evrensel Kayıt Bildirimi (Two-Tier Transitions & Save Feedback)
+
+- **İki Kademeli Geçiş Mimarisi (Two-Tier Transitions - [`Scripts/city_map.gd`](file:///home/hakan/dive&find/Scripts/city_map.gd)):**
+  - **Kademe 1: Hızlı Mikro-Geçiş (`_play_micro_transition` ~0.35s):**
+    - Şehir içi binalar, dükkanlar ve tesisler (Çöpçü, Pazar, Antikacı, Ekipman Mağazası, Laboratuvar, Şarj İstasyonu) açılırken çalışır.
+    - `CanvasLayer` (layer 135) üzerinde derin okyanus tonlu (`Color(0.01, 0.04, 0.08, 1.0)`) perde 0.14 saniyede kararır, sahneler arası anlık GPU/CPU takılmasını gizler, çift tıklamayı (`_is_transitioning`) engeller ve 0.16 saniyede açılarak menüyü oyuncuya sunar.
+  - **Kademe 2: Tam Yükleme Ekranı (`_play_transition` ~1.0s):**
+    - Büyük ortam geçişlerinde (Şehir Haritası ↔ Liman Barakası, Liman Barakası ↔ Okyanus Dalışı, Şehir Haritası ↔ Ana Menü) tam teşekküllü `Scenes/loading_screen.tscn` (layer 150) devreye girer.
+
+- **Ayarlardan Açılıp Kapanabilen Otomatik Kayıt & Tek Merkezli Ayarlar Menüsü ([`Scenes/settings_menu.tscn`](file:///home/hakan/dive&find/Scenes/settings_menu.tscn) & [`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)):**
+  - Ana Menü içerisindeki eski gömülü `SettingsPanel` ve ~300 satırlık kopya kontrol kodu tamamen temizlendi.
+  - Tıpkı `city_map`, `dock_shack` ve `pause_menu` gibi Ana Menü de doğrudan bağımsız `Scenes/settings_menu.tscn` örneğini (`popup_ui`, layer 129) spawn ederek çalışır.
+  - Ayarlar paneline `AutosaveRow` (CheckButton) eklendi ve `user://settings.cfg` içinde `[general] autosave_enabled = true/false` olarak saklanır.
+  - Şehir içi dükkan ve bina tıklamalarındaki gereksiz otomatik kayıt ve toast kirliliği tamamen kaldırıldı; mikro ve majör geçişler yalnızca görsel akış olarak çalışır.
+  - Otomatik kayıt yalnızca anlamlı oyun kilometre taşlarında (Ana Menüye Çıkış / Dalış Sonu Gün Özeti / Gün Atlama) açık olması durumunda tetiklenir.
+  - Çift dilli arayüz: TR "Otomatik Kayıt", EN "Auto-Save".
+
+- **Evrensel Kayıt Bildirimi (Universal Save Toast - [`Scripts/global_inventory.gd`](file:///home/hakan/dive&find/Scripts/global_inventory.gd)):**
+  - Oyun ne zaman ve hangi sahnede kaydedilirse kaydedilsin (manuel kayıt, gün atlama, menüye dönüş) `GlobalInventory` üzerinden `game_saved` sinyali yayılır ve `_show_save_toast()` tetiklenir.
+  - `GlobalInventory` autoload bünyesindeki bağımsız yüksek seviye `CanvasLayer` (layer 160) üzerinde zarif, tıklama engellemeyen (`mouse_filter = MOUSE_FILTER_IGNORE`) bir panel belirir.
+  - TR: `"💾 Oyun Kaydedildi"` / EN: `"💾 Game Saved"`.
+  - 2 saniye boyunca ekranda kalıp yumuşak bir alfa animasyonuyla kaybolur.
+
+
+
+
 
 
 

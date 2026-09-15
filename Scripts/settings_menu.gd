@@ -11,6 +11,7 @@ const DEV_SECRET_CODE: String = "mercedesforever"
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SfxSlider
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
+@onready var autosave_check: CheckButton = %AutosaveCheck
 @onready var language_row: HBoxContainer = get_node_or_null("%LanguageRow")
 @onready var language_label: Label = get_node_or_null("%LanguageLabel")
 @onready var language_option: OptionButton = get_node_or_null("%LanguageOption")
@@ -39,6 +40,8 @@ func _ready() -> void:
 	music_slider.value_changed.connect(_on_music_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
+	if is_instance_valid(autosave_check):
+		autosave_check.toggled.connect(_on_autosave_toggled)
 	reset_collection_button.pressed.connect(_on_reset_collection_pressed)
 
 	if is_instance_valid(language_option):
@@ -88,6 +91,10 @@ func refresh_ui() -> void:
 	if fs_lbl:
 		fs_lbl.text = "Fullscreen" if is_en else "Tam Ekran"
 
+	var autosave_lbl: Label = get_node_or_null("SettingsPanel/Content/AutosaveRow/AutosaveLabel")
+	if autosave_lbl:
+		autosave_lbl.text = "Auto-Save" if is_en else "Otomatik Kayıt"
+
 	var lang_lbl: Label = get_node_or_null("SettingsPanel/Content/LanguageRow/LanguageLabel")
 	if lang_lbl:
 		lang_lbl.text = "Language" if is_en else "Dil"
@@ -109,6 +116,10 @@ func refresh_ui() -> void:
 
 	if reset_collection_button:
 		reset_collection_button.text = "RESET COLLECTION" if is_en else "KOLEKSİYONU SIFIRLA"
+
+	var dev_code_lbl: Label = get_node_or_null("SettingsPanel/Content/DevCodeRow/DevCodeLabel")
+	if dev_code_lbl:
+		dev_code_lbl.text = "DevCode"
 
 	if is_instance_valid(flashlight_aim_option) and flashlight_aim_option.item_count >= 3:
 		flashlight_aim_option.set_item_text(0, "🕹️ Swim Direction (Joystick)" if is_en else "🕹️ Yüzüş Yönü (Joystick)")
@@ -138,13 +149,12 @@ func _on_close_pressed() -> void:
 
 func _ensure_audio_buses() -> void:
 	if AudioServer.get_bus_index(MUSIC_BUS) < 0:
-		var idx = AudioServer.bus_count
+		var idx := AudioServer.bus_count
 		AudioServer.add_bus(idx)
 		AudioServer.set_bus_name(idx, MUSIC_BUS)
 		AudioServer.set_bus_send(idx, "Master")
-
 	if AudioServer.get_bus_index(SFX_BUS) < 0:
-		var idx = AudioServer.bus_count
+		var idx := AudioServer.bus_count
 		AudioServer.add_bus(idx)
 		AudioServer.set_bus_name(idx, SFX_BUS)
 		AudioServer.set_bus_send(idx, "Master")
@@ -155,6 +165,7 @@ func _load_settings() -> void:
 	var music := 70.0
 	var sfx := 80.0
 	var fullscreen := true
+	var autosave := true
 	var joystick_scale := 1.0
 	var flashlight_aim := 2
 	var language := "tr"
@@ -162,6 +173,7 @@ func _load_settings() -> void:
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
+		autosave = bool(cfg.get_value("general", "autosave_enabled", cfg.get_value("general", "autosave_on_transition", autosave)))
 		joystick_scale = cfg.get_value("controls", "joystick_scale", joystick_scale)
 		flashlight_aim = int(cfg.get_value("controls", "mobile_flashlight_aim", flashlight_aim))
 		language = cfg.get_value("general", "language", language)
@@ -174,6 +186,10 @@ func _load_settings() -> void:
 	music_slider.value = music
 	sfx_slider.value = sfx
 	fullscreen_check.set_pressed_no_signal(fullscreen)
+	if is_instance_valid(autosave_check):
+		autosave_check.set_pressed_no_signal(autosave)
+	if GlobalInventory.has_method("set_autosave_enabled"):
+		GlobalInventory.set_autosave_enabled(autosave)
 	if is_instance_valid(joystick_slider):
 		joystick_slider.value = joystick_scale
 	if is_instance_valid(joystick_val_label):
@@ -195,11 +211,22 @@ func _save_settings() -> void:
 	cfg.set_value("audio", "music", music_slider.value)
 	cfg.set_value("audio", "sfx", sfx_slider.value)
 	cfg.set_value("video", "fullscreen", fullscreen_check.button_pressed)
+	if is_instance_valid(autosave_check):
+		cfg.set_value("general", "autosave_enabled", autosave_check.button_pressed)
+		if GlobalInventory.has_method("set_autosave_enabled"):
+			GlobalInventory.set_autosave_enabled(autosave_check.button_pressed)
 	if is_instance_valid(joystick_slider):
 		cfg.set_value("controls", "joystick_scale", joystick_slider.value)
 	if is_instance_valid(flashlight_aim_option):
 		cfg.set_value("controls", "mobile_flashlight_aim", flashlight_aim_option.selected)
 	cfg.save(SETTINGS_FILE)
+
+
+func _on_autosave_toggled(on: bool) -> void:
+	GlobalSoundManager.play_sfx("click")
+	if GlobalInventory.has_method("set_autosave_enabled"):
+		GlobalInventory.set_autosave_enabled(on)
+	_save_settings()
 
 
 func _on_language_selected(index: int) -> void:

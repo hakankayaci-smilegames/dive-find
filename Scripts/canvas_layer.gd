@@ -29,6 +29,13 @@ var city_map_scene: PackedScene = null
 @export var office_button_surface_range: float = 600.0  # Yüzeyin bu kadar üstü/altında ofis butonu aktif olur
 @onready var office_button: Button = $Button2
 
+@export_group("Su Altı Efekti (Underwater Overlay)")
+@export var enable_underwater_overlay: bool = false
+@export var underwater_overlay: ColorRect
+@export var underwater_tint_color: Color = Color(0.151, 0.62, 0.618, 1.0)
+@export var underwater_max_alpha: float = 0.45
+@export var underwater_fade_speed: float = 7.0
+
 var _active_inventory: Node = null
 var _active_pause_menu: Node = null
 var _office_loading: Node = null
@@ -90,8 +97,29 @@ func _ready() -> void:
 	if GlobalInventory.has_signal("equipment_updated"):
 		GlobalInventory.equipment_updated.connect(func(_k: String, _v: int) -> void: _on_inventory_or_equipment_updated())
 	_on_inventory_or_equipment_updated()
+	_setup_underwater_overlay()
 	refresh_ui()
 	call_deferred("_open_office_at_start")
+
+
+func _setup_underwater_overlay() -> void:
+	if not is_instance_valid(underwater_overlay):
+		underwater_overlay = get_node_or_null("UnderwaterOverlay") as ColorRect
+	if not is_instance_valid(underwater_overlay):
+		underwater_overlay = ColorRect.new()
+		underwater_overlay.name = "UnderwaterOverlay"
+		underwater_overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+		underwater_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		underwater_overlay.color = underwater_tint_color
+		underwater_overlay.modulate.a = 0.0
+		underwater_overlay.visible = false
+		add_child(underwater_overlay)
+		move_child(underwater_overlay, 0)
+	else:
+		underwater_overlay.color = underwater_tint_color
+		underwater_overlay.modulate.a = 0.0
+		underwater_overlay.visible = false
+		underwater_overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
 func _on_inventory_or_equipment_updated() -> void:
@@ -111,6 +139,19 @@ func _open_office_at_start() -> void:
 func _process(delta: float) -> void:
 	if not is_instance_valid(player_node):
 		player_node = get_tree().get_first_node_in_group("player") as Node2D
+
+	# Su Altı Modulate Efekti (Dalgıcın suya batma derinliğine göre yumuşak okyanus perdesi - Aç/Kapa Bool)
+	if is_instance_valid(underwater_overlay):
+		if enable_underwater_overlay and is_instance_valid(player_node):
+			var surface_y: float = InfiniteMapManager.water_surface_y
+			var player_y: float = player_node.global_position.y
+			var submersion: float = clampf((player_y - surface_y) / 40.0, 0.0, 1.0)
+			var target_alpha: float = submersion * underwater_max_alpha
+			underwater_overlay.modulate.a = lerpf(underwater_overlay.modulate.a, target_alpha, underwater_fade_speed * delta)
+			underwater_overlay.visible = underwater_overlay.modulate.a > 0.002
+		elif underwater_overlay.visible or underwater_overlay.modulate.a > 0.0:
+			underwater_overlay.visible = false
+			underwater_overlay.modulate.a = 0.0
 
 	if is_instance_valid(player_node) and depth_label:
 		var surface_y = InfiniteMapManager.water_surface_y

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c4jgb442wbgyu"]
 
-[ext_resource type="Script" path="res://Scripts/settings_menu.gd" id="1_settings_script"]
+[ext_resource type="Script" uid="uid://c1g5ur4e40atb" path="res://Scripts/settings_menu.gd" id="1_settings_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_info"]
 content_margin_left = 24.0
@@ -72,18 +72,6 @@ corner_radius_bottom_left = 8
 shadow_color = Color(0, 0.85, 1, 0.25)
 shadow_size = 12
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_focus"]
-bg_color = Color(0, 0, 0, 0)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0.9, 1, 0.8)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_bg"]
 content_margin_top = 4.0
 content_margin_bottom = 4.0
@@ -107,12 +95,24 @@ corner_radius_top_right = 5
 corner_radius_bottom_right = 5
 corner_radius_bottom_left = 5
 
-[node name="SettingsMenu" type="CanvasLayer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_focus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0.9, 1, 0.8)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="SettingsMenu" type="CanvasLayer" unique_id=799565079]
 process_mode = 3
 layer = 129
 script = ExtResource("1_settings_script")
 
-[node name="DimOverlay" type="ColorRect" parent="."]
+[node name="DimOverlay" type="ColorRect" parent="." unique_id=1935704061]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -120,7 +120,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.55)
 
-[node name="SettingsPanel" type="Panel" parent="."]
+[node name="SettingsPanel" type="Panel" parent="." unique_id=498486134]
 custom_minimum_size = Vector2(700, 560)
 anchors_preset = 8
 anchor_left = 0.5
@@ -135,7 +135,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_info")
 
-[node name="TitleLabel" type="Label" parent="SettingsPanel"]
+[node name="TitleLabel" type="Label" parent="SettingsPanel" unique_id=1644211090]
 layout_mode = 0
 offset_left = 24.0
 offset_top = 14.0
@@ -146,7 +146,7 @@ theme_override_font_sizes/font_size = 26
 text = "AYARLAR"
 vertical_alignment = 1
 
-[node name="CloseButton" type="Button" parent="SettingsPanel"]
+[node name="CloseButton" type="Button" parent="SettingsPanel" unique_id=1208701278]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 1
@@ -167,7 +167,7 @@ theme_override_styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
 theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 text = "X"
 
-[node name="Content" type="VBoxContainer" parent="SettingsPanel"]
+[node name="Content" type="VBoxContainer" parent="SettingsPanel" unique_id=98781549]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -180,10 +180,10 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 14
 
-[node name="MusicRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="MusicRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=1329581697]
 layout_mode = 2
 
-[node name="MusicLabel" type="Label" parent="SettingsPanel/Content/MusicRow"]
+[node name="MusicLabel" type="Label" parent="SettingsPanel/Content/MusicRow" unique_id=1209772327]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -191,7 +191,7 @@ theme_override_font_sizes/font_size = 20
 text = "Müzik Sesi"
 vertical_alignment = 1
 
-[node name="MusicSlider" type="HSlider" parent="SettingsPanel/Content/MusicRow"]
+[node name="MusicSlider" type="HSlider" parent="SettingsPanel/Content/MusicRow" unique_id=1080113083]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 24)
 layout_mode = 2
@@ -201,10 +201,10 @@ theme_override_styles/grabber_area = SubResource("StyleBoxFlat_slider_fill")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_slider_fill")
 value = 70.0
 
-[node name="SfxRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="SfxRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=191987637]
 layout_mode = 2
 
-[node name="SfxLabel" type="Label" parent="SettingsPanel/Content/SfxRow"]
+[node name="SfxLabel" type="Label" parent="SettingsPanel/Content/SfxRow" unique_id=1538763068]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -212,7 +212,7 @@ theme_override_font_sizes/font_size = 20
 text = "Ses Efektleri"
 vertical_alignment = 1
 
-[node name="SfxSlider" type="HSlider" parent="SettingsPanel/Content/SfxRow"]
+[node name="SfxSlider" type="HSlider" parent="SettingsPanel/Content/SfxRow" unique_id=1191475792]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 24)
 layout_mode = 2
@@ -222,10 +222,10 @@ theme_override_styles/grabber_area = SubResource("StyleBoxFlat_slider_fill")
 theme_override_styles/grabber_area_highlight = SubResource("StyleBoxFlat_slider_fill")
 value = 80.0
 
-[node name="FullscreenRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="FullscreenRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=1966811026]
 layout_mode = 2
 
-[node name="FullscreenLabel" type="Label" parent="SettingsPanel/Content/FullscreenRow"]
+[node name="FullscreenLabel" type="Label" parent="SettingsPanel/Content/FullscreenRow" unique_id=216654433]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -233,16 +233,32 @@ theme_override_font_sizes/font_size = 20
 text = "Tam Ekran"
 vertical_alignment = 1
 
-[node name="FullscreenCheck" type="CheckButton" parent="SettingsPanel/Content/FullscreenRow"]
+[node name="FullscreenCheck" type="CheckButton" parent="SettingsPanel/Content/FullscreenRow" unique_id=634859671]
 unique_name_in_owner = true
 layout_mode = 2
 button_pressed = true
 
-[node name="LanguageRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="AutosaveRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=546317602]
+layout_mode = 2
+
+[node name="AutosaveLabel" type="Label" parent="SettingsPanel/Content/AutosaveRow" unique_id=1039067998]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "Otomatik Kayıt"
+vertical_alignment = 1
+
+[node name="AutosaveCheck" type="CheckButton" parent="SettingsPanel/Content/AutosaveRow" unique_id=714183433]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+
+[node name="LanguageRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=200321050]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="LanguageLabel" type="Label" parent="SettingsPanel/Content/LanguageRow"]
+[node name="LanguageLabel" type="Label" parent="SettingsPanel/Content/LanguageRow" unique_id=1377124488]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
@@ -251,7 +267,7 @@ theme_override_font_sizes/font_size = 20
 text = "Dil"
 vertical_alignment = 1
 
-[node name="LanguageOption" type="OptionButton" parent="SettingsPanel/Content/LanguageRow"]
+[node name="LanguageOption" type="OptionButton" parent="SettingsPanel/Content/LanguageRow" unique_id=308474407]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 40)
 layout_mode = 2
@@ -270,11 +286,11 @@ popup/item_0/id = 0
 popup/item_1/text = "🇬🇧 English"
 popup/item_1/id = 1
 
-[node name="JoystickRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="JoystickRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=2067812645]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="JoystickLabel" type="Label" parent="SettingsPanel/Content/JoystickRow"]
+[node name="JoystickLabel" type="Label" parent="SettingsPanel/Content/JoystickRow" unique_id=897469025]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -282,7 +298,7 @@ theme_override_font_sizes/font_size = 20
 text = "Joystick Boyutu"
 vertical_alignment = 1
 
-[node name="JoystickSlider" type="HSlider" parent="SettingsPanel/Content/JoystickRow"]
+[node name="JoystickSlider" type="HSlider" parent="SettingsPanel/Content/JoystickRow" unique_id=743539546]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(200, 24)
 layout_mode = 2
@@ -295,7 +311,7 @@ max_value = 1.5
 step = 0.05
 value = 1.0
 
-[node name="JoystickValueLabel" type="Label" parent="SettingsPanel/Content/JoystickRow"]
+[node name="JoystickValueLabel" type="Label" parent="SettingsPanel/Content/JoystickRow" unique_id=1423185711]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(65, 0)
 layout_mode = 2
@@ -305,11 +321,11 @@ text = "%100"
 horizontal_alignment = 2
 vertical_alignment = 1
 
-[node name="FlashlightAimRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="FlashlightAimRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=769524729]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="FlashlightAimLabel" type="Label" parent="SettingsPanel/Content/FlashlightAimRow"]
+[node name="FlashlightAimLabel" type="Label" parent="SettingsPanel/Content/FlashlightAimRow" unique_id=776009883]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -317,7 +333,7 @@ theme_override_font_sizes/font_size = 20
 text = "Mobil Fener Yönü"
 vertical_alignment = 1
 
-[node name="FlashlightAimOption" type="OptionButton" parent="SettingsPanel/Content/FlashlightAimRow"]
+[node name="FlashlightAimOption" type="OptionButton" parent="SettingsPanel/Content/FlashlightAimRow" unique_id=1559971253]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 40)
 layout_mode = 2
@@ -337,10 +353,10 @@ popup/item_1/id = 1
 popup/item_2/text = "✨ Akıllı Hibrit (Joystick + Dokunma)"
 popup/item_2/id = 2
 
-[node name="CollectionRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="CollectionRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=763432334]
 layout_mode = 2
 
-[node name="CollectionLabel" type="Label" parent="SettingsPanel/Content/CollectionRow"]
+[node name="CollectionLabel" type="Label" parent="SettingsPanel/Content/CollectionRow" unique_id=1505999421]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -348,7 +364,7 @@ theme_override_font_sizes/font_size = 20
 text = "Koleksiyon"
 vertical_alignment = 1
 
-[node name="ResetCollectionButton" type="Button" parent="SettingsPanel/Content/CollectionRow"]
+[node name="ResetCollectionButton" type="Button" parent="SettingsPanel/Content/CollectionRow" unique_id=877730932]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(260, 40)
 layout_mode = 2
@@ -364,10 +380,10 @@ theme_override_styles/hover = SubResource("StyleBoxFlat_btn_hover")
 theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
 text = "KOLEKSİYONU SIFIRLA"
 
-[node name="DevCodeRow" type="HBoxContainer" parent="SettingsPanel/Content"]
+[node name="DevCodeRow" type="HBoxContainer" parent="SettingsPanel/Content" unique_id=338623871]
 layout_mode = 2
 
-[node name="DevCodeLabel" type="Label" parent="SettingsPanel/Content/DevCodeRow"]
+[node name="DevCodeLabel" type="Label" parent="SettingsPanel/Content/DevCodeRow" unique_id=2033473745]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.95, 1, 1)
@@ -375,7 +391,7 @@ theme_override_font_sizes/font_size = 20
 text = "DevCode"
 vertical_alignment = 1
 
-[node name="DevCodeInput" type="LineEdit" parent="SettingsPanel/Content/DevCodeRow"]
+[node name="DevCodeInput" type="LineEdit" parent="SettingsPanel/Content/DevCodeRow" unique_id=1763760199]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(160, 40)
 layout_mode = 2
@@ -388,7 +404,7 @@ theme_override_styles/focus = SubResource("StyleBoxFlat_btn_focus")
 placeholder_text = "Gizli kod..."
 secret = true
 
-[node name="DevCodeButton" type="Button" parent="SettingsPanel/Content/DevCodeRow"]
+[node name="DevCodeButton" type="Button" parent="SettingsPanel/Content/DevCodeRow" unique_id=1901121652]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(95, 40)
 layout_mode = 2
