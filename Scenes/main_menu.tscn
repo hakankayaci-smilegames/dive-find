@@ -196,29 +196,6 @@ corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 shadow_size = 16
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_bg"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0.02, 0.05, 0.1, 1)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.15, 0.3, 0.45, 0.8)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slider_fill"]
-content_margin_top = 4.0
-content_margin_bottom = 4.0
-bg_color = Color(0, 0.85, 0.95, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [node name="MainMenu" type="Control" unique_id=918717952]
 layout_mode = 3
 anchors_preset = 15

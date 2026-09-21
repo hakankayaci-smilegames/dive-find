@@ -343,20 +343,22 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
 - **İki Dilli (TR / EN) Durum & İstem Metinleri ([`Scripts/loading_screen.gd`](file:///home/hakan/dive&find/Scripts/loading_screen.gd)):**
   - İlerleme aşama metinleri (`StageLabel`) aktif yerel dile (`tr` / `en`) göre dinamik güncellenir:
     - `%0 - %30`: `"Scanning ancient relics and treasures..."` / `"Eski kalıntılar ve hazineler taranıyor..."`
-    - `%30 - %65`: `"Preparing audio files and map layers..."` / `"Ses dosyaları ve harita katmanları hazırlanıyor..."`
+    - `%30 - %65`: `"Preparing city map and harbor animation..."` / `"Şehir haritası ve liman animasyonu hazırlanıyor..."`
     - `%65 - %95`: `"Checking diving gear and equipment..."` / `"Dalış ekipmanları kontrol ediliyor..."`
     - `%95+`: `"Ready to dive!"` / `"Dalışa hazır!"`
   - Devam istemi (`ContinuePrompt`): `"▶ TAP SCREEN OR PRESS ANY KEY TO CONTINUE ◀"` / `"▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀"`.
-- **Gerçek Asenkron Sahne Yükleme (`ResourceLoader.load_threaded_request`):**
-  - Sahte `Tween` bar yerine Godot'nun yerleşik asenkron yükleyicisi bağlandı. `ResourceLoader.load_threaded_get_status()` ile diskten RAM'e aktarılan gerçek dosya boyutu/yüzdesi okunur.
-  - Sahne belleğe tam olarak yüklendiğinde `get_tree().change_scene_to_packed()` ile sıfır donmayla geçiş yapılır.
+- **Gerçek Asenkron Sahne & Şehir Animasyonu Ön Yükleme Motoru (`ResourceLoader.load_threaded_request` & `CityMap.preload_batch`):**
+  - Ana sahne (`main.tscn`) ile eşzamanlı olarak `res://Scenes/city_map.tscn` threaded olarak belleğe alınır (`CityMap.city_map_packed`).
+  - Arka planda 120 adet 1280x720 animasyon karesi her frame 8'er adet (`CityMap.preload_batch(8)`) akıcı bir şekilde RAM'e aktarılır.
+  - İlerleme çubuğu hem ana sahnenin hem de 120 animasyon karesinin yüklenme yüzdesini gerçek zamanlı birleştirir.
+  - Devam istemi yalnızca tüm sahneler ve animasyon kareleri RAM'e %100 girdikten sonra açılır; oyuncu tuşa bastığında sahne geçişi **0.00 saniyede (sıfır takılma / anında)** gerçekleşir.
 - **SFX Pre-Caching & Ses Takılmalarının Sıfırlanması:**
   - [`global_sound_manager.gd`](file:///home/hakan/dive&find/Scripts/global_sound_manager.gd) içinde `preload_all_sfx()` ve `_sfx_cache` eklendi. Tüm ses efektleri loading esnasında RAM'e alınarak oyun içindeki ilk etkileşim takılmaları (audio stutter) önlendi.
 - **Yatay Geniş Loading Bar & Aşama Durumları:**
   - Ekranın alt kenarı boyunca uzanan ince, şık ve neon turkuaz dolgulu ProgressBar (`#00e5ff`).
   - Dinamik yüzde sayacı (`%0 ➔ %100`) ve aşamalı teknik durum metni.
 - **Sinematik Geçişler (Fade-to-Black & Fade-in):**
-  - Yükleme tamamlandığında 0.25sn yumuşak kararma (`Fade to Black`) ile pürüzsüz çıkış.
+  - Yükleme tamamlandığında ve tuşa basıldığında 0.15sn yumuşak kararma (`Fade to Black`) ile anında geçiş.
   - Ofis karargahı (`office_menu.gd`) açıldığında `$Background.modulate.a` 0.35 saniyede soluktan nete gelerek (`Fade-in`) sinematik bir giriş hissi sunar.
 - **Modüler İpucu Sistemi ([`Data/loading_tips.json`](file:///home/hakan/dive&find/Data/loading_tips.json)):**
   - İpuçları koda gömülmek yerine bağımsız JSON dosyasında tutulur. Koda dokunmadan kolayca genişletilebilir.
@@ -886,9 +888,18 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - Fare üzerine gelince yukarı sıçrama (`position.y - 6px`), `scale: 1.15`, tık sesi ve pürüzsüz açılan bilgi kartı (`TooltipCard`).
     - Tıklamada basılma hissi (punch scale 0.92x -> 1.15x) ve `pin_clicked` sinyali.
 - **Şehir Haritası Sahnesi ([`Scenes/city_map.tscn`](file:///home/hakan/dive&find/Scenes/city_map.tscn) & [`Scripts/city_map.gd`](file:///home/hakan/dive&find/Scripts/city_map.gd)):**
-  - **Oran Korumalı Çözünürlük Bağımsızlığı (Aspect Ratio Container):** Arka plandaki [`Sprites/Map.png`](file:///home/hakan/dive&find/Sprites/Map.png) (1184x606) görseli `ratio = 1.95379` olan `AspectRatioContainer` içerisine yerleştirildi. Böylece 16:9, tablet veya geniş ekranlarda harita büyüyüp küçülse dahi binaların üzerindeki pinler asla kaymaz.
+  - **12 FPS Animasyonlu Arkaplan & Statik RAM Önbellek Mimarisi:**
+    - Arka plandaki statik görsel, `res://Sprites/map_anim/frame_0001.png` - `frame_0120.png` dizisinden oluşan 120 karelik (tam 10.0 saniye döngü) canlı animasyonla değiştirildi.
+    - `static var _cached_map_frames: Array[Texture2D]` mimarisiyle kareler ilk girişte RAM'e alınır; sonraki girişlerde sıfır gecikmeyle (0ms) anında çalışır.
+    - `TextureRect` (`MapTexture`) ve `MapContent` (`custom_minimum_size = Vector2(1184, 606)`) hiyerarşisi korunduğu için 8 mekan pininin binalar üzerindeki konumları ve oranları milimetrik olarak korunur.
+    - `_process(delta)` içinde `ANIM_FRAME_TIME = 1.0 / 12.0` adımıyla kareler akar; `process_mode = PROCESS_MODE_ALWAYS` sayesinde oyun duraklatılmış (`paused = true`) olsa dahi animasyon akıcı şekilde oynamayı sürdürür.
+  - **Senkron Şehir Ambiyansı (`Sounds/map_ambient.ogg`):**
+    - 10.01 saniyelik rıhtım ve kasaba dalga/rüzgar ambiyansı tam animasyon döngüsüyle senkron akar (`loop = true`).
+    - `bus = "SFX"` kanalından çalar; Ayarlar menüsündeki ses kaydırıcılarıyla %100 uyumludur ve arka plan müziğiyle katmanlı duyulur.
+    - Şehre girişte 0.6s tatlı bir fade-in ile başlar; dükkan alt pencereleri açıkken kesintisiz çalar; İskele Barakası'na veya Ana Menü'ye geçişte 0.6s fade-out ile yumuşakça durdurulur.
+  - **Oran Korumalı Çözünürlük Bağımsızlığı (Aspect Ratio Container):** Arka plandaki görsel `ratio = 1.95379` olan `AspectRatioContainer` içerisine yerleştirildi. Böylece 16:9, tablet veya geniş ekranlarda harita büyüyüp küçülse dahi binaların üzerindeki pinler asla kaymaz.
   - **Üst HUD Bar:**
-    - `📍 LİMAN KASABASI / PORT TOWN`
+    - `📍 PORTOVERO KASABASI / PORTOVERO TOWN`
     - `💰 %d Zurna` (Canlı `GlobalEconomy` animasyonlu tween bakiye)
     - `📅 GÜN %d` & `⏰ %s` (`GlobalTime` tam senkronizasyon)
     - `⏭️ DİNLEN / İLERLET` (Erken uyuma modalı ve gün özeti entegrasyonu)
@@ -903,16 +914,16 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - 🧪 **Laboratuvar** (x: 590, y: 145) -> `laboratory.tscn`.
     - 🕶️ **Kara Borsa** (x: 610, y: 260) -> `kara_borsa.tscn`.
     - ⚡ **Şarj İstasyonu** (x: 875, y: 395) -> `charge_station.tscn`.
-- **Deniz ile Senkron Dinamik Işıklandırma (Dynamic Hourly / Half-Hourly Lighting):**
-  - Okyanus yüzeyindeki atmosferle senkronize olarak, 15 ayrı anahtar renkten (`TIME_PALETTE`) oluşan akıcı bir zaman eğrisi kuruldu:
-    - `10:00`: Berrak beyaz gündüz güneşi (`1.0, 1.0, 1.0`).
-    - `11:30 - 13:00`: Hafif ısınan öğle ışığı.
-    - `14:30 - 16:00`: Altın saat / zengin kehribar gün batımı başlangıcı.
-    - `17:00 - 18:00`: Sıcak kızıl gün batımı ve mor-lacivert alacakaranlık.
-    - `19:00 - 21:00`: Koyu akşamdan ay ışığı aydınlatmalı gece mavisine geçiş.
-  - Saat değişimleri ve gün ilerletmeleri 0.8 saniyelik yumuşak `Tween` ile canlı olarak akar.
-- **Geliştirici Konsolu Test Geçişi (`city` / `sehir` / `map`):**
-  - Geliştirici konsoluna eklenen komutlarla (`city`, `sehir` veya `map`) oyunun herhangi bir anında yeni şehir haritası canlı olarak açılıp test edilebilir.
+  - **Deniz ile Senkron Dinamik Işıklandırma (Dynamic Hourly / Half-Hourly Lighting):**
+    - Okyanus yüzeyindeki atmosferle senkronize olarak, 15 ayrı anahtar renkten (`TIME_PALETTE`) oluşan akıcı bir zaman eğrisi kuruldu:
+      - `10:00`: Berrak beyaz gündüz güneşi (`1.0, 1.0, 1.0`).
+      - `11:30 - 13:00`: Hafif ısınan öğle ışığı.
+      - `14:30 - 16:00`: Altın saat / zengin kehribar gün batımı başlangıcı.
+      - `17:00 - 18:00`: Sıcak kızıl gün batımı ve mor-lacivert alacakaranlık.
+      - `19:00 - 21:00`: Koyu akşamdan ay ışığı aydınlatmalı gece mavisine geçiş.
+    - Saat değişimleri ve gün ilerletmeleri 0.8 saniyelik yumuşak `Tween` ile canlı olarak akar (`map_texture.modulate` üzerinden animasyonlu kareleri dinamik renklendirir).
+  - **Geliştirici Konsolu Test Geçişi (`city` / `sehir` / `map`):**
+    - Geliştirici konsoluna eklenen komutlarla (`city`, `sehir` veya `map`) oyunun herhangi bir anında yeni şehir haritası canlı olarak açılıp test edilebilir.
 
 ---
 

@@ -128,7 +128,9 @@ func _on_inventory_or_equipment_updated() -> void:
 
 
 func _open_office_at_start() -> void:
-	var scene: PackedScene = city_map_scene if city_map_scene else load("res://Scenes/city_map.tscn")
+	var scene: PackedScene = city_map_scene if city_map_scene else CityMap.city_map_packed
+	if not scene:
+		scene = load("res://Scenes/city_map.tscn")
 	if scene:
 		var city_inst = scene.instantiate()
 		get_tree().current_scene.add_child(city_inst)

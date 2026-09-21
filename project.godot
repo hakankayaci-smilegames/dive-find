@@ -34,7 +34,9 @@ window/stretch/aspect="expand"
 
 [editor]
 
-movie_writer/movie_file="/home/hakan/Masaüstü/test.ogv"
+movie_writer/movie_file="/home/hakan/Desktop/dive-find/test.ogv"
+movie_writer/disable_vsync=true
+movie_writer/fps=120
 
 [global_group]
 

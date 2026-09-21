@@ -31,6 +31,8 @@ var _scene_loaded: bool = false
 var _loaded_packed_scene: PackedScene = null
 var _waiting_for_input: bool = false
 var _prompt_tween: Tween = null
+var _city_scene_requested: bool = false
+var _city_scene_loaded: bool = false
 
 
 func _ready() -> void:
@@ -57,6 +59,9 @@ func _ready() -> void:
 	# 4. Gerçek Arka Plan Sahne Talebi (Threaded Loading)
 	if auto_change_scene:
 		ResourceLoader.load_threaded_request(target_scene_path)
+		if not _city_scene_requested and ResourceLoader.exists("res://Scenes/city_map.tscn"):
+			ResourceLoader.load_threaded_request("res://Scenes/city_map.tscn")
+			_city_scene_requested = true
 
 	progress_bar.value = 0.0
 	_update_progress_ui(0.0)
@@ -84,16 +89,30 @@ func _process(delta: float) -> void:
 				# Hata durumunda da takılı kalmasın
 				_scene_loaded = true
 
+		if _city_scene_requested and not _city_scene_loaded:
+			var city_status = ResourceLoader.load_threaded_get_status("res://Scenes/city_map.tscn")
+			if city_status == ResourceLoader.THREAD_LOAD_LOADED:
+				_city_scene_loaded = true
+				CityMap.city_map_packed = ResourceLoader.load_threaded_get("res://Scenes/city_map.tscn") as PackedScene
+			elif city_status == ResourceLoader.THREAD_LOAD_FAILED or city_status == ResourceLoader.THREAD_LOAD_INVALID_RESOURCE:
+				_city_scene_loaded = true
+
+		# Şehir haritası 120 animasyon karesini parti parti RAM'e önbellekle (her frame 8 kare)
+		var anim_ratio: float = 1.0
+		if not CityMap.is_animation_loaded():
+			anim_ratio = CityMap.preload_batch(8)
+
+		var combined_real: float = (_real_progress * 0.5) + (anim_ratio * 50.0)
 		var time_progress: float = clamp((_elapsed_time / min_display_time) * 100.0, 0.0, 100.0)
-		if _scene_loaded and _elapsed_time >= min_display_time:
+		if _scene_loaded and CityMap.is_animation_loaded() and _elapsed_time >= min_display_time:
 			target_progress = 100.0
 		else:
-			target_progress = min(_real_progress, time_progress) if _real_progress > 0.0 else time_progress
+			target_progress = min(combined_real, time_progress) if combined_real > 0.0 else time_progress
 
 		_displayed_progress = move_toward(_displayed_progress, target_progress, 160.0 * delta)
 		_update_progress_ui(_displayed_progress)
 
-		if _displayed_progress >= 99.9 and _scene_loaded and _elapsed_time >= min_display_time:
+		if _displayed_progress >= 99.9 and _scene_loaded and CityMap.is_animation_loaded() and _elapsed_time >= min_display_time:
 			if not _waiting_for_input:
 				_ready_for_continue()
 
@@ -155,7 +174,7 @@ func _update_progress_ui(val: float) -> void:
 		if int_val < 30:
 			stage_label.text = "Scanning ancient relics and treasures..." if is_en else "Eski kalıntılar ve hazineler taranıyor..."
 		elif int_val < 65:
-			stage_label.text = "Preparing audio files and map layers..." if is_en else "Ses dosyaları ve harita katmanları hazırlanıyor..."
+			stage_label.text = "Preparing city map and harbor animation..." if is_en else "Şehir haritası ve liman animasyonu hazırlanıyor..."
 		elif int_val < 95:
 			stage_label.text = "Checking diving gear and equipment..." if is_en else "Dalış ekipmanları kontrol ediliyor..."
 		else:
@@ -221,7 +240,7 @@ func _finish() -> void:
 	if is_instance_valid(fade_overlay):
 		var fade := create_tween()
 		fade.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-		fade.tween_property(fade_overlay, "color:a", 1.0, 0.25)
+		fade.tween_property(fade_overlay, "color:a", 1.0, 0.15)
 		fade.tween_callback(_complete_transition)
 	else:
 		_complete_transition()

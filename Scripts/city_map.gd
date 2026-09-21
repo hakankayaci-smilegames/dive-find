@@ -1,3 +1,4 @@
+class_name CityMap
 extends CanvasLayer
 
 # Sahne Ön Yüklemeleri
@@ -58,6 +59,24 @@ var _light_tween: Tween = null
 var _current_day: int = 1
 var _is_transitioning: bool = false
 
+# Animasyonlu Arkaplan Ayarları (12 FPS - 120 Kare)
+const ANIM_FRAME_COUNT: int = 120
+const ANIM_FPS: float = 12.0
+const ANIM_FRAME_TIME: float = 1.0 / ANIM_FPS
+const ANIM_PATH_PATTERN: String = "res://Sprites/map_anim/frame_%04d.png"
+
+static var _cached_map_frames: Array[Texture2D] = []
+static var city_map_packed: PackedScene = null
+var _anim_timer: float = 0.0
+var _current_frame_idx: int = 0
+
+# Şehir Ambiyans Sesi
+@export var ambient_stream: AudioStream = preload("res://Sounds/map_ambient.ogg")
+@export var ambient_target_volume_db: float = -4.0
+var _ambient_player: AudioStreamPlayer = null
+var _ambient_tween: Tween = null
+var _initial_location_text: String = ""
+
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -67,6 +86,9 @@ func _ready() -> void:
 	add_to_group("city_map")
 	add_to_group("popup_ui")
 	add_to_group("hub_menu")
+
+	if is_instance_valid(location_badge):
+		_initial_location_text = location_badge.text
 
 	# Bakiye ve Zaman
 	_displayed_money = GlobalEconomy.money
@@ -112,13 +134,31 @@ func _ready() -> void:
 	# Saat bazlı ışıklandırmayı haritaya uygula
 	_update_map_lighting(false)
 
+	# Animasyon karelerini hazırla
+	_init_map_animation()
+
+	# Şehir ambiyans sesini başlat (SFX Bus, yumuşak fade-in)
+	_start_ambient_audio()
+
 	refresh_ui()
 
 
 func _exit_tree() -> void:
 	remove_from_group("hub_menu")
+	_stop_ambient_audio(0.0)
 	if not _is_transitioning:
 		get_tree().paused = false
+
+
+func _process(delta: float) -> void:
+	if _cached_map_frames.is_empty() or not is_instance_valid(map_texture):
+		return
+	_anim_timer += delta
+	if _anim_timer >= ANIM_FRAME_TIME:
+		var frames_to_advance: int = int(_anim_timer / ANIM_FRAME_TIME)
+		_anim_timer -= frames_to_advance * ANIM_FRAME_TIME
+		_current_frame_idx = (_current_frame_idx + frames_to_advance) % _cached_map_frames.size()
+		map_texture.texture = _cached_map_frames[_current_frame_idx]
 
 
 func _connect_pins() -> void:
@@ -159,6 +199,7 @@ func _handle_dock_action() -> void:
 		return
 	_is_transitioning = true
 	GlobalSoundManager.play_sfx("door_close")
+	_stop_ambient_audio(0.6)
 
 	# Ortam geçişi: Şehir Haritası -> Liman Barakası (Loading Screen ile)
 	_play_transition(func() -> void:
@@ -247,6 +288,7 @@ func _on_close_pressed() -> void:
 		return
 	_is_transitioning = true
 	GlobalSoundManager.play_sfx("door_close")
+	_stop_ambient_audio(0.6)
 
 	# 1. Otomatik Kaydet (Açıksa)
 	if GlobalInventory.is_autosave_enabled():
@@ -398,25 +440,23 @@ func _show_early_end_confirmation(time_str: String) -> void:
 
 
 func refresh_ui() -> void:
-	var is_en: bool = ItemTranslator.get_current_locale() == "en"
-
 	# Üst Bar
 	if is_instance_valid(location_badge):
-		location_badge.text = "📍 PORT TOWN" if is_en else "📍 LİMAN KASABASI"
+		location_badge.text = tr(_initial_location_text)
 	if is_instance_valid(zurna_label):
-		zurna_label.text = "💰 %d Zurna" % _displayed_money
+		zurna_label.text = tr("💰 %d Zurna") % _displayed_money
 	if is_instance_valid(day_label):
-		day_label.text = ("📅 DAY %d" if is_en else "📅 GÜN %d") % _current_day
+		day_label.text = tr("📅 GÜN %d") % _current_day
 	if is_instance_valid(advance_day_button):
-		advance_day_button.text = "⏭️ REST / ADVANCE" if is_en else "⏭️ DİNLEN / İLERLET"
+		advance_day_button.text = tr("⏭️ DİNLEN / İLERLET")
 	if is_instance_valid(inventory_button):
 		var count: int = GlobalInventory.collected_items.size()
 		var cap: int = GlobalInventory.get_capacity()
-		inventory_button.text = ("🎒 BAG (%d/%d)" if is_en else "🎒 ÇANTA (%d/%d)") % [count, cap]
+		inventory_button.text = tr("🎒 ÇANTA (%d/%d)") % [count, cap]
 	if is_instance_valid(collection_button):
-		collection_button.text = "📖 COLLECTION" if is_en else "📖 KOLEKSİYON"
+		collection_button.text = tr("📖 KOLEKSİYON")
 	if is_instance_valid(close_button):
-		close_button.text = "🚪 EXIT MAP" if is_en else "🚪 HARİTADAN ÇIK"
+		close_button.text = tr("🚪 HARİTADAN ÇIK")
 
 	# Saat
 	var time_mgr: Node = _get_time_mgr()
@@ -616,3 +656,83 @@ func _play_transition(on_complete: Callable, display_time: float = 1.0) -> void:
 		layer_node.queue_free()
 		on_complete.call()
 	)
+
+
+static func preload_batch(batch_size: int = 10) -> float:
+	if _cached_map_frames.size() >= ANIM_FRAME_COUNT:
+		return 1.0
+	var start_idx: int = _cached_map_frames.size() + 1
+	var end_idx: int = mini(start_idx + batch_size - 1, ANIM_FRAME_COUNT)
+	for i in range(start_idx, end_idx + 1):
+		var path: String = ANIM_PATH_PATTERN % i
+		if ResourceLoader.exists(path):
+			var tex = load(path) as Texture2D
+			if tex:
+				_cached_map_frames.append(tex)
+	return float(_cached_map_frames.size()) / float(ANIM_FRAME_COUNT)
+
+
+static func is_animation_loaded() -> bool:
+	return _cached_map_frames.size() >= ANIM_FRAME_COUNT
+
+
+static func preload_animation_frames() -> void:
+	if _cached_map_frames.size() >= ANIM_FRAME_COUNT:
+		return
+	while _cached_map_frames.size() < ANIM_FRAME_COUNT:
+		preload_batch(ANIM_FRAME_COUNT)
+
+
+func _init_map_animation() -> void:
+	if not is_animation_loaded():
+		preload_animation_frames()
+	if not _cached_map_frames.is_empty() and is_instance_valid(map_texture):
+		map_texture.texture = _cached_map_frames[0]
+
+
+func _start_ambient_audio() -> void:
+	if not ambient_stream:
+		return
+
+	if ambient_stream is AudioStreamOggVorbis:
+		(ambient_stream as AudioStreamOggVorbis).loop = true
+
+	_ambient_player = AudioStreamPlayer.new()
+	_ambient_player.name = "MapAmbientPlayer"
+	_ambient_player.bus = "SFX"
+	_ambient_player.process_mode = Node.PROCESS_MODE_ALWAYS
+	_ambient_player.stream = ambient_stream
+	_ambient_player.volume_db = -40.0
+	add_child(_ambient_player)
+	_ambient_player.play()
+
+	_ambient_player.finished.connect(func() -> void:
+		if is_instance_valid(_ambient_player) and _ambient_player.is_inside_tree():
+			_ambient_player.play()
+	)
+
+	if _ambient_tween and _ambient_tween.is_valid():
+		_ambient_tween.kill()
+	_ambient_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_ambient_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_ambient_tween.tween_property(_ambient_player, "volume_db", ambient_target_volume_db, 0.6)
+
+
+func _stop_ambient_audio(fade_time: float = 0.5) -> void:
+	if not is_instance_valid(_ambient_player) or not _ambient_player.playing:
+		return
+
+	if _ambient_tween and _ambient_tween.is_valid():
+		_ambient_tween.kill()
+
+	if fade_time > 0.0:
+		_ambient_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+		_ambient_tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		_ambient_tween.tween_property(_ambient_player, "volume_db", -40.0, fade_time)
+		_ambient_tween.tween_callback(func() -> void:
+			if is_instance_valid(_ambient_player):
+				_ambient_player.stop()
+		)
+	else:
+		_ambient_player.stop()
+

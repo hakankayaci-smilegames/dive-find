@@ -1,15 +1,14 @@
 [gd_scene format=3 uid="uid://ceeld623du87d"]
 
-[ext_resource type="Script" path="res://Scripts/city_map.gd" id="1_map_script"]
+[ext_resource type="Script" uid="uid://u060dbbyny8j" path="res://Scripts/city_map.gd" id="1_map_script"]
 [ext_resource type="Texture2D" uid="uid://cd15rkbv4202l" path="res://Sprites/Map.png" id="2_map_tex"]
-[ext_resource type="PackedScene" uid="uid://map_pin_component001" path="res://Scenes/map_pin.tscn" id="3_pin_scene"]
+[ext_resource type="PackedScene" path="res://Scenes/map_pin.tscn" id="3_pin_scene"]
 [ext_resource type="PackedScene" uid="uid://c0pcushop001" path="res://Scenes/copcu.tscn" id="4_copcu"]
-[ext_resource type="PackedScene" uid="uid://pazar_scene001" path="res://Scenes/pazar.tscn" id="5_pazar"]
+[ext_resource type="PackedScene" path="res://Scenes/pazar.tscn" id="5_pazar"]
 [ext_resource type="PackedScene" uid="uid://bdqp5h4m3ejvw" path="res://Scenes/equstore.tscn" id="6_equstore"]
 [ext_resource type="PackedScene" uid="uid://ct77y8qdyllvr" path="res://Scenes/antikaci.tscn" id="7_antikaci"]
-[ext_resource type="PackedScene" uid="uid://laboratory_scene001" path="res://Scenes/laboratory.tscn" id="8_lab"]
+[ext_resource type="PackedScene" path="res://Scenes/laboratory.tscn" id="8_lab"]
 [ext_resource type="PackedScene" uid="uid://drtt8k8d2axic" path="res://Scenes/kara_borsa.tscn" id="9_kara_borsa"]
-[ext_resource type="PackedScene" uid="uid://chargestation_scene001" path="res://Scenes/charge_station.tscn" id="10_charge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_topbar"]
 content_margin_left = 16.0
@@ -72,11 +71,11 @@ corner_radius_bottom_left = 8
 shadow_color = Color(0, 0, 0, 0.8)
 shadow_size = 12
 
-[node name="CityMap" type="CanvasLayer"]
+[node name="CityMap" type="CanvasLayer" unique_id=137629252]
 layer = 80
 script = ExtResource("1_map_script")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=1033737664]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -85,7 +84,7 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.03, 0.04, 0.06, 1)
 
-[node name="MapContainer" type="AspectRatioContainer" parent="."]
+[node name="MapContainer" type="AspectRatioContainer" parent="." unique_id=1796105770]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -95,11 +94,11 @@ grow_vertical = 2
 ratio = 1.95379
 stretch_mode = 0
 
-[node name="MapContent" type="Control" parent="MapContainer"]
+[node name="MapContent" type="Control" parent="MapContainer" unique_id=599996252]
 custom_minimum_size = Vector2(1184, 606)
 layout_mode = 2
 
-[node name="MapTexture" type="TextureRect" parent="MapContainer/MapContent"]
+[node name="MapTexture" type="TextureRect" parent="MapContainer/MapContent" unique_id=85205775]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -109,7 +108,7 @@ grow_vertical = 2
 texture = ExtResource("2_map_tex")
 expand_mode = 1
 
-[node name="PinsHolder" type="Control" parent="MapContainer/MapContent"]
+[node name="PinsHolder" type="Control" parent="MapContainer/MapContent" unique_id=336191365]
 unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 15
@@ -119,7 +118,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Pin_Dock" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_Dock" parent="MapContainer/MapContent/PinsHolder" unique_id=1000339102 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 819.0
 offset_top = 440.0
@@ -134,7 +133,7 @@ pin_badge_color = Color(0.2, 0.75, 1, 1)
 pin_icon_emoji = "🤿"
 target_action = "shack_dive"
 
-[node name="Pin_Scrapper" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_Scrapper" parent="MapContainer/MapContent/PinsHolder" unique_id=640980322 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 740.0
 offset_top = 380.0
@@ -149,7 +148,7 @@ pin_badge_color = Color(0.7, 0.65, 0.6, 1)
 pin_icon_emoji = "🗑️"
 target_scene = ExtResource("4_copcu")
 
-[node name="Pin_Market" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_Market" parent="MapContainer/MapContent/PinsHolder" unique_id=1226845941 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 357.0
 offset_top = 268.0
@@ -164,7 +163,7 @@ pin_badge_color = Color(1, 0.85, 0.25, 1)
 pin_icon_emoji = "💰"
 target_scene = ExtResource("5_pazar")
 
-[node name="Pin_EquStore" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_EquStore" parent="MapContainer/MapContent/PinsHolder" unique_id=1206945252 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 285.0
 offset_top = 250.0
@@ -179,7 +178,7 @@ pin_badge_color = Color(0.3, 0.85, 0.95, 1)
 pin_icon_emoji = "⚙️"
 target_scene = ExtResource("6_equstore")
 
-[node name="Pin_Antique" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_Antique" parent="MapContainer/MapContent/PinsHolder" unique_id=149160789 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 370.0
 offset_top = 140.0
@@ -194,7 +193,7 @@ pin_badge_color = Color(0.85, 0.55, 1, 1)
 pin_icon_emoji = "🏺"
 target_scene = ExtResource("7_antikaci")
 
-[node name="Pin_Lab" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_Lab" parent="MapContainer/MapContent/PinsHolder" unique_id=31126015 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 590.0
 offset_top = 145.0
@@ -209,7 +208,7 @@ pin_badge_color = Color(0.25, 0.95, 0.55, 1)
 pin_icon_emoji = "🧪"
 target_scene = ExtResource("8_lab")
 
-[node name="Pin_BlackMarket" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_BlackMarket" parent="MapContainer/MapContent/PinsHolder" unique_id=237492498 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 610.0
 offset_top = 260.0
@@ -224,7 +223,7 @@ pin_badge_color = Color(1, 0.25, 0.4, 1)
 pin_icon_emoji = "🕶️"
 target_scene = ExtResource("9_kara_borsa")
 
-[node name="Pin_Charge" parent="MapContainer/MapContent/PinsHolder" instance=ExtResource("3_pin_scene")]
+[node name="Pin_Charge" parent="MapContainer/MapContent/PinsHolder" unique_id=1896355128 instance=ExtResource("3_pin_scene")]
 layout_mode = 0
 offset_left = 875.0
 offset_top = 395.0
@@ -239,66 +238,66 @@ pin_badge_color = Color(1, 0.6, 0.1, 1)
 pin_icon_emoji = "⚡"
 target_action = "charge_station"
 
-[node name="TopBar" type="PanelContainer" parent="."]
+[node name="TopBar" type="PanelContainer" parent="." unique_id=516009430]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 48.0
 grow_horizontal = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_topbar")
 
-[node name="HBox" type="HBoxContainer" parent="TopBar"]
+[node name="HBox" type="HBoxContainer" parent="TopBar" unique_id=726910510]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="LocationBadge" type="Label" parent="TopBar/HBox"]
+[node name="LocationBadge" type="Label" parent="TopBar/HBox" unique_id=1447592651]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.75, 0.25, 1)
 theme_override_font_sizes/font_size = 14
-text = "📍 LİMAN KASABASI"
+text = "📍Portovero Kasabası"
 vertical_alignment = 1
 
-[node name="VSeparator1" type="VSeparator" parent="TopBar/HBox"]
+[node name="VSeparator1" type="VSeparator" parent="TopBar/HBox" unique_id=1289108607]
 layout_mode = 2
 
-[node name="ZurnaBadge" type="PanelContainer" parent="TopBar/HBox"]
+[node name="ZurnaBadge" type="PanelContainer" parent="TopBar/HBox" unique_id=615711283]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="ZurnaLabel" type="Label" parent="TopBar/HBox/ZurnaBadge"]
+[node name="ZurnaLabel" type="Label" parent="TopBar/HBox/ZurnaBadge" unique_id=196788434]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
 theme_override_font_sizes/font_size = 13
 text = "💰 0 Zurna"
 
-[node name="DayBadge" type="PanelContainer" parent="TopBar/HBox"]
+[node name="DayBadge" type="PanelContainer" parent="TopBar/HBox" unique_id=395567984]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="DayLabel" type="Label" parent="TopBar/HBox/DayBadge"]
+[node name="DayLabel" type="Label" parent="TopBar/HBox/DayBadge" unique_id=202460199]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.5, 0.85, 1, 1)
 theme_override_font_sizes/font_size = 13
 text = "📅 GÜN 1"
 
-[node name="TimeBadge" type="PanelContainer" parent="TopBar/HBox"]
+[node name="TimeBadge" type="PanelContainer" parent="TopBar/HBox" unique_id=617683804]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_badge")
 
-[node name="TimeLabel" type="Label" parent="TopBar/HBox/TimeBadge"]
+[node name="TimeLabel" type="Label" parent="TopBar/HBox/TimeBadge" unique_id=695675315]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
 theme_override_font_sizes/font_size = 13
 text = "⏰ 08:00"
 
-[node name="Spacer" type="Control" parent="TopBar/HBox"]
+[node name="Spacer" type="Control" parent="TopBar/HBox" unique_id=1894410765]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AdvanceDayButton" type="Button" parent="TopBar/HBox"]
+[node name="AdvanceDayButton" type="Button" parent="TopBar/HBox" unique_id=413368792]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.75, 0.25, 1)
@@ -306,7 +305,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "⏭️ DİNLEN / İLERLET"
 
-[node name="InventoryButton" type="Button" parent="TopBar/HBox"]
+[node name="InventoryButton" type="Button" parent="TopBar/HBox" unique_id=1859232360]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
@@ -314,7 +313,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "🎒 ÇANTA [I]"
 
-[node name="CollectionButton" type="Button" parent="TopBar/HBox"]
+[node name="CollectionButton" type="Button" parent="TopBar/HBox" unique_id=198855042]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
@@ -322,7 +321,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "📖 KOLEKSİYON [C]"
 
-[node name="SettingsButton" type="Button" parent="TopBar/HBox"]
+[node name="SettingsButton" type="Button" parent="TopBar/HBox" unique_id=1932437638]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
@@ -330,7 +329,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "⚙️"
 
-[node name="CloseButton" type="Button" parent="TopBar/HBox"]
+[node name="CloseButton" type="Button" parent="TopBar/HBox" unique_id=1722485445]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
@@ -338,7 +337,7 @@ theme_override_font_sizes/font_size = 12
 theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
 text = "🚪 HARİTADAN ÇIK"
 
-[node name="SubMenuContainer" type="Control" parent="."]
+[node name="SubMenuContainer" type="Control" parent="." unique_id=500546720]
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 15
@@ -348,7 +347,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ToastCenter" type="CenterContainer" parent="."]
+[node name="ToastCenter" type="CenterContainer" parent="." unique_id=714209223]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
@@ -358,13 +357,13 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 
-[node name="ToastBanner" type="PanelContainer" parent="ToastCenter"]
+[node name="ToastBanner" type="PanelContainer" parent="ToastCenter" unique_id=134001838]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
 
-[node name="ToastLabel" type="Label" parent="ToastCenter/ToastBanner"]
+[node name="ToastLabel" type="Label" parent="ToastCenter/ToastBanner" unique_id=336014670]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.9, 0.6, 1)

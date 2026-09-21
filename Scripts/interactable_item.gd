@@ -311,4 +311,3 @@ func quick_pickup() -> bool:
 
 	play_pickup_vfx_and_destroy()
 	return true
-

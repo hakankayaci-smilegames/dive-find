@@ -280,9 +280,10 @@ TRANSLATION_MAP = {
     "Hoşgeldin adamım?, bugun ne pazarlık ediyoruz?": "Welcome my man! What are we haggling over today?",
 
     # --- ŞEHİR HARİTASI (CITY MAP & PINS) ---
-    "📍 LİMAN KASABASI": "📍 PORT TOWN",
-    "Liman Kasabası": "Port Town",
+    "📍Portovero Kasabası": "📍 Portovero Town",
+    "Portovero Kasabası": "Portovero Town",
     "⏭️ DİNLEN / İLERLET": "⏭️ REST / ADVANCE",
+    "🎒 ÇANTA (%d/%d)": "🎒 BAG (%d/%d)",
     "🚪 HARİTADAN ÇIK": "🚪 EXIT MAP",
     "Haritadan Çık": "Exit Map",
     "▶ GİR [TIKLA]": "▶ ENTER [CLICK]",
@@ -291,6 +292,7 @@ TRANSLATION_MAP = {
     "Bildirim mesajı...": "Notification message...",
     "📅 GÜN 1": "📅 DAY 1",
     "💰 0 Zurna": "💰 0 Zurna",
+    "📍Portovero Kasabası": "📍 Portovero Town",
     "Liman İskelesi & Dalış": "Harbor Pier & Dive",
     "Suya dalış yap veya rıhtım iskelesinden açıl.": "Dive into the ocean from the wooden pier.",
     "Genel ticaret ve alım satım tezgahları.": "General trade and barter stalls.",
@@ -376,6 +378,7 @@ TRANSLATION_MAP = {
     "Hazırlanıyor...": "Preparing...",
     "✦ DALIŞA HAZIRLANIYOR ✦": "✦ PREPARING FOR DIVE ✦",
     "Eski kalıntılar ve hazineler taranıyor...": "Scanning ancient relics and treasures...",
+    "Şehir haritası ve liman animasyonu hazırlanıyor...": "Preparing city map and harbor animation...",
     "▶ DEVAM ETMEK İÇİN EKRANA DOKUNUN VEYA BİR TUŞA BASIN ◀": "▶ TOUCH SCREEN OR PRESS ANY KEY TO CONTINUE ◀",
     "💡 [E] Kısayolu: Su yüzeyine çıktığında teknene hızlıca binmek için [E] tuşuna basabilirsin.": "💡 [E] Shortcut: When you reach the surface, press [E] to quickly board your boat.",
     "💡 Eşya Kilitleme: Çantandaki değerli eşyaları korumak için üzerlerine Sağ Tıkla kilit 🔒 vurabilirsin.": "💡 Item Locking: Right-click valuable items in your bag to lock 🔒 and protect them.",
@@ -471,6 +474,7 @@ def main():
     rows = []
     translated_count = 0
     missing_count = 0
+    missing_keys = []
 
     for key in sorted(all_keys):
         if key.isdigit() or key.startswith("res://") or key.startswith("uid://"):
@@ -484,6 +488,7 @@ def main():
         else:
             en_val = key
             missing_count += 1
+            missing_keys.append(key)
 
         rows.append({
             "id": key,
@@ -502,6 +507,12 @@ def main():
     print(f"  • Toplam Satır      : {len(rows)}")
     print(f"  • Tam Çevrilen      : {translated_count}")
     print(f"  • Kalan             : {missing_count}")
+
+    if missing_keys:
+        print("\n⚠️ TRANSLATION_MAP içine eklenmesi gereken eksik çeviriler:")
+        for mk in missing_keys:
+            print(f'    "{mk}": "TODO_ENGLISH",')
+
 
 
 if __name__ == "__main__":
