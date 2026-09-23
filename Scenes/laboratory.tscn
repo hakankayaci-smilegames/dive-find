@@ -1,6 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://laboratory_scene001"]
+[gd_scene format=3 uid="uid://o5udkrr82jyi"]
 
-[ext_resource type="Script" path="res://Scripts/laboratory.gd" id="1_lab_script"]
+[ext_resource type="Script" uid="uid://tf20d3kblx5i" path="res://Scripts/laboratory.gd" id="1_lab_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.11, 0.08, 0.05, 0.98)
@@ -13,7 +13,6 @@ corner_radius_top_left = 12
 corner_radius_top_right = 12
 corner_radius_bottom_right = 12
 corner_radius_bottom_left = 12
-shadow_color = Color(0, 0, 0, 0.6)
 shadow_size = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_close_normal"]
@@ -27,6 +26,22 @@ corner_radius_top_left = 6
 corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_box"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+bg_color = Color(0.07, 0.05, 0.03, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.6, 0.25, 0.6)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_craft_normal"]
 content_margin_left = 16.0
@@ -76,26 +91,10 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_detail_box"]
-content_margin_left = 16.0
-content_margin_top = 14.0
-content_margin_right = 16.0
-content_margin_bottom = 14.0
-bg_color = Color(0.07, 0.05, 0.03, 0.95)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.85, 0.6, 0.25, 0.6)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
 [node name="Laboratory" type="CanvasLayer" unique_id=712634891]
 script = ExtResource("1_lab_script")
 
-[node name="Backdrop" type="ColorRect" parent="."]
+[node name="Backdrop" type="ColorRect" parent="." unique_id=59112582]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -103,21 +102,15 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 0.65)
 
-[node name="MainPanel" type="Panel" parent="."]
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -430.0
-offset_top = -270.0
-offset_right = 430.0
-offset_bottom = 270.0
+[node name="MainPanel" type="Panel" parent="." unique_id=689662358]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
 
-[node name="Margin" type="MarginContainer" parent="MainPanel"]
+[node name="Margin" type="MarginContainer" parent="MainPanel" unique_id=1711691841]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -129,14 +122,14 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 16
 
-[node name="VBox" type="VBoxContainer" parent="MainPanel/Margin"]
+[node name="VBox" type="VBoxContainer" parent="MainPanel/Margin" unique_id=1419938858]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="TopRow" type="HBoxContainer" parent="MainPanel/Margin/VBox"]
+[node name="TopRow" type="HBoxContainer" parent="MainPanel/Margin/VBox" unique_id=523015889]
 layout_mode = 2
 
-[node name="Title" type="Label" parent="MainPanel/Margin/VBox/TopRow"]
+[node name="Title" type="Label" parent="MainPanel/Margin/VBox/TopRow" unique_id=2127810773]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_colors/font_color = Color(1, 0.75, 0.3, 1)
@@ -147,7 +140,7 @@ theme_override_font_sizes/font_size = 22
 text = "🧪 LABORATUVAR & SENTEZ MERKEZİ"
 vertical_alignment = 1
 
-[node name="CloseButton" type="Button" parent="MainPanel/Margin/VBox/TopRow"]
+[node name="CloseButton" type="Button" parent="MainPanel/Margin/VBox/TopRow" unique_id=819660847]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
@@ -157,79 +150,80 @@ theme_override_font_sizes/font_size = 18
 theme_override_styles/normal = SubResource("StyleBoxFlat_close_normal")
 text = "X"
 
-[node name="HSeparator" type="HSeparator" parent="MainPanel/Margin/VBox"]
+[node name="HSeparator" type="HSeparator" parent="MainPanel/Margin/VBox" unique_id=671381542]
 layout_mode = 2
 
-[node name="ContentHBox" type="HBoxContainer" parent="MainPanel/Margin/VBox"]
+[node name="ContentHBox" type="HBoxContainer" parent="MainPanel/Margin/VBox" unique_id=1531888892]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="LeftCol" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox"]
-custom_minimum_size = Vector2(350, 0)
+[node name="LeftCol" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox" unique_id=344149665]
+custom_minimum_size = Vector2(420, 0)
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="ListTitle" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/LeftCol"]
+
+[node name="ListTitle" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/LeftCol" unique_id=240229612]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.85, 0.7, 1)
 theme_override_font_sizes/font_size = 14
 text = "📋 TARİF FİHRİSTİ"
 
-[node name="Scroll" type="ScrollContainer" parent="MainPanel/Margin/VBox/ContentHBox/LeftCol"]
+[node name="Scroll" type="ScrollContainer" parent="MainPanel/Margin/VBox/ContentHBox/LeftCol" unique_id=1885160624]
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="RecipeListContainer" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/LeftCol/Scroll"]
+[node name="RecipeListContainer" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/LeftCol/Scroll" unique_id=679961223]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
-[node name="VSeparator" type="VSeparator" parent="MainPanel/Margin/VBox/ContentHBox"]
+[node name="VSeparator" type="VSeparator" parent="MainPanel/Margin/VBox/ContentHBox" unique_id=394499451]
 layout_mode = 2
 
-[node name="RightCol" type="PanelContainer" parent="MainPanel/Margin/VBox/ContentHBox"]
+[node name="RightCol" type="PanelContainer" parent="MainPanel/Margin/VBox/ContentHBox" unique_id=95693535]
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_detail_box")
 
-[node name="DetailVBox" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol"]
+[node name="DetailVBox" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol" unique_id=480003262]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HeaderHBox" type="HBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="HeaderHBox" type="HBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=1167373569]
 layout_mode = 2
 theme_override_constants/separation = 12
 
-[node name="ItemIcon" type="TextureRect" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox"]
+[node name="ItemIcon" type="TextureRect" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox" unique_id=679924896]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="TitleGroup" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox"]
+[node name="TitleGroup" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox" unique_id=133162538]
 layout_mode = 2
 size_flags_horizontal = 3
 alignment = 1
 
-[node name="ItemNameLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox/TitleGroup"]
+[node name="ItemNameLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox/TitleGroup" unique_id=1332144285]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.35, 1)
 theme_override_font_sizes/font_size = 20
 text = "Eşya Adı"
 
-[node name="ItemValueLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox/TitleGroup"]
+[node name="ItemValueLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox/HeaderHBox/TitleGroup" unique_id=1803144885]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.95, 0.8, 1)
 theme_override_font_sizes/font_size = 13
 text = "💰 Tahmini Satış Değeri: 0 Zurna"
 
-[node name="ItemDescLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="ItemDescLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=1397396623]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 0.9)
@@ -237,25 +231,25 @@ theme_override_font_sizes/font_size = 12
 text = "Eşya açıklaması..."
 autowrap_mode = 3
 
-[node name="HSep2" type="HSeparator" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="HSep2" type="HSeparator" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=1053880645]
 layout_mode = 2
 
-[node name="ReqTitle" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="ReqTitle" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=909140828]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.95, 0.75, 0.4, 1)
 theme_override_font_sizes/font_size = 13
 text = "🧪 GEREKLİ HAMMADDELER (KİLİTSİZ):"
 
-[node name="IngredientsContainer" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="IngredientsContainer" type="VBoxContainer" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=202363567]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="Spacer" type="Control" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="Spacer" type="Control" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=1744429635]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CraftCostLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="CraftCostLabel" type="Label" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=1736327804]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.8, 0.4, 1)
@@ -263,15 +257,16 @@ theme_override_font_sizes/font_size = 13
 text = "Laboratuvar Masrafı: 0 Zurna"
 horizontal_alignment = 1
 
-[node name="CraftButton" type="Button" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox"]
+[node name="CraftButton" type="Button" parent="MainPanel/Margin/VBox/ContentHBox/RightCol/DetailVBox" unique_id=1448279198]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(340, 48)
 layout_mode = 2
+size_flags_horizontal = 4
 mouse_default_cursor_shape = 2
 theme_override_colors/font_color = Color(0.15, 0.1, 0.05, 1)
-theme_override_font_colors/font_disabled_color = Color(0.6, 0.6, 0.6, 0.6)
 theme_override_font_sizes/font_size = 16
 theme_override_styles/normal = SubResource("StyleBoxFlat_craft_normal")
 theme_override_styles/hover = SubResource("StyleBoxFlat_craft_hover")
 theme_override_styles/disabled = SubResource("StyleBoxFlat_craft_disabled")
 text = "SENTEZLE / ÜRET ✨"
+

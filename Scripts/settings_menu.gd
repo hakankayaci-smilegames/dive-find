@@ -3,11 +3,13 @@ extends CanvasLayer
 signal closed
 
 const SETTINGS_FILE := "user://settings.cfg"
+const MASTER_BUS := "Master"
 const MUSIC_BUS := "Music"
 const SFX_BUS := "SFX"
 const DEV_SECRET_CODE: String = "mercedesforever"
 
 @onready var close_button: Button = %CloseButton
+@onready var master_slider: HSlider = %MasterSlider
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SfxSlider
 @onready var fullscreen_check: CheckButton = %FullscreenCheck
@@ -37,6 +39,7 @@ func _ready() -> void:
 	_ensure_audio_buses()
 	_load_settings()
 
+	master_slider.value_changed.connect(_on_master_changed)
 	music_slider.value_changed.connect(_on_music_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	fullscreen_check.toggled.connect(_on_fullscreen_toggled)
@@ -78,6 +81,10 @@ func refresh_ui() -> void:
 	var title_lbl: Label = get_node_or_null("SettingsPanel/TitleLabel")
 	if title_lbl:
 		title_lbl.text = "SETTINGS" if is_en else "AYARLAR"
+
+	var master_lbl: Label = get_node_or_null("SettingsPanel/Content/MasterRow/MasterLabel")
+	if master_lbl:
+		master_lbl.text = "Master Volume" if is_en else "Genel Ses"
 
 	var music_lbl: Label = get_node_or_null("SettingsPanel/Content/MusicRow/MusicLabel")
 	if music_lbl:
@@ -162,6 +169,7 @@ func _ensure_audio_buses() -> void:
 
 func _load_settings() -> void:
 	var cfg := ConfigFile.new()
+	var master := 80.0
 	var music := 70.0
 	var sfx := 80.0
 	var fullscreen := true
@@ -170,6 +178,7 @@ func _load_settings() -> void:
 	var flashlight_aim := 2
 	var language := "tr"
 	if cfg.load(SETTINGS_FILE) == OK:
+		master = cfg.get_value("audio", "master", master)
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
@@ -178,11 +187,13 @@ func _load_settings() -> void:
 		flashlight_aim = int(cfg.get_value("controls", "mobile_flashlight_aim", flashlight_aim))
 		language = cfg.get_value("general", "language", language)
 
+	_set_bus_volume(MASTER_BUS, master)
 	_set_bus_volume(MUSIC_BUS, music)
 	_set_bus_volume(SFX_BUS, sfx)
 	if DisplayServer.get_name() != "headless":
 		DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN if fullscreen else DisplayServer.WINDOW_MODE_WINDOWED)
 
+	master_slider.value = master
 	music_slider.value = music
 	sfx_slider.value = sfx
 	fullscreen_check.set_pressed_no_signal(fullscreen)
@@ -208,6 +219,7 @@ func _save_settings() -> void:
 	cfg.load(SETTINGS_FILE)
 	var current_lang := "en" if TranslationServer.get_locale().begins_with("en") else "tr"
 	cfg.set_value("general", "language", current_lang)
+	cfg.set_value("audio", "master", master_slider.value)
 	cfg.set_value("audio", "music", music_slider.value)
 	cfg.set_value("audio", "sfx", sfx_slider.value)
 	cfg.set_value("video", "fullscreen", fullscreen_check.button_pressed)
@@ -238,6 +250,11 @@ func _on_language_selected(index: int) -> void:
 	var dev_console = get_node_or_null("/root/DevConsole")
 	if dev_console and dev_console.has_method("refresh_active_uis"):
 		dev_console.refresh_active_uis()
+
+
+func _on_master_changed(value: float) -> void:
+	_set_bus_volume(MASTER_BUS, value)
+	_save_settings()
 
 
 func _on_music_changed(value: float) -> void:

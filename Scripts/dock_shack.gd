@@ -75,9 +75,12 @@ func _ready() -> void:
 	GlobalInventory.equipment_updated.connect(_on_equipment_updated)
 
 	var player = get_tree().get_first_node_in_group("player")
-	if player and player.has_signal("battery_changed"):
-		if not player.battery_changed.is_connected(_on_player_battery_changed):
+	if player:
+		if player.has_method("reset_flashlight_for_office"):
+			player.reset_flashlight_for_office()
+		if player.has_signal("battery_changed") and not player.battery_changed.is_connected(_on_player_battery_changed):
 			player.battery_changed.connect(_on_player_battery_changed)
+
 
 	# Buton Bağlantıları
 	dive_button.pressed.connect(_on_start_dive_pressed)
@@ -217,11 +220,16 @@ func _get_battery_info() -> Dictionary:
 		if player.get("current_battery") != null:
 			cur_bat = float(player.get("current_battery"))
 	else:
-		var save_data: Dictionary = GlobalInventory.get_save_data()
-		if not save_data.is_empty() and save_data.has("equipment"):
-			var eq: Dictionary = save_data["equipment"]
-			if eq.has("current_battery") and float(eq["current_battery"]) >= 0.0:
-				cur_bat = float(eq["current_battery"])
+		if GlobalInventory.equipment_data.has("current_battery") and float(GlobalInventory.equipment_data["current_battery"]) >= 0.0:
+			cur_bat = float(GlobalInventory.equipment_data["current_battery"])
+		else:
+			var save_data: Dictionary = GlobalInventory.get_save_data()
+			if not save_data.is_empty() and save_data.has("equipment"):
+				var eq: Dictionary = save_data["equipment"]
+				if eq.has("current_battery") and float(eq["current_battery"]) >= 0.0:
+					cur_bat = float(eq["current_battery"])
+				else:
+					cur_bat = max_bat
 			else:
 				cur_bat = max_bat
 

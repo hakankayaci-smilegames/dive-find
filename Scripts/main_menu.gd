@@ -2,6 +2,7 @@ extends Control
 
 const LOADING_SCREEN := "res://Scenes/loading_screen.tscn"
 const SETTINGS_FILE := "user://settings.cfg"
+const MASTER_BUS := "Master"
 const MUSIC_BUS := "Music"
 const SFX_BUS := "SFX"
 
@@ -671,11 +672,13 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _init_engine_settings() -> void:
 	var cfg := ConfigFile.new()
+	var master := 80.0
 	var music := 70.0
 	var sfx := 80.0
 	var fullscreen := true
 	var language := "tr"
 	if cfg.load(SETTINGS_FILE) == OK:
+		master = cfg.get_value("audio", "master", master)
 		music = cfg.get_value("audio", "music", music)
 		sfx = cfg.get_value("audio", "sfx", sfx)
 		fullscreen = cfg.get_value("video", "fullscreen", fullscreen)
@@ -684,6 +687,7 @@ func _init_engine_settings() -> void:
 	if language == "en" or language == "tr":
 		TranslationServer.set_locale(language)
 
+	_set_bus_volume(MASTER_BUS, master)
 	_set_bus_volume(MUSIC_BUS, music)
 	_set_bus_volume(SFX_BUS, sfx)
 	if DisplayServer.get_name() != "headless":

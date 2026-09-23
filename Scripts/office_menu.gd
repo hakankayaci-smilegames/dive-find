@@ -504,18 +504,10 @@ func _setup_button_juice(btn: Button) -> void:
 
 
 func _on_save_exit_pressed() -> void:
-	var player = get_tree().get_first_node_in_group("player")
-	var equipment_dict: Dictionary = {
-		"tube_level": int(player.get("tube_level")) if player else 1,
-		"fins_level": int(player.get("fins_level")) if player else 0,
-		"goggles_level": int(player.get("goggles_level")) if player else 0,
-		"backpack_level": int(player.get("backpack_level")) if player else 0,
-		"flashlight_level": int(player.get("flashlight_level")) if player else 0,
-		"current_battery": float(player.get("current_battery")) if player else -1.0
-	}
 	var time_mgr: Node = _get_time_mgr()
 	var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
-	GlobalInventory.save_game(save_day, GlobalEconomy.money, equipment_dict)
+	var eq_dict: Dictionary = GlobalInventory.get_current_equipment_dict() if GlobalInventory.has_method("get_current_equipment_dict") else {}
+	GlobalInventory.save_game(save_day, GlobalEconomy.money, eq_dict)
 	GlobalSoundManager.play_sfx("door")
 	get_tree().paused = false
 	get_tree().change_scene_to_file(main_menu_scene_path)

@@ -400,6 +400,28 @@ func set_autosave_enabled(enabled: bool) -> void:
 	autosave_on_transition = enabled
 
 
+func get_current_equipment_dict() -> Dictionary:
+	var player: Node = null
+	var tree := get_tree()
+	if tree:
+		player = tree.get_first_node_in_group("player")
+
+	var cur_battery: float = -1.0
+	if player and player.get("current_battery") != null:
+		cur_battery = float(player.get("current_battery"))
+	else:
+		cur_battery = float(equipment_data.get("current_battery", -1.0))
+
+	return {
+		"backpack_level": get_equipment_stat("backpack_level", 0),
+		"tube_level": get_equipment_stat("tube_level", 1),
+		"goggles_level": get_equipment_stat("goggles_level", 0),
+		"fins_level": get_equipment_stat("fins_level", 0),
+		"flashlight_level": get_equipment_stat("flashlight_level", 0),
+		"current_battery": cur_battery
+	}
+
+
 func auto_save_game() -> bool:
 	if not autosave_on_transition:
 		return false
@@ -413,20 +435,7 @@ func auto_save_game() -> bool:
 	var eco: Node = get_node_or_null("/root/GlobalEconomy")
 	var money: int = int(eco.get("money")) if eco else 0
 
-	var player: Node = null
-	var tree := get_tree()
-	if tree:
-		player = tree.get_first_node_in_group("player")
-
-	var equipment_dict: Dictionary = {
-		"backpack_level": get_equipment_stat("backpack_level", 0),
-		"tube_level": get_equipment_stat("tube_level", 1),
-		"goggles_level": get_equipment_stat("goggles_level", 0),
-		"fins_level": get_equipment_stat("fins_level", 0),
-		"flashlight_level": get_equipment_stat("flashlight_level", 0),
-		"current_battery": float(player.get("current_battery")) if (player and player.get("current_battery") != null) else float(equipment_data.get("current_battery", -1.0))
-	}
-	return save_game(save_day, money, equipment_dict)
+	return save_game(save_day, money, get_current_equipment_dict())
 
 
 func _setup_save_toast_ui() -> void:
@@ -561,40 +570,70 @@ func sort_inventory_by_category() -> void:
 	emit_signal("inventory_updated")
 
 
+func reset_equipment_data() -> void:
+	equipment_data = {
+		"tube_level": 1,
+		"fins_level": 0,
+		"goggles_level": 0,
+		"backpack_level": 0,
+		"flashlight_level": 0,
+		"current_battery": -1.0
+	}
+	var player = get_tree().get_first_node_in_group("player") if get_tree() else null
+	if player:
+		player.set("tube_level", 1)
+		player.set("fins_level", 0)
+		player.set("goggles_level", 0)
+		player.set("backpack_level", 0)
+		player.set("flashlight_level", 0)
+		player.set("current_battery", 60.0)
+		if player.has_method("_broadcast_battery"):
+			player.call("_broadcast_battery")
+
+	for k in equipment_data.keys():
+		equipment_updated.emit(k, int(equipment_data[k]) if k != "current_battery" else 0)
+	inventory_updated.emit()
+
+
 func apply_save_to_player(player: Node) -> void:
 	if not is_instance_valid(player):
 		return
 	_load_equipment_data()
 	var data := get_save_data()
-	if data.is_empty():
-		player.set("tube_level", int(equipment_data.get("tube_level", 1)))
-		player.set("fins_level", int(equipment_data.get("fins_level", 0)))
-		player.set("goggles_level", int(equipment_data.get("goggles_level", 0)))
-		player.set("backpack_level", int(equipment_data.get("backpack_level", 0)))
-		player.set("flashlight_level", int(equipment_data.get("flashlight_level", 0)))
-		return
-	var eq: Dictionary = data.get("equipment", {})
+	var eq: Dictionary = data.get("equipment", equipment_data) if not data.is_empty() else equipment_data
 	for k in eq.keys():
 		equipment_data[k] = eq[k]
+
 	player.set("tube_level", int(eq.get("tube_level", 1)))
 	player.set("fins_level", int(eq.get("fins_level", 0)))
 	player.set("goggles_level", int(eq.get("goggles_level", 0)))
 	player.set("backpack_level", int(eq.get("backpack_level", 0)))
 	player.set("flashlight_level", int(eq.get("flashlight_level", 0)))
+
+	var flash_lvl: int = int(eq.get("flashlight_level", 0))
+	var default_bat: float = 75.0 + float(max(0, flash_lvl - 1)) * 8.93 if flash_lvl > 0 else 60.0
+	if player.has_method("get_flashlight_max_battery"):
+		default_bat = player.get_flashlight_max_battery()
+
 	if eq.has("current_battery") and float(eq["current_battery"]) >= 0.0:
 		player.set("current_battery", float(eq["current_battery"]))
-		if player.has_method("_broadcast_battery"):
-			player.call("_broadcast_battery")
+	else:
+		player.set("current_battery", default_bat)
+
+	if player.has_method("_broadcast_battery"):
+		player.call("_broadcast_battery")
 
 
 func start_new_game() -> void:
 	delete_save()
 	clear_inventory()
+	reset_equipment_data()
 	GlobalEconomy.money = 0
 	GlobalEconomy.money_changed.emit(0)
 	var time_mgr: Node = _get_time_mgr()
 	if time_mgr and time_mgr.has_method("reset_to_new_game"):
 		time_mgr.reset_to_new_game()
+	save_game(1, 0, get_current_equipment_dict())
 
 
 func delete_save() -> void:

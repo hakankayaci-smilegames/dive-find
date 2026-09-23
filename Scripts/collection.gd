@@ -56,6 +56,7 @@ const CATEGORY_LABELS_EN: Dictionary = {
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS  # Ofis pause'ken de çalışsın
 	add_to_group("popup_ui")
+	add_to_group("collection_book")
 	close_button.pressed.connect(queue_free)
 
 	# Mobil dokunmatik ekran optimizasyonu (daha geniş butonlar)
@@ -172,7 +173,7 @@ func _populate_grid() -> void:
 	var overall_total := all_items.size()
 	var overall_discovered := 0
 	for item in all_items:
-		if GlobalInventory.discovered_items.has(item.resource_path):
+		if GlobalInventory.is_item_discovered(item):
 			overall_discovered += 1
 
 	# Filtreli liste
@@ -185,7 +186,7 @@ func _populate_grid() -> void:
 	for item in display_items:
 		var slot = slot_scene.instantiate() as CollectionSlot
 		grid_container.add_child(slot)
-		var is_discovered: bool = GlobalInventory.discovered_items.has(item.resource_path)
+		var is_discovered: bool = GlobalInventory.is_item_discovered(item)
 		if is_discovered:
 			filtered_discovered += 1
 		slot.setup(item, is_discovered)
@@ -215,5 +216,7 @@ func _on_slot_clicked(item: ItemData) -> void:
 
 	GlobalSoundManager.play_sfx("click")
 	var popup = popup_scene.instantiate()
+	if popup is CanvasLayer:
+		popup.layer = 120
 	get_tree().current_scene.add_child(popup)
 	popup.setup(item, null, true)

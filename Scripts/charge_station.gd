@@ -68,7 +68,7 @@ func _refresh_ui() -> void:
 	if not player:
 		player = get_tree().get_first_node_in_group("player")
 
-	var flash_lvl: int = int(player.get("flashlight_level")) if player else 0
+	var flash_lvl: int = GlobalInventory.get_equipment_stat("flashlight_level", 0) if GlobalInventory.has_method("get_equipment_stat") else (int(player.get("flashlight_level")) if player else 0)
 	if flash_lvl <= 0:
 		battery_title_label.text = "No Flashlight" if is_en else "Fener Yok"
 		wallet_label.text = ("Balance: %d Z" if is_en else "Bakiye: %d Z") % GlobalEconomy.money
@@ -82,8 +82,17 @@ func _refresh_ui() -> void:
 		cost_label.add_theme_color_override("font_color", Color(0.8, 0.4, 0.4, 1.0))
 		return
 
-	_max_battery = player.get_flashlight_max_battery() if player.has_method("get_flashlight_max_battery") else 60.0
-	_cur_battery = float(player.get("current_battery"))
+	if player and player.has_method("get_flashlight_max_battery"):
+		_max_battery = player.get_flashlight_max_battery()
+	else:
+		_max_battery = 75.0 + float(max(0, flash_lvl - 1)) * 8.93
+
+	if player and player.get("current_battery") != null:
+		_cur_battery = float(player.get("current_battery"))
+	else:
+		var saved_bat: float = float(GlobalInventory.equipment_data.get("current_battery", -1.0))
+		_cur_battery = saved_bat if saved_bat >= 0.0 else _max_battery
+
 	if _cur_battery < 0.0:
 		_cur_battery = _max_battery
 
@@ -186,6 +195,8 @@ func _on_charge_pressed() -> void:
 
 	if GlobalEconomy.spend_money(cost):
 		var new_battery: float = (float(_target_pct) / 100.0) * _max_battery
+		_cur_battery = new_battery
+		GlobalInventory.equipment_data["current_battery"] = new_battery
 		if player:
 			player.set("current_battery", new_battery)
 			if player.has_method("_broadcast_battery"):

@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://vw2m3m1uiv1p" path="res://Sprites/images (2).jpg" id="3_aikwe"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.15, 0.1, 0.06, 0.95)
+bg_color = Color(0.14901961, 0.101960786, 0.05882353, 1)
 border_width_left = 3
 border_width_top = 3
 border_width_right = 3
@@ -94,15 +94,9 @@ slot_scene = ExtResource("2_slot_scene")
 
 [node name="MainPanel" type="Panel" parent="." unique_id=1271672358]
 custom_minimum_size = Vector2(900, 600)
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -450.0
-offset_top = -300.0
-offset_right = 450.0
-offset_bottom = 300.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
@@ -139,13 +133,15 @@ text = "X"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="MainPanel" unique_id=951052727]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = 20.0
+anchor_bottom = 1.0
+offset_left = 24.0
 offset_top = 60.0
-offset_right = -150.0
-offset_bottom = 363.0
+offset_right = -160.0
+offset_bottom = -245.0
 grow_horizontal = 2
+grow_vertical = 2
 horizontal_scroll_mode = 0
 
 [node name="GridContainer" type="GridContainer" parent="MainPanel/ScrollContainer" unique_id=850747675]
@@ -156,15 +152,33 @@ theme_override_constants/h_separation = 10
 theme_override_constants/v_separation = 10
 columns = 7
 
+[node name="HintLabel" type="Label" parent="MainPanel" unique_id=55062603]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -240.0
+offset_right = -160.0
+offset_bottom = -215.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.85)
+theme_override_font_sizes/font_size = 12
+text = "💡 İpucu: Eşyayı kilitlemek / açmak için Sağ Tıkla veya Basılı Tut 🔒 (Hepsini Sat kilitli eşyaları satmaz)"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="DetailPanel" type="Panel" parent="MainPanel" unique_id=342245798]
 layout_mode = 1
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = -205.0
-offset_right = -150.0
+offset_left = 24.0
+offset_top = -210.0
+offset_right = -160.0
 offset_bottom = -15.0
 grow_horizontal = 2
 grow_vertical = 0
@@ -175,16 +189,19 @@ layout_mode = 0
 offset_left = 20.0
 offset_top = 15.0
 offset_right = 155.0
-offset_bottom = 130.0
+offset_bottom = 145.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="NameLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=764419760]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
 offset_left = 175.0
 offset_top = 14.0
-offset_right = 540.0
+offset_right = -210.0
 offset_bottom = 40.0
+grow_horizontal = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 18
 text = "Eşya Seçin..."
@@ -208,22 +225,29 @@ theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 1)
 text = "-"
 
 [node name="DescLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=1072968596]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
 offset_left = 175.0
 offset_top = 68.0
-offset_right = 540.0
-offset_bottom = 178.0
+offset_right = -210.0
+offset_bottom = 180.0
+grow_horizontal = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 0.9)
 theme_override_font_sizes/font_size = 12
 text = "-"
 autowrap_mode = 3
 
 [node name="SellButton" type="Button" parent="MainPanel/DetailPanel" unique_id=1932424913]
-layout_mode = 0
-offset_left = 560.0
-offset_top = 35.0
-offset_right = 710.0
-offset_bottom = 75.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -190.0
+offset_top = 18.0
+offset_right = -20.0
+offset_bottom = 58.0
+grow_horizontal = 0
 theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
@@ -238,11 +262,15 @@ disabled = true
 text = "SAT"
 
 [node name="SellAllButton" type="Button" parent="MainPanel/DetailPanel" unique_id=1932424914]
-layout_mode = 0
-offset_left = 560.0
-offset_top = 85.0
-offset_right = 710.0
-offset_bottom = 135.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -190.0
+offset_top = 66.0
+offset_right = -20.0
+offset_bottom = 114.0
+grow_horizontal = 0
 theme_override_colors/font_color = Color(0.15, 0.1, 0.06, 1)
 theme_override_colors/font_pressed_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_colors/font_hover_color = Color(0.15, 0.1, 0.06, 1)
@@ -258,11 +286,15 @@ text = "HEPSİNİ SAT"
 autowrap_mode = 2
 
 [node name="LockHintLabel" type="Label" parent="MainPanel/DetailPanel" unique_id=1932424915]
-layout_mode = 0
-offset_left = 550.0
-offset_top = 142.0
-offset_right = 720.0
-offset_bottom = 182.0
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -195.0
+offset_top = 120.0
+offset_right = -15.0
+offset_bottom = 175.0
+grow_horizontal = 0
 theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.85)
 theme_override_font_sizes/font_size = 10
 text = "🔒 Sağ Tık / Basılı Tut:
@@ -271,30 +303,15 @@ horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="HintLabel" type="Label" parent="MainPanel" unique_id=55062603]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 20.0
-offset_top = 368.0
-offset_right = -150.0
-offset_bottom = 390.0
-grow_horizontal = 2
-theme_override_colors/font_color = Color(0.85, 0.75, 0.45, 0.85)
-theme_override_font_sizes/font_size = 12
-text = "💡 İpucu: Eşyayı kilitlemek / açmak için Sağ Tıkla veya Basılı Tut 🔒 (Hepsini Sat kilitli eşyaları satmaz)"
-horizontal_alignment = 1
-vertical_alignment = 1
-
 [node name="TextureRect" type="TextureRect" parent="MainPanel" unique_id=1401976274]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -140.0
+offset_left = -145.0
 offset_top = 60.0
 offset_right = -15.0
-offset_bottom = 320.0
+offset_bottom = 300.0
 grow_horizontal = 0
 texture = ExtResource("3_aikwe")
 expand_mode = 1
@@ -302,14 +319,16 @@ stretch_mode = 5
 
 [node name="TitleLabel2" type="Label" parent="MainPanel" unique_id=663085994]
 layout_mode = 1
-anchors_preset = 1
+anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -140.0
-offset_top = 330.0
-offset_right = -20.0
-offset_bottom = 570.0
+anchor_bottom = 1.0
+offset_left = -145.0
+offset_top = 310.0
+offset_right = -15.0
+offset_bottom = -20.0
 grow_horizontal = 0
+grow_vertical = 2
 theme_override_colors/font_color = Color(0.95, 0.9, 0.8, 1)
 theme_override_font_sizes/font_size = 13
 text = "Hoşgeldin adamım?, bugun ne pazarlık ediyoruz?"

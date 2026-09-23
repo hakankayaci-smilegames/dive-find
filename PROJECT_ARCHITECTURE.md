@@ -787,8 +787,9 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
     - **Koleksiyon Kitabı ([`Scripts/collection.gd`](file:///home/hakan/dive&find/Scripts/collection.gd) & [`Scripts/collection_slot.gd`](file:///home/hakan/dive&find/Scripts/collection_slot.gd)):** Sekme butonları (`All`, `Trash`, `Resource`, `Rare`, `Valuable`, `Special`, `Crafted`), pencere başlığı (`Collection Book`), kategori keşif ilerlemesi (`%s: %d / %d Discovered` / `%s: %d / %d Keşfedildi`) ve alt toplam çubuğu (`Total Discovered: %d / %d (%%%d)` / `Toplam Keşif: %d / %d (%%%d)`) ile slot hover tooltip'leri tamamen iki dilli yapıldı; `popup_ui` grubuna eklenerek `refresh_ui()` ile anlık dil değişimine bağlandı.
     - **Karargah Ofis Menüsü ([`Scripts/office_menu.gd`](file:///home/hakan/dive&find/Scripts/office_menu.gd)):** Ana başlık (`OFFICE & DIVE HEADQUARTERS`), alt başlık, bölüm başlıkları (`TRADERS & ACQUISITIONS`, `FACILITIES & PRODUCTION`), tüccar kartları (`Scrapper`, `Antique Dealer`, `Black Market` isim ve açıklamaları), tesis kartları (`Equipment Shop`, `Laboratory`, `Marketplace` isim, açıklama ve `[ ACTIVE ]` rozeti) ile alt bar butonları (`🎒 INVENTORY [I]`, `📖 COLLECTION [C]`, `⚡ CHARGE`, `SAVE & QUIT`) `refresh_ui()` fonksiyonuyla çalışma zamanında dinamik yenilenir.
     - **Şarj İstasyonu ([`Scripts/charge_station.gd`](file:///home/hakan/dive&find/Scripts/charge_station.gd)):** Başlık (`⚡ CHARGE STATION`), batarya durum etiketleri (`BATTERY FULL (100%)`, `⚡ NO FLASHLIGHT`), maliyet hesaplama metinleri (`Cost: %d Zurna (+%ds / +%%%d)`) ve butonlar (`⚡ CHARGE (%d Zurna)`, `MAX`) eksiksiz çevrildi ve `popup_ui` grubuna dahil edildi.
-    - **Oyun Bitti Ekranı ([`Scripts/game_over.gd`](file:///home/hakan/dive&find/Scripts/game_over.gd)):** Boğulma başlığı (`YOU DROWNED`), balıkçı kurtarma hikayesi (`The diver ran out of oxygen...`) ve onay butonu (`OK` / `TAMAM`) dinamik yerelleştirildi.
+    - **Oyun Bitti Ekranı ([`Scripts/game_over.gd`](file:///home/hakan/Desktop/dive-find/Scripts/game_over.gd)):** Boğulma başlığı (`YOU DROWNED`), balıkçı kurtarma hikayesi (`The diver ran out of oxygen...`) ve onay butonu (`OK` / `TAMAM`) dinamik yerelleştirildi; TAMAM tıklandığında oyuncu İskele Barakası'na (`Scenes/dock_shack.tscn`) yönlendirilir.
     - **Duraklatma Menüsü ([`Scripts/pause_menu.gd`](file:///home/hakan/dive&find/Scripts/pause_menu.gd)):** Duraklatma başlığı (`⏸️ PAUSED`), butonlar (`▶ CONTINUE`, `⚙️ SETTINGS`, `🚪 RETURN TO MAIN MENU`) ve dalıştan çıkış modalı (`⚠️ QUIT DIVE?`, `RETURN TO DIVE`, `YES, QUIT 🚪`) EN/TR çift dilli hale getirildi.
+
     - **Ayarlar Menüsü ([`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)):** Müzik/SFX sesleri, tam ekran, dokunmatik joystick boyutu, mobil fener nişanlama seçenekleri (`🕹️ Swim Direction (Joystick)`, `👆 Free Touch Aim`, `✨ Smart Hybrid`), koleksiyon sıfırlama onay modalı ve geliştirici kodu butonları/bildirimleri `popup_ui` grubu altında canlı güncellenir.
     - **Yükleme Ekranı ([`Scripts/loading_screen.gd`](file:///home/hakan/dive&find/Scripts/loading_screen.gd)):** Yenilenmiş `game_bg.png` arkaplanı, `header.png` transparan logosu, durum metinleri (`Scanning ancient relics...`, `Preparing...`, `▶ TOUCH SCREEN OR PRESS ANY KEY TO CONTINUE ◀`) ve döner ipuçları `Data/loading_tips.json` üzerinden Türkçe ve İngilizce sunulur.
     - **Sürüm Notları & Yardım Kılavuzu ([`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd)):** 1.6.3 (%100 İngilizce desteği, eşya açıklamaları & hikaye düzeltmeleri, fiyatlandırma & nadirlik rework'ü, ana menü & yükleme ekranı UI yenilemesi, yeni oyun simgesi & splash screen), 1.6.2 & 1.6.1 yama notları ve temel oyun kontrolleri rehberi (PC & Dokunmatik) zengin metin BBCode formatıyla CSV'ye aktarılıp kusursuz çevrildi. Dinamik dil değişiminde canlı güncellenir.
@@ -1044,12 +1045,50 @@ Proje genelinde `project.godot` üzerinden 3 temel Autoload tanımlıdır:
   - TR: `"💾 Oyun Kaydedildi"` / EN: `"💾 Game Saved"`.
   - 2 saniye boyunca ekranda kalıp yumuşak bir alfa animasyonuyla kaybolur.
 
+- **Genel Ses (Master Volume) Seviye Kaydırıcısı Entegrasyonu:**
+  - Ayarlar menüsüne ([`Scenes/settings_menu.tscn`](file:///home/hakan/dive&find/Scenes/settings_menu.tscn) & [`Scripts/settings_menu.gd`](file:///home/hakan/dive&find/Scripts/settings_menu.gd)) Müzik ve SFX kontrollerinin üzerine `MasterRow` (`MasterLabel` + `MasterSlider`) eklendi.
+  - Godot'un en üst düzey ses veriyolu olan `Master` (AudioServer index 0) kanalını yönetir; hem müzik hem SFX hem de ortam sesleri genel seviyeye bağlı olarak oranlı ayarlanır.
+  - Değerler `user://settings.cfg` içinde `[audio] master` anahtarı altında kalıcı saklanır (varsayılan: %80).
+  - Oyun açılışında [`Scripts/main_menu.gd`](file:///home/hakan/dive&find/Scripts/main_menu.gd) içerisindeki `_init_engine_settings()` fonksiyonu ile kayıtlı genel ses seviyesi motor genelinde doğrudan yüklenir ve uygulanır.
+  - TR: `"Genel Ses"` / EN: `"Master Volume"` çift dilli desteği sağlandı.
 
+- **Kapsamlı Kayıt Sistemi İyileştirmesi & Yeni Oyun Sıfırlama Düzeltmesi (Save System Fixes):**
+  - **Yeni Oyunda Ekipman Sıfırlamama Hatası Giderildi:** `GlobalInventory.start_new_game()` çağrıldığında RAM'deki `equipment_data` ve sahnede varsa `player` özellikleri taban değerlere (`tube_level: 1`, diğerleri `0`, batarya taban seviyeye) çekildi; `equipment_updated` ve `inventory_updated` sinyalleri yayımlandı. Temiz bir "Gün 1, 0 Zurna" taban save dosyası diske yazılarak state senkronize edildi.
+  - **Merkezi Ekipman Sözlüğü (`GlobalInventory.get_current_equipment_dict()`):** `office_menu.gd`, `day_summary.gd`, `city_map.gd` ve `auto_save_game()` içindeki kopya ve `player == null` durumunda ekipman seviyelerini yanlışlıkla 0/1'e sıfırlayan ad-hoc dictionary üretimleri merkezi tek fonksiyona bağlandı.
+  - **Şehirde Şarj İstasyonu Desteği ([`Scripts/charge_station.gd`](file:///home/hakan/dive&find/Scripts/charge_station.gd)):** `player` nesnesinin olmadığı sahnelerde (şehir haritası vb.) fener seviyesi ve batarya takibi `GlobalInventory.get_equipment_stat()` ve `GlobalInventory.equipment_data` üzerinden okunacak ve şarj edildiğinde güncellenecek şekilde güvenli hale getirildi.
+  - **Koleksiyon Koruma Ayrımı:** Keşfedilen eşya koleksiyonu (`collection_save.json`) yeni oyunda bozulmadan korunurken, ekipman ve ilerleme verileri kusursuzca sıfırlanır.
 
+- **Şehir Haritası Koleksiyon Defteri & Alt Menü Yönetimi İyileştirmesi (City Map Collection Book Fixes):**
+  - **Grup ve Toggle Eşleşmesi:** [`Scripts/collection.gd`](file:///home/hakan/Desktop/dive-find/Scripts/collection.gd) sahnesine `collection_book`, [`Scripts/inventory.gd`](file:///home/hakan/Desktop/dive-find/Scripts/inventory.gd) sahnesine `inventory` grupları eklendi. [`Scripts/city_map.gd`](file:///home/hakan/Desktop/dive-find/Scripts/city_map.gd) içindeki toggle kontrolleri isim ve grup esasına dayalı çift taraflı güvenli hale getirildi; butonlara veya `C`/`I` tuşlarına tekrar basıldığında menüler sorunsuz kapanır.
+  - **Alt Sahne Temizliği (`_open_sub_scene`):** Yeni bir alt sahne açılmadan önce var olan aktif menünün (`_active_sub_menu`) bellekten temizlenmesi (`queue_free()`) sağlandı; sahnelerin arka arkaya birikmesi ve ağaçta asılı kalması engellendi. Alt menü katmanı `layer = 95` olarak sabitlendi.
+  - **Eşya İnceleme Katman Düzeltmesi (`popupui.gd` - `layer = 120`):** Koleksiyon defterindeki eşyalara tıklandığında açılan detay kartının (`pickup.tscn` / `popupui.gd`) katmanı `layer = 120` yapılarak şehir haritasının (`layer = 80`) ve koleksiyon defterinin (`layer = 95`) üzerinde kusursuz görünmesi sağlandı.
+  - **Güvenli Keşif Sorgusu (`is_item_discovered`):** [`Scripts/collection.gd`](file:///home/hakan/Desktop/dive-find/Scripts/collection.gd) içerisindeki ham sözlük kontrolü yerine `GlobalInventory.is_item_discovered(item)` kullanılarak dosya yolu uyuşmazlıkları ve keşfedilen eşyaların silüet kalma riski sıfırlandı.
 
+- **Gün Sonu Özetinden Yeni Güne Geçiş & Yükleme Ekranı Düzeltmesi (Day Summary Loading Screen Fix):**
+  - **Döngüsel Bağımlılık (Cyclic Dependency) & Null Crash Çözümü:** [`Scripts/day_summary.gd`](file:///home/hakan/Desktop/dive-find/Scripts/day_summary.gd) dosyasındaki `@export var loading_scene = preload(...)` derleme zamanında döngüsel bağımlılık yüzünden runtime'da `instantiate()` çağrısının `null` dönmesine ve `Invalid assignment on null instance` hatasına yol açıyordu.
+  - `loading_scene` dinamik `load("res://Scenes/loading_screen.tscn")` yapısına geçirildi ve `is_instance_valid(loading_inst)` kontrolü eklendi. Yükleme ekranı nesnesi oluşmadığı takdirde doğrudan `new_day_started` sinyali yayılarak yeni güne temizce başlanması sağlandı (oyun asla gün özetinde kilitlenmez).
+  - Benzer emniyet kontrolü [`Scripts/city_map.gd`](file:///home/hakan/Desktop/dive-find/Scripts/city_map.gd) içindeki `_play_transition` fonksiyonuna da entegre edildi.
 
+- **Şehir İçi Mekanlar & Dükkanlar Tam Ekran UI Dengeleme Revizyonu (Full-Screen Shop & Venue UI Polish):**
+  - **Tüccar & Dükkan Taban Sahnesi ([`Scenes/item_seller.tscn`](file:///home/hakan/Desktop/dive-find/Scenes/item_seller.tscn)):**
+    - `ScrollContainer` tam ekran en-boy oranına uygun olarak üstte `offset_top = 60.0`, altta `offset_bottom = -245.0` aralığına yerleştirildi; 7 kolonlu (`columns = 7`) geniş ızgara ile eşyaların rahat sergilenmesi sağlandı.
+    - `DetailPanel` ekranın alt kısmına yatay bir bant olarak sabitlendi (`offset_top = -210.0`, `offset_bottom = -15.0`).
+    - `SellButton`, `SellAllButton` ve `LockHintLabel` panelin sağ kenarına hizalandı (`anchor_left = 1.0, anchor_right = 1.0`, ~170px genişlik); `NameLabel` ve `DescLabel` 210px sağ boşlukla sol tarafa yayılarak metin taşmaları engellendi.
+    - Sağ dikey şeritte NPC portresi (`TextureRect`) ve replik alanı (`TitleLabel2`) dengelendi. Çöpcü, Antikacı ve Satış Pazarı bu iyileştirmeden anında faydalandı.
+  - **Kara Borsa Düzeni ([`Scenes/kara_borsa.tscn`](file:///home/hakan/Desktop/dive-find/Scenes/kara_borsa.tscn)):**
+    - 2 kolonlu yapıdaki orta boşluk (272px boşluk) giderildi: `ScrollContainer` sağ sınırı `-460.0` px'e çekilip 6 kolona (`columns = 6`) genişletildi; `DetailPanel` sağda 420px genişlikte dikey panel olarak konumlandırıldı ve aradaki boşluk 20px standart marjine çekildi.
+  - **Ekipman Mağazası ([`Scenes/equstore.tscn`](file:///home/hakan/Desktop/dive-find/Scenes/equstore.tscn) & [`Scripts/equstore.gd`](file:///home/hakan/Desktop/dive-find/Scripts/equstore.gd)):**
+    - 5 adet ekipman yükseltme kartını barındıran `SlotsContainer` ekranın tam merkezine ortalandı (`anchors_preset = 8`, 960x280px).
+    - Alt kenara çift dilli dinamik ipucu etiketi (`HintLabel`) eklendi (`refresh_ui()` ile Türkçe / İngilizce senkronize).
+  - **Biyokimya Laboratuvarı ([`Scenes/laboratory.tscn`](file:///home/hakan/Desktop/dive-find/Scenes/laboratory.tscn)):**
+    - Sol kolon (`LeftCol`) minimum genişliği 350px'ten 420px'e çıkarılarak tarif listesi ferahlatıldı.
+    - Sentez butonu (`CraftButton`) 700px üzeri devasa genişlemeden kurtarılarak `340x48px` boyutunda merkeze (`size_flags_horizontal = SIZE_SHRINK_CENTER`) hizalandı.
 
-
-
+- **Boğulma / Ölüm Sonrası İskele Barakasına Dönüş (Game Over to Dock Shack Routing):**
+  - [`Scripts/game_over.gd`](file:///home/hakan/Desktop/dive-find/Scripts/game_over.gd) ve [`Scenes/game_over.tscn`](file:///home/hakan/Desktop/dive-find/Scenes/game_over.tscn) güncellendi.
+  - Oyuncu boğulduğunda ve TAMAM'a bastığında eski ofis menüsü (`office_menu.tscn`) yerine v1.7.0 liman merkezi olan İskele Barakası'na ([`Scenes/dock_shack.tscn`](file:///home/hakan/Desktop/dive-find/Scenes/dock_shack.tscn)) yönlendirilir.
+  - Ölüm ekranı `layer = 130` yapılarak diğer UI katmanlarının üzerinde render edilmesi garanti edildi.
+  - TAMAM butonuna tıklandığında oyuncunun canı (`current_health`), oksijeni (`current_oxygen`), hızı ve fener durumu (`reset_flashlight_for_office`) barakaya geçiş öncesinde eksiksiz yenilenir.
+  - Çift dilli bilgilendirme metni ("iskele barakasına geri gönderileceksin" / "sent back to the dock shack") güncellendi ve `translations.csv` senkronize edildi.
 
 

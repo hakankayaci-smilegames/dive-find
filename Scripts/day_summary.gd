@@ -2,7 +2,7 @@ extends CanvasLayer
 
 signal new_day_started
 
-@export var loading_scene: PackedScene = preload("res://Scenes/loading_screen.tscn")
+@export var loading_scene: PackedScene = null
 
 @onready var day_title: Label = %DayTitle
 @onready var earnings_label: Label = %EarningsLabel
@@ -70,22 +70,15 @@ func _on_continue_pressed() -> void:
 		time_mgr.start_new_day()
 
 	# 2. Otomatik Kayıt Al
-	var player = get_tree().get_first_node_in_group("player")
-	var equipment_dict: Dictionary = {
-		"tube_level": int(player.get("tube_level")) if player else 1,
-		"fins_level": int(player.get("fins_level")) if player else 0,
-		"goggles_level": int(player.get("goggles_level")) if player else 0,
-		"backpack_level": int(player.get("backpack_level")) if player else 0,
-		"flashlight_level": int(player.get("flashlight_level")) if player else 0,
-		"current_battery": float(player.get("current_battery")) if player else -1.0
-	}
 	var current_day_num: int = int(time_mgr.get("current_day")) if time_mgr else 1
-	GlobalInventory.save_game(current_day_num, GlobalEconomy.money, equipment_dict)
+	var eq_dict: Dictionary = GlobalInventory.get_current_equipment_dict() if GlobalInventory.has_method("get_current_equipment_dict") else {}
+	GlobalInventory.save_game(current_day_num, GlobalEconomy.money, eq_dict)
 
 	# 3. Havalı Yükleme Ekranı (Loading Screen)
-	if loading_scene:
+	var scene: PackedScene = loading_scene if loading_scene else load("res://Scenes/loading_screen.tscn")
+	var loading_inst = scene.instantiate() if scene else null
+	if is_instance_valid(loading_inst):
 		visible = false # Gün özetini gizle
-		var loading_inst = loading_scene.instantiate()
 		loading_inst.auto_change_scene = false
 		loading_inst.min_display_time = 1.6 # 1.6 saniye tatlı bir geçiş
 		var layer := CanvasLayer.new()

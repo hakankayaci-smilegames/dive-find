@@ -41,6 +41,8 @@ TRANSLATION_MAP = {
     "Geri": "Back",
     "KAPAT": "CLOSE",
     "Kapat": "Close",
+    "Genel Ses": "Master Volume",
+    "Ana Ses": "Master Volume",
     "Müzik": "Music",
     "Müzik Sesi": "Music Volume",
     "Ses Efektleri": "Sound Effects",
@@ -198,6 +200,8 @@ TRANSLATION_MAP = {
     "Dalış Gözlüğü: Görüş açısını ve zoom'u genişletir": "Diving Mask: Expands field of view and zoom",
     "Çanta: Envanter kapasitesini artırır (+5 slot)": "Backpack: Increases inventory capacity (+5 slots)",
     "Sırt Çantası: Envanter kapasitesini artırır": "Backpack: Increases inventory capacity",
+    "💡 İpucu: Ekipmanlarını geliştirerek daha derine dalabilir, daha hızlı yüzebilir ve daha fazla ganimet toplayabilirsin.": "💡 Tip: Upgrade your diving gear to dive deeper, swim faster and carry more treasures.",
+
 
     # --- BİYOKİMYA LABORATUVARI ---
     "BİYOKİMYA LABORATUVARI": "BIOCHEMISTRY LAB",
@@ -281,9 +285,7 @@ TRANSLATION_MAP = {
 
     # --- ŞEHİR HARİTASI (CITY MAP & PINS) ---
     "📍Portovero Kasabası": "📍 Portovero Town",
-    "Portovero Kasabası": "Portovero Town",
     "⏭️ DİNLEN / İLERLET": "⏭️ REST / ADVANCE",
-    "🎒 ÇANTA (%d/%d)": "🎒 BAG (%d/%d)",
     "🚪 HARİTADAN ÇIK": "🚪 EXIT MAP",
     "Haritadan Çık": "Exit Map",
     "▶ GİR [TIKLA]": "▶ ENTER [CLICK]",
@@ -292,7 +294,6 @@ TRANSLATION_MAP = {
     "Bildirim mesajı...": "Notification message...",
     "📅 GÜN 1": "📅 DAY 1",
     "💰 0 Zurna": "💰 0 Zurna",
-    "📍Portovero Kasabası": "📍 Portovero Town",
     "Liman İskelesi & Dalış": "Harbor Pier & Dive",
     "Suya dalış yap veya rıhtım iskelesinden açıl.": "Dive into the ocean from the wooden pier.",
     "Genel ticaret ve alım satım tezgahları.": "General trade and barter stalls.",
@@ -402,6 +403,8 @@ TRANSLATION_MAP = {
     "OFİS & DALIŞ KARARGAHI": "OFFICE & DIVE HEADQUARTERS",
     "Oksijen Tüpü: Oksijen tüketimini azaltır": "Oxygen Tank: Reduces oxygen consumption",
     "Oksijen tüpün bitti ve yüzeye ulaşamadın, yandan geçen bir balıkçı seni buldu ve kurtardı ancak uyandığında çantan yoktu.\nDevam etmek için TAMAM'a bas, ofise geri gönderileceksin.": "You ran out of oxygen and couldn't reach the surface. A passing fisherman spotted and rescued you, but your bag was gone when you woke up.\nPress OK to return to the office.",
+    "Oksijen tüpün bitti ve yüzeye ulaşamadın, yandan geçen bir balıkçı seni buldu ve kurtardı ancak uyandığında çantan yoktu.\nDevam etmek için TAMAM'a bas, iskele barakasına geri gönderileceksin.": "You ran out of oxygen and couldn't reach the surface. A passing fisherman spotted and rescued you, but your bag was gone when you woke up.\nPress OK to return to the dock shack.",
+
     "Palet: Yüzme hızını artırır": "Fins: Increases swim speed",
     "SATIŞ PAZARI": "MARKETPLACE",
     "SENTEZLE / ÜRET ✨": "SYNTHESIZE / CRAFT ✨",

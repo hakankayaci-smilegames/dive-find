@@ -6,6 +6,8 @@ extends CanvasLayer
 @onready var close_button: Button = $MainPanel/CloseButton
 @onready var slots_container: HBoxContainer = $MainPanel/SlotsContainer
 @onready var title_label: Label = $MainPanel/TitleLabel
+@onready var hint_label: Label = get_node_or_null("MainPanel/HintLabel")
+
 
 
 var _player: Node = null
@@ -33,9 +35,12 @@ func refresh_ui() -> void:
 	var is_en: bool = ItemTranslator.get_current_locale() == "en"
 	if is_instance_valid(title_label):
 		title_label.text = "Equipment Shop" if is_en else "Ekipman Mağazası"
+	if is_instance_valid(hint_label):
+		hint_label.text = "💡 Tip: Upgrade your diving gear to dive deeper, swim faster and carry more treasures." if is_en else "💡 İpucu: Ekipmanlarını geliştirerek daha derine dalabilir, daha hızlı yüzebilir ve daha fazla ganimet toplayabilirsin."
 	for slot in slots_container.get_children():
 		if slot is EquipmentSlot:
 			slot.refresh(slot.current_level)
+
 
 
 func _build_slots() -> void:

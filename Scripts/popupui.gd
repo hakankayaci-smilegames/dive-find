@@ -78,6 +78,7 @@ const RARITY_COLORS := {
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	layer = 120
 	add_to_group("popup_ui")
 
 	# Açılış Pop-in Animasyonu

@@ -234,25 +234,30 @@ func _open_sub_scene(scene: PackedScene) -> void:
 	if not scene:
 		return
 
+	if is_instance_valid(_active_sub_menu):
+		_active_sub_menu.queue_free()
+		_active_sub_menu = null
+
 	var inst: Node = scene.instantiate()
 	_active_sub_menu = inst
 
 	# Tam ekran kontrolü: Alt sahne açıldığında sub_menu_container içerisine veya CanvasLayer olarak eklenir
 	if inst is CanvasLayer:
-		inst.layer = 90
+		inst.layer = 95
 		add_child(inst)
 	else:
 		sub_menu_container.add_child(inst)
 
 	inst.tree_exited.connect(func() -> void:
-		_active_sub_menu = null
+		if _active_sub_menu == inst:
+			_active_sub_menu = null
 		refresh_ui()
 	)
 
 
 func _toggle_inventory() -> void:
 	GlobalSoundManager.play_sfx("click")
-	if is_instance_valid(_active_sub_menu) and _active_sub_menu.is_in_group("inventory"):
+	if is_instance_valid(_active_sub_menu) and (_active_sub_menu.is_in_group("inventory") or _active_sub_menu.name.begins_with("Inventory")):
 		_active_sub_menu.queue_free()
 		_active_sub_menu = null
 		return
@@ -263,7 +268,7 @@ func _toggle_inventory() -> void:
 
 func _toggle_collection() -> void:
 	GlobalSoundManager.play_sfx("click")
-	if is_instance_valid(_active_sub_menu) and _active_sub_menu.is_in_group("collection_book"):
+	if is_instance_valid(_active_sub_menu) and (_active_sub_menu.is_in_group("collection_book") or _active_sub_menu.name.begins_with("Collection")):
 		_active_sub_menu.queue_free()
 		_active_sub_menu = null
 		return
@@ -274,6 +279,10 @@ func _toggle_collection() -> void:
 
 func _open_settings() -> void:
 	GlobalSoundManager.play_sfx("click")
+	if is_instance_valid(_active_sub_menu) and (_active_sub_menu.is_in_group("settings_menu") or _active_sub_menu.name.begins_with("Settings")):
+		_active_sub_menu.queue_free()
+		_active_sub_menu = null
+		return
 	if settings_scene:
 		_open_sub_scene(settings_scene)
 
@@ -294,16 +303,8 @@ func _on_close_pressed() -> void:
 	if GlobalInventory.is_autosave_enabled():
 		var time_mgr: Node = _get_time_mgr()
 		var save_day: int = int(time_mgr.get("current_day")) if time_mgr else _current_day
-		var player = get_tree().get_first_node_in_group("player")
-		var equipment_dict := {
-			"backpack_level": GlobalInventory.get_equipment_stat("backpack_level", 0),
-			"tube_level": GlobalInventory.get_equipment_stat("tube_level", 1),
-			"goggles_level": GlobalInventory.get_equipment_stat("goggles_level", 0),
-			"fins_level": GlobalInventory.get_equipment_stat("fins_level", 0),
-			"flashlight_level": GlobalInventory.get_equipment_stat("flashlight_level", 0),
-			"current_battery": float(player.get("current_battery")) if (player and player.get("current_battery") != null) else float(GlobalInventory.equipment_data.get("current_battery", -1.0))
-		}
-		GlobalInventory.save_game(save_day, GlobalEconomy.money, equipment_dict)
+		var eq_dict: Dictionary = GlobalInventory.get_current_equipment_dict() if GlobalInventory.has_method("get_current_equipment_dict") else {}
+		GlobalInventory.save_game(save_day, GlobalEconomy.money, eq_dict)
 
 	# 2. Ortam Geçişi: Şehir Haritası -> Ana Menü (Loading Screen ile)
 	_play_transition(func() -> void:
@@ -640,11 +641,16 @@ func _play_micro_transition(action: Callable) -> void:
 
 
 func _play_transition(on_complete: Callable, display_time: float = 1.0) -> void:
-	if not loading_scene:
+	var scene: PackedScene = loading_scene if loading_scene else load("res://Scenes/loading_screen.tscn")
+	if not scene:
 		on_complete.call()
 		return
 
-	var loading_inst = loading_scene.instantiate()
+	var loading_inst = scene.instantiate()
+	if not is_instance_valid(loading_inst):
+		on_complete.call()
+		return
+
 	loading_inst.auto_change_scene = false
 	loading_inst.min_display_time = display_time
 	var layer_node := CanvasLayer.new()

@@ -65,6 +65,7 @@ const ITEM_SCENE_MAP: Dictionary = {
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS  # Ofis açıp oyunu duraklattığımızda bu panel çalışmaya devam etsin
 	add_to_group("popup_ui")
+	add_to_group("inventory")
 	close_button.pressed.connect(queue_free)
 	if is_instance_valid(sort_button):
 		sort_button.pressed.connect(_on_sort_pressed)
