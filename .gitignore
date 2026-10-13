@@ -4,6 +4,7 @@
 # Export/publish builds
 build/
 export/
+export_presets.cfg
 *.exe
 *.pck
 *.x86_64
@@ -14,5 +15,6 @@ export/
 # OS junk
 .DS_Store
 Thumbs.db
+.directory
 __pycache__/
 *.pyc
