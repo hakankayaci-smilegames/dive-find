@@ -1,8 +1,25 @@
+<p align="center">
+  <img src="Sprites/header.png" alt="Dive&Find logo" width="900">
+</p>
+
 # Dive&Find
 
 **Dive&Find**, Godot ile geliştirilen 2D bir su altı keşif ve hayatta kalma oyunudur. Oyuncu dalış yapar, deniz tabanındaki eşyaları keşfeder, çantasını yönetir, buluntularını satar ve ekipmanını geliştirerek daha derine iner.
 
 > Proje şu anda pre-alpha aşamasındadır. Oynanış, denge ve içerik aktif olarak değişebilir.
+
+## Pre-Alpha 1.7 (Dev) önizleme
+
+<p align="center">
+  <img src="assets/screenshots/pre-alpha-1.7-dev-01-menu.png" alt="Pre-Alpha 1.7 ana menüsü ve sürüm notları" width="31%">
+  <img src="assets/screenshots/pre-alpha-1.7-dev-02-city-map.png" alt="Portovero Kasabası şehir haritası" width="31%">
+  <img src="assets/screenshots/pre-alpha-1.7-dev-03-laboratory.png" alt="Laboratuvar ve sentez merkezi" width="31%">
+</p>
+<p align="center">
+  <img src="assets/screenshots/pre-alpha-1.7-dev-04-dive-dock.png" alt="Dalış hazırlık iskelesi" width="31%">
+  <img src="assets/screenshots/pre-alpha-1.7-dev-05-underwater.png" alt="Okyanusta dalış oynanışı" width="31%">
+  <img src="assets/screenshots/pre-alpha-1.7-dev-06-collecting.png" alt="Dalış sırasında eşya toplama arayüzü" width="31%">
+</p>
 
 ## Öne çıkanlar
 
