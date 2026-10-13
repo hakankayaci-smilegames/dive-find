@@ -66,14 +66,6 @@ Katkılar memnuniyetle karşılanır. Küçük ve odağı net değişiklikler te
 4. Sahne, veri modeli veya mekanik etkileniyorsa `PROJECT_ARCHITECTURE.md` belgesini güncelleyin.
 5. Yeni oyuncuya görünen metinlerde Türkçe ve İngilizce karşılıkları birlikte ekleyin.
 
-### Başlamak için fikirler
-
-- Uzun dalışlarda chunk yükleme/silme ve eşya spawn maliyetlerini profil çıkararak iyileştirmek
-- Farklı ekran oranları, klavye/fare ve dokunmatik kullanımında arayüz erişilebilirliğini geliştirmek
-- Eksik veya tutarsız Türkçe/İngilizce çevirileri düzeltmek
-- Kayıt/yükleme, envanter kilidi, satış, gün döngüsü ya da dalış geçişlerinde yeniden üretilebilir bir hatayı izole edip test ederek düzeltmek
-- Yeni eşya, tarif veya yükleme ipucu eklerken veri odaklı mevcut Resource/JSON yapısını korumak
-
 Bir hata bildirirken Godot sürümünü, işletim sistemini, yeniden üretim adımlarını ve mümkünse konsol çıktısını ekleyin. Bir hata düzeltmesi gönderirken sorunun nedenini ve elle yaptığınız doğrulamayı PR açıklamasında belirtin.
 
 ## Export ayarları
